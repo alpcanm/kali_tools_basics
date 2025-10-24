@@ -1,0 +1,55 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T23:59:05+03:00
+
+====== util-linux ======
+Created Friday 24 October 2025
+
+util-linux
+
+Siber güvenlik kategorisi nedir?
+- General Cybersecurity
+- Security Operations
+- Incident Response
+- Threat Hunting
+
+Nedir?
+- Linux’ta sistem yönetimi için onlarca temel komuttan oluşan paket (örn. mount, fdisk, dmesg, lsblk).
+- Disk, süreç, oturum, ad alanı ve günlük gibi düşük seviye işleri yapar.
+
+Ne işe yarar (basit örneklerle)?
+- Depolamayı görmek/bağlamak: lsblk, blkid, fdisk/cfdisk, mount/umount.
+- Çekirdek ve sistem loglarını okumak: dmesg; süreçleri yönetmek: kill, renice, ionice.
+- Oturum ve izolasyon: login, su/runuser; nsenter, unshare ile namespace erişimi.
+
+Ne değildir?
+- Antivirüs, IDS/IPS, SIEM veya “hack aracı” değildir.
+- GNU coreutils değildir; coreutils dosya/metin, util-linux sistem/disk/oturum odaklıdır.
+
+Kullanım alanları nedir?
+- Günlük Linux sistem yönetimi, disk/FS bakımı, kurtarma.
+- Olay müdahalesinde canlı inceleme/triage; temel artefakt toplama.
+- Tehdit avcılığında sistem görünürlüğü (diskler, süreçler, kernel mesajları).
+
+Kullanım ortamı nelerdir?
+- Linux sunucular, iş istasyonları, gömülü sistemler, canlı kurtarma medyası.
+- Komut satırı/terminal; bazı komutlar için root yetkisi gerekir.
+
+Neden tercih edilir?
+- Hemen her dağıtımda hazır, hızlı, olgun ve güvenilirdir.
+- BusyBox/Toybox’tan daha tam özellikli; özel araçlara göre daha genel ve hafiftir.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Linux ortamı ve kabuk (SSH/TTY) erişimi.
+- Gerekli dosya sistemi ve donanım erişim izinleri (çoğu işlem için root).
+
+Öğrenme zorluk seviyesi nedir?
+- Orta (ortalama bir ayda öğrenilebilir); çok komut var ama her biri küçük ve odaklı.
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 6 — Rol-çekirdek zorunlu (Linux ağırlıklı mavi/kırmızı/DFIR rolleri için şart)
+
+Alternatifleri nelerdir?
+- BusyBox, Toybox (minimal birleşik setler).
+- GNU Core Utilities (kısmi örtüşür; dosya/metin odaklı).
+- procps-ng, iproute2, e2fsprogs, systemd araçları (alanına göre ikame/ tamamlayıcı).

@@ -1,0 +1,61 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T23:56:22+03:00
+
+====== plocate ======
+Created Friday 24 October 2025
+
+plocate
+
+- Siber güvenlik kategorisi nedir?
+  - General Cybersecurity, Security Operations, Incident Response, Threat Hunting
+
+- Nedir?
+  - Linux’ta dosya ve dizin adlarını çok hızlı bulan, indeksli bir “locate” aracıdır (mlocate’nin daha hızlı ve daha küçük veritabanlı halı).
+
+- Ne işe yarar (basit örneklerle)?
+  - Olay anında belirli dosya adlarını anında bulma: ör. “plocate suspicious.sh”
+  - Log yollarını hızlıca bulma: “plocate auth.log”
+  - Bilinen IOC dosya adlarını sistem genelinde tarama: “plocate cobaltstrike”
+  - Konfigürasyon dosyalarını hızla bulma: “plocate sshd_config”
+
+- Ne değildir?
+  - Antivirüs/EDR değildir, zararlıyı analiz etmez.
+  - Gerçek zamanlı değişim izlemez; indeks tazelenmezse yeni dosyaları kaçırabilir.
+  - Dosya içeriği aramaz (sadece ad/yol arar).
+  - Ağ/geniş ölçekli (çoklu sunucu) arama çözümü değildir.
+
+- Kullanım alanları nedir?
+  - Olay müdahalesinde hızlı triage
+  - Tehdit avcılığında bilinen artefakt adlarını arama
+  - Güvenlik operasyonlarında log/konfig dosyalarını çabuk bulma
+  - Envanter ve temizlik (artık dosyaları saptama)
+
+- Kullanım ortamı nelerdir?
+  - Linux sistemler; yerel dosya sistemleri
+  - Kullanıcı izinlerine saygı duyar (göremediğiniz dosyayı listelemez)
+  - Periyodik indeksleme (updatedb) gerektirir
+
+- Neden tercih edilir?
+  - mlocate/slocate’tan çok daha hızlı
+  - Daha küçük indeks dosyası
+  - Düşük I/O etkisi (io_uring destekliyse daha verimli)
+  - Basit kullanım, düşük öğrenme eşiği
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - Linux üzerinde kurulum (paket yöneticisi)
+  - Sistem genelinde indeks için yetki (genelde root) ve updatedb zamanlayıcı
+  - Bir miktar disk alanı (büyük dosya sistemlerinde yüzlerce MB)
+  - Opsiyonel: Linux 5.1+ (io_uring için)
+
+- Öğrenme zorluk seviyesi nedir?
+  - kolay (ortalama bir haftada öğrenilebilir)
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 3 — Durumsal önemli (IR/SecOps’ta hız kazandırır)
+
+- Alternatifleri nelerdir?
+  - mlocate, slocate, locate
+  - find (daha yavaş, indeks yok)
+  - fd (hızlı dosya adı arama, indeks siz)
+  - ripgrep/grep (içerik arama; dosya adı odaklı değildir)

@@ -1,0 +1,48 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T23:44:13+03:00
+
+====== vlan ======
+Created Friday 24 October 2025
+
+Siber güvenlik kategorisi nedir?
+- Ağ güvenliği — ağ segmentasyonu (L2), erişim sınırlandırma.
+
+Nedir?
+- VLAN: Aynı fiziksel ağ üzerinde mantıksal, ayrılmış sanal ağlar sağlar (802.1Q etiketleme).
+- “vlan” paketi: ifupdown (/etc/network/interfaces) ile VLAN arayüzlerini eski (legacy) yöntemle kuran betikler ve vconfig uyumluluk sarmalayıcısı.
+
+Ne işe yarar (basit örneklerle)?
+- Misafir/trafik/ yönetim ağlarını birbirinden ayırır; örn. üretim ile test trafiğini izole eder.
+- Bu paket özelinde: legacy adlandırma (vlan0001) ve ek özellikleri (vlan-raw-device, ip-proxy-arp, ip-rp-filter, hw-mac-address) kolayca etkinleştirir.
+
+Ne değildir?
+- Şifreleme, firewall, IDS/IPS değildir; sadece ağın mantıksal ayrıştırılmasıdır.
+- Bir switch ya da sürücü değildir; sadece yapılandırma kolaylığı sunar.
+
+Kullanım alanları nedir?
+- Kurumsal LAN’lar, veri merkezleri, lab ortamları; güvenlik ve düzenleme amaçlı segmentasyon.
+- Linux sunucularda bir trunk port üzerinden birden çok VLAN’a bağlanma.
+
+Kullanım ortamı nelerdir?
+- Debian/Ubuntu ve ifupdown kullanan sistemler; 802.1Q destekli anahtarlar (switch).
+- Not: Çoğu kullanımda bu pakete gerek yok; iproute2 ile doğrudan VLAN yönetimi tercih edilir.
+
+Neden tercih edilir?
+- Eski adlandırma şemasına uyum (vlan0001) ve ekstra seçenekler gerekir.
+- Geriye dönük uyumluluk (vconfig sarmalayıcısı; ileride kaldırılabilir) ve dosya tabanlı kalıcı ayar.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Root yetkisi, Linux çekirdeğinde 8021q modülü, iproute2, ifupdown.
+- Switch’te uygun VLAN/trunk yapılandırması; /etc/network/interfaces düzenleme.
+
+Öğrenme zorluk seviyesi nedir?
+- Orta (ortalama bir ayda öğrenilebilir).
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 2 — Niş/uzmanlık aracı (legacy ifupdown ekosistemi için). Not: VLAN kavramının kendisi roller için çok daha yüksek önemdedir.
+
+Alternatifleri nelerdir?
+- iproute2 ile doğrudan VLAN yönetimi (önerilen, modern yöntem).
+- systemd-networkd, Netplan, NetworkManager ile VLAN tanımları.
+- Sanallaştırma/ağ sanallaştırma için Open vSwitch.

@@ -1,0 +1,59 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T00:10:46+03:00
+
+====== openssh ======
+Created Saturday 25 October 2025
+
+openssh-client
+
+Siber güvenlik kategorisi nedir?
+- General Cybersecurity, Security Operations, Incident Response, Penetration Testing, Secure Development
+
+Nedir?
+- Uzak bilgisayarlara güvenli şekilde bağlanmayı, komut çalıştırmayı ve dosya aktarımını sağlayan açık kaynaklı SSH istemcisidir. (ssh, scp, sftp, ssh-agent, ssh-keygen gibi araçları içerir.)
+
+Ne işe yarar (basit örneklerle)?
+- Uzak sunucuya bağlanıp günlükleri kontrol etmek.
+- Sunucuya kod/deploy dosyası göndermek (scp/sftp).
+- Güvenli tünel açmak (ör. ofisten dışarıdaki veritabanına geçici erişim).
+- Anahtar ile parolasız, tek komutla giriş yapmak (ssh-agent).
+
+Ne değildir?
+- Hack/istismar aracı değildir.
+- VPN değildir (ama nokta-atış port tüneli yapabilir).
+- Sunucu yazılımı değildir (bu “client”; sunucu için openssh-server gerekir).
+- Şifre kırma/ brute-force aracı değildir.
+
+Kullanım alanları nedir?
+- Sistem/altyapı yönetimi, bulut erişimi, CI/CD dağıtımları.
+- Olay müdahalesi sırasında log toplama ve adli kopyalama.
+- Güvenli dosya transferi ve geçici servis erişimi (port forward).
+- Geliştirici ortamlarına güvenli erişim.
+
+Kullanım ortamı nelerdir?
+- Linux, macOS, Windows (yerleşik veya paket olarak).
+- Terminal/komut satırı; internet veya şirket ağı olan her yer.
+
+Neden tercih edilir?
+- Güçlü şifreleme, yaygınlık, ücretsiz ve olgun ekosistem.
+- Anahtar tabanlı kimlik doğrulama ve otomasyona uygunluk.
+- Esnek tünelleme (TCP, X11) ve proxy/jump host desteği.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Karşı tarafta çalışan bir SSH sunucusu.
+- Ağ erişimi (genelde TCP 22) ve yetkili kullanıcı hesabı.
+- Parola veya SSH anahtar çifti; tercihen ssh-agent.
+- Temel terminal kullanımı bilgisi.
+
+Öğrenme zorluk seviyesi nedir?
+- Kolay (temelleri 1 haftada öğrenilebilir).
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 7 — Evrensel zorunlu.
+
+Alternatifleri nelerdir?
+- PuTTY (Windows, basit GUI), MobaXterm/SecureCRT (GUI, gelişmiş; ücretli/karma).
+- Dropbear client (hafif), mosh (daha dayanıklı mobil SSH).
+- SFTP/GUI: FileZilla, WinSCP.
+- Kurumsal: Teleport, AWS SSM Session Manager (SSH alternatifi yaklaşım).

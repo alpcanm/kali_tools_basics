@@ -1,0 +1,58 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T23:54:07+03:00
+
+====== sakisi3g ======
+Created Friday 24 October 2025
+
+Sakis3G
+
+- Siber güvenlik kategorisi nedir?
+  - General Cybersecurity, Security Operations, Incident Response
+
+- Nedir?
+  - Linux’ta 3G/USB/Bluetooth modemleri otomatik tanıyıp internet bağlantısı kurmaya yarayan hafif bir kabuk betiğidir.
+
+- Ne işe yarar (basit örneklerle)?
+  - Kurum ağı çöktüğünde olay müdahalesi ekibine operatörden bağımsız internet sağlar.
+  - Saha çalışmasında ya da taşınabilir lab’da güncelleme/araç indirmek için geçici bağlantı kurar.
+  - Uzak lokasyondaki bir cihazın hat/operatör erişimini hızlıca doğrular.
+
+- Ne değildir?
+  - Güvenlik duvarı, VPN, IDS/IPS, sızma testi aracı değildir.
+  - Anonimlik/mahremiyet aracı değildir; sadece bağlantı kurar.
+  - Kurumsal bağlantı yönetim platformu değildir.
+
+- Kullanım alanları nedir?
+  - Out-of-band (ana ağdan bağımsız) erişim
+  - Olay müdahalesi ve saha teşhisleri
+  - Eğitim/demo ortamlarında hızlı internet erişimi
+
+- Kullanım ortamı nelerdir?
+  - Linux masaüstü/sunucu, tek kart bilgisayarlar (ör. Raspberry Pi)
+  - USB 3G modemler veya Bluetooth üzerinden telefon paylaşımı
+  - Hücresel kapsama alanı olan sahalar
+
+- Neden tercih edilir?
+  - Otomatik modem ve operatör/APN tespiti; az kurulum gerektirir.
+  - Ağdan bağımsız, izole bir hat sağlar (IR için işe yarar).
+  - Eski/çeşitli donanımlarla uyumludur; hafif ve taşınabilirdir.
+  - NetworkManager’a göre daha “tek amaçlı” ve betik tabanlıdır (GUI gerekmez).
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - Linux kabuğu ve yönetici (root) yetkisi
+  - 3G modem veya Bluetooth-tethering yapan telefon
+  - SIM kart ve gerektiğinde APN bilgisi
+  - İlgili sürücüler/PPP bileşenleri
+
+- Öğrenme zorluk seviyesi nedir?
+  - Kolay (ortalama bir haftada öğrenilebilir)
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 3 — Durumsal önemli (özellikle saha/IR senaryolarında)
+
+- Alternatifleri nelerdir?
+  - NetworkManager/nmcli + ModemManager (mmcli)
+  - wvdial
+  - Telefon USB/Bluetooth internet paylaşımı (hotspot)
+  - Operatörün kendi bağlantı yöneticileri (vendor yazılımları)

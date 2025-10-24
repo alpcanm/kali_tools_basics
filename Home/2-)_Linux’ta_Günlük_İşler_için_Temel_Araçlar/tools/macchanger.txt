@@ -1,0 +1,56 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T23:40:40+03:00
+
+====== macchanger ======
+Created Friday 24 October 2025
+
+Nedir?
+- GNU/Linux’ta ağ kartlarının MAC adresini geçici olarak değiştirmeyi kolaylaştıran küçük bir komut satırı aracıdır. Üretici (vendor) veritabanı içerir.
+
+Ne işe yarar (basit örneklerle)?
+- Gizlilik: Her Wi‑Fi bağlantısında farklı MAC kullanıp izlenmeyi zorlaştırma.
+- Test/Lab: MAC’e bağlı filtre/kayıt mekanizmalarını deneme.
+- Donanım taklidi: Yetkili senaryolarda eski cihazı “mış gibi” gösterip lisans/MAC bağlı davranışları test etme.
+- Çakışma senaryosu: Lab’da MAC çakışmalarını canlandırma.
+
+Ne değildir?
+- VPN/IP değiştirici değildir; trafiği şifrelemez, konumu gizlemez.
+- Donanımı kalıcı değiştirmez; reboot sonrası eski haline dönebilir.
+- Tam anonimlik sağlamaz; üst katman izlemeye karşı tek başına yeterli değildir.
+- Yetkisiz erişim aracı değildir.
+
+Kullanım alanları nedir?
+- Gizlilik odaklı kullanım (Wi‑Fi’da MAC rastgeleleştirme).
+- Yetkili sızma testi/Red Team.
+- DFIR ve lab ortamında olay çoğaltma/test.
+- QA/Dev’de MAC bağlı lisans/davranış doğrulama.
+
+Kullanım ortamı nelerdir?
+- OS: GNU/Linux dağıtımları.
+- Arayüz: Ethernet ve Wi‑Fi (sürücü kısıtları olabilir).
+- Bağlam: Ev/kurum ağları, VM’ler, lab.
+- Yetki: Genellikle root/sudo gerekir.
+
+Neden tercih edilir?
+- Hızlı ve basit; rastgele, belirli üreticiye veya arayüz türüne uygun MAC seçebilir.
+- Geniş üretici veritabanı ile gerçekçi MAC üretir.
+- Hafif ve otomasyona uygun CLI.
+- NetworkManager’in temel rastgeleleştirmesine göre daha ince ayar sunar.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Linux sistem ve yönetici yetkisi.
+- MAC değişimini destekleyen adaptör/sürücü.
+- Arayüzü geçici kapatıp açabilme (bağlantı kısa kesilebilir).
+- Temel komut satırı bilgisi.
+
+Öğrenme zorluk seviyesi nedir?
+- Kolay (ortalama bir haftada öğrenilebilir).
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 3 — Durumsal önemli: Özellikle kırmızı takım ve lab/test senaryolarında faydalı; herkes için çekirdek zorunlu değil.
+
+Alternatifleri nelerdir?
+- Yerleşik Linux: iproute2 (ip link), ifconfig; NetworkManager/nmcli MAC rastgeleleştirme.
+- Diğer platformlar: Technitium MAC Address Changer (Windows), SpoofMAC (macOS), iOS/Android “Özel MAC”.
+- Yapılandırma/otomasyon: systemd-networkd, wpa_supplicant MAC randomization, basit betikler/Scapy.

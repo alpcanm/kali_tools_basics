@@ -1,0 +1,53 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T23:37:35+03:00
+
+====== whatmask ======
+Created Friday 24 October 2025
+
+Nedir?
+- Whatmask: IP alt ağ (subnet) hesapları için küçük bir komut satırı aracıdır (C ile yazılmış).
+
+Ne işe yarar (basit örneklerle)?
+- Maske dönüştürür: /24 ↔ 255.255.255.0 ↔ 0xffffff00 ↔ 0.0.0.255 ve kaç adres kullanılabilir gösterir.
+- IP+maske verince ağ bilgisi üretir: ağ adresi, yayın (broadcast), ilk/son kullanılabilir IP, toplam kullanılabilir.
+  - Örnek: 192.168.0.13/24 → Ağ: 192.168.0.0, Broadcast: 192.168.0.255, Kullanılabilir: 254.
+
+Ne değildir?
+- Tarayıcı (scanner), güvenlik duvarı, yönlendirici, zafiyet aracı değildir.
+- Görsel topoloji/otomatize ağ tasarım aracı değildir.
+- IPv6 odaklı ileri seviye hesaplayıcı değildir.
+
+Kullanım alanları nedir?
+- Ağ segmentasyonu planlama (VLAN/subnet boyutu seçimi).
+- Yönlendirici/switch arayüz maskesi ayarlama.
+- Güvenlik duvarı ACL’lerinde wildcard mask kullanımı.
+- Dokümantasyon ve maske uyumsuzluğu sorun giderme.
+
+Kullanım ortamı nelerdir?
+- Komut satırı: Linux/BSD/macOS (doğal), Windows’ta WSL/MSYS/Cygwin ile.
+- Script içine gömülü hızlı hesap.
+- Çevrimdışı çalışır; basit web demo’ları da vardır.
+
+Neden tercih edilir?
+- Çok küçük, hızlı, tek işini temiz yapar.
+- 4 gösterimi (CIDR, dotted mask, hex mask, wildcard) tek komutta verir.
+- Manuel hesaplamaya göre hatasız; ipcalc/sipcalc’a göre daha yalın.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Bir terminal ve çalışır ikili dosya ya da derlemek için: gcc/make.
+- Temel IP/subnet bilgisi (/24 nedir gibi).
+- Yönetici yetkisi gerekmez (yalnızca hesap yapar).
+
+Öğrenme zorluk seviyesi nedir?
+- Kolay (ortalama bir haftada öğrenilebilir).
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 2 — Niş/uzmanlık aracı: İş akışını hızlandırır, özellikle ACL/wildcard mask senaryolarında faydalı.
+
+Alternatifleri nelerdir?
+- ipcalc (Linux): Daha fazla çıktı/validasyon, IPv6 desteği yaygın.
+- sipcalc: Zengin özellikler, IPv6 güçlü.
+- netmask (Perl), subnetcalc: Benzer hesaplayıcılar.
+- Python ipaddress modülü, PowerShell (Get-NetIPAddress): Kodla entegre hesap.
+- Çevrim içi subnet hesaplayıcılar: Görsel ve hızlı, ancak çevrimdışı değil.

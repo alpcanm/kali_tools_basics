@@ -1,0 +1,45 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T23:33:11+03:00
+
+====== netcat ======
+Created Friday 24 October 2025
+
+==== Nedir? ====
+- Netcat (nc), Unix sistemlerde TCP/UDP üzerinden veri okuyup yazan basit bir ağ aracı. “Klasik” Hobbit sürümüdür; netcat-openbsd’ye göre daha az özelliğe sahiptir.
+
+==== Ne işe yarar (basit örneklerle)? ====
+- Bir sunucudaki porta bağlanıp “açık mı, cevap veriyor mu” diye kontrol eder.
+- Basit bir dinleyici açıp test verisi alır/gönderir.
+- Küçük dosyaları hızlıca aktarır (şifrelemesiz).
+- Servislerin ilk yanıtını (banner) görerek temel teşhis yapar.
+
+==== Ne değildir? ====
+- Güvenli (şifreli) transfer aracı değildir (SSH/SCP kadar güvenli değil).
+- Kapsamlı zafiyet/port tarayıcısı değildir (Nmap kadar kapsamlı değil).
+- Üretim için kalıcı sunucu veya protokol bilinci yüksek bir istemci değildir (curl/socat kadar özellikli değil).
+
+==== Kullanım alanları nedir? ====
+- Geliştirme/test laboratuvarları, kurum içi LAN’lar.
+- Veri merkezleri ve bulut VM’leri.
+- Konteyner/Kubernetes pod’larında bağlantı testi.
+- Olay müdahale (IR) ve hızlı ağ teşhisi.
+- OT/IoT test tezgahlarında temel erişilebilirlik denemeleri.
+
+==== Neden tercih edilir? ====
+- Çok hafif, çoğu Unix’te hazır veya kolay kurulur.
+- Hem istemci hem dinleyici; TCP ve UDP desteğiyle esnek.
+- Scriptlerle kolay otomasyon; pipe ile diğer araçlarla iyi çalışır.
+- Telnet’ten daha esnek; socat’tan daha basit; curl’dan daha genel amaçlı (ama daha az protokol bilgili).
+- Not: Klasik nc minimaldir; netcat-openbsd ek seçenekler ve iyileştirmeler sunar.
+
+==== Kullanmak için nelere ihtiyaç vardır? ====
+- Unix benzeri sistem ve terminal erişimi.
+- Hedef IP/alan adı ve port bilgisi.
+- Uygun ağ/ güvenlik izinleri; temel TCP/UDP, port kavramları.
+
+==== Öğrenme zorluk seviyesi nedir? ====
+- Kolay (ortalama bir haftada öğrenilebilir).
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 6 — Rol-çekirdek zorunlu: Kırmızı/mavi takım ve DFIR’de sıkça beklenir.

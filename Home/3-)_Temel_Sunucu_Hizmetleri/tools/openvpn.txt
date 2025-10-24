@@ -1,0 +1,64 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T00:12:37+03:00
+
+====== openvpn ======
+Created Saturday 25 October 2025
+
+OpenVPN
+
+- Siber güvenlik kategorisi nedir?
+  - General Cybersecurity, Security Operations, Penetration Testing
+
+- Nedir?
+  - İnternet üzerinden iki nokta arasında şifreli tünel kuran, açık kaynak bir VPN yazılımıdır. Tek bir UDP/TCP portu üzerinden çalışır; OpenSSL ile şifreleme/doğrulama yapar.
+
+- Ne işe yarar (basit örneklerle)?
+  - Evden ofis ağına güvenli erişim (dosya sunucusu, intranet)
+  - İki şubenin ağını birleştirme (site-to-site)
+  - Kafedeki Wi‑Fi’da trafiği şifreleyerek dinlemeyi zorlaştırma
+  - Test/lab ortamlarına uzaktan erişim
+
+- Ne değildir?
+  - Antivirüs/EDR veya IDS değildir
+  - Firewall yerine geçmez
+  - Anonimlik aracı değildir (Tor gibi gizlilik sağlamaz)
+  - Tek başına “zero-trust” değildir; MFA ve doğru yetkilendirme gerekir
+
+- Kullanım alanları nedir?
+  - Kurumsal uzaktan erişim, SMB/startup ağları
+  - Site-to-site tüneller, bulut-yerel ağ köprüleme
+  - Pentest bağlantıları ve CTF/lab erişimi
+  - OT/IoT uzak bakım (kontrollü)
+
+- Kullanım ortamı nelerdir?
+  - Sunucu: Linux/Windows, bulut VM, router/firewall cihazları, konteyner
+  - İstemci: Windows, macOS, Linux, iOS, Android
+  - NAT ve stateful firewall arkasında tek portla çalışabilir
+
+- Neden tercih edilir?
+  - Açık kaynak, olgun ve yaygın ekosistem
+  - Güçlü/esnek kripto (OpenSSL), sertifika veya PSK, TLS
+  - Zorlu ağlarda çalışır (NAT geçişi, UDP/TCP seçimi)
+  - Kıyas: WireGuard daha hafif/hızlı; OpenVPN daha özellikli/olgun. IPsec cihazlarda doğal; kurulumu/NAT geçişi nispeten zor olabilir.
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - OpenVPN sunucusu ve istemciler
+  - CA altyapısı (sunucu/istemci sertifikaları) veya ön paylaşımlı anahtar
+  - Açık bir port ve uygun yönlendirme/firewall kuralları
+  - Temel ağ bilgisi (IP, yönlendirme, DNS), yönetici yetkisi
+  - İsteğe bağlı: MFA, LDAP/AD entegrasyonu, log/izleme
+
+- Öğrenme zorluk seviyesi nedir?
+  - Orta (ortalama bir ayda öğrenilebilir). İstemci kullanımı kolay; sunucu/PKI ve yönlendirme ayarları ek bilgi ister.
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 4 — Kuvvetle tavsiye edilen
+
+- Alternatifleri nelerdir?
+  - WireGuard
+  - IPsec/IKEv2 (strongSwan, Libreswan)
+  - L2TP/IPsec, SSTP
+  - Ticari SSL VPN’ler (Cisco AnyConnect, Palo Alto GlobalProtect, FortiClient)
+  - Mesh/SDP: Tailscale, ZeroTier, Cloudflare Tunnel/Access
+  - Basit senaryolar: SSH tünelleme

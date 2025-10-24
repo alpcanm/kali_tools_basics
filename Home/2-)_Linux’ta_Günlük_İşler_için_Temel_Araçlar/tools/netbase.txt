@@ -1,0 +1,56 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T23:50:44+03:00
+
+====== netbase ======
+Created Friday 24 October 2025
+
+Siber güvenlik kategorisi nedir?
+- General Cybersecurity (Genel Siber Güvenlik)
+- Security Operations (Güvenlik Operasyonları)
+- Incident Response (Olay Müdahalesi)
+
+Nedir?
+- Linux/Debian tabanlı sistemlerde temel TCP/IP ağları için isim–numara eşlemesi sağlayan paket.
+- /etc/services, /etc/protocols, /etc/rpc, /etc/ethertypes dosyalarını sunar.
+- Arka planda çalışan servis değildir; “sözlük/veri tabanı” gibidir.
+
+Ne işe yarar (basit örneklerle)?
+- Loglarda “80 → http”, “443 → https”, “17 → UDP”, “1 → ICMP” gibi çeviriler yapılır.
+- netstat/ss gibi komutlar port numarası yerine hizmet adını gösterebilir.
+- Paket yakalama/analiz araçları (ör. tcpdump) EtherType 0x0800 → IPv4 gibi anlamlandırma yapar.
+
+Ne değildir?
+- Güvenlik duvarı, IDS/IPS, antivirüs, sızma aracı değildir.
+- Ağ bağlantısını başlatmaz/engellemez; yalnızca isimlendirme sunar.
+- DNS çözümleyici değildir; IP’yi ada çevirmez.
+
+Kullanım alanları nedir?
+- Olay inceleme ve log analizi: Port/protokol anlamını hızlı görmek.
+- Sistem yönetimi ve hata ayıklama: Çıktıları okunur kılmak.
+- Uygulama geliştirme: Port/protokol adlarına göre yapılandırma.
+
+Kullanım ortamı nelerdir?
+- Debian/Ubuntu ve türevleri, sunucular, iş istasyonları, konteynerlar.
+- İnternetsiz/kapalı ağlarda da çalışır (yerel dosyalar).
+
+Neden tercih edilir?
+- Standart, hafif, kararlı; tüm araçlarda tutarlı isimler sağlar.
+- Kurumsal uyum: Log ve raporların anlaşılmasını kolaylaştırır.
+- Alternatiflerine göre sistemle bütünleşik ve bakım maliyeti düşük.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Linux (özellikle Debian/Ubuntu) ve paket yöneticisi (apt).
+- Okuma yetkisi (root gerekmez); dosyaları kullanan araçlar (netstat, ss, tcpdump, vb.).
+
+Öğrenme zorluk seviyesi nedir?
+- Kolay (ortalama bir haftada öğrenilebilir).
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 3 — Durumsal önemli (log/olay analizinde faydalı ama zorunlu değil).
+
+Alternatifleri nelerdir?
+- IANA resmi port/protokol kayıtları (daha güncel, manuel bakış).
+- Nmap’in nmap-services dosyası (daha kapsamlı, araç-özel).
+- Diğer işletim sistemi “services/protocols” dosyaları (Windows/macOS).
+- Uygulama içi özel eşleme tabloları veya doğrudan port numarası kullanımı.

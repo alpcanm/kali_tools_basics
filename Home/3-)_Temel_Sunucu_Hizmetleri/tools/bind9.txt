@@ -1,0 +1,60 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T00:06:36+03:00
+
+====== bind9 ======
+Created Saturday 25 October 2025
+
+BIND 9
+
+- Siber güvenlik kategorisi nedir?
+  - General Cybersecurity, Security Operations
+
+- Nedir?
+  - İnternetin “isim defteri” olan DNS’i çalıştıran bir sunucu yazılımıdır.
+  - Hem yetkili (authoritative) hem çözücü (recursive) DNS hizmeti verebilir.
+  - Açık kaynak, MPL 2.0 lisanslıdır.
+
+- Ne işe yarar (basit örneklerle)?
+  - www.ornek.com → 203.0.113.10 gibi isim–IP çevirisi yapar.
+  - Kurum içi ve dışı alan adlarını yayınlar.
+  - RRL ve DNS Cookies ile DNS yansıtma/amplification DDoS riskini düşürür.
+  - DNSSEC’i imzalama/ doğrulama ile destekler (inline signing).
+
+- Ne değildir?
+  - Web sunucusu, e-posta sunucusu, WAF/IDS değildir.
+  - DDoS’u tek başına durduran “sihirli kalkan” değildir; sadece azaltır.
+  - Tam yönetilen bulut DNS hizmeti değildir; siz kurar ve işletirsiniz.
+
+- Kullanım alanları nedir?
+  - Kurum DNS altyapısı: iç/dış zonelar.
+  - ISP’ler ve büyük kuruluşlarda çözücü çiftlikleri.
+  - Birincil/ikincil (AXFR/IXFR, TSIG) mimarileri; katalog zonelar ile otomatik çoğaltma.
+  - Günlükleme/izleme: dnstap ile hızlı sorgu–yanıt kaydı.
+
+- Kullanım ortamı nelerdir?
+  - Linux/BSD sunucular, konteyner (resmi Docker imajı), sanal/çıplak metal.
+  - HSM ile anahtar saklama (PKCS#11) seçenekli.
+  - Paketler: Ubuntu, Debian, CentOS/Fedora; kaynak koddan kurulum.
+
+- Neden tercih edilir?
+  - Olgun, özelliği bol, çok yaygın; bilen mühendis çok.
+  - Şeffaf açık kaynak; topluluk ve ücretli 7/24 destek var.
+  - Performans/ölçeklenebilirlik: büyük zoneler, çok sayıda ikincil, hızlı yeniden yükleme (map formatı).
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - 1+ sunucu, açık 53/UDP-TCP portları, temel DNS bilgisi.
+  - Alan adı/zone dosyaları; yönetim için rndc/ARM dokümantasyonu.
+  - İsteğe bağlı: HSM, merkezi log/izleme.
+
+- Öğrenme zorluk seviyesi nedir?
+  - Orta: basit kurulum–yayın/çözümleme ~1 ay; DNSSEC ve ileri ayarlar zorlayıcı olabilir.
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 5 — Kurumsal standart: DNS’i yöneten veya güvenliğini sağlayanlar için güçlü beklenti.
+
+- Alternatifleri nelerdir?
+  - Çözücü: Unbound, Knot Resolver.
+  - Yetkili: NSD, Knot DNS, PowerDNS Authoritative, Microsoft DNS.
+  - Yönetilen hizmet: Cloudflare DNS, AWS Route 53, Google Cloud DNS.
+  - Not: BIND 9 hem yetkili hem çözücü yapabilir; Unbound sadece çözücü, NSD/Knot çoğunlukla yetkilidir.
