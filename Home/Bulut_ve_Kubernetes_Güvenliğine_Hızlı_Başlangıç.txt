@@ -1,0 +1,86 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:03:55+03:00
+
+====== Bulut ve Kubernetes Güvenliğine Hızlı Başlangıç ======
+
+
+
+===== Konu =====
+Amaç; bulut (uzaktan kiralanan bilgisayar ve servisler), Kubernetes/K8s (container’ları yöneten sistem) ve container (uygulamanın hafif paketlenmiş hali) dünyasında güvenliği pratik şekilde kurmaktır. Odak; keşif, yanlış ayarları bulma, saldırı simülasyonu (zararsız, kontrollü saldırı provası), imaj güvenliği ve gizli bilgi sızıntısını önlemedir. Tüm adımlar DevSecOps (geliştirme, güvenlik ve operasyonun birlikte çalışması) ve supply chain (yazılımı oluşturan parçaların geldiği süreç) yaklaşımına uyar.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+- Bulutta (AWS: Amazon’un bulutu; Azure: Microsoft’un bulutu) yanlış yapılandırmayı ve fazla izni erken yakalarsın.
+- K8s’te RBAC’ı (kim ne yapar kural sistemi) ve servis hesaplarını (uygulamanın kullandığı teknik hesap) güvenli sınar, açık kapıları kapatırsın.
+- K8s ağında CNI’yi (Kubernetes ağ eklentisi) ve ağ politikalarını (kim kiminle konuşur kuralları) doğrularsın.
+- Container imajında (çalıştırma dosya paketi) SBOM (yazılım “içindekiler” listesi) üretir, zafiyetleri (güvenlik açıkları) bulur, imza/doğrulama (kim yaptı ve değişmedi mi kontrolü) uygularsın.
+- Gizli bilgilerin (secret: K8s’te gizli veri nesnesi; ayrıca API anahtarları/parolalar) sızmasını kaynakta yakalarsın.
+- En az ayrıcalık (iş için gereken en düşük izin) ve izole test ile riski düşürürsün.
+
+===== Nasıl çalışır/uygulanır? =====
+- Bulut keşfi ve “kuru koşu”:
+  - Hesaptaki kaynak ve izinleri envanterle. Fazla izinleri ve yetki yükseltme (kademeli daha fazla izin alma) yollarını çıkar.
+  - Sızmış bir anahtar ile neler yapılabileceğini izole bir ortamda, yazmadan/bozmadan simüle et.
+- Kubernetes keşfi ve yanlış yapılandırma testi:
+  - Pod (K8s’te en küçük çalışma birimi), secret ve servis hesabı erişimlerini haritala. RBAC kurallarını doğrula.
+  - Düşük yetkili bir hesabın gerçek gücünü görmeye yönelik senaryoları simüle et.
+  - Geçici test kümeleri kurup hızla kaldır. Örnek uygulamaları bir paket yöneticisi (K8s paketleri yükleme aracı) ya da manifest özelleştirici (K8s dosyalarını varyasyonla yönetme aracı) ile dağıt.
+- K8s ağ ve CNI politika testleri:
+  - “Kim kime konuşabilir?” sorusunu ağ politikaları ile sınırla ve test et.
+  - eBPF’li (Linux çekirdeğinde çalışan küçük, güvenli programlar) görünürlükle bağlantı ve engelleme noktalarını izle.
+  - Hangi kuralın trafiği kestiğini adım adım ayıkla.
+- Container imaj güvenliği ve supply chain:
+  - Her imaj için SBOM üret. Zafiyet taraması yap.
+  - İmajı imzala, doğrulamasını zorunlu tut. Doğrulanmayan imajların çekilmesini engelle.
+- Gizli bilgi sızıntısı tespiti:
+  - Kod geçmişini ve depo içeriğini gizli bilgiler için tara.
+  - CI/CD’de (kodun otomatik test ve dağıtım hattı) “erken uyarı” koy. Sızıntılı commit’leri daha itmeden durdur.
+  - Arşivleri ve obje depolamayı (dosyaları nesne olarak saklayan bulut hizmeti) da kontrol et.
+- Not: Hangi aracın seçileceği ve komut detayları dökümandan çıkarılamıyor. Tüm testler izinli, izole ortamlarda yapılmalı.
+
+===== Kime yarar? =====
+- Güvenlik ekipleri: Hızlı keşif, ispatlı bulgu, uygulanabilir kapanış.
+- Platform/SRE: Güvenli varsayılanlar, tekrarlanabilir test ortamları.
+- Geliştiriciler: CI/CD’de otomatik ve erken geri bildirim.
+- Uyum/denetim: İmzalı imaj, SBOM ve politika kanıtları.
+
+
+===== Sözlük =====
+- ağ politikası: Hangi pod’un hangisiyle konuşacağını belirleyen K8s kuralları.
+- AWS: Amazon’un bulut platformu.
+- Azure: Microsoft’un bulut platformu.
+- CI/CD: Kodun otomatik test ve dağıtım hattı.
+- CNI: Kubernetes’in ağ bağını sağlayan eklenti.
+- container: Uygulamayı ve bağımlılıklarını hafif paketleyip çalıştıran yapı.
+- DevSecOps: Geliştirme, güvenlik ve operasyonun birlikte çalışması.
+- doğrulama: Bir imzanın ve içeriğin değişmediğinin kontrolü.
+- eBPF: Linux çekirdeğinde güvenle küçük programlar çalıştırma tekniği.
+- en az ayrıcalık: İşi yapmak için gereken en düşük izni verme kuralı.
+- imaj: Container’ın çalıştırma için gereken dosya paketi.
+- imza: Bir içeriği üreteni ve bütünlüğü kanıtlayan dijital kayıt.
+- Kubernetes/K8s: Container’ları yöneten ve ölçekleyen sistem.
+- obje depolama: Dosyaları nesne olarak saklayan bulut hizmeti.
+- pod: Kubernetes’te birlikte çalışan container’ların en küçük birimi.
+- RBAC: Kim ne yapar sorusunu kuralla çözen yetki sistemi.
+- saldıri simülasyonu: Zararsız, kontrollü saldırı provası.
+- SBOM: Bir yazılımın “içindekiler listesi”.
+- secret: Kubernetes’te gizli veri nesnesi; ayrıca anahtar/parola gibi sırlar.
+- supply chain: Yazılımı oluşturan parçaların geldiği süreç.
+- yetki yükseltme: Kademeli adımlarla daha yüksek izinler elde etme yolu.
+- zafiyet: Bir sistemde sömürülebilir güvenlik açığı.
+
+
+===== Kazanımlar =====
+- Bulut hesaplarında tüm kaynak ve izinleri çıkarıp fazla yetkileri raporlayabilirsin.
+- Olası saldırı yollarını ve yetki yükseltme zincirlerini güvenli şekilde “kuru koşu” ile deneyebilirsin.
+- Kubernetes’te servis hesabı, RBAC, pod ve secret erişimlerini haritalayıp riskleri kapatabilirsin.
+- Geçici K8s test kümeleri kurup kaldırarak bulguları hızla yeniden üretebilirsin.
+- Ağ politikaları yazar, CNI davranışını doğrular ve hangi kuralın trafiği kestiğini saptayabilirsin.
+- eBPF tabanlı görünürlükle pod’lar arası bağlantı sorunlarını kök sebepleriyle görebilirsin.
+- Her imaj için SBOM üreterek bileşenleri ve lisansları şeffaf kılabilirsin.
+- İmaj ve bağımlılık zafiyetlerini tarayıp kritik açıkları yayın öncesi düzeltebilirsin.
+- İmajları imzalayıp sadece doğrulanmış imajların kümeye girmesini zorunlu kılabilirsin.
+- Kod depolarında ve geçmişinde gizli bilgileri otomatik tarayıp sızıntılı commit’leri bloğlayabilirsin.
+- Arşivlerde ve bulut obje depolamada unutulmuş anahtar ve parolaları tespit edebilirsin.
+- CI/CD hattına bu kontrolleri ekleyerek güvenliği sola kaydırabilir ve sürtünmeyi azaltabilirsin.
+- Üretim öncesi izole ortamda test edip, bulguları değişiklik süreçlerine kanıtla bağlayabilirsin.

@@ -1,0 +1,39 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:51:53+03:00
+
+SSL/TLS analiz/test
+
+TLS/SSL yapılandırma taraması ve zafiyet kontrolü – sunucu odaklı denetim
+- Açıklama: Sunucunun hangi TLS sürümlerini ve şifre takımlarını (cipher) desteklediğini, zayıf ayarları ve bilinen açıkları tespit eder. Kuruluma zarar vermeden hızlı bir genel sağlık kontrolü sağlar.
+- Örnek: Şirket web sunucunuzda TLS 1.0 kapalı mı, zayıf RC4/3DES gibi şifreler açık mı ve Heartbleed/ROBOT gibi zafiyetler var mı ön kontrol yapmak.
+- Araçlar: sslscan (hızlı sürüm/şifre takımı taraması), sslyze (kapsamlı denetim, otomasyona uygun), testssl.sh (bash tabanlı, kurulum gerektirmez, bilinen zafiyet testleri), tlssled (klasik betik, temel protokol/şifre kontrolleri)
+
+SSL/TLS trafiği yakalama ve hata ayıklama – analiz ve teşhis
+- Açıklama: TLS el sıkışmasını (handshake) ve oturum bilgilerini yakalayıp okur; gerekirse sağlanan anahtarlarla şifreli trafiği çözümler. Uygulama/sunucu uyumsuzluklarını anlamaya yardımcı olur.
+- Örnek: “Handshake failure” hatası alan bir mobil istemci ile sunucu arasındaki trafiği inceleyip sürüm veya sertifika uyuşmazlığını bulmak.
+- Araçlar: ssldump (TLS el sıkışmasını ayrıntılı gösterir, özel anahtar/anahtar günlükleriyle içeriği çözebilir)
+
+Aktif MITM/ara-yol testleri – laboratuvar ve güvenlik doğrulama
+- Açıklama: Trafiği araya girerek bölme, yönlendirme veya şifrelemeyi düşürme senaryolarını laboratuvar ortamında canlandırır. Uygulamaların sertifika/doğrulama hatalarına tepkisini ölçmek için kullanılır. Yalnızca yetkili ve kontrollü ortamlarda kullanılmalıdır.
+- Örnek: Geliştirme ortamında bir istemci uygulamasının sahte/yanlış imzalı sertifikalara nasıl tepki verdiğini görmek için şeffaf proxy ile HTTPS trafiğini bölmek.
+- Araçlar: sslsplit (şeffaf TLS/HTTPS bölme, anlık sahte sertifika üretimi), sslsniff (MITM, eski/yanıltıcı sertifika senaryolarını göstermek için), sslstrip (HTTPS’i HTTP’ye düşürme deneyi; HSTS olmayan hedeflerde etki gösterir)
+
+TLS istemcisi doğrulama/sertifika denetimi – istemci tarafı güven
+- Açıklama: TLS istemcilerinin (tarayıcı, mobil/masaüstü uygulama) sertifika zincirlerini ve doğrulama kurallarını doğru uygulayıp uygulamadığını sınar.
+- Örnek: Kurumsal masaüstü uygulamasının sahte bir ara CA ile imzalanmış sunucu sertifikasını reddedip etmediğini test etmek.
+- Araçlar: qsslcaudit (TLS istemcilerinin sertifika doğrulama davranışını denetler)
+
+Protokol çoklama ve yönlendirme – tek portta birden fazla hizmet
+- Açıklama: Aynı port üzerinden gelen trafiğin TLS/SSH gibi protokollerine bakarak doğru arka uca yönlendirir. Ağ kısıtlamaları olan ortamlarda erişimi kolaylaştırır.
+- Örnek: Güvenlik duvarında yalnızca 443 portu açıksa, bu port üzerinden hem HTTPS hem de SSH hizmetini ayırt edip ilgili servislere aktarmak.
+- Araçlar: sslh (protokol çoklayıcı; SSH/HTTPS/OpenVPN trafiğini ayırt eder ve yönlendirir)
+
+Dayanıklılık ve DoS testi – stres ve kötüye kullanım senaryoları
+- Açıklama: Sunucunun TLS katmanında aşırı kaynak tüketimine yol açan isteklerle dayanıklılığını ölçer. Orantısız CPU kullanımı veya oturum yönetimi sorunlarını ortaya çıkarır. Yalnızca yetkili testlerde uygulanmalıdır.
+- Örnek: WAF ve oran sınırlama (rate limit) kurallarınızın TLS yeniden anlaşma (renegotiation) suistimaline karşı dayanıklı olup olmadığını görmek.
+- Araçlar: thc-ssl-dos (TLS/SSL yeniden anlaşma ve benzeri tekniklerle DoS etkisi oluşturmayı dener)
+
+Notlar:
+- testssl.sh ve sslyze taramaları sırasında sertifika ayrıntılarını da rapor eder; bu yüzden sertifika sağlık kontrolü için de kullanılabilir.
+- MITM ve DoS araçları saldırı amaçlı da kullanılabilir; bu araçları yalnızca yetkiniz olan, kontrollü ortamlarda ve güvenlik testi kapsamında kullanın.

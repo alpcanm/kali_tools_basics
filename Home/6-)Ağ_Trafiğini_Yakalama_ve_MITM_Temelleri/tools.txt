@@ -1,0 +1,42 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:53:02+03:00
+
+Sniffing/ spoofing / MITM / trafik analizi
+
+Paket yakalama (sniffing) ve canlı trafik izleme
+- Açıklama: Ağdaki paketleri anlık olarak yakalar ve filtreler. Sorun giderme, ilk teşhis ve genel trafik görünürlüğü için kullanılır.
+- Örnek: Ofis ağı yavaşladığında hangi IP/port’un en çok bant genişliği kullandığını tespit etmek.
+- Araçlar: tcpdump$ (CLI paket yakalama/filtreleme), wireshark/tshark (GUI/CLI derin paket analizi), netsniff-ng (yüksek performanslı yakalama/suite), darkstat$ (trafik istatistikleri ve web arayüzü), ngrep$ (paket içeriğinde regex arama)
+
+Trafik analizi ve oturum/akış yeniden yapılandırma
+- Açıklama: Kaydedilmiş trafiği (pcap) inceleyip oturumları, dosyaları ve içerikleri okunabilir şekilde yeniden birleştirir. Olay müdahalesi ve adli analizde kullanılır.
+- Örnek: Bir olay sonrası pcap dosyasından hangi URL’lere gidildiğini ve indirilen dosyaları çıkarmak.
+- Araçlar: chaosreader$ (pcap’ten oturum/dosya çıkarımı, HTML rapor), tcpflow (TCP akışlarını dosyalara ayırır), tcpick$ (TCP oturum takibi/yeniden birleştirme), wireshark/tshark (protokol ayrıştırma ve istatistik), driftnet$ (trafikten geçen görselleri toplar)
+
+MITM ve spoofing çerçeveleri
+- Açıklama: Aynı ağda istemci ile ağ geçidi arasına girerek trafiği izleme, yönlendirme ve sahteleme yapar. Yetkili kurum içi testlerde ve eğitim amaçlı kullanılır.
+- Örnek: Kurumsal sızma testinde ARP spoofing ile test kullanıcısının HTTP trafiğini görmek ve zayıf noktaları raporlamak.
+- Araçlar: bettercap$ (çok amaçlı MITM/sniff/spoof framework), bettercap-ui (bettercap için web arayüzü), ettercap (cli/gtk/text) (ARP/DNS spoof + MITM süiti), dsniff (şifre/protokol toplayıcı araçlar paketi), mitmproxy (etkileşimli HTTP(S) proxy ve müdahale)
+
+Trafik manipülasyonu, enjeksiyon ve yeniden oynatma
+- Açıklama: Kaydedilmiş trafiği tekrar oynatır, paketlere müdahale eder veya özel paketler üretir. IDS/IPS testleri ve uygulama davranışı doğrulamada kullanılır.
+- Örnek: Yeni bir IDS kuralını doğrulamak için, daha önce kaydedilmiş saldırı trafiğini laboratuvar ortamında tekrar oynatmak.
+- Araçlar: tcpreplay (pcap trafiğini yeniden oynatır), hexinject (ham paket okuma/yazma ve enjeksiyon), netsniff-ng (trafik üretimi/replay modülleri içerir), mitmproxy (istek/yanıtları anlık düzenleme), sniffjoke (IDS/IPS atlatma için paket obfuscation/parçalama)
+
+Oturum ve kimlik bilgisi odaklı yakalama/hijacking
+- Açıklama: Şifrelenmemiş veya zayıf protokollerde oturum çerezleri ve kimlik bilgilerinin tespitini hedefler. Yalnızca yetkili test ve eğitim amaçlıdır.
+- Örnek: Güvenlik denetiminde, kurum içi bir uygulamanın HTTP ile çerez gönderdiğini tespit edip risk olarak raporlamak.
+- Araçlar: hamster-sidejack$ (HTTP oturum çerezleriyle sidejacking), dsniff (çeşitli protokollerden kullanıcı/parola çıkarımı), xspy$ (X11 tuş/fare olaylarını izleme)
+
+İzleme ve görselleştirme odaklı yardımcılar
+- Açıklama: Trafiği özetler, metrik ve grafiklerle anlaşılır hale getirir. Hızlı durum tespiti ve bant genişliği takibinde kullanılır.
+- Örnek: Bir sunucuda en çok trafik üreten port ve hedefleri hızlıca görmek.
+- Araçlar: darkstat$ (bant genişliği istatistikleri ve web arayüzü), ngrep$ (canlı kalıp/anahtar kelime arama), wireshark/tshark (grafikler, istatistikler ve protokol hiyerarşisi)
+
+Tedarik zinciri/güncelleme güvenliği testleri
+- Açıklama: Eski veya yanlış yapılandırılmış yazılım güncelleme mekanizmalarının risklerini göstermek için laboratuvar aracı.
+- Örnek: Farkındalık eğitiminde, sahte güncelleme sunucusu kurup imza/doğrulama eksikliği olan istemcilerin nasıl kandırılabileceğini göstermek.
+- Araçlar: isr-evilgrade (sahte güncelleme sunucusu framework’ü)
+
+Not: Bu araçlar güçlü ve çift kullanımlıdır. Yalnızca yasal, yetkili ve kontrollü ortamlarda (kendi ağınız, laboratuvar, resmi sızma testi) kullanınız.

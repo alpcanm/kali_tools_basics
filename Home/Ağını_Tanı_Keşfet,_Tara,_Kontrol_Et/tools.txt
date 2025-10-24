@@ -1,0 +1,61 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:13:03+03:00
+
+Ağ keşfi/ tarama / parmak izi
+
+
+Canlı cihaz (host) keşfi – ICMP/ARP tabanlı
+- Açıklama: Ağda hangi cihazların aktif olduğunu hızlıca bulur. Yerel ağda ARP, daha geniş ağlarda ICMP/TTL gibi yöntemler kullanır. Düşük riskli ve başlangıç adımı için idealdir.
+- Örnek: Ofisinizde hangi IP’lerin dolu olduğunu anlamak ve yeni yazıcıya boş bir IP vermek için önce canlı cihazları listelemek.
+- Araçlar: fping (çoklu ping, hızlı tarama), arp-scan (LAN’da ARP ile keşif), arping (tek hedefe ARP ping), netdiscover (pasif/aktif ARP keşfi), nmap (kapsamlı; ncat: bağlantı/aktarım, ndiff: sonuç karşılaştırma, zenmap/nmapsi4: grafik arayüz)
+
+Port taraması – açık kapıları bulma (TCP/UDP/SCTP)
+- Açıklama: Hedef cihazlarda hangi portların açık olduğunu belirler. Önce hızlı tarama, sonra ayrıntılandırma yaklaşımı yaygındır.
+- Örnek: İnternete açık bir sunucuda “gereksiz açık port” olup olmadığını görmek ve kapatma/sertleştirme planı yapmak.
+- Araçlar: nmap (kapsamlı tarama ve betikler), masscan (çok hızlı TCP tarayıcı), naabu (hızlı ve sade tarayıcı), pnscan (belirli portlarda hızlı tarama), knocker (basit port tarayıcı), sctpscan (SCTP portlarını tarar), hping3 (özel paketlerle esnek tarama)
+
+Servis ve versiyon tespiti – uygulama parmak izi
+- Açıklama: Açık portta gerçekte hangi uygulamanın (ör. Apache, SSH, veritabanı) ve hangi sürümün çalıştığını anlamaya yarar. Yanlış yapılandırmaları ortaya çıkarmada etkilidir.
+- Örnek: 80/TCP açık fakat gerçekten bir web sunucusu mu, yoksa gömülü bir cihaz paneli mi var görmek; riskli eski sürümleri belirlemek.
+- Araçlar: nmap (versiyon ve betik tabanlı tespit), amap (uygulama eşleme/bannerdan servis tanıma), nbtscan (Windows NetBIOS bilgisi), nbtscan-unixwiz (nbtscan’ın geliştirilmiş çeşidi), onesixtyone (SNMP community keşfi)
+
+Pasif parmak izi ve ağ izleme
+- Açıklama: Trafiği aktif olarak sonda göndermeden dinleyerek OS, cihaz türü ve değişiklikleri çıkarır. Ağda “gürültü” oluşturmaz.
+- Örnek: Ağa kimliği belirsiz bir cihaz bağlandığında işletim sistemi tipini anlamak ve ARP/MAC değişikliklerini kaydetmek.
+- Araçlar: p0f (pasif işletim sistemi tespiti), arpwatch (MAC–IP eşleşmeleri ve ARP değişimlerini izleme)
+
+Yol izleme ve güvenlik duvarı/topoloji analizi
+- Açıklama: Paketlerin hedefe giderken geçtiği yönlendiricileri (hop) gösterir, bazı araçlar güvenlik duvarı/ACL davranışını da test eder.
+- Örnek: Uzak ofise bağlantı kopuyorsa trafiğin nerede tıkandığını görmek; hangi port/protokollerin güvenlik duvarından geçebildiğini anlamak.
+- Araçlar: traceroute (klasik yol izleme), 0trace (etkin bağlantı üzerinden iç segmentleri izleme), firewalk (TTL tekniğiyle FW/ACL kural haritası), hping3 (TTL ve özel bayraklarla esnek yol testi), nmap (isteğe bağlı traceroute desteği)
+
+Windows/NetBIOS/SMB keşfi
+- Açıklama: Windows ağına özgü isimleme, paylaşımlar ve iş grubu/etki alanı bilgilerini toplar. Dosya paylaşımı risklerini bulmada faydalıdır.
+- Örnek: Küçük bir ofiste açık paylaşımları ve Windows makinelerini hızlıca tespit etmek.
+- Araçlar: nbtscan (NetBIOS taraması), nbtscan-unixwiz (geliştirilmiş NetBIOS tarayıcı)
+
+SNMP keşfi ve ağ cihazı envanteri
+- Açıklama: Yönlendirici, anahtar, yazıcı gibi ağ cihazlarında SNMP’nin açık olup olmadığını ve olası community değerlerini hızlıca kontrol eder.
+- Örnek: Ağınızdaki yönetilebilir cihazları (switch, AP, yazıcı) toplu halde bulup envantere eklemek.
+- Araçlar: onesixtyone (hızlı SNMP community taraması)
+
+SCTP ve özel paket/protokol testleri
+- Açıklama: Telekom ve bazı özel sistemlerde kullanılan SCTP gibi protokollere odaklanır; ayrıca özel hazırlanmış paketlerle hedef davranışı test edilebilir.
+- Örnek: SCTP kullanan bir sinyalizasyon ağında açık uç noktaları görmek veya bir güvenlik cihazının belirli bayraklara tepkisini ölçmek.
+- Araçlar: sctpscan (SCTP port taraması), hping3 (özel TCP/UDP/ICMP paket üretimi)
+
+Katman 2 (L2) protokol analizi ve güvenlik kontrolleri
+- Açıklama: Anahtarlama katmanı protokollerini (STP, CDP, DTP, HSRP vb.) analiz eder; yanlış yapılandırmaları ve zayıflıkları ortaya çıkarır.
+- Örnek: Switch güvenliğini gözden geçirirken STP sahteciliğine karşı dayanıklılığı test etmek.
+- Araçlar: yersinia (çoklu L2 protokol analizi/testi)
+
+Kimlik doğrulama ve ağ erişimi testleri (802.1X/NAC/MAC)
+- Açıklama: Kurumsal ağlarda 802.1X/EAP, NAC ve port bazlı güvenlik gibi kimlik doğrulama ve erişim kontrollerinin sağlamlığını test eder.
+- Örnek: 802.1X ile korunan bir switch portunda yanlış yapılandırma olup olmadığını görmek için yetkili bir laboratuvar ortamında kimlik doğrulama akışını test etmek.
+- Araçlar: fiked$ (802.1X/EAP kimlik doğrulama testi/MITM aracı), multimac$ (birden fazla MAC adresi kullanımı/MAC spoofing yardımcıları; ayrıntı belirsiz), proximoth$ (NAC/erişim kontrolü çevresinde test için; ayrıntı belirsiz), nasty$ (ağ erişim/kimlik testiyle ilişkili yardımcı; ayrıntı belirsiz)
+
+Çok amaçlı ağ yardımcıları ve arayüzler
+- Açıklama: Tek bir araçtan çok, onlarca/k yüzlerce küçük işlev sunan araç setleri veya mevcut araçların arayüzleri/yardımcılarıdır.
+- Örnek: Hızlı bir POC için çeşitli küçük testleri tek pencereden çalıştırmak veya tarama sonuçlarını GUI üzerinden incelemek.
+- Araçlar: netwox (geniş ağ yardımcı komut koleksiyonu), netwag (netwox için GUI), nmap (ncat: çok yönlü bağlantı/aktarım, ndiff: tarama sonuçlarını karşılaştırma, zenmap/nmapsi4: grafik arayüz)

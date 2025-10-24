@@ -1,0 +1,41 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:16:11+03:00
+
+Exploit geliştirme / shellcode / tersine hata ayıklama – Genel bakış
+- Açıklama: Bu kategori, yazılımlardaki zafiyetleri analiz etmek, düşük seviye kod (assembly/shellcode) üretmek, shellcode’u paketlemek/enjekte etmek ve hata ayıklamak için kullanılan araçları kapsar. Tüm kullanım senaryoları sadece yetkili, kontrollü ve eğitim/denetimli ortamlarda gerçekleştirilmelidir.
+- Örnek: Bir güvenlik eğitimi veya CTF sırasında, çakılan bir programın nedenini hata ayıklayıcıyla incelemek, ardından laboratuvarda basit bir shellcode’u derleyip emülatörde test etmek ve ROP konseptini bir eğitim ikilisi üzerinde göstermek.
+
+Hata ayıklama ve tersine mühendislik – Debugger’lar
+- Açıklama: Programların çalışma zamanındaki davranışını adım adım izlemek, bellek/register durumunu görmek, çakılma (crash) anını analiz etmek ve zafiyetin kök nedenini anlamak için kullanılır.
+- Örnek: İzinli bir testte, çakılan bir uygulamanın hangi girdiyle bozulduğunu gdb ile (peda eklentisi yardımıyla) analiz edip, hatalı bellek erişimini tespit etmek.
+- Araçlar: gdb (GNU hata ayıklayıcı; gdb-multiarch: çok mimari destekli sürüm, peda: exploit geliştirmeye yardımcı GDB eklentisi), edb-debugger (Evan’s Debugger; GUI tabanlı hata ayıklayıcı, özellikle Linux/x86 için pratik), ollydbg$ (Windows 32-bit için popüler GUI tersine mühendislik/hata ayıklama aracı)
+
+Düşük seviye geliştirme ve shellcode üretimi – Assembler ve yardımcılar
+- Açıklama: Assembly yazmak, makine kodu üretmek ve shellcode’u doğru formatta/uzunlukta hazırlamak için kullanılır. Eğitim ve laboratuvar ortamlarında güvenli testler yapmayı kolaylaştırır.
+- Örnek: Bir eğitim senaryosunda, küçük bir test shellcode’unu nasm ile derleyip shellnoob$ ile opcod’lara çevirerek emülatörde davranışını incelemek.
+- Araçlar: nasm (Netwide Assembler; x86/x86_64 assembly derleyicisi), shellnoob$ (assembly’yi shellcode’a dönüştürme, kodlama/decoder yardımcıları), shellfire$ (shellcode üretimini ve düzenlemeyi kolaylaştıran yardımcı araç seti)
+
+Shellcode yükleme/enjeksiyon ve payload paketleme – Yükleyiciler/enjektörler
+- Açıklama: Mevcut kodu/shellcode’u farklı biçimlerde paketleyip çalıştırmak veya yasal testlerde bellekten çalıştırma/enjeksiyon tekniklerini laboratuvar ortamında göstermek için kullanılır.
+- Örnek: Kurumsal bir kırmızı takım tatbikatında (önceden yazılı izinle), bir .NET modülünün disk’e dokunmadan bellekten yüklenmesi tekniğini sadece izole test makinelerinde göstermek.
+- Araçlar: donut (PE/.NET bileşenlerini bellekten çalıştırmak için shellcode üreten yükleyici), donut-shellcode (donut ile ilişkili shellcode/yardımcı betikler), shellter$ (Windows PE dosyalarına dinamik shellcode enjeksiyonu yapmaya yönelik araç; araştırma ve savunma testleri için), shellfire$ (shellcode’u farklı biçimlerde paketlemeye yardımcı olabilir), shellnoob$ (üretilen shellcode’u uygun forma/encoder’a sokmada yardımcı)
+
+ROP/JOP zinciri oluşturma – Gadget arama ve zincirleme
+- Açıklama: Bellek korumaları (NX/DEP gibi) devredeyken bile kontrol akışını yönlendirmek için ikili dosyalardaki küçük kod parçacıklarını (gadget’lar) bulur ve ROP/JOP zincirlerinin tasarımına yardımcı olur.
+- Örnek: Bir güvenlik atölyesinde, savunma mekanizmaları açık bir örnek ikilide ropper$ ile temel ROP zinciri konseptini göstermek (yalnızca eğitim amaçlı ve izole ortamda).
+- Araçlar: ropper$ (ROP/JOP gadget bulucu ve zincir oluşturmayı kolaylaştıran araç)
+
+Zafiyet tarama, exploit arama ve kampanya raporlama
+- Açıklama: Zafiyetleri tespit eder, ilgili exploit’leri araştırır ve red team faaliyetlerini görselleştirir/raporlar.
+- Örnek: Eski bir sunucuda temel bir zafiyet taraması yaptıktan sonra bulunan CVE’lere karşı elimizde PoC var mı diye exploit araması yapıp, bulguları kampanya raporuna eklemek.
+- Araçlar: sara$ (eski nesil zafiyet tarayıcı; tarihsel/karşılaştırma amaçlı faydalı), sploitscan$ (CVE/servis sürümüne göre exploit arama; ayrıntı belirsiz), redeye (red team kampanya görselleştirme ve raporlama aracı)
+
+Post-Exploitation ve iç ağ keşfi
+- Açıklama: Yetkili iç ağ testlerinde, ele geçirilen bir uçtan çevredeki ağları/servisleri daha iyi anlamak ve yanal hareket fırsatlarını görmek için kullanılır.
+- Örnek: Bir iç istemcide oturum aldıktan sonra erişilebilir yeni alt ağları ve potansiyel hedefleri haritalamak.
+- Araçlar: nextnet$ (komşu/sonraki ağları ve rotaları keşfetmeye yardımcı; ayrıntı belirsiz)
+
+Notlar
+- Birden fazla kullanım alanına dokunan araçlar ilgili tüm kategorilere eklenmiştir (ör. shellnoob$, shellfire$).
+- Bu araçların tümü yalnızca yetkili, kontrollü ve etik kullanım içindir. Üretim sistemlerinde veya izinsiz ortamlarda kullanılmamalıdır.

@@ -1,0 +1,25 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:08:12+03:00
+
+steganografi
+
+Görsel ve ses dosyalarında steganografi (gizleme-çıkarma)
+- Açıklama: Resim (JPEG/PNG/BMP) ve ses (WAV/AU) dosyalarının içine metin ya da dosya gizler ve geri çıkarır. Genelde parola koruması ve şifreleme destekler. Görsel kalite çoğunlukla fark edilmeyecek kadar az etkilenir.
+- Örnek: Bir PNG şirket logosunun içine, proje planını parola korumalı olarak gömmek ve sadece yetkili kişilerin çıkarmasını sağlamak.
+- Araçlar: steghide (resim/ses içine veri gizler ve çıkarır; parola ve şifreleme destekler), outguess (özellikle JPEG üzerinde çalışır; istatistiksel iz bırakmamaya odaklanır), stegosuite (grafik arayüzlü; sürükle-bırak ile görsellere veri gizleme/çıkarma)
+
+Metin ve boşluk karakteri (whitespace) steganografisi
+- Açıklama: Düz metin dosyalarının satır sonlarına görünmeyen boşluk/sekme karakterleri ekleyerek mesaj gizler. Gözle fark etmek zordur, metin “normal” görünür.
+- Örnek: Bir e-postanın düz metin gövdesine, sonlara eklenen görünmez boşluklarla kısa bir parola gizlemek; alan dar olduğu için sadece küçük mesajlar için uygundur.
+- Araçlar: stegsnow (metinlerde boşluk/sekme ile gizler ve çıkarır; parola kullanabilir), snowdrop (düz metinlerde görünmez karakterlerle mesaj gizleme/çıkarma)
+
+Parola kırma ve otomasyon (steganografi için)
+- Açıklama: Gizli içeriğin parolasını bilmiyorsanız, sözlük/brute-force yöntemleriyle tahmin etmeye çalışır. Genelde steghide ile gömülmüş verileri hedefler.
+- Örnek: Elde edilen bir JPG dosyasında steghide ile gömülü içeriğin olduğunu biliyorsunuz ama parolayı bilmiyorsunuz; yaygın parola listeleriyle deneme yaparsınız.
+- Araçlar: stegcracker (steghide ile gizlenmiş içeriğin parolasını wordlist kullanarak otomatik dener)
+
+Dokümantasyon ve kılavuzlar
+- Açıklama: Komutların nasıl kullanılacağını, parametreleri ve örnekleri açıklar. Aracı öğrenirken başvuru olarak kullanılır.
+- Örnek: steghide ile hangi dosya türlerinin desteklendiğini ve temel komut örneklerini hızlıca görmek.
+- Araçlar: steghide-doc (steghide için resmi dökümantasyon ve örnekler)

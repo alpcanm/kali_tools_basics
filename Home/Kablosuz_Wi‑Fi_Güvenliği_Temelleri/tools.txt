@@ -1,0 +1,46 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:01:27+03:00
+
+Kablosuz (WiFi/EAP) saldırı ve savunma
+
+Kablosuz keşif ve izleme – pasif tarama ve trafik toplama
+- Açıklama: Çevredeki erişim noktalarını (SSID/BSSID), kanalları, şifreleme türlerini ve istemci bağlantılarını dinleyerek ortaya çıkarır. Pasiftir; ağ üzerinde çok az veya hiç trafik üretmez.
+- Örnek: Ofis katında yetkisiz (gölge) erişim noktası olup olmadığını ve hangi kanalların yoğun olduğunu tespit etmek.
+- Araçlar: kismet (pasif 802.11 izleme ve IDS; tüm bileşenler), sparrow-wifi (GUI tabanlı keşif ve haritalama), horst (hafif canlı 802.11 trafik monitörü), aircrack-ng (airodump-ng ile ağ/istemci takibi), iw (kablosuz arayüz/kanal/monitor modu yönetimi), airgraph-ng (keşif verisini ilişki grafiğine döker)
+
+WPA/WPA2‑PSK el sıkışma/PMKID toplama ve parola gücü testi – offline analiz
+- Açıklama: PSK (şifre) kullanan ağlarda el sıkışma veya PMKID verisi toplanır; parola politikası zayıflıkları offline sözlük/maske testleriyle değerlendirilir.
+- Örnek: Misafir Wi‑Fi’ının parolasının kolay tahmin edilebilir olup olmadığını, politika gerekliliklerine (uzunluk/karmaşıklık) uyup uymadığını ölçmek.
+- Araçlar: aircrack-ng (el sıkışma yakalama ve sözlük testi), hcxtools (PMKID/EAPOL yakalama ve hash dönüştürme), cowpatty (WPA‑PSK sözlük testi; eski ama basit), pskracker (varsayılan anahtar kalıplarına yönelik sözlük üretimi), routerkeygenpc (bazı modemlerin varsayılan PSK hesaplayıcısı), wifite (PSK/WPS akışlarını otomatikleştirir), airgeddon (uçtan uca Wi‑Fi denetim otomasyonu)
+
+WPS güvenlik testleri – PIN tabanlı eşleştirme açıklıkları
+- Açıklama: WPS özelliği açıksa PIN tahmini/brute force ve “Pixie Dust” gibi yöntemlerle cihazın eşleştirme güvenliği test edilir. Amaç, WPS’nin kapatılması veya güçlendirilmesi gerekip gerekmediğini göstermektir.
+- Örnek: Küçük ofis yönlendiricisinde WPS’in açık olup olmadığını kontrol etmek ve riskleri raporlamak.
+- Araçlar: reaver (WPS PIN çevrim içi denemesi), bully (WPS için hızlı/sağlam çevrim içi test), pixiewps (Pixie‑Dust; offline WPS PIN çıkarımı), wifite (WPS testlerini otomatikleştirir), airgeddon (WPS akışlarını yönetir)
+
+Evil Twin ve captive portal (sahte erişim noktası) – kullanıcı farkındalığı ve savunma
+- Açıklama: Meşru AP’ye benzeyen sahte AP kurularak kullanıcıların yanlış ağa bağlanması ve kimlik avı portallarıyla hassas bilgi paylaşma eğilimlerinin test edilmesi amaçlanır. Mavi takım için tespit/önleme senaryoları da kurgulanır.
+- Örnek: Çalışanların “misafir” adıyla açılan sahte ağa bağlanıp bağlanmadığını ve sertifika uyarılarına dikkat edip etmediğini değerlendirmek.
+- Araçlar: wifiphisher (Evil Twin + kimlik avı senaryoları), wifipumpkin3 (modüler rogue AP ve phishing), berate-ap (hızlı sahte AP kurulumu), wifi-honey (honeypot AP; farkındalık/algılama için), airgeddon (Evil Twin otomasyonu), eaphammer (hedefli Evil Twin; Enterprise senaryolarını da destekler)
+
+WPA2‑Enterprise (802.1X/EAP) güvenlik testleri – kimlik doğrulama ve protokol analizi
+- Açıklama: Kurumsal Wi‑Fi (PEAP/TTLS/TLS vb.) yapılandırmalarında sertifika doğrulaması, zayıf EAP türleri, kimlik bilgisi sızması ve yanlış yapılandırmalar test edilir.
+- Örnek: Şirketin WPA2‑Enterprise ağında istemcilerin sunucu sertifikasını doğrulamayı zorunlu tutup tutmadığını ve MSCHAPv2 zayıflıklarına açık olup olmadığını kontrol etmek.
+- Araçlar: eaphammer (WPA2‑Enterprise Evil Twin ve kimlik bilgisi toplama), hostapd-mana (ileri düzey rogue AP; EAP kimlik bilgisi toplama/downgrade), hostapd-wpe (EAP/MSCHAPv2 bilgisi kaydı yapan hostapd sürümü), freeradius-wpe (EAP oturumlarını loglayan RADIUS), asleap (Cisco LEAP’e özel saldırılar), eapmd5pass (EAP‑MD5 parola testi), wpa-sycophant (EAP kimlik doğrulamayı relay etmeye yardımcı), cupid-hostapd (EAP üzerinden Heartbleed/CUPID testi için hostapd), cupid-wpasupplicant (CUPID testi için istemci), cupid-wpa (CUPID/Heartbleed ile ilgili test aracı)
+
+802.11 çerçeve enjeksiyonu ve servis dışı bırakma (DoS) – dayanıklılık testi
+- Açıklama: Deauthentication, beacon flood gibi çerçeve enjeksiyonlarıyla kablosuz altyapının kararlılığı ve WIPS/WIDS tepkileri gözlemlenir. Yalnızca izole lab ortamlarında yapılmalıdır.
+- Örnek: Kurumun kablosuz saldırı tespit/önleme sisteminin (WIPS) deauth saldırılarına verdiği alarmları ve otomatik savunma aksiyonlarını doğrulamak.
+- Araçlar: mdk3 (çeşitli 802.11 saldırı/DoS testleri; eski), mdk4 (mdk3’ün modern/kararlı devamı), aircrack-ng (aireplay-ng ile deauth/enjeksiyon testleri)
+
+Görselleştirme ve raporlama – ilişki/harita çıkarmak
+- Açıklama: Toplanan keşif verilerinin anlaşılır grafiklere/topolojilere dönüştürülmesi, ekip ve yönetime net raporlama yapılmasını kolaylaştırır.
+- Örnek: Denetim sonunda AP‑istemci ilişkilerini ve dolaşım (roaming) davranışlarını gösteren bir ilişki grafiği hazırlamak.
+- Araçlar: airgraph-ng (AP‑istemci ilişkilerini Graphviz çıktısına döker), kismet (topoloji/ısı haritaları ve raporlar), sparrow-wifi (bulguları harita/GUI ile sunar)
+
+Sürücü, sanallaştırma ve RF yardımcıları – laboratuvar ve altyapı
+- Açıklama: Test ortamı kurmaya, arayüzleri yönetmeye ve RF donanımını kalibre etmeye yardımcı araçlardır.
+- Örnek: Fiziksel AP’siz bir laboratuvarda sanal Wi‑Fi arayüzleri oluşturarak senaryoları güvenli şekilde canlandırmak.
+- Araçlar: iw (kablosuz sürücü ve bağlantı yönetimi), vwifi-dkms (sanal Wi‑Fi arabirimi için çekirdek modülü), vwifi-tool (vwifi için yardımcı araçlar), kalibrate-rtl (RTL‑SDR saat/sapma kalibrasyonu; RF testleri)
+

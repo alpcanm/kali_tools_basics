@@ -1,0 +1,55 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:44:56+03:00
+
+====== [Hizmet Engelleme ve Atlatma Testleri] ======
+
+===== Konu =====
+Bu metin iki şeyi anlatır: DoS (hizmeti aşırı yükleyip kapatma) ve erişim atlatma (güvenlik denetimini kandırma) testleri. Amaç, savunmayı güçlendirmektir. Yalnızca izinli, kontrollü ortamlarda yapılır.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+- Canlı sistemlerin durmasını önlemek için zayıf noktaları erkenden bulur.
+- WAF (web uygulama güvenlik duvarı; web trafiğini filtreleyen sistem) ve hız sınırlandırma (belirli sürede izin verilen istek sayısını sınırlama) ayarlarını iyileştirmenizi sağlar.
+- IDS/IPS (saldırı tespit/önleme sistemi; şüpheli trafiği uyarır veya durdurur) kurallarının gerçekten işe yarayıp yaramadığını doğrular.
+- Kapasite planlaması yapmanıza yardım eder; hangi yükte sistemin zorlandığını görürsünüz.
+- Yasal ve etik hareket etmeyi öğretir; testleri yalnızca yetkili ortamlarda yapmanız gerektiğini hatırlatır.
+
+===== Nasıl çalışır/uygulanır? =====
+- DoS testleri, flood (çok kısa sürede çok fazla istek/paket gönderme), yavaş HTTP (isteği parça parça ve çok yavaş gönderme) veya protokol (cihazların nasıl konuşacağını belirleyen kurallar) zayıflıklarını dener. Hedefin kaynaklarını meşgul etmeyi amaçlar.
+- Erişim atlatma testleri, ağ paketi (ağ üzerinden giden küçük veri birimi) düzeyinde IP (internet trafiğini yöneten temel kural seti) paketlerini paket parçalama (veriyi daha küçük parçalara bölme), yeniden sıralama (parçaların geliş sırasını değiştirme) ve yeniden birleştirme (parçaları tekrar tek mesaja toplama) farklarını kullanarak IDS/IPS’i şaşırtmayı dener.
+- Ayrıca port tarayıcı (açık kapı/servis arayan yazılım) araçlarını oyalamak için sahteleme (gerçekte olmayan bir şeyi varmış gibi gösterme) ve trafik manipülasyonu (trafiğin şeklini bilerek değiştirme) gibi yöntemlerle yanlış sonuç üretip üretmediklerini sınar.
+- Uygulama adımları: Yetkili bir lab ortamı kurun, kontrollü senaryoları çalıştırın, sistem kaynaklarını ve uyarıları izleyin, WAF/IDS/IPS ve hız sınırlandırma ayarlarını iyileştirin, yeniden test edin.
+
+===== Kime yarar? =====
+- Kurum içindeki siber güvenlik ekipleri ve ağ/sistem yöneticileri.
+- Denetim, kırılganlık yönetimi ve olay müdahale ekipleri.
+- Ürün/sistem sahipleri; hizmetlerinin kesintisiz kalmasını isteyen herkes.
+
+===== Sözlük =====
+- Ağ paketi: Ağ üzerinden taşınan küçük veri parçası.
+- DoS: Bir hizmeti aşırı yükle kapatmaya çalışma.
+- Flood: Çok kısa sürede çok sayıda istek/paket gönderme.
+- Hız sınırlandırma: Belirli sürede kabul edilen istek sayısını kısıtlama.
+- IDS/IPS: Saldırı trafiğini tespit eden ve/veya durduran sistem.
+- IP: İnternet trafiğini yönlendiren temel kural seti.
+- Paket parçalama: Veriyi daha küçük parçalara bölme işlemi.
+- Port tarayıcı: Açık ağ kapılarını/servislerini arayan yazılım.
+- Protokol: Cihazların nasıl iletişim kuracağını belirleyen kurallar.
+- Sahteleme: Gerçekte olmayanı varmış gibi gösterme.
+- Trafik manipülasyonu: Trafiğin şeklini kasıtlı olarak değiştirme.
+- WAF: Web trafiğini filtreleyen ve saldırıları engellemeye çalışan güvenlik duvarı.
+- Yavaş HTTP: HTTP isteğini çok yavaş göndererek bağlantıyı meşgul etme yöntemi.
+- Yeniden birleştirme: Parçalara ayrılmış veriyi tekrar tek parçada toplama.
+- Yeniden sıralama: Verinin parça geliş sırasını değiştirme.
+===== = =====
+===== Kazanımlar =====
+- Web uygulamalarının yavaş HTTP trafiğine karşı dayanıklılığını ölçebilir, eşzamanlı bağlantı ve zaman aşımı sınırlarını doğru ayarlayabilirsiniz.
+- WAF kurallarını ve hız sınırlandırma politikalarını gerçekçi yük altında doğrulayıp sıkılaştırabilirsiniz.
+- HTTP ve çoklu protokol flood senaryolarında sunucu, uygulama ve ağ cihazlarının davranışını görerek kapasite planı yapabilirsiniz.
+- Şifreli bağlantı kurulumlarının yoğunluğunda işlemci etkisini ölçüp, yeniden görüşme/bağlantı sınırlarını güvenli şekilde daraltabilirsiniz.
+- IDS/IPS’in parçalanmış veya yeniden sıralanmış paketleri doğru şekilde yeniden birleştirip uyarı ürettiğini kanıtlayabilirsiniz.
+- Port tarayıcılarını oyalayan sahte açık kapı/servis gösterimlerini tespit edip yanlış pozitifleri azaltabilirsiniz.
+- Pasif dinleyicileri yanıltan trafik manipülasyonlarına karşı günlükleme, korelasyon ve uyarı eşiklerini iyileştirebilirsiniz.
+- IPv6 ortamlarında keşif ve atlatma denemelerine karşı güvenlik cihazlarının kapsamasını ve kural setlerini değerlendirebilirsiniz.
+- Kritik servisler için hız sınırlandırma, bağlantı başına kaynak kotası ve kuyruklama ayarlarını optimize ederek kaynak tüketimini kontrol altına alabilirsiniz.
+- Tüm bu testleri yalnızca yetkili, kapalı ve yasal ortamlarda yürütecek süreç ve izin kontrollerini işletebilirsiniz.

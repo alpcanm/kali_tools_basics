@@ -1,0 +1,37 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:57:29+03:00
+
+Donanım / SDR / JTAG / seri / firmware
+
+SDR ile genel RF alma ve sinyal işleme
+- Açıklama: Yazılım tanımlı radyo (SDR) donanımıyla sinyalleri yakalama, filtreleme, demodülasyon ve hızlı prototipleme. Öğrenme ve keşif için idealdir.
+- Örnek: 433 MHz uzaktan kumanda sinyalini yakalayıp temel genlik/frekans modülasyonunu incelemek.
+- Araçlar: gnuradio (akış tabanlı RF/sinyal işleme), gr-osmosdr (RTL‑SDR/HackRF/USRP kaynak sürücü katmanı), gqrx-sdr (kolay SDR alıcı/GUI), hackrf (HackRF donanımı için araç/firmware), uhd (USRP sürücü/araç/firmware)
+
+Uçak ADS‑B/Mode‑S ve belirli RF protokollerini çözme
+- Açıklama: Belirli kablosuz protokollerin (ör. uçak transponderi ADS‑B/Mode‑S) havadan yakalanması ve çözülmesi.
+- Örnek: Yakınınızdaki uçakların konum ve irtifa bilgilerini ADS‑B sinyallerinden çıkarmak.
+- Araçlar: gr-air-modes (ADS‑B/Mode‑S alım/çözümleme), gnuradio (özel bloklarla protokol işleme), gqrx-sdr (hızlı tarama ve dinleme), hackrf (yaygın SDR donanımı), gr-iqbal (IQ dengesizliği düzeltme ile daha temiz alma)
+
+SDR kalibrasyonu ve sürücü/ekosistem
+- Açıklama: SDR cihazlarının frekans doğruluğunu ve alım kalitesini iyileştirme, sürücü/firmware yönetimi.
+- Örnek: RTL‑SDR dongle’ınızın PPM frekans hatasını ölçüp düzeltmek.
+- Araçlar: kalibrate-rtl (RTL‑SDR PPM kalibrasyonu), gr-iqbal (IQ dengesizliği düzeltme modülü), uhd (USRP sürücü/araç/firmware), hackrf (donanım araçları ve firmware güncelleme), gr-osmosdr (çoklu SDR sürücü katmanı)
+
+RF sinyal görselleştirme ve offline analiz
+- Açıklama: Canlı veya kaydedilmiş IQ verisini spektrumda görme, sinyal yapısını ve bant genişliğini inceleme.
+- Örnek: Kısa bir IQ kaydı üzerinde taşıyıcı, yan bantlar ve sembol hızını tespit etmek.
+- Araçlar: inspectrum (IQ kayıt görselleştirme/ölçüm), gqrx-sdr (spektrogram ve güç ölçümü), gnuradio (akış içinde görsel bloklar)
+
+JTAG/Flash/Firmware erişimi ve programlama
+- Açıklama: Gömülü cihazlara donanım seviyesinde erişip bellek okuma/yazma, hata ayıklama ve firmware analiz/yeniden paketleme.
+- Örnek: Bir yönlendiricinin SPI flash’ını yedekleyip içindeki dosya sistemini çıkararak yapılandırma dosyalarını incelemek.
+- Araçlar: openocd$ (JTAG/SWD hata ayıklama ve bellek erişimi), flashrom (BIOS/SPI/NOR/NAND flash okuma/yazma), firmware-mod-kit (gömülü firmware çıkarma/yeniden paketleme)
+
+Seri ve I2C haberleşme
+- Açıklama: UART/seri ve I2C üzerinden cihazlarla iletişim kurma, konsol çıktısı alma ve register ayarı yapma.
+- Örnek: Bir IoT cihazının UART konsoluna bağlanıp önyükleme loglarını izlemek; I2C hattında bağlı sensörlerin adreslerini taramak.
+- Araçlar: minicom (metin tabanlı seri terminal), cutecom$ (grafik arayüzlü seri terminal), i2c-tools (i2cdetect/i2cget/i2cset ile I2C tarama/erişim)
+
+Not: Bazı araçlar birden fazla kategoriye girer. Örneğin gnuradio hem sinyal işleme hem de görselleştirme için kullanılır; hackrf ve uhd ise hem alım/deneme hem de sürücü/firmware yönetimi kapsamında yer alır.

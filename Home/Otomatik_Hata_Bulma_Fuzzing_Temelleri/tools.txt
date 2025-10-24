@@ -1,0 +1,26 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:56:20+03:00
+
+Fuzzing – Yazılımların beklenmeyen girdilerle nasıl davrandığını otomatik test ederek hata ve çökme yakalama tekniği
+
+- Not: Yalnızca izinli ortamlarda ve hedeflerde kullanın.
+
+Kapsam yönlendirmeli (coverage‑guided) mutasyon fuzzing
+- Açıklama: Programın hangi kod yollarını geçtiğini ölçerek (coverage) yeni girdiler üretir. Genelde kaynak kodu ya da ikili dosyayı enstrümante eder ve hızla çok sayıda test yapar. Dosya ayrıştırıcıları, CLI araçları ve kütüphaneler için idealdir.
+- Örnek: Test ortamında bir PNG ayrıştırıcı kütüphanesini AFL++ ile fuzz edip, bozuk PNG dosyalarıyla çökme ve bellek hatalarını yakalamak.
+- Araçlar: afl++ (modern AFL türevi; coverage‑guided; kaynak/binary destekler), aflplusplus (afl++ ile aynı projenin paket/isim varyantı)
+
+Ağ/Protokol fuzzing (jeneratif/şablon bazlı)
+- Açıklama: TCP/UDP tabanlı protokoller için istek şablonları hazırlayıp beklenmeyen alanlar/enjeksiyonlarla sunucu veya istemciyi dener. FTP, SMTP, HTTP, DNS gibi protokoller veya özel ikili protokoller için uygundur.
+- Örnek: İzinli bir test ortamında özel bir TCP servisini SPIKE scriptleriyle fuzz ederek, servisi kilitleyen (DoS) bir istek dizisini ortaya çıkarmak.
+- Araçlar: spike (ağ protokol fuzzer; SPIKE scriptleriyle şablonlanır), bed (Bruteforcer‑Exploit‑Detector; FTP/SMTP/HTTP gibi protokoller için modüller), sfuzz (Simple Fuzzer; temel şablonlu protokol/dosya girdisi fuzzing)
+
+Web/HTTP odaklı fuzzing
+- Açıklama: HTTP istek/yanıt başlıkları ve parametreleri üzerinde çalışır. Yanıt ayırma, CRLF enjeksiyonu, giriş doğrulama zafiyetleri gibi web’e özgü sorunları hedefler.
+- Örnek: Kurumsal bir uygulamada, yetkili test kapsamında crlfuzz ile CRLF Injection (yanıt ayırma) zafiyetlerini taramak.
+- Araçlar: crlfuzz (CRLF Injection denetleyicisi; başlık/yanıt ayırma testleri), doona (BED’in devamı; çok protokollü ağ fuzzer’ı; HTTP/DNS/FTP vb. için modüller)
+
+Notlar
+- AFL++ gerektiğinde ağ/protokol fuzzing için de kullanılabilir (ör. hedefe bir harness/arabirim yazarak). Bu yüzden hem “kapsam yönlendirmeli” hem de “dosya/CLI” senaryolarında değerlendirilebilir.
+- Doona, BED’in modernleştirilmiş sürümü gibi düşünülebilir; web ve diğer metin/tabanlı protokollerde pratik modüller sunar.

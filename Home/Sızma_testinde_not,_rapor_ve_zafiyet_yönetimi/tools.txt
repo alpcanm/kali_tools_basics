@@ -1,0 +1,27 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:06:59+03:00
+
+Raporlama / not alma / zafiyet yönetimi
+
+Not alma ve bilgi organizasyonu
+- Açıklama: Test sırasında topladığınız bilgileri düzenli tutmanızı sağlar. Adım adım notlar, komutlar, ekran görüntüsü bağlantıları ve bulgularınızı tek yerde tutup sonra rapora dönüştürmeyi kolaylaştırır.
+- Örnek: Bir web uygulaması testinde, denediğiniz istekleri ve dönüşleri Joplin’de Markdown olarak kaydedip, CherryTree’de “Keşif > Giriş Noktaları > Yetkilendirme” gibi bir ağaç yapısında düzenlersiniz. Obsidian ile ilgili notları birbirine bağlayıp hızlıca geri dönersiniz.
+- Araçlar: cherrytree$ (ağaç yapılı zengin metin notlar), joplin (Markdown notlar; senkronizasyon), joplin-cli (Joplin’in komut satırı sürümü), obsidian$ (yerel Markdown; bağlantı grafiği), zim$ (masaüstü wiki tarzı not alma)
+
+Raporlama ve işbirliği (pentest raporlaması)
+- Açıklama: Ekip olarak bulguları tek bir yerde toplayıp, şablonlu raporlar üretmenizi ve herkesin aynı veriyi görmesini sağlar. Farklı tarayıcıların çıktıları bir araya getirilir.
+- Örnek: Üç kişilik ekip Nmap, Nessus ve Burp çıktılarını Dradis’e aktarır. Ortak bulgu listesi oluşur, açıklamalar ve kanıtlar eklenir. Faraday üzerinden taramalar planlanır, sonuçlar otomatik toplanır ve rapor şablonuna aktarılır.
+- Araçlar: dradis (işbirlikçi pentest raporlama), faraday (işbirlikçi sızma testi IDE’si; faraday-agent-dispatcher: ajan/iş zamanlama, faraday-cli$: CLI istemcisi)
+
+Zafiyet yönetimi (takip ve süreç)
+- Açıklama: Bulunan zafiyetleri kaynaktan (tarayıcılar, manuel bulgular) içeri alır, önceliklendirir, sorumlulara atar ve kapatma sürecini takip eder. Dashboard ve metriklerle durumu görmenizi sağlar.
+- Örnek: Haftalık tarama sonuçları DefectDojo’ya otomatik aktarılır. Her bulguya risk puanı verilir, Jira’da görev açılır ve SLA süreleri izlenir. Faraday/Dradis üzerinden durum güncellemeleri yapılır.
+- Araçlar: defectdojo (OWASP zafiyet yönetimi ve program takibi), faraday (tarayıcı sonuçlarını birleştirir; iş takibi), dradis (bulgu konsolidasyonu ve temel takip)
+
+Ekran kaydı ve kanıt toplama
+- Açıklama: Bir açığı yeniden gösterirken ekran ve sesi kaydedip rapora kanıt olarak eklemenizi sağlar.
+- Örnek: CSRF açığını tekrarlarken recordmydesktop ile 30 saniyelik bir video kaydedip Dradis/DefectDojo’daki bulguya kanıt olarak yüklersiniz.
+- Araçlar: recordmydesktop$ (ekran/ses kaydı; OGG/Theora çıktısı)
+
+Not: faraday hem “Raporlama ve işbirliği” hem de “Zafiyet yönetimi” altında değerlendirilebilir; dradis de bulgu takibinde temel bir zafiyet yönetimi aracı gibi kullanılabilir.

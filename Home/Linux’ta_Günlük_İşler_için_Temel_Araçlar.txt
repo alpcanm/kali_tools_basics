@@ -1,0 +1,79 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:07:20+03:00
+
+====== Linux’ta Günlük İşler için Temel Araçlar ======
+
+
+
+===== Konu =====
+Bu içerik, Linux’ta günlük işleri hızlandıran yardımcıları özetler. Tek pencerede birden çok oturum (bir terminal içinde ayrı çalışma alanı) yönetebilirsiniz. Bağlantı kopsa bile işler arka planda (siz bağlı olmasanız da çalışmaya devam eden işler) sürer. Metin editörü (metin dosyası düzenleme programı) ile yapılandırma dosyalarını düzenler, çıktıları pano’ya (kopyala‑yapıştır belleği) alır, paste servisi’ne (metni yükleyip link veren web hizmeti) yükleyerek paylaşırsınız. Ağda port’ları (bilgisayardaki iletişim kapısı numarası) test eder, ağ arayüzü (ağa bağlandığınız kart/bağlantı) ve rota (ağ trafiğinin izlediği yol) bilgilerini görürsünüz. IP blok (aynı kurallarla yönetilen IP adres aralığı) planlar, CIDR (IP adres ve maskeyi kısaca yazma biçimi) ve alt ağ maskesi’ni (IP aralığının sınırını gösteren sayı) hesaplarsınız. MAC adresi’ni (ağ kartının benzersiz kimliği) geçici değiştirir, VLAN (aynı fiziksel ağda mantıksal ağ bölmesi) arayüzleri kurarsınız; 802.1Q (VLAN etiketleme standardı) kullanılır. Sistem protokol (iletişim kuralları) ve hizmet listesi’ni (port/protokol eşleşme tablosu) tutar. 3G/UMTS (mobil veri standartları) destekli USB modem (USB’den internete bağlayan aygıt) ile internete çıkabilirsiniz. İndeksli arama (önceden oluşturulan listeyle hızlı arama) ile dosya sistemi’nde (dosyaların düzenlendiği yapı) dosyaları anında bulursunuz. Disk işleri için bölümlendirme (diski parçalara ayırma), biçimlendirme (bölümü bir dosya sistemine hazırlama), bağlamak/mount (dosya sistemini sisteme ekleme) adımlarını uygular; süreç (çalışan program) ve günlük (sistem olay kayıtları) bilgilerini incelersiniz. Son olarak zaman dilimi (coğrafi saat ayarı) veritabanı (düzenli veri koleksiyonu) ile saati doğru ayarlarsınız.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+* Bağlantı koptuğunda işler durmaz; kaldığınız yerden devam edersiniz.
+* Hataları ve ayarları hızlıca düzenler, çıktıları kolayca paylaşırsınız.
+* Ağ sorunlarını birkaç komutla teşhis eder ve doğrularsınız.
+* Kurumsal ağlarda IP ve VLAN planını doğru kurarsınız.
+* İnternet erişimi olmayan sahada USB modemle hızlıca bağlanırsınız.
+* Büyük sistemlerde kayıp dosyaları saniyeler içinde bulursunuz.
+* Disk ve dosya sistemi görevlerini güvenle tamamlarsınız.
+* Sunucuların saatini doğru tutar, zamanla ilgili hataları önlersiniz.
+
+===== Nasıl çalışır/uygulanır? =====
+* Tek terminalde (komut yazdığınız pencere) birden çok oturum açar, oturumu ayırır ve sonra geri bağlanırsınız; uzun işler arka planda sürer.
+* Yapılandırma dosyasını metin editörü ile düzenler; hata çıktısını pano’ya kopyalar; ayrıntılı çıktıyı paste servisi’ne yükleyip link paylaşırsınız.
+* Bir sunucuda belli bir port açık mı test eder; hangi portların dinlediğini, ağ arayüzü ve rota bilgisini görüntülersiniz.
+* Bir IP blok için CIDR ve alt ağ maskesi hesaplar; geçici MAC adresi kullanır; gereken yerde VLAN arayüzü (802.1Q) oluşturursunuz; protokol ve hizmet listesi bilgilerini kontrol edersiniz.
+* 3G/UMTS destekli USB modem’i tanıtır ve birkaç adımla internete bağlanırsınız.
+* İndeksli arama ile dosya sistemi genelinde adı geçen dosyayı anında bulursunuz.
+* Yeni diski görür, bölümlendirme yapar, biçimlendirir ve dosya sistemini bağlamak/mount ile erişime açarsınız; süreç ve günlük bilgileriyle sorunları incelersiniz.
+* Zaman dilimini ülkenize göre seçer, sistem saatini güncellersiniz.
+
+===== Sözlük =====
+* 3G/UMTS: Mobil veriyle internet bağlantısı sağlayan hücresel standartlar.
+* 802.1Q: VLAN etiketlerinin ağ trafiğine nasıl ekleneceğini belirleyen standart.
+* Ağ arayüzü: Ağa bağlandığınız fiziksel ya da sanal ağ bağlantısı.
+* Alt ağ maskesi: Bir IP aralığının büyüklüğünü ve sınırlarını belirleyen sayı.
+* Arka plan: Kullanıcı bağlı olmasa da çalışmaya devam eden işler.
+* Bağlamak (mount): Bir dosya sistemini işletim sistemine erişilebilir hale getirme.
+* Biçimlendirme: Bir bölümü belirli bir dosya sistemine hazırlama işlemi.
+* CIDR: IP adres ve ağ maskesini kısaca gösteren yazım biçimi.
+* Dosya sistemi: Dosyaların nasıl saklandığını ve düzenlendiğini yöneten yapı.
+* Günlük: Sistem ve uygulamaların tuttuğu olay/mesaj kayıtları.
+* Hizmet listesi: Hangi hizmetin hangi port ve protokolü kullandığını gösteren tablo.
+* İndeksli arama: Önceden oluşturulmuş bir liste üzerinden çok hızlı arama yapma.
+* IP blok: Aynı kurallarla yönetilen IP adres aralığı.
+* MAC adresi: Ağ kartına üretimde verilen benzersiz donanım kimliği.
+* Metin editörü: Düz metin dosyalarını düzenlemeye yarayan program.
+* Oturum: Bir terminal içinde tek başına çalışan bağımsız çalışma alanı.
+* Pano: Kopyala‑yapıştır için kullanılan geçici bellek alanı.
+* Paste servisi: Metni yükleyip paylaşılabilir bir bağlantı veren web hizmeti.
+* Port: Ağ bağlantılarında kullanılan mantıksal kapı numarası.
+* Protokol: Cihazların nasıl iletişim kuracağını belirleyen kurallar bütünü.
+* Rota: Ağ paketlerinin hedefine giderken izlediği yol.
+* SSH: Uzak bilgisayarlara güvenli şekilde bağlanma yöntemi.
+* Süreç: İşletim sisteminde çalışan program örneği.
+* Terminal: Komut yazıp çalıştırdığınız metin tabanlı pencere.
+* Uzak sunucu: Kendi bilgisayarınızdan farklı bir yerde çalışan sunucu.
+* USB modem: USB üzerinden mobil veriyle internete bağlanmayı sağlayan aygıt.
+* Veritabanı: Yapılandırılmış verilerin saklandığı düzenli koleksiyon.
+* VLAN: Aynı fiziksel ağ içinde mantıksal olarak ayrılmış sanal ağ.
+* Zaman dilimi: Bulunduğunuz bölgeye göre kullanılan resmi saat ayarı.
+
+===== Kazanımlar =====
+* Tek pencerede birden çok oturumu yönetir, oturumu ayırıp geri bağlanırım.
+* Bağlantı kesilse bile uzun süren işleri arka planda güvenle sürdürürüm.
+* Yapılandırma dosyalarını hızlıca düzenler, yaptığım değişiklikleri geri alıp yineleyebilirim.
+* Terminal çıktısını panoya kopyalar, uzun çıktıları link olarak ekip ile paylaşırım.
+* Bir sunucunun belirli portunun açık olup olmadığını test ederim.
+* Sistemde hangi portların dinlediğini, hangi süreçlerin kullandığını görürüm.
+* Aktif ağ arayüzü ve rota bilgilerini inceleyip bağlantı sorunlarını teşhis ederim.
+* IP blokları için doğru CIDR ve alt ağ maskesi hesaplar, adres planı çıkarırım.
+* Geçici MAC adresi kullanarak gizliliği artırır veya ağ kabul kurallarını denerim.
+* VLAN arayüzleri oluşturup 802.1Q etiketli trafiği yapılandırırım.
+* Protokol ve hizmet listesi bilgilerini kontrol ederek servis ayarlarını doğrularım.
+* 3G/UMTS destekli USB modem ile kısa sürede internete bağlanırım.
+* Büyük dosya sistemlerinde aradığım dosyayı ismiyle anında bulurum.
+* Yeni diski görüp bölümlendirir, biçimlendirir ve dosya sistemini bağlarım.
+* Günlük ve süreç bilgilerini okuyarak hataların kök nedenini bulurum.
+* Sunucunun zaman dilimini doğru ayarlar, zaman kaynaklı hata riskini azaltırım.

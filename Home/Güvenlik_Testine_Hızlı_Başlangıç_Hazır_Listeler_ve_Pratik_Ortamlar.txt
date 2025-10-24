@@ -1,0 +1,47 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:05:58+03:00
+
+====== Güvenlik Testine Hızlı Başlangıç: Hazır Listeler ve Pratik Ortamlar ======
+
+
+
+===== Konu =====
+Bu kaynaklar, güvenlik testinde zaman kazandırır. Üç ana parça vardır: wordlist (hazır deneme kelime/şifre listesi), payload (test için özel giriş metni/komutu) ve eğitim amaçlı zafiyetli uygulama (bilerek açık bırakılmış uygulama). Amaç, yaygın zafiyetleri (güvenlik açıkları) hızlıca denemek, öğrenmek ve notlara çabucak erişmektir.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+- Sıfırdan liste hazırlamak yerine hazır listelerle hızlı deneme yaparsın.
+- Zafiyet türüne göre denenmiş payload’larla daha isabetli test edersin.
+- Güvenli, yasal ortamlarda elini kirletmeden pratik yaparsın.
+- Kısa referans paketleriyle yeni bir konuya dakikalar içinde girersin.
+
+===== Nasıl çalışır/uygulanır? =====
+- Parola ve dizin keşfini hızlandır: Wordlist seç ve kullan. Örneğin parola testi için rockyou.txt’yi dener, gizli klasörleri ararken dir busting (gizli klasörleri deneme yoluyla arama) için “directory” listelerini kullanırsın. Tüm denemeleri sadece yetkili ve kontrollü ortamlarda yap.
+- Zafiyet türüne göre doğru payload’ı seç: XSS (tarayıcıda zararlı betik çalıştırma), SQLi (veritabanı sorgusunu saptırma) veya SSTI (sunucu tarafı şablona komut sızdırma) şüphesinde, payload koleksiyonlarını açar, filtreleri aşmayı dener ve kenar durumları (alışılmadık uç örnekler) için önerileri incelersin. Yalnızca izinli test ortamında uygula.
+- Uygulamalı öğren: Eğitim amaçlı zafiyetli uygulama üzerinde görevleri çöz. Böylece kimlik doğrulama (kullanıcının kim olduğunu kanıtlama), girdi doğrulama (kullanıcıdan gelen veriyi kontrol etme) ve erişim kontrolü (kimin ne yapabileceğini sınırlandırma) açıklarını somut örneklerle görürsün.
+- Hızlı referansla başla: Referans paketi (bir konunun kısa özeti ve adım adım başlangıç rehberi) sayesinde “nedir, nasıl kurulur, temel kullanım ne?” gibi sorulara tek yerde yanıt bulursun.
+
+===== Sözlük =====
+- dir busting: Gizli klasörleri deneme yoluyla arama yöntemi.
+- eğitim amaçlı zafiyetli uygulama: Bilerek açık bırakılmış, pratik yapmaya yarayan uygulama.
+- erişim kontrolü: Kimin, neyi yapabileceğini sınırlandırma.
+- girdi doğrulama: Kullanıcıdan gelen veriyi kontrol edip temizleme.
+- kenar durumu: Alışılmadık, uç örnek senaryo.
+- kimlik doğrulama: Kullanıcının kim olduğunu kanıtlama.
+- payload: Test için özel olarak hazırlanmış giriş metni/komutu.
+- referans paketi: Bir konunun kısa özeti ve adım adım başlangıç rehberi.
+- SQLi: Veritabanı sorgusunu saptırma zafiyeti.
+- SSTI: Sunucu tarafı şablona komut sızdırma zafiyeti.
+- wordlist: Hazır deneme kelime/şifre listesi.
+- XSS: Tarayıcıda zararlı betik çalıştırma zafiyeti.
+- zafiyet: Güvenlik açığı.
+
+===== Kazanımlar =====
+- Parola testi ve kullanıcı adı denemelerinde, uygun hazır listeleri seçip hızlıca uygulayabilmek.
+- Dizin ve alt yol keşfini (dir busting) sistemli biçimde yapıp gizli klasörleri daha hızlı bulabilmek.
+- XSS, SQLi ve SSTI gibi zafiyetler için bağlama uygun payload seçip denemeleri planına ekleyebilmek.
+- Filtreleri ve giriş kontrollerini payload örnekleriyle güvenli ortamda sınayıp sonuçları karşılaştırabilmek.
+- Güvenli, yasal eğitim ortamlarında zafiyetleri tespit etmeyi, etkiyi göstermeyi ve temel düzeltme yollarını öğrenebilmek.
+- Kimlik doğrulama, girdi doğrulama ve erişim kontrolü hatalarını senaryolarla tanıyıp raporlamaya hazır hale gelebilmek.
+- Yeni bir programlama ya da araç konusuna, kısa referans paketleriyle hızlı ve doğru başlangıç yapabilmek.
+- Ekip içinde ortak terimler, kontrol listeleri ve örneklerle aynı standartta ilerleyebilmek.

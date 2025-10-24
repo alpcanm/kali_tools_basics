@@ -1,0 +1,34 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:11:30+03:00
+
+Ağ/servis yapılandırma denetimi / güvenlik denetimi / IDS/IPS
+Rootkit ve kötü amaçlı iz tespiti (host üzerinde)
+- Açıklama: Sunucu veya masaüstü sistemlerde gizlenen zararlı yazılımları (rootkit/arka kapı) tarar. Dosya izinleri, bilinmeyen modüller ve şüpheli süreçleri kontrol eder. Hızlı fikir verir; derin inceleme için adli analiz şarttır.
+- Örnek: Üretim Linux sunucusunda olağan dışı CPU kullanımı fark edildiğinde chkrootkit ve rkhunter ile ilk tarama yapıp şüpheli çekirdek modüllerini tespit etmek.
+- Araçlar: chkrootkit (hızlı rootkit iz taraması), rkhunter$ (rootkit/backdoor imzaları ve dosya bütünlüğü kontrolleri)
+
+Sistem güvenlik yapılandırması denetimi (hardening denetimi)
+- Açıklama: İşletim sistemi, servisler ve dosya izinlerini tarayarak zayıf ayarları ortaya çıkarır. Güvenlik iyileştirme (hardening) için somut öneriler üretir. Sunucu devreye almadan önce “sağlık kontrolü” gibi düşünebilirsiniz.
+- Örnek: Yeni yayına alınacak Debian web sunucusunda lynis ve tiger çalıştırıp gereksiz servisleri kapatma, parola/SSH ayarlarını güçlendirme önerilerini uygulamak.
+- Araçlar: lynis$ (kapsamlı sistem denetimi ve hardening önerileri), tiger (UNIX benzeri sistemlerde otomatik güvenlik kontrol listeleri)
+
+Ağ tabanlı IDS/IPS (saldırı tespiti/önleme)
+- Açıklama: Ağ trafiğini gerçek zamanlı izler; imza/kural setlerine göre şüpheli paketleri uyarır veya engeller (IDS/IPS). Web, veritabanı, kötü amaçlı tarama ve brute-force gibi aktiviteleri yakalamada etkilidir.
+- Örnek: DMZ’ye konumlandırılan bir sensörde Snort’u IPS modunda çalıştırarak web uygulamasına yönelik SQL injection denemelerini otomatik engellemek.
+- Araçlar: snort (bileşenleri; ağ IDS/IPS, kural temelli)
+
+Tespit kuralları geliştirme ve çevirisi (Sigma kuralları)
+- Açıklama: Sigma, günlük (log) temelli tehditleri tarif etmek için ortak bir kural dilidir. sigma-cli, bu kuralları SIEM sorgularına (Elastic, Splunk vb.) dönüştürüp test etmeye yarar. IDS/IPS yanında SOC/SIEM tarafındaki tespit mühendisliğini hızlandırır.
+- Örnek: Şüpheli PowerShell kullanımını tanımlayan bir Sigma kuralını yazıp sigma-cli ile Elasticsearch sorgusuna çevirerek SOC alarmı oluşturmak.
+- Araçlar: sigma-cli$ (Sigma kurallarını farklı platform sorgularına dönüştürme/test)
+
+Honeypot (tuzak servisler) – ağ/servis düzeyi
+- Açıklama: Bilerek savunmasız veya cazip görünen sahte servisler açarak saldırganları kendine çeker. Davranışlarını kaydeder, IP/tekniklerini öğrenmenizi sağlar. Üretimden yalıtılmış bir ortamda kullanılmalıdır.
+- Örnek: İnternete açık bir VPS üzerinde hb-honeypot ile sahte SSH/FTP servisleri koşturup brute-force yapan IP’leri toplayarak engelleme listesine eklemek.
+- Araçlar: hb-honeypot (düşük etkileşimli servis taklidi; saldırı denemelerini kaydeder)
+
+Kablosuz honeypot (Wi‑Fi tuzak ağları)
+- Açıklama: Sahte Wi‑Fi ağ adları (SSID) yayınlayarak meraklı cihazları veya kötü niyetli faaliyetleri (evil twin, kimlik avı) tespit eder. Kablosuz güvenlik testlerinde görünürlük sağlar.
+- Örnek: Ofis güvenlik değerlendirmesinde “Guest-WiFi” adında sahte bir ağ yayınlayıp wifi-honey ile bağlantı denemelerini ve cihaz bilgilerini kaydetmek.
+- Araçlar: wifi-honey$ (sahte SSID/AP yayını; bağlantı denemelerini günlüğe alır)

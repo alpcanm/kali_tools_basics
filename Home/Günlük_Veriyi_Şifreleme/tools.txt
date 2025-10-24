@@ -1,0 +1,11 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:12:28+03:00
+
+Kriptografi / şifreleme yardımcıları
+
+
+Kriptografi / şifreleme yardımcıları
+- Açıklama: Dosyaları, diskleri ve ağ iletişimini kriptografi ile korumaya yarayan araçlardır. Temel amaç, veriyi yetkisiz kişilerin okuyamaması (gizlilik), değiştirilememesi (bütünlük) ve tarafların kimliğinin doğrulanmasıdır. Günlük hayatta dosya şifreleme, USB/disk şifreleme ve sertifika/anahtar üretimi gibi işler için kullanılır.
+- Örnek: Kaybolursa içindekiler okunmasın diye bir USB belleği şifrelemek. Adımların özeti: USB’yi LUKS ile başlat (cryptsetup luksFormat /dev/sdX), aç (cryptsetup open /dev/sdX gizli_usb), üzerinde dosya sistemi oluştur (mkfs.ext4 /dev/mapper/gizli_usb), sonra bağla ve kullan. Böylece bellek çalınsa bile parola olmadan veriler okunamaz.
+- Araçlar: ccrypt (basit dosya/dizin şifreleme; parola ile korur, .cpt uzantısı), openssl (çok amaçlı kripto kiti; anahtar/sertifika üretimi, dosya şifreleme, TLS testleri; sağlayıcılar: default/legacy/FIPS), cryptsetup (LUKS ile disk/bölüm/USB şifreleme; türevler: cryptsetup-reencrypt [yeniden şifreleme], integritysetup [bütünlük koruması], veritysetup [salt-okunur doğrulama])

@@ -1,0 +1,72 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:00:51+03:00
+
+
+
+
+DNS / Alt alan adı keşfi ve web OSINT
+
+Kategori: Pasif alt alan adı (subdomain) keşfi – OSINT kaynakları
+- Araçlar: amass (kapsamlı; pasif ve aktif çalışabilir), subfinder (hızlı pasif), findomain (çok hızlı pasif), assetfinder (bağlı varlıklar ve alt alanlar), sublist3r (arama motoru tabanlı).
+- Açıklama: Hedefe çok az trafik göndererek arama motorları, sertifika kayıtları ve açık veritabanlarından alt alan adlarını toplar. Genelde hızlı ve gürültüsüzdür.
+- Örnek: Bir şirketin izinli testinde example.com için subfinder -d example.com ile alt alanları toplar, çıkan listeyi daha sonra doğrulamak üzere saklarsınız.
+
+Kategori: Aktif DNS/alt alan doğrulama (canlı mı, gerçekten var mı?)
+- Araçlar: dnsx (çok hızlı çözümleme/doğrulama), amass (aktif mod; DNS’e sorgu gönderir), dnsrecon (aktif kayıt keşfi), dnsenum (aktif keşif), fierce (aktif testler).
+- Açıklama: Bulduğunuz aday alt alanlara doğrudan DNS sorguları atar, hangilerinin gerçekten çözümlendiğini (canlı olduğunu) doğrular. Biraz daha “gürültü” üretir.
+- Örnek: Pasif araçlardan gelen sublar.txt listesini dnsx -a -l sublar.txt -o canli.txt komutuyla filtreleyip sadece yaşayan alt alanları çıkarırsınız.
+
+Kategori: Wordlist tabanlı brute-force alt alan keşfi
+- Araçlar: dnsmap (sözlük tabanlı brute-force), dnsrecon (brute modu), dnsenum (wordlist desteği), fierce (wordlist ve denemeler), amass (brute modu da var).
+- Açıklama: “dev, test, stage” gibi sık kullanılan alt alan adlarını sözlükten deneyerek var mı yok mu kontrol eder. Trafik üretir; izinsiz yapılmamalıdır.
+- Örnek: dnsrecon -d example.com -D wordlist.txt -t brt ile wordlist’teki adayları dener, sürpriz alt alanlar (ör. dev.example.com) yakalayabilirsiniz.
+
+Kategori: Permütasyon/typosquatting ve benzer alt alan üretimi
+- Araçlar: altdns (mevcutlardan varyasyon üretir), dnsgen (kural ve sözlükle permütasyon üretir), dnstwist (benzer yazımlar/typosquatting analizi), urlcrazy (yazım hatası varyasyonları).
+- Açıklama: Mevcut alt alanlarınızdan türevler üretir veya marka/alan adınıza çok benzeyen yazımları çıkarır. Hem saldırı yüzeyi genişletme hem de sahte alan tespiti için kullanılır.
+- Örnek: dnstwist example.com komutuyla examp1e.com, exampl-e.com gibi olası oltalama (phishing) alanlarını ve DNS durumlarını görürsünüz.
+
+Kategori: Subdomain takeover (alt alan ele geçirme) kontrolü
+- Araçlar: subjack (CNAME’leri kontrol ederek takeover riskini tespit eder).
+- Açıklama: Bir alt alan bulut servisine (S3, Azure, GitHub Pages vb.) yönleniyor ama arka tarafta kaynak silinmişse, o alt alan saldırgan tarafından alınabilir. Bu aracı bu zafiyeti bulmak için kullanırsınız.
+- Örnek: subjack -w canli.txt -ssl -v -c fingerprints.json ile listedeki alt alanlarda bilinen sağlayıcılar üzerinden takeover riski var mı kontrol edersiniz.
+
+Kategori: DNS altyapı keşfi, izleme ve zone transfer kontrolleri
+- Araçlar: dnstracer (sorgunun geçtiği ad sunucusu zincirini gösterir), dnswalk (zone bütünlüğü/denetim; AXFR açıksa yürür), dnsrecon (AXFR ve farklı testler), dnsenum (AXFR denemesi, kayıt dökümü), fierce (NS/MX keşfi ve transfer kontrolleri).
+- Açıklama: Alan adının hangi isim sunucularını kullandığını, hatalı yapılandırmaları (ör. açık zone transfer/AXFR) ve genel DNS topolojisini anlamak için kullanılır.
+- Örnek: dnstracer example.com ile hangi yetkili NS’lere ulaşıldığını görür, dnsenum example.com ile AXFR denemesi yapıp yanlış yapılandırmayı tespit edebilirsiniz.
+
+Kategori: Sertifika günlükleri (CT) ve ilişki haritalama
+- Araçlar: certgraph (CT loglardan sertifika/alan/kurum ilişkilerini çıkarır), amass (pasif kaynak olarak CT günlüklerini de kullanabilir).
+- Açıklama: Sertifika Şeffaflığı (CT) günlükleri, bir kurumun farklı alan adları ve alt alanlarını ortaya çıkarabilir. Kurumun varlık haritasını çıkarmaya yardımcı olur.
+- Örnek: certgraph -d example.com çıktısından aynı şirketin sahip olduğu başka alan isimlerini (ör. example.org) ve ortak sertifika kullanımlarını görürsünüz.
+
+Kategori: IP → Host (aynı IP’deki diğer alanlar) keşfi
+- Araçlar: bing-ip2hosts (Bing aramalarından IP’ye bağlı hostları çıkarır).
+- Açıklama: Hedefle aynı sunucuda barınan diğer siteleri bulursunuz. Yan hedefler veya paylaşılan altyapılar bu şekilde tespit edilebilir.
+- Örnek: bing-ip2hosts 203.0.113.10 ile aynı IP’yi kullanan başka domainleri listeler ve potansiyel yeni hedefler verir.
+
+Kategori: Web arşivi ve URL toplama (web OSINT)
+- Araçlar: getallurls/gau (Wayback, Common Crawl, OTX gibi pasif kaynaklardan URL toplar), waybackpy (Internet Archive/Wayback Machine erişimi).
+- Açıklama: Bir domainin geçmişteki sayfalarını ve uç noktalarını (endpoint) toplamak, gizli veya unutulmuş yolları (ör. /admin, /old) bulmak için idealdir.
+- Örnek: gau example.com | grep -i admin ile geçmişte görülen admin yollarını yakalayıp bugünkü durumu test edebilirsiniz.
+
+Kategori: Arama motoru/dorking ile dosya ve içerik arama
+- Araçlar: goofile (Google’da belirli dosya türlerini arar), sublist3r (arama motorlarını kullanarak alt alan toplar; pasif kategoriye de dahildir).
+- Açıklama: Kurumunuza ait herkese açık dokümanları (PDF, XLS, DOC) veya yanlışlıkla yayımlanmış yapılandırma dosyalarını arama motorları üzerinden bulmaya yarar.
+- Örnek: goofile -d example.com -f pdf ile kamusal PDF’leri bulup içindeki e-posta veya sürüm bilgilerini çıkarabilirsiniz.
+
+Kategori: Whois ve kayıt bilgisi OSINT
+- Araçlar: whois (domain sahipliği, kayıt/sonlanma tarihleri, nameserver bilgileri).
+- Açıklama: Domain kime ait, ne zaman alınmış, hangi isim sunucuları kullanılıyor gibi temel kayıt bilgilerini verir. Sahte domainleri ayırt etmede faydalıdır.
+- Örnek: whois example.com çıktısındaki kayıt tarihi ve nameserver değişimlerini kontrol ederek şüpheli durumları tespit edersiniz.
+
+Kategori: Pasif veri kaynakları ve kataloglar
+- Araçlar: zonedb (TLD/SLD zone veritabanı; açık kaynaklı liste/katalog).
+- Açıklama: TLD’ler (ör. .com, .org) ve bazı ülkelerdeki ikinci seviye alan adlandırmaları (ör. .com.tr, .co.uk) hakkında referans sağlar. Hangi adlandırma şemasının kullanıldığını anlamayı kolaylaştırır.
+- Örnek: co.uk altında yaygın ikinci seviye kullanım olduğunu görüp, test planınızda example.co.uk gibi varyasyonları da dikkate alırsınız.
+
+Notlar
+- Birden fazla kategoriye giren araçlar: amass (pasif/aktif), dnsrecon ve dnsenum (brute-force + AXFR testleri), sublist3r (pasif ve arama motoru tabanlı), dnstwist (typosquatting + DNS kontrolleri).
+- Etik ve yasal uyarı: Bu araçları yalnızca sahibi olduğunuz veya açık, yazılı izin aldığınız sistemlerde kullanın. Pasif bile olsa izinsiz tarama hukuka aykırı olabilir.

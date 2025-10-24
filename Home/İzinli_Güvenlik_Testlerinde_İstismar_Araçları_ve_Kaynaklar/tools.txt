@@ -1,0 +1,32 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:58:54+03:00
+
+İstismar çerçeveleri / exploit referansları
+
+İstismar çerçeveleri (framework’ler)
+- Açıklama: Güvenlik açıklarını, izinli ve kontrollü ortamlarda test etmeyi sağlayan modüler platformlardır. Hazır “exploit” ve “payload” modülleri ile tekrarlayan işleri otomatikleştirir, raporlama ve kanıt üretmeyi kolaylaştırır.
+- Örnek: <Bir kurumun sızma testi ekibi, yama duyurusu yapılan bir sunucudaki açığı doğrulamak için Metasploit’te ilgili modülü yalnızca lab ortamında çalıştırır; sonuçlara göre yamayı acil olarak planlar.>
+- Araçlar: metasploit-framework (modüler istismar ve test çerçevesi), routersploit (yönlendirici/IoT odaklı istismar çerçevesi)
+
+Exploit referansları ve arama (veritabanları)
+- Açıklama: Kamuya açık güvenlik açığı istismar kodlarını (PoC) ve açıklamalarını bir arada bulabileceğiniz kaynaklardır. Hızlı arama yapıp ilgili CVE için PoC olup olmadığını görebilirsiniz.
+- Örnek: <Bir BT güvenlik analisti, yeni açıklanan bir CVE için Exploit-DB’de PoC olup olmadığını arayıp riski ve önceliği belirler.>
+- Araçlar: exploitdb (Exploit-DB’nin yerel veritabanı ve searchsploit ile arama)
+
+Derlenmiş exploit örnekleri (lab kullanımı)
+- Açıklama: Bazı PoC’ların önceden derlenmiş (binary) halleri lab çalışmaları için paketlenmiştir. Amaç, kapalı ve güvenli ortamlarda davranış analizi veya tespit kuralları geliştirmektir.
+- Örnek: <Bir araştırmacı, sandbox ortamında bilinen exploit ikililerini çalıştırıp EDR’nin alarm üretme kabiliyetini test eder.>
+- Araçlar: exploitdb-bin-sploits (derlenmiş PoC exploit ikilileri)
+
+Güvenlik makaleleri ve notlar
+- Açıklama: Zafiyet türlerini, sömürü tekniklerini ve savunma yaklaşımlarını anlatan dokümanlar ve whitepaper’lar içerir. Öğrenme ve dokümantasyon içindir.
+- Örnek: <Bir mühendis, yığın taşması (buffer overflow) üzerine yazılmış Exploit-DB makalesini okuyup kendi uygulamasında benzer hataları önlemek için kod incelemesi yapar.>
+- Araçlar: exploitdb-papers (güvenlik makaleleri, notlar ve whitepaper arşivi)
+
+Payload oluşturma ve otomasyon
+- Açıklama: Metasploit/MSFvenom ile payload üretimini basitleştirir, şablonlar ve hızlı seçeneklerle zaman kazandırır. Eğitim ve lab senaryolarında kullanılır.
+- Örnek: <Sızma testi eğitmeni, eğitim lab’ında kullanılacak payload’ı MSFPC ile hızlıca oluşturup sadece izni olan test makinelerinde dener.>
+- Araçlar: msfpc (MSFvenom Payload Creator; hızlı payload şablonlama)
+
+Not: routersploit hem bir istismar çerçevesidir hem de özellikle yönlendirici/IoT cihazlarına odaklandığı için ağ cihazları güvenliği kategorisine de girer.

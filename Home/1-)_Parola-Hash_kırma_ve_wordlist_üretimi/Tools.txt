@@ -1,0 +1,87 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:48:37+03:00
+
+Parola/Hash saldırıları ve wordlist üretimi
+
+1) Hash türünü belirleme ve ön hazırlık
+- Açıklama: Elinizdeki hash’in (ör. MD5, NTLM, bcrypt) türünü bilmek, doğru kırma yöntemini seçmek için ilk adımdır. Ayrıca bazı yardımcılar dosya/hash bütünlüğünü kontrol etmenize yarar.
+- Örnek: Kurumdan yasal olarak alınmış tek satırlık bir hash’in NTLM mi yoksa SHA-1 mi olduğunu tespit edip doğru aracı seçmek.
+- Araçlar:
+- hash-identifier (hash formatını tahmin eder)
+- hashid (bir hash için birden çok olası formatı listeler)
+- name-that-hash (hash türünü tespit eder, yöntem/araç önerir)
+- hashrat (dosya ve metinlerin hash’ini hesaplar; bütünlük/karşılaştırma için)
+
+2) Çevrimdışı parola kırma (genel amaç)
+- Açıklama: Elde ettiğiniz hash’leri hedef sisteme trafik göndermeden, kendi makinenizde kırma girişimidir. Hızlı, esnek ve güvenlidir (hedefe yük bindirmez).
+- Örnek: İzinli bir denetimde, yedekten alınan kullanıcı hash’lerini ofis bilgisayarınızda GPU destekli bir kırıcıyla denemek.
+- Araçlar:
+- hashcat (GPU/CPU destekli, çok hızlı genel amaçlı kırıcı)
+- john (John the Ripper; birçok formatı destekler)
+- johnny (John the Ripper için kolay arayüz)
+- crack (klasik Unix parola kırıcı)
+- crack-md5 (MD5 özelinde basit kırma aracı)
+- ophcrack (Windows LM/NTLM için; rainbow table kullanabilir)
+- oclgausscrack (GPU destekli, özel/nadir senaryolara yönelik brute-force)
+- rainbowcrack (önceden hesaplanmış rainbow tablolarla kırma)
+- rcracki-mt (rainbowcrack’in çok çekirdekli sürümü)
+
+3) Belgeler ve arşivler için parola kırma
+- Açıklama: Şifreli PDF, ZIP, RAR, 7z gibi dosyaların parolasını kurtarmaya yöneliktir. Unutulan parolaları geri kazanma veya adli analiz amaçlıdır.
+- Örnek: Ekip içindeki bir kullanıcının unuttuğu, iş için gerekli şifreli ZIP dosyasını kurtarmak.
+- Araçlar:
+- pdfcrack (PDF parola kırıcı)
+- fcrackzip (ZIP/PKZIP parola kırıcı)
+- rarcrack (RAR/ZIP/7z parola kırıcı)
+
+4) Disk/kapsayıcı (container) ve cüzdan parolaları
+- Açıklama: Tam disk şifreleme ya da şifreli konteyner ve kripto cüzdan dosyaları için parola kurtarma.
+- Örnek: Adli analizde, LUKS ile şifrelenmiş bir diskin parolasını geri kazanmayı denemek (hukuki izinle).
+- Araçlar:
+- bruteforce-luks (LUKS disk parolasını dener)
+- truecrack (TrueCrypt hacimleri için GPU destekli kırma)
+- bruteforce-salted-openssl (OpenSSL ile şifrelenmiş dosyaların parolasını dener)
+- bruteforce-wallet (Bitcoin/Electrum vb. cüzdan dosyalarının parolasını dener)
+
+5) Sistem/Donanım parolaları (yerel kurtarma)
+- Açıklama: Cihazın açılış/BIOS düzeyindeki parolaları için kurtarma amaçlı araçlar.
+- Örnek: Envanterdeki eski bir bilgisayarın BIOS parolasını kurtarıp sistem ayarlarına girebilmek.
+- Araçlar:
+- cmospwd (BIOS/UEFI/CMOS parolasını kurtarmaya yardımcı)
+
+6) Ağ ve servis üzerinden parola denemeleri (çevrimiçi)
+- Açıklama: SSH, RDP, FTP, HTTP gibi servislerde, yetkili testlerde kullanıcı adı/parola kombinasyonlarını dener. Hedefe trafik gönderdiği için dikkatli ve sınırlı kullanılmalıdır.
+- Örnek: İç ağ sızma testinde, test kullanıcı hesaplarıyla zayıf parolaları olan servisleri tespit etmek (hız limitleri ve kurallara uyarak).
+- Araçlar:
+- hydra (çok protokollü, hızlı çevrimiçi denemeler)
+- medusa (modüler, paralel bağlantılarla çevrimiçi denemeler)
+- patator (esnek/modüler brute-force; HTTP/SSH/SMTP vb.)
+- crowbar (RDP/SSH/VNC/OpenVPN’e anahtar/sertifika ya da hash ile denemeler)
+- thc-pptp-bruter (PPTP VPN için parola denemeleri)
+- sucrack (yerelde ‘su’ parolasını denemek için çok süreçli araç)
+- passing-the-hash (Windows’ta hash’i crack etmeden kimlik doğrulamada kullanma tekniği)
+
+7) Wordlist (şifre listesi) üretimi – hedefe özel ve genel
+- Açıklama: Şifre tahmininde kullanılacak kelime listelerini sıfırdan üretir ya da hedefe özel veri (web sitesi, sosyal medya, kişisel bilgiler) kullanarak zenginleştirir.
+- Örnek: Kurumun web sitesinden şirket jargonunu toplayıp, bu kelimeleri farklı varyasyonlara çevirerek denemelerde kullanmak.
+- Araçlar:
+- crunch (istediğiniz karakter seti/uzunlukta tüm kombinasyonları üretir)
+- cewl (hedef web sitesini tarayıp kelime listesi çıkarır)
+- bopscrk (kişisel bilgi/kalıplardan şifre listesi üretir)
+- twofi (Twitter’dan anahtar kelime toplayıp liste oluşturur)
+- wordlistraider (çeşitli kaynaklardan wordlist toplar/birleştirir)
+- princeprocessor (PRINCE algoritmasıyla gerçekçi parola adayları üretir)
+- statsprocessor (Markov temelli aday parola üretir)
+- rsmangler (anahtar kelimelerden akıllı varyasyonlar üretir)
+- rling (dil kurallarına göre filtreleme/üretim yapar)
+- sickle-tool (istatistiksel yöntemlerle listeyi iyileştirir)
+- hashcat-utils (küçük yardımcılar; liste/rule/permütasyon işlemleri)
+
+8) Wordlist analiz/temizleme ve koleksiyonlar
+- Açıklama: Elinizdeki parola listelerini istatistiksel olarak analiz eder, temizler veya hazır listeleri sağlar.
+- Örnek: Daha etkili denemeler için büyük bir listeyi analiz edip en sık desenleri öne çıkarmak ve mükerrerleri temizlemek.
+- Araçlar:
+- pipal (parola listesi analizi, uzunluk/desen/istatistik)
+- wordlists (hazır listeler paketi; ör. rockyou.txt, seclists içeriği)
+- wordlistraider (farklı kaynaklardan listeleri indirip birleştirme – aynı zamanda üretim kategorisinde)

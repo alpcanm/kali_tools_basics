@@ -1,0 +1,100 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:43:43+03:00
+
+====== Kablosuz Wi‑Fi Güvenliği Temelleri ======
+
+
+
+===== Konu =====
+Bu içerik, Wi‑Fi (kablosuz yerel ağ) güvenliğini ölçmek ve güçlendirmek için yapılan temel denetim adımlarını özetler. Kapsam şunları içerir: kablosuz keşif ve izleme, parola gücü değerlendirmesi, WPS (kolay eşleştirme özelliği) testleri, Evil Twin (sahte erişim noktası kopyası) ve captive portal (bağlanınca açılan giriş sayfası) senaryoları, WPA2‑Enterprise (kurumsal kimlik doğrulamalı Wi‑Fi modu) kontrolleri, 802.11 (Wi‑Fi standart ailesi) çerçeve enjeksiyonu (ağa sahte kablosuz paket yollama) ve DoS (servis dışı bırakma: sistemi geçici olarak kullanılmaz kılma) dayanıklılık testleri, ayrıca görselleştirme ve laboratuvar kurulumudur.
+- Keşif ve izleme, pasif tarama (sadece dinleyerek bilgi toplama) ile SSID (ağ adı), BSSID (erişim noktasının benzersiz adresi), kanal (yayın frekans numarası), şifreleme (veriyi şifreleyerek koruma) gibi bilgileri ve yakınlardaki AP’leri (erişim noktası: kablosuz ağ dağıtan cihaz) ortaya çıkarır.
+- Parola gücü, WPA/WPA2‑PSK (ön paylaşımlı anahtarlı Wi‑Fi modu) ağlarda el sıkışma (bağlantı başlatma mesajlaşması) veya PMKID (anahtar tanımlayıcı özeti) toplayıp çevrimdışı analiz (toplanan veriyi sonra, ağdan bağımsız test etme) ve sözlük testi (hazır parola listelerini deneme) ile ölçülür.
+- WPS testleri, PIN (sayısal eşleşme kodu) tahmini, brute force (tüm olası kombinasyonları deneme) ve Pixie Dust (WPS zayıflığından yararlanma tekniği) gibi yöntemlerle eşleştirme risklerini gösterir.
+- Evil Twin ve captive portal, kimlik avı (sahte sayfayla bilgi toplama) farkındalığını ölçer; sertifika (sunucunun kimliğini kanıtlayan dijital belge) uyarılarının kontrolünü sağlar; mavi takımın (savunma ekibi) tespit‑önleme senaryolarını sınar.
+- WPA2‑Enterprise denetimleri, 802.1X (ağ erişim kontrol standardı) ve EAP’nin (kimlik doğrulama yöntemi ailesi) doğru ayarlanıp ayarlanmadığını, kimlik doğrulama (kimin bağlandığını kanıtlama) ve protokol (cihazların konuşma kuralları) güvenliğini test eder.
+- Dayanıklılık testleri; deauthentication (bağlantıyı kopartan çerçeve), beacon flood (çok sayıda sahte ağ duyurusu) gibi çerçeve enjeksiyonu ve DoS etkilerine karşı WIPS’in (kablosuz saldırı tespit/önleme sistemi) tepkisini gözler.
+- Görselleştirme, topoloji (bileşenlerin bağlantı düzeni) ve ısı haritası (sinyal yoğunluğu haritası) ile bulguları anlaşılır kılar.
+- Laboratuvar tarafında sanallaştırma (donanımı yazılımla taklit etme) ve RF (radyo frekansı) yardımcıları güvenli test ortamı kurmaya yardım eder.
+Not: Bu çalışmalar yalnızca yazılı izinle, yetkili kapsamda ve tercihen izole bir laboratuvarda yapılmalıdır.
+
+
+
+===== Neden önemlidir?/Ne işe yarar? =====
+- Yetkisiz AP’leri ve zayıf şifreleme ayarlarını hızlıca bulmayı sağlar.
+- Parola politikalarının gerçekte işe yarayıp yaramadığını ölçer.
+- WPS açıksa oluşan riskleri net biçimde gösterir.
+- Kullanıcıların sahte ağ ve kimlik avına karşı farkındalığını test eder.
+- Kurumsal kimlik doğrulamasındaki yanlış ayarları ortaya çıkarır.
+- Altyapının çerçeve enjeksiyonu ve DoS’a karşı dayanıklılığını doğrular.
+- Bulguları yönetim ve ekiplerle açıkça paylaşmayı kolaylaştırır.
+- Güvenli, tekrarlanabilir laboratuvar ortamı kurmayı mümkün kılar.
+
+
+
+===== Nasıl çalışır/uygulanır? =====
+- Yetki ve kapsam yazılı olarak belirlenir; güvenli ortam hazırlanır.
+- Pasif tarama ile SSID, BSSID, kanal ve şifreleme bilgileri toplanır.
+- WPA/WPA2‑PSK ağlarda el sıkışma veya PMKID verisi toplanır; çevrimdışı sözlük testi ile parola politikası kontrol edilir.
+- WPS açıksa PIN ve ilgili zayıflıklar etik sınırlar içinde test edilir; kapatma/sertleştirme önerilir.
+- Evil Twin/captive portal senaryoları, kullanıcı farkındalığı ve mavi takım tespiti için kurgulanır; sertifika uyarıları özellikle gözlenir.
+- WPA2‑Enterprise ağlarda 802.1X/EAP ayarları gözden geçirilir; sertifika doğrulaması ve zayıf yöntemlerin devre dışı bırakılması kontrol edilir.
+- Çerçeve enjeksiyonu ve DoS testleri, izole labda kısa ve kontrollü uygulanır; WIPS alarmları ve otomatik aksiyonlar doğrulanır.
+- Tüm bulgular topoloji ve ısı haritası gibi görsellerle raporlanır; düzeltme adımları önerilir.
+
+
+
+===== Sözlük =====
+- 802.11: Wi‑Fi bağlantılarının temelini oluşturan standart ailesi.
+- 802.1X: Ağ erişimini merkezi olarak kontrol eden kimlik doğrulama standardı.
+- AP: Kablosuz ağı sağlayan ve dağıtan cihaz.
+- beacon flood: Çok sayıda sahte ağ duyurusu gönderme tekniği.
+- BSSID: Bir erişim noktasının benzersiz kablosuz adresi.
+- brute force: Bir değeri bulmak için tüm olasılıkları deneme yöntemi.
+- captive portal: Ağa bağlanınca açılan giriş/doğrulama sayfası.
+- çerçeve enjeksiyonu: Ağa kasıtlı ve sahte kablosuz paketler gönderme.
+- deauthentication: Bir cihazın bağlantısını koparan kablosuz çerçeve türü.
+- DoS: Bir hizmeti geçici olarak kullanılamaz hale getirme.
+- EAP: Farklı kimlik doğrulama yöntemlerini taşıyan çerçeve.
+- Evil Twin: Meşru erişim noktasına çok benzeyen sahte erişim noktası.
+- kanal: Kablosuz iletişimde kullanılan belirli frekans aralığı.
+- kimlik avı: Sahte içerikle kullanıcıdan hassas bilgi alma yöntemi.
+- kimlik doğrulama: Bir kullanıcının ya da cihazın gerçekten o olup olmadığını kanıtlama.
+- mavi takım: Savunma yapan güvenlik ekibi.
+- pasif tarama: Ağı etkilemeden, sadece dinleyerek bilgi toplama.
+- PMKID: WPA ağında anahtarı temsil eden kısa kimlik/özet.
+- protokol: Cihazların nasıl iletişim kuracağını belirleyen kurallar bütünü.
+- PSK: Ağa katılmak için herkesin bildiği ön paylaşımlı anahtar/şifre.
+- RF: Radyo dalgalarıyla ilgili frekans alanı.
+- sanallaştırma: Donanımı yazılımla taklit ederek kaynaklar oluşturma.
+- sertifika: Sunucunun kimliğini kanıtlayan dijital belge.
+- SSID: Kablosuz ağın görünen adı.
+- sözlük testi: Hazır parola listelerindeki parolaları tek tek deneme.
+- şifreleme: Veriyi yetkisiz kişilerden gizlemek için dönüştürme.
+- topoloji: Ağ bileşenlerinin birbirine bağlanma düzeni.
+- ısı haritası: Bir değerin (ör. sinyal) alanda dağılımını renklerle gösteren harita.
+- WIPS: Kablosuz saldırıları tespit edip önlemeye çalışan sistem.
+- WPA/WPA2‑PSK: Wi‑Fi’de ön paylaşımlı anahtarla korunan güvenlik modu.
+- WPA2‑Enterprise: Kurumsal kimlik doğrulama ile korunan Wi‑Fi modu.
+- WPS: Cihazları ağa kolayca eklemek için tasarlanmış eşleştirme özelliği.
+- PIN: Kısa sayısal doğrulama kodu.
+
+
+
+===== Kazanımlar =====
+- Yakındaki AP’leri pasif tarama ile saptayıp SSID/BSSID, kanal ve şifreleme bilgilerini çıkarabilirsin.
+- Yoğun kanalları belirleyip kapsama ve parazit sorunlarına dair öneri sunabilirsin.
+- WPA/WPA2‑PSK ağlarda el sıkışma/PMKID toplayarak parola politikasını çevrimdışı sözlük testiyle değerlendirebilirsin.
+- Varsayılan ya da zayıf parola kalıplarını tespit edip güçlendirme gereksinimini kanıtlayabilirsin.
+- WPS’in açık olup olmadığını doğrulayıp PIN tabanlı riskleri göstererek kapatma/sertleştirme kararı için somut veri sağlayabilirsin.
+- Evil Twin ve captive portal tatbikatı tasarlayıp kullanıcı farkındalığını ve sertifika uyarısı davranışlarını ölçebilirsin.
+- WPA2‑Enterprise ortamında 802.1X/EAP ayarlarını denetleyip sertifika doğrulamasını zorunlu hale getirildiğini teyit edebilirsin.
+- Çerçeve enjeksiyonu ve kısa DoS senaryolarıyla WIPS alarm ve otomatik karşılıklarını doğrulayabilirsin.
+- AP‑istemci ilişkilerini ve dolaşımı topoloji/ilişki grafikleriyle görselleştirip raporlayabilirsin.
+- Kapsama ve sinyal kalitesi için ısı haritaları üreterek iyileştirme noktalarını gösterebilirsin.
+- Sanal kablosuz arayüzler kurup güvenli, tekrarlanabilir laboratuvar senaryoları oluşturabilirsin.
+- RF ölçüm ve kalibrasyon adımlarını uygulayarak test sonuçlarının doğruluğunu artırabilirsin.
+
+===== Notlar =====
+- Belirli donanım gereksinimleri ve ayrıntılı kullanım adımları: Dökümandan çıkarılamıyor.
+- Üçüncü taraf yazılımların tam kurulum/komut örnekleri: Dökümandan çıkarılamıyor.

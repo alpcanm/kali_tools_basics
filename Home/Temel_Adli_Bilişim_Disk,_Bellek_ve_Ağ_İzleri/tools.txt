@@ -1,0 +1,43 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:56:56+03:00
+
+Adli bilişim (disk/dosya, bellek, kayıt, ağ, zaman çizelgesi, tarayıcı/e-posta)
+
+Adli bilişim – Disk/dosya ve dosya sistemleri
+- Açıklama: Fiziksel diskleri veya imaj dosyalarını kopyalama, bozuk/silinebilir verileri kurtarma, dosya sistemlerini inceleme ve delil bütünlüğünü koruma işlemleri. Genellikle “önce imaj al, sonra imaj üzerinde çalış” yaklaşımı izlenir.
+- Örnek: Hasar görmüş bir USB bellekten silinen fotoğrafları kurtarmak ve delil niteliğindeki imajı hash’leyerek güvenceye almak.
+- Araçlar: afflib-tools (AFF disk imaj formatı araçları), autopsy (grafik arayüzlü kapsamlı adli analiz), bulk-extractor (imajdan/klonlardan parça artefakt çıkarımı), dc3dd (adli disk kopyalama ve doğrulama), dcfldd (gelişmiş dd; hash/doğrulama), ddrescue (bozuk diskten veri kurtarma), dislocker (BitLocker şifreli sürücüyü açma), ext3grep (ext3’te silineni kurtarma), ext4magic (ext4’te dosya kurtarma), extundelete (ext2/3/4 silinen dosya kurtarma), fatcat (FAT dosya sistemi analiz/kurtarma), foremost (dosya türüne göre carving), forensic-artifacts (yaygın artefakt konumları listesi), forensics-colorize (çıktı/renklendirme yardımı), gpart (kayıp bölümleri bulma), gparted (grafik bölüm yöneticisi), guymager (grafik disk imajlama), magicrescue (imzaya göre dosya kurtarma), myrescue (okuma hatalı disklerden kurtarma), recoverdm (CD/DVD’den veri kurtarma), recoverjpeg (kartlardan JPEG kurtarma), scalpel (hızlı dosya carving), sleuthkit (dosya sistemi adli araçları; ayrıca mactime ile zaman çizelgesi), testdisk (kayıp bölüm/dosya kurtarma), xmount (imajı sanal disk gibi bağlama/dönüştürme), zerofree (ext boş blokları sıfırlama; imajı küçültme)
+
+Adli bilişim – Bellek (RAM) analizi
+- Açıklama: Sistem RAM’ini döküp geçici verileri (anahtarlar, oturum bilgileri, süreç izleri) çıkarmak. Olay anında RAM’de kalan kritik bilgiler diskte olmayabilir.
+- Örnek: Şüpheli bir sunucunun RAM’inden şifreleme anahtarlarını veya açık oturum bilgilerini çıkarmak.
+- Araçlar: aesfix (AES anahtar planını onarma), aeskeyfind (RAM’de AES anahtarı arama), memdump (RAM dökümü alma), rsakeyfind (RAM’de RSA anahtarı arama), dwarf2json (Linux çekirdek sembollerini Volatility benzeri araçlar için üretme)
+
+Adli bilişim – Kayıt defteri (Windows Registry)
+- Açıklama: Windows’un yapılandırma veritabanı olan Registry’den kullanıcı aktiviteleri, kalıcı çalıştırma noktaları, takılan USB’ler gibi izleri çıkarma.
+- Örnek: Bir çalışanın hangi USB belleği ne zaman taktığını ve son açılan dosyaları belirlemek.
+- Araçlar: hivex araçları (Registry hive okuma/düzenleme), reglookup (anahtar/değer ve zaman bilgisini çözümleme), regripper (eklenti tabanlı hızlı raporlama), winregfs (Registry’yi dosya sistemi gibi bağlama)
+
+Adli bilişim – Ağ adli analizi
+- Açıklama: Ağ trafiği (PCAP) üzerinde oturumları yeniden kurma, protokol çözümleme ve sızdırılan verileri/kimlik bilgilerini tespit etme.
+- Örnek: Bir sızma olayında saldırganın HTTP üzerinden hangi dosyaları dışarı sızdırdığını PCAP dosyasından çıkarmak.
+- Araçlar: bruteshark (PCAP’ten protokol/kimlik bilgisi çıkarımı), chaosreader (PCAP’ten akış ve web oturumu çıkarımı), xplico (uygulama katmanı verisini yeniden yapılandırma)
+
+Adli bilişim – Zaman çizelgesi ve artefakt toplama
+- Açıklama: Farklı kaynaklardan (dosya zaman damgaları, loglar, tarayıcı izleri) olayları toplayıp tek bir zaman çizelgesine dökmek. Olayın “ne zaman-ne oldu” sorusuna netlik kazandırır.
+- Örnek: Fidye yazılımı bulaşan bir bilgisayarda ilk şüpheli dosyanın ne zaman indiğini, çalıştırıldığını ve silme işlemlerini zaman sırasıyla göstermek.
+- Araçlar: mac-robber (dosya MAC zamanlarını toplama), plaso (log2timeline; çoklu kaynaktan ayrıntılı zaman çizelgesi)
+
+Adli bilişim – Tarayıcı ve e‑posta analizi
+- Açıklama: Tarayıcı geçmişi, çerezler, indirmeler ve e‑posta kutularından (DBX vb.) kullanıcı faaliyetlerini ve ilgili ekleri çıkarmak.
+- Örnek: Kimlik avı e‑postasının ekini indirip indirmediğini ve sonrasında hangi sitelere girdiğini tespit etmek.
+- Araçlar: dumpzilla (Firefox profili: geçmiş, çerez, parolalar), galleta (Internet Explorer çerez analizi), pasco (IE index.dat geçmiş analizi), undbx (Outlook Express DBX e‑posta çıkarımı), vinetto (Windows Thumbs.db küçük resim veritabanı analizi)
+
+Adli bilişim – Hash ve fuzzy hash
+- Açıklama: Dosya bütünlüğünü doğrulamak (MD5/SHA) ve birbirinin aynısı olmasa da benzer içerikleri tespit etmek (fuzzy hashing). Delil bütünlüğü ve dosya eşleştirme için kritik.
+- Örnek: Alınan disk imajının değişmediğini kanıtlamak ve farklı isimlerdeki iki zararlı örneğin aslında benzer içerikte olduğunu göstermek.
+- Araçlar: gtkhash (GUI ile MD5/SHA/CRC hesaplama), ssdeep (fuzzy hashing; benzer dosya tespiti)
+
+Notlar:
+- Birden fazla kategoriye girenler: sleuthkit (disk analizi; mactime ile zaman çizelgesi), bulk-extractor (disk imajından e‑posta/URL gibi artefaktlar; tarayıcı/e‑posta bulgularına destek), xmount (disk imajını bağlayıp diğer araçlarla birlikte çalışma) gibi araçlar farklı adımlarda da kullanılabilir.

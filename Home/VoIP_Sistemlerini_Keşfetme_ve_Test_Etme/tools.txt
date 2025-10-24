@@ -1,0 +1,42 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:01:56+03:00
+
+VoUP/SIP/RTC
+
+
+VoIP/SIP keşfi ve numaralandırma (extension/hesap bulma)
+- Açıklama: VoIP altyapısında hangi sunucuların açık olduğunu, hangi SIP/IAX servislerinin çalıştığını ve hangi dahili numaraların (extension) var olduğunu anlamak için kullanılır. Amaç, sistemin haritasını çıkarmaktır.
+- Örnek: Yetkili bir sızma testinde, kurumun PBX sisteminde 1000–1200 arası dahili numaraların hangilerinin aktif olduğunu ve hangi SIP yöntemlerinin (INVITE, REGISTER, OPTIONS) desteklendiğini tespit etmek.
+- Araçlar: sipvicious (SIP tarama ve uzantı keşfi; svmap/svwar), sipsak (SIP mesaj gönderici; hızlı “OPTIONS ping” ve temel testler), siparmyknife (çok amaçlı SIP testleri; farklı yöntemlerle yoklama), sippts (modüler; tarama ve keşif modülleri), enumiax (Asterisk’in IAX2 protokolünde kullanıcı/uzantı numaralandırma)
+
+Kimlik doğrulama ve parola güvenliği testleri
+- Açıklama: Zayıf parolaları, tahmin edilebilir kimlik bilgilerini veya hatalı kimlik doğrulama yapılandırmalarını ortaya çıkarmayı hedefler. Amaç, kaba kuvvet (brute force) veya sözlük denemeleriyle riskleri göstermek.
+- Örnek: Kurum içi denetimde, ağda yakalanan SIP “digest” (özet) kimlik doğrulama bilgilerine karşı zayıf parolaların varlığını kontrol etmek.
+- Araçlar: sipcrack (SIP digest parola kırma/sözlük denemesi), sipvicious (svcrack ile temel brute-force), sippts (parola denemeleri ve kimlik doğrulama test modülleri)
+
+Trafik üretimi ve performans/yük testleri
+- Açıklama: Çağrı kurulumlarını (INVITE/REGISTER), kayıt trafiğini ve medya akışını taklit ederek sistemin kapasitesini, gecikmesini ve kararlılığını ölçer. Üretim öncesi dayanıklılık ve ölçeklenebilirlik için kullanılır.
+- Örnek: Yeni SIP proxy’nin 500 eşzamanlı çağrıyı karşılayıp karşılamadığını, yanıt sürelerinin kabul edilebilir olup olmadığını test etmek.
+- Araçlar: sipp (senaryo tabanlı SIP trafik üretici ve yük testi aracı), sipsak (basit isteklerle ulaşılabilirlik/yanıt süresi ölçümü), siparmyknife (çeşitli SIP mesaj akışlarını deneyerek davranış gözlemi)
+
+Protokol sağlamlık/fuzzing ve güvenlik testi
+- Açıklama: Standart dışı, bozuk veya uç durumdaki SIP mesajları göndererek cihazların/proxy’lerin hataya düşüp düşmediğini test eder. Amaç, protokol işleyici hatalarını yakalamaktır.
+- Örnek: PBX yazılımı güncellemesi sonrası, hatalı SIP paketleri geldiğinde sistemin çökmediğini ve beklenmedik davranış sergilemediğini doğrulamak.
+- Araçlar: protos-sip (SIP için PROTOS sağlamlık testleri; hatalı paketler), sippts (fuzzing ve zafiyet test modülleri), siparmyknife (çeşitli yöntem/başlık kombinasyonlarıyla uç durum testi)
+
+Hizmet engelleme (DoS) ve dayanıklılık testleri
+- Açıklama: Aşırı istek veya medya paketi göndererek sistemin limitlerini ve korumalarını (rate limit, IPS/IDS, SBC kuralları) ölçer. Amaç, kapasite ve koruma ayarlarının doğru yapıldığını doğrulamaktır. Bu testler mutlaka izole ve yetkili ortamda yapılmalıdır.
+- Örnek: Güvenlik duvarı/SBC ayarlarının INVITE fırtınasına karşı sistemi koruyup korumadığını, alarmların doğru çalışıp çalışmadığını sınamak.
+- Araçlar: inviteflood (SIP INVITE flood ile DoS testi), iaxflood (IAX2 flood; Asterisk IAX dayanıklılık testi), rtpflood (RTP medya trafiği flood), sipp (yük test senaryolarında agresif trafik üretimi)
+
+RTP medya analizi ve manipülasyonu
+- Açıklama: RTP (ses/video) akışlarını inceleme, ayıklama veya kontrollü şekilde değiştirme amaçlı araçlardır. Şifreleme (SRTP) devre dışıysa riskleri göstermek için kullanılır.
+- Örnek: İç denetimde, SRTP zorunlu değilse RTP trafiğinin kolayca dinlenip dinlenemediğini veya çağrıya ses enjekte edilip edilemeyeceğini göstermek.
+- Araçlar: rtpbreak (RTP akışlarını ayıklar; ses dosyalarına dönüştürür), rtpinsertsound (mevcut RTP akışına ses enjekte etme PoC aracı), rtpmixsound (RTP akışına ses karıştırma; kalite/güvenlik testi)
+
+Ağ ayrıştırma ve VLAN atlama (VoIP erişim testleri)
+- Açıklama: Ses VLAN’ı ile veri VLAN’ının doğru ayrıştırılıp ayrıştırılmadığını ve uç noktaların yetkisizce ses VLAN’ına geçiş yapıp yapamayacağını test eder.
+- Örnek: Ofis ağında IP telefonlar için ayrılmış ses VLAN’ına, bilgisayar portundan yetkisiz erişimin mümkün olup olmadığını doğrulamak.
+- Araçlar: voiphopper (ses VLAN’ına geçiş denemeleri; CDP/LLDP/DHCP seçenekleri üzerinden VLAN tespiti)
+

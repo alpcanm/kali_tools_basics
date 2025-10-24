@@ -2,7 +2,7 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-10-24T19:33:28+03:00
 
-====== Bluetooth/BLE Güvenlik Tarama Temelleri ======
+====== 3-) Bluetooth-Ble Güvenlik tarama temelleri ======
 
 
 

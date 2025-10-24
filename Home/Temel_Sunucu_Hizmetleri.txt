@@ -1,0 +1,81 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:05:13+03:00
+
+====== Test Labında Temel Sunucu Hizmetleri ======
+
+
+
+===== Konu =====
+Bu içerik, test amaçlı bir laboratuvar ortamında hangi sunucu hizmetlerini kurup deneyebileceğinizi anlatır. Web yayınlama (HTTP/HTTPS; web iletişim protokolü/şifreli sürümü), ad çözümleme (DNS; alan adını IP adresine çeviren sistem), uzak erişim (SSH; uzaktan komut bağlantısı protokolü) ve (VPN; uzak ağı şifreli tünelle birleştiren yapı), merkezi kimlik doğrulama (RADIUS; ağ erişimi için merkezi kimlik doğrulama protokolü), dosya paylaşımı (SMB/NFS/TFTP/WebDAV; farklı dosya paylaşım protokolleri), uygulama çalışma ortamları (PHP/Python; web odaklı betik dili/genel amaçlı programlama dili), sürüm kontrolü (SCM; kod değişikliklerini takip eden sistem), tehdit istihbaratı paylaşımı (TAXII; tehdit verisini ileten protokol) ve trafik/servis simülasyonu (simülasyon; gerçeğin kontrollü taklidi) başlıklarını kapsar.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+* Test web sitelerini ve API’leri (API; uygulamaların konuştuğu arayüz) güvenli şekilde yayınlamayı, (TLS; internet trafiğini şifreleyen güvenlik katmanı) ve (sertifika; sunucu kimliğini kanıtlayan dijital belge) kurulumunu denersiniz. (Güvenlik başlıkları; tarayıcıya güvenlik talimatı veren HTTP ayarları) örn. (HSTS; tarayıcıya hep HTTPS kullanmasını söyleyen başlık) ve (CSP; hangi kaynaklara izin verileceğini sınırlayan başlık) doğrulanır.
+* Yerel alan adlarınızı DNS ile yönetir, bir (zone; bir alan adına ait kayıtlar kümesi) oluşturup (authoritative; alanın kesin kayıtlarını veren) sunucuyla istemci çözümlemesini test edersiniz. (IP; ağ üzerindeki sayısal adres) eşleştirmelerini kontrol edersiniz.
+* Lab ağına dışarıdan güvenli erişim kurar, (tünel; iki nokta arasında şifreli geçit) ile trafiği korur, sunuculara SSH ile bağlanırsınız.
+* Wi‑Fi ve VPN gibi ağlarda merkezi doğrulama yapar, (802.1X; ağ portu bazlı kimlik doğrulama standardı) ve (EAP; esnek kimlik doğrulama yöntemleri çerçevesi) yöntemlerini, örn. (EAP‑TTLS; TLS tüneli içinde kimlik doğrulama) ve (PEAP; TLS tüneli içinde parola tabanlı kimlik doğrulama) denersiniz.
+* Farklı işletim sistemleri arasında dosya paylaşır: (SMB; Windows odaklı dosya paylaşım protokolü), (NFS; Unix/Linus odaklı dosya paylaşım protokolü), (TFTP; çok basit dosya aktarım protokolü), (WebDAV; HTTP üzerinden dosya paylaşım uzantısı).
+* Web uygulamalarını PHP/Python ortamında çalıştırıp entegrasyonlarını test edersiniz.
+* Kodunuzu bir (SCM; sürüm kontrol sistemi) ile sürümlersiniz; dallanma (dallanma (branch); aynı koddan paralel geliştirme kolu) ve kod inceleme (kod inceleme; birinin değişikliklerini diğerinin kontrol etmesi) süreçlerini denersiniz. Basit (CI/CD; sürekli entegrasyon/sürekli teslim otomasyonu) akışlarını labda prova edebilirsiniz.
+* Tehdit verilerini paylaşır ve tüketirsiniz: (IOC; zararlı etkinliği işaret eden gösterge) kayıtlarını (STIX; yapılandırılmış tehdit veri formatı) ve TAXII ile aktarımı test edersiniz.
+* İnternete kapalı bir ortamda trafik ve servisleri taklit ederek zararlı yazılımların davranışını izlersiniz; örn. bir (sandbox; izole test ortamı) içinde DNS/HTTP isteklerini güvenle yakalarsınız.
+
+===== Kime yarar? =====
+* Lab/test ortamı kuran ve deney yapan kişiler için. Daha detaylı hedef kitle: Dökümandan çıkarılamıyor.
+
+===== Nasıl çalışır/uygulanır? =====
+* Web yayınlama: Bir HTTP/HTTPS sunucusu kurun, TLS/sertifika ekleyin, güvenlik başlıklarını açın; test sitenizi ve API’nizi yayınlayın.
+* DNS: Yerel alan adınız için authoritative bir zone oluşturun; iç IP’leri adlarla eşleyin ve istemciden sorgu yaparak doğrulayın.
+* Uzak erişim: Lab ağına bir VPN tüneli açın; sunuculara SSH ile bağlanıp yönetim yapın.
+* Kimlik doğrulama: RADIUS sunucusu kurun; 802.1X üzerinden EAP‑TTLS/PEAP ile kullanıcı doğrulamasını Wi‑Fi/VPN tarafında sınayın.
+* Dosya/paylaşım: SMB/NFS ile kalıcı paylaşımlar kurun; TFTP ile küçük imaj/konfig dosyalarını dağıtın; WebDAV ile tarayıcı/istemcilerden dosya aktarımı yapın.
+* Uygulama ortamları: PHP tabanlı web uygulamasını web sunucusuna bağlayın; Python tabanlı küçük bir dosya servisinin çalıştığını doğrulayın.
+* Sürüm kontrolü: Bir SCM deposu oluşturun; dallanma ve kod inceleme akışını örnek bir proje üzerinde deneyin; isterseniz basit bir CI/CD tetikleyin.
+* Tehdit istihbaratı: IOC kayıtlarını STIX formatında hazırlayın; TAXII üzerinden diğer araçlara servis edip akışı doğrulayın.
+* Trafik/servis simülasyonu: İnternet servislerini taklit eden bir simülasyonu başlatın; sandbox içindeki yazılımın DNS/HTTP isteklerini gözlemleyin.
+
+===== Sözlük =====
+* 802.1X: Ağ portu bazlı kimlik doğrulama standardı.
+* API: Uygulamaların birbiriyle konuşmasını sağlayan arayüz.
+* Authoritative: Bir alan adının kesin kayıtlarını veren sunucu türü.
+* CI/CD: Kodun otomatik test ve dağıtım süreci.
+* CSP: Tarayıcıda hangi kaynaklara izin verileceğini sınırlayan güvenlik başlığı.
+* Dallanma (branch): Aynı koddan paralel geliştirme kolu oluşturma.
+* DNS: Alan adlarını IP adreslerine çeviren sistem.
+* EAP: Kimlik doğrulamada kullanılan esnek yöntemler çerçevesi.
+* EAP‑TTLS: TLS tüneli içinde kimlik doğrulaması yapan EAP yöntemi.
+* Güvenlik başlıkları: HTTP yanıtında tarayıcıya güvenlik talimatı veren ayarlar.
+* HSTS: Tarayıcıya siteye hep HTTPS ile bağlanmasını söyleyen başlık.
+* HTTP: Web üzerinde veri taşıyan temel protokol.
+* HTTPS: HTTP’nin TLS ile şifrelenmiş sürümü.
+* IOC: Zararlı etkinliği işaret eden göstergeler.
+* IP: Ağ cihazlarının sayısal adresi.
+* Kod inceleme: Bir geliştiricinin değişikliklerini başka birinin kontrol etmesi.
+* PEAP: TLS tüneli içinde parola tabanlı kimlik doğrulaması yapan EAP yöntemi.
+* PHP: Özellikle web için kullanılan betik dili.
+* Python: Genel amaçlı programlama dili.
+* RADIUS: Ağ erişimi için merkezi kimlik doğrulama protokolü.
+* Sandbox: Dış dünyadan izole edilmiş güvenli test ortamı.
+* SCM: Kod değişikliklerini takip ve yönetim sistemi.
+* Simülasyon: Gerçeğin kontrollü taklidi.
+* SMB: Windows ağı için dosya paylaşım protokolü.
+* STIX: Yapılandırılmış tehdit istihbaratı veri formatı.
+* SSH: Uzak komut satırı bağlantısı sağlayan güvenli protokol.
+* TAXII: Tehdit istihbaratı verisini ileten protokol.
+* TFTP: Çok basit dosya aktarım protokolü.
+* TLS: İnternet trafiğini şifreleyen güvenlik katmanı.
+* Tünel: İki nokta arasında kurulan şifreli geçit.
+* VPN: Uzak ağları şifreli tünelle birleştiren yapı.
+* WebDAV: HTTP üzerinden dosya paylaşımını sağlayan uzantı.
+* Zone: Bir alan adına ait DNS kayıtları kümesi.
+
+===== Kazanımlar =====
+* Bir web sunucusunu HTTPS ile ayağa kaldırıp TLS/sertifika ve HSTS/CSP gibi güvenlik başlıklarını doğru yapılandırmak ve test etmek.
+* Yerel bir DNS altyapısı kurup authoritative bir zone yönetmek, ad-IP eşleştirmelerini istemciden doğrulamak.
+* Lab ağına dışarıdan VPN tüneli kurmak ve sunuculara SSH ile güvenli uzaktan erişim sağlamak.
+* Wi‑Fi/VPN erişimini merkezi RADIUS ile yönetmek; 802.1X ve EAP‑TTLS/PEAP senaryolarını uçtan uca çalıştırmak.
+* SMB/NFS paylaşımlarıyla farklı sistemler arasında dosya paylaşmak; TFTP ile küçük imaj/konfig dosyalarını hızla dağıtmak; WebDAV ile tarayıcı/istemci tabanlı aktarım yapmak.
+* PHP ve Python uygulamalarını sunucuda koşturup diğer servislerle entegrasyonlarını doğrulamak.
+* Bir sürüm kontrol sistemiyle depo açmak, dallanma ve kod inceleme süreçlerini uygulamak; basit bir CI/CD akışını denemek.
+* Tehdit göstergelerini STIX formatında hazırlayıp TAXII ile diğer güvenlik araçlarına servis ederek entegrasyon akışını doğrulamak.
+* İnternet servislerini taklit eden bir ortam kurup sandbox içindeki yazılımın DNS/HTTP davranışını güvenli şekilde gözlemlemek.

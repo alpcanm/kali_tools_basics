@@ -1,0 +1,50 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:05:26+03:00
+
+Hizmetler / laboratuvar sunucuları (test amaçlı)
+
+Web ve uygulama sunucuları – HTTP/HTTPS
+- Açıklama: Web sayfaları, API’ler ve uygulamaları test ortamında yayınlamak için kullanılır. TLS/sertifika, yönlendirme ve güvenlik başlıkları gibi ayarları denemeye uygundur.
+- Örnek: Bir test web sitesi kurup HTTPS sertifikası ve HTTP güvenlik başlıklarını (HSTS, CSP) doğrulamak.
+- Araçlar: apache2 (modüler HTTP/HTTPS web sunucusu), php (sunucu tarafı betik dili; modüller), wsgidav (WebDAV uygulama sunucusu; Python tabanlı)
+
+DNS hizmeti – Ad çözümleme
+- Açıklama: Yerel alan adlarınızı yönetmek, ad çözümleme senaryolarını ve DNS güvenlik ayarlarını (özellikle lab ortamlarında) sınamak için kullanılır.
+- Örnek: “lab.local” için authoritative bir zone oluşturup iç IP’lerinizi adlarla eşleştirerek istemci çözümlemesini test etmek.
+- Araçlar: bind9 (DNS sunucusu; authoritative/recursive kurulum yapılabilir)
+
+Uzak erişim ve tünelleme – SSH/VPN
+- Açıklama: Sunuculara güvenli uzaktan bağlantı sağlamak ve laboratuvar ağına şifreli tüneller kurmak için kullanılır.
+- Örnek: Evden lab ağına OpenVPN ile bağlanıp, sunuculara SSH ile giriş yapmak.
+- Araçlar: openssh (SSH sunucusu ve istemcisi), openvpn (TLS tabanlı VPN sunucusu/istemcisi)
+
+Kimlik doğrulama ve ağ erişim kontrolü – RADIUS
+- Açıklama: VPN, Wi‑Fi (802.1X) ve ağ erişim kontrolü için merkezi kimlik doğrulama sağlar. Farklı EAP yöntemlerini ve politika kurallarını denemeye uygundur.
+- Örnek: WPA2‑Enterprise kablosuz ağında EAP‑TTLS/PEAP ile kullanıcı doğrulamasını test etmek.
+- Araçlar: freeradius (RADIUS kimlik doğrulama sunucusu; modüller/EAP desteği)
+
+Dosya ve paylaşım servisleri – SMB/NFS/TFTP/WebDAV
+- Açıklama: Farklı işletim sistemleri arasında dosya paylaşımı ve imaj/konfig dağıtımı için hafif ya da yüksek performanslı servisler sunar.
+- Örnek: Windows istemcilere SMB paylaşımdan yazılım dağıtmak, ağ cihazlarına TFTP ile konfig dosyası yüklemek, Linux sunucular arasında NFS ile log klasörünü paylaşmak.
+- Araçlar: samba (SMB/CIFS dosya/paylaşım servisi), nfs-common (NFS istemci araçları), nfs-kernel-server (NFS sunucusu), tftp-hpa (TFTP istemcisi), tftpd-hpa (TFTP sunucusu), wsgidav (WebDAV ile dosya paylaşımı)
+
+Uygulama çalışma ortamları – PHP/Python
+- Açıklama: Web uygulamalarını ve API’leri farklı teknoloji yığınlarıyla (PHP, Python) çalıştırmak ve entegrasyonlarını denemek için kullanılır.
+- Örnek: PHP ile yazılmış bir uygulamayı Apache altında, WebDAV tabanlı bir mini dosya servisinin ise wsgidav üzerinde çalışmasını test etmek.
+- Araçlar: php (modüller ile birlikte PHP çalışma ortamı), wsgidav (Python tabanlı WebDAV sunucusu)
+
+Sürüm kontrol sistemleri – SCM
+- Açıklama: Kodun sürümlenmesi, ekip içi iş birliği ve depo yönetimi için kullanılır. Lab ortamında CI/CD zincirine entegre testler yapılabilir.
+- Örnek: Küçük bir takım için dahili Git/SVN deposu kurup dallanma (branch) ve kod inceleme süreçlerini denemek.
+- Araçlar: git (dağıtık sürüm kontrolü; istemci ve bare repo), subversion (SVN; sunucu ve istemci bileşenleri), mercurial (hg; dağıtık sürüm kontrol sistemi)
+
+Tehdit istihbaratı servisleri – TAXII
+- Açıklama: Göstergelerin (IOC) STIX/TAXII formatlarında toplanması ve paylaşılması için kullanılır. Diğer güvenlik araçlarıyla entegrasyon testleri yapılabilir.
+- Örnek: Kendi IOC’lerinizi OpenTAXII üzerinden MISP/Splunk gibi araçlara servis ederek akış entegrasyonunu doğrulamak.
+- Araçlar: opentaxii (TAXII 1.x uyumlu tehdit istihbaratı sunucusu)
+
+Lab trafiği ve servis simülasyonu – INetSim
+- Açıklama: İnternet servislerini (HTTP, DNS, SMTP vb.) taklit ederek zararlı yazılımların veya araçların ağ davranışını güvenli bir ortamda gözlemlemeyi sağlar.
+- Örnek: İnternete çıkışı olmayan bir sandbox’ta zararlı yazılımın DNS/HTTP isteklerini yakalayıp iletişim denemelerini analiz etmek.
+- Araçlar: inetsim (çeşitli servisleri taklit eden lab simülatörü)

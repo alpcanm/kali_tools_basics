@@ -1,0 +1,78 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:14:26+03:00
+
+Web uygulama güvenliği
+
+
+- Genel keşif ve teknoloji tespiti (fingerprinting)
+- Araçlar: httpx-toolkit (hızlı HTTP kontrol ve özet bilgi), httprobe (hangi ana makineler web servisi veriyor), whatweb (kullanılan yazılım ve teknolojileri tanır), wig (web tekno/fingerprint toplar), wig-ng (wig’in güncel sürümü), httprint (web sunucusunu parmak iziyle belirler), finalrecon (tek komutta temel site keşfi), wafw00f (WAF var mı, türü ne)
+- Açıklama: Hedef sitenin ayakta olup olmadığını, hangi sunucu ve teknolojileri kullandığını anlamak ilk adımdır. Böylece sonraki testleri daha bilinçli planlarsınız.
+- Örnek: Bir şirketin alt alan adları listesinden hangilerinin aktif olduğunu ve WordPress mi, Django mu kullandığını hızlıca görmek.
+
+- İçerik ve dizin keşfi (gizli yol ve dosya bulma)
+- Araçlar: dirb (wordlist ile dizin dosya arama), dirbuster (GUI ile dizin tarama), dirsearch (hızlı Python tabanlı), gobuster (çok hızlı, Go tabanlı), feroxbuster (çok hızlı, rekürsif keşif), ffuf (esnek içerik arama/fuzz), wfuzz (çok amaçlı web fuzz), gospider (link ve endpoint toplayan crawler), photon (endpoint, parametre ve varlık toplayan crawler), parsero (robots.txt’den gizli yolları çıkartır), httrack (site kopyalama)
+- Açıklama: Sitede doğrudan görünmeyen admin panelleri, yedek dosyalar veya API uçları gibi içerikleri bulmanıza yardımcı olur.
+- Örnek: /admin, /backup.zip veya /api/v1/users gibi yolların varlığını kontrol etmek.
+
+- Görsel keşif ve raporlama (ekran görüntüsü ve hızlı envanter)
+- Araçlar: eyewitness (çoklu site ekran görüntüsü ve rapor), gowitness (headless Chrome ile görüntü alma), witnessme (toplu ekran görüntü ve durum), cutycapt (sayfa görüntüsü yakalama)
+- Açıklama: Çok sayıda host veya alt alan varsa, hepsinin görsel özetini alıp hızlıca önceliklendirme yapmanızı sağlar.
+- Örnek: 500 alt alanın hangi sayfalarının giriş ekranı, hangilerinin hata sayfası olduğunu tek raporda görmek.
+
+- Proxy ve tarayıcı tabanlı test platformları (istek yakalama/değiştirme)
+- Araçlar: Burp Suite (intercept proxy ve test platformu), ZAP/Zaproxy (OWASP’ın açık kaynak alternatifi), Caido (modern proxy ve akış analizi), caido-cli (Caido için CLI otomasyon), Paros (eski ama basit proxy), WebScarab (eski OWASP proxy), WATOBO (proxy + test araçları), OWASP Mantra-FF (güvenlik eklentili Firefox)
+- Açıklama: Tarayıcı ile sunucu arasındaki trafiği görmenizi, parametreleri değiştirip uygulamanın tepkisini güvenle test etmenizi sağlar.
+- Örnek: Bir giriş formunun gönderdiği gizli parametreleri görmek ve hatalı girişlerde dönen cevapları analiz etmek.
+
+- Fuzzing ve parametre keşfi (akıllı deneme)
+- Araçlar: ffuf (genel amaçlı hızlı fuzz), wfuzz (çok yönlü HTTP fuzz), Arjun (gizli GET/POST parametrelerini bulur), Doona (çok protokollü fuzz; HTTP dahil), CRLFuzz (CRLF header enjeksiyonu testi), DotDotPwn (dizin geçişi/path traversal testi)
+- Açıklama: Uygulamanın kabul ettiği parametreleri ve girdilere verdiği beklenmeyen tepkileri sistematik olarak arar.
+- Örnek: Ürün listeleme sayfasının aslında page, sort veya debug gibi gizli parametreleri de kabul edip etmediğini keşfetmek.
+
+
+Web ve HTTP test otomasyonu
+- Açıklama: HTTP(S) isteklerini otomatikleştirir, API uç noktalarını test eder, yanıtları doğrular. Geliştirici ve pentester’lar için hızlı denemeler sağlar.
+- Örnek: Bir REST API’ye farklı yetkilendirme başlıklarıyla istek atıp beklenen durum kodlarını ve cevaptaki alanları doğrulamak.
+- Araçlar: hurl (dosyadan tanımlı HTTP isteklerini çalıştıran pratik test aracı), rephrase$ (payload/metinleri yeniden ifade ederek WAF/sosyal mühendislik içeriklerini çeşitlendirmede yardımcı; ayrıntı belirsiz), tinja$ (web/test otomasyonuna yardımcı; ayrıntı belirsiz)
+
+
+- Otomatik web zafiyet tarayıcıları
+- Araçlar: Nikto (klasik web açığı tarayıcısı), Wapiti (kara kutu web taraması), Skipfish (Google kaynaklı hızlı tarama), Uniscan (çok amaçlı tarama), Web-Cache-Vulnerability-Scanner (cache zehirleme vb. cache sorunları), XSRFProbe (CSRF zafiyet kontrolü)
+- Açıklama: Bilinen zafiyet kalıpları ve yanlış yapılandırmaları hızlıca tarar. Çıktıları manuel doğrulamak önemlidir.
+- Örnek: Eski sürüm bir yönetim panelinin bilinen bir açığa sahip olup olmadığını otomatik kontrol etmek.
+
+- Enjeksiyon ve spesifik zafiyet araçları (hedefli test ve doğrulama)
+- SQL enjeksiyonu: sqlmap (otomatik SQLi testi/çıkarma), jSQL ve jsql-injection (GUI tabanlı SQLi aracı), sqlninja (özellikle MSSQL odaklı), sqlsus (MySQL odaklı), sqlmc (SQLi otomasyonu/toplu kullanım için yardımcı)
+- Komut enjeksiyonu: Commix (komut enjeksiyonunu tespit/istismar eder)
+- XSS: XSSer (XSS tespiti için çerçeve)
+- Padding oracle: PadBuster (CBC padding oracle testi)
+- PHP nesne enjeksiyonu: PHPGGC (bilinen kütüphaneler için gadget chain üretir; tek başına istismar değildir)
+- Açıklama: Genel taramalarda şüpheli görülen noktaları daha derin ve hedefli biçimde doğrulamak için kullanılır.
+- Örnek: Bir arama parametresinde şüpheli davranış görüldüğünde, sqlmap veya jSQL ile bunun gerçekten SQL enjeksiyonu olup olmadığını doğrulamak.
+
+- CMS ve özel platform odaklı tarama/istismar
+- Araçlar: WPScan (WordPress eklenti/tema/sürüm taraması), JoomScan (Joomla zafiyet taraması), jboss-autopwn (JBoss platformuna özel otomatik istismar aracı)
+- Açıklama: Belirli içerik yönetim sistemleri ve uygulama sunucuları için özelleştirilmiş kontroller yapar.
+- Örnek: WordPress sitesinin hangi eklenti sürümlerini kullandığını ve bu sürümlere ait bilinen açıkların olup olmadığını listelemek.
+
+- WebDAV ve sunucu bileşenleri testi
+- Araçlar: DAVTest (WebDAV yazma/yükleme yetkilerini dener), Cadaver (WebDAV istemcisi; dosya yükleme/indirme), apache-users (Apache kullanıcı dizinlerini/enumeration yapar)
+- Açıklama: Web sunucusunda WebDAV açık mı, yazma yetkisi var mı gibi kritik yanlış yapılandırmaları kontrol eder.
+- Örnek: Eski bir intranet sitesinde WebDAV’ın yanlışlıkla açık bırakılıp bırakılmadığını denetlemek.
+
+- İstismar sonrası ve kalıcılık (yalnızca izinli testler!)
+- Araçlar: webshells (test amaçlı örnek web shell koleksiyonu), Weevely (gizlenmiş PHP tabanlı web agent/shell), PHPSploit (HTTP üzerinden gizli yönetim/kalıcılık aracı), WebSploit (saldırı ve keşif modülleri içeren çerçeve)
+- Açıklama: Zafiyet doğrulandıktan sonra, test ortamında etkisini göstermek veya tespit/tepki süreçlerini simüle etmek için kullanılır. Yasal izin olmadan kesinlikle kullanılmamalıdır.
+- Örnek: Güvenlik ekibinin tespit sistemlerini denemek için, izole bir laboratuvarda web shell yükleme senaryosu canlandırmak.
+
+- Eğitim ve laboratuvar
+- Araçlar: DVWA (bilinçli olarak zafiyetli web uygulaması)
+- Açıklama: Gerçek sistemlere zarar vermeden, güvenli bir ortamda zafiyetleri öğrenip pratik yapmanızı sağlar.
+- Örnek: XSS, SQLi ve CSRF gibi açıkları DVWA üzerinde deneyimleyip nasıl çalıştıklarını anlamak.
+
+- Notlar ve çakışan kullanım alanları
+- ffuf ve wfuzz hem içerik keşfi hem de fuzzing kategorisine girer (dosya/dizin arama ve parametre testleri).
+- gospider ve photon, içerik keşfine yardım eden crawler’lardır; parametre keşfinde de kullanılabilir.
+- whatweb, wig, wig-ng, httprint gibi araçlar teknoloji tespiti için birbirini tamamlar; birini doğrulamak için diğerini de çalıştırmak pratik olur.
+- wafw00f keşif aşamasında savunma katmanını (WAF) anlamaya yarar; bu bilgi sonraki testlerin gürültüsünü ayarlamak için önemlidir.

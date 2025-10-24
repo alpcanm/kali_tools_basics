@@ -1,0 +1,8 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:54:20+03:00
+
+ICS/SCADA – Endüstriyel kontrol ve otomasyon güvenlik testleri
+- Açıklama: Fabrika hatları, enerji altyapısı ve akıllı sayaçlar gibi endüstriyel sistemlerde kullanılan cihazların güvenliğini değerlendirmek için kullanılır. Amaç; yanlış yapılandırmaları, zayıf kimlik doğrulamayı ve gereksiz açık kapıları tespit etmektir. Testler her zaman yetkili ve kontrollü (tercihen laboratuvar) ortamda yapılmalıdır.
+- Örnek: Bir elektrik dağıtım şirketinin güvenlik ekibi, laboratuvarda bir akıllı sayacı optik prob ile bağlayıp termineter kullanarak sayaç üzerindeki erişim yetkilerinin doğru yapılandırıldığını ve hassas verilerin korunabildiğini doğrular.
+- Araçlar: termineter (akıllı sayaç güvenlik değerlendirme aracı; ANSI C12.18/19 protokolleri ve optik port ile çalışır; yetkili testlerde konfigürasyon ve erişim kontrollerini gözden geçirmek için)

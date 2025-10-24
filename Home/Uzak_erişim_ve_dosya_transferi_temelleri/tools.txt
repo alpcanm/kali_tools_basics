@@ -1,0 +1,30 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:04:55+03:00
+
+Uzak masaüstü / uzaktan erişim / Dosya aktarımı / indirme / arşiv
+
+Uzak masaüstü / uzaktan erişim – RDP ve VNC
+- Açıklama: Uzak bir bilgisayarın ekranını görüp kontrol etmenizi sağlar. RDP genelde Windows sistemlerde yaygındır; VNC ise platformdan bağımsız çalışır. Uzaktan destek, sunucu yönetimi ve görsel doğrulama gibi işlerde kullanılır.
+- Örnek: Veri merkezindeki bir Windows sunucuya RDP ile bağlanıp hizmet (service) durumlarını GUI üzerinden kontrol etmek; ofisteki Linux masaüstüne VNC ile bağlanıp kısa bir ayar yapmak.
+- Araçlar: freerdp3 (RDP istemcisi/bileşenleri), rdesktop$ (eski RDP istemcisi), tightvnc (VNC sunucusu ve CLI araçları), xtightvncviewer (VNC görüntüleyici)
+
+Dosya aktarımı / indirme / arşiv – FTP/TFTP istemci ve sunucu
+- Açıklama: FTP ve TFTP, ağ üzerinden dosya göndermek/çekmek için kullanılan basit protokollerdir. TFTP genelde cihaz yazılımı ve konfigürasyon aktarımı için, FTP ise genel dosya transferi için kullanılır. Güvenlik notu: Mümkünse şifreli alternatifleri (FTPS/SFTP) tercih edin.
+- Örnek: Bir ağ anahtarının (switch) yapılandırmasını TFTP ile yedeklemek; eski bir uygulama sunucusundan FTP ile log dosyası indirmek.
+- Araçlar: atftp (TFTP istemcisi), atftpd (TFTP sunucusu), tnftp (basit FTP istemcisi), ftp (klasik FTP istemcisi), curlftpfs$ (FTP’yi yerel klasör olarak bağlayabilir)
+
+Dosya aktarımı / indirme / arşiv – HTTP/HTTPS ile indirme ve hızlandırma
+- Açıklama: Web üzerinden dosya indirir, betiklerle otomasyonu kolaylaştırır. Büyük dosyalarda çok parçalı indirme hız kazandırabilir.
+- Örnek: Bir depo (repository) dizinindeki tüm .zip dosyalarını wget ile çekmek; büyük bir ISO dosyasını axel ile çok parçalı indirerek süreyi kısaltmak.
+- Araçlar: wget (esnek indirici, yeniden deneme/filtreleme destekler), axel$ (çok parçalı indirme/hızlandırıcı)
+
+Dosya aktarımı / indirme / arşiv – Uzak depoyu klasör gibi bağlama (mount)
+- Açıklama: Uzak bir FTP sunucusunu yerel bir klasörmüş gibi kullanmanızı sağlar. Böylece kopyalama, senkronizasyon ve düzenleme işlemleri normal dosyalarla çalışır gibi yapılır.
+- Örnek: İç ağdaki FTP yedek sunucusunu /mnt/backup olarak bağlayıp rsync ile günlük yedek almak.
+- Araçlar: curlftpfs$ (FUSE tabanlı FTP’yi dosya sistemi olarak bağlama)
+
+Dosya aktarımı / indirme / arşiv – Arşivleme ve sıkıştırılmış dosyaları açma
+- Açıklama: Sıkıştırılmış arşivleri açar ve bazı formatlarda arşiv oluşturur. Farklı işletim sistemlerinden gelen değişik formatları destekler.
+- Örnek: .7z ile sıkıştırılmış bir proje arşivini açmak; Windows’tan gelen .cab sürücü paketini veya .rar arşivini çıkarmak.
+- Araçlar: 7zip (çok formatlı arşivleyici/açıcı), 7zip-standalone (bağımsız/CLI sürüm), cabextract$ (Microsoft CAB arşivlerini açar), unar (çok sayıda formatı yalnızca açar), unrar-nonfree (RAR arşivlerini açar, kapalı kaynak)

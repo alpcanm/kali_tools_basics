@@ -1,0 +1,39 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:57:53+03:00
+
+Veritabanı güvenliği ve DB araçları
+
+Veritabanı yönetimi ve görselleştirme (GUI istemcileri)
+- Açıklama: Veritabanlarına grafik arayüzle bağlanıp tablo yapısını görmek, sorgu çalıştırmak ve veriyi incelemek için kullanılır. Teknik detaylara girmeden hızlıca “ne var ne yok” görmek isteyenler için idealdir.
+- Örnek: İç denetimde, bir SQLite dosyasındaki tabloları ve ilişkileri hızlıca incelemek için görsel arayüzde açmak.
+- Araçlar: dbeaver (çoklu veritabanı desteği olan GUI istemcisi), sqlitebrowser (SQLite veritabanlarını görsel olarak görüntüleme/düzenleme)
+
+Komut satırı veritabanı yardımcıları ve yedekleme/geri yükleme
+- Açıklama: Sunuculara komut satırından bağlanma, veri yedekleme/geri yükleme ve veri dönüştürme gibi günlük işlemler için kullanılır. Otomasyon ve betiklerle iyi çalışır.
+- Örnek: Üretim dışı bir MongoDB’nin yedeğini almak için mongodump ile dump alıp test ortamına mongorestore ile geri yüklemek.
+- Araçlar: default-mysql-client/server (mysql-defaults) (MySQL/MariaDB istemci ve sunucu meta paketleri), mongo-tools (mongodump/mongorestore gibi MongoDB yardımcıları), mdbtools (MS Access .mdb/.accdb dosyalarını okumak/dışa aktarmak)
+
+Oracle veritabanı keşfi ve servis doğrulama
+- Açıklama: Ağda Oracle veritabanı servislerinin (özellikle TNS dinleyici) çalışıp çalışmadığını, sürüm ve temel bilgileri doğrulamak için kullanılır. Hedefe düşük trafik gönderir.
+- Örnek: Envanter çalışmasında, Oracle veritabanı olup olmadığını ve TNS dinleyicisinin erişilebilirliğini kontrol etmek için TNS ping göndermek.
+- Araçlar: tnscmd10g (Oracle TNS dinleyiciye sorgu/komut gönderme), oscanner (Oracle servis keşfi ve temel bilgiler), odat (Oracle için keşif ve test modülleri barındırır)
+
+Parola/SID doğrulama ve kaba kuvvet testleri
+- Açıklama: İzinli güvenlik testlerinde zayıf hesapları veya tahmin edilebilir Oracle SID’lerini kontrol etmek için kullanılır. Her zaman yetki ve kapsam dahilinde çalışılmalıdır.
+- Örnek: Kurumun onayıyla, test ortamındaki MySQL kullanıcılarında sık kullanılan parolaların olup olmadığını sözlük denemesiyle kontrol etmek.
+- Araçlar: sqldict (MySQL parola sözlük saldırısı aracı), sidguesser (Oracle SID tahmin/deneme), oscanner (zayıf parolaları da yoklayabilir), odat (parola denemeleri dahil çeşitli Oracle testleri)
+
+Oracle güvenlik denetimi ve zafiyet doğrulama
+- Açıklama: Oracle veritabanlarında yanlış yapılandırmaları, bilinen zafiyetleri ve kötü uygulamaları tarayıp raporlamak için kullanılır. Çoğunlukla birden çok modül içerir.
+- Örnek: Yetkili bir sızma testinde, Oracle veritabanında gereksiz açık servisleri ve yanlış yapılandırılmış hakları tarayıp bulguları rapora eklemek.
+- Araçlar: odat (Oracle Database Attacking Tool – keşif, yanlış yapılandırma ve zafiyet testleri), oscanner (Oracle için temel güvenlik kontrolleri), tnscmd10g (dinleyiciyle ilgili güvenlik kontrollerini doğrulamada yardımcı)
+
+Veri dönüştürme ve eski dosyalardan veri çıkarma
+- Açıklama: Eski veya kapalı formatlı veri dosyalarından (ör. MS Access) veriyi dışa aktarmak ya da başka sistemlere aktarmak için kullanılır.
+- Örnek: Eski bir Access (.mdb) arşivindeki müşteri kayıtlarını CSV’ye çevirip modern bir veritabanına aktarmak.
+- Araçlar: mdbtools (Access dosyalarını okumak ve CSV/SQL’e dönüştürmek)
+
+Notlar:
+- Bazı araçlar birden fazla kategoriye girer (ör. odat ve oscanner hem keşif hem güvenlik denetimi altında yer alır).
+- Güvenlik testlerini yalnızca yazılı izinle ve belirlenen kapsam içinde yapın. Bu araçların çoğu denetim ve eğitim amaçlıdır.

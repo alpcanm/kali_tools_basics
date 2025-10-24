@@ -1,0 +1,48 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:44:09+03:00
+
+====== Endüstriyel Cihaz Güvenliğini Test Etme ======
+
+
+
+====== Konu ======
+Bu konu, ICS (makine ve süreçleri yöneten endüstriyel kontrol sistemi) ve SCADA (uzaktan izleme ve kumanda sistemi) ortamlarındaki cihazlara yönelik güvenlik testi (zayıflıkları bulmak için yapılan kontrollü deneme) yaklaşımını anlatır. Amaç; yanlış konfigürasyon (cihaz ayarlarının bütünü), zayıf kimlik doğrulama (kullanıcının gerçekten kim olduğunu kanıtlama süreci) ve gereksiz açık port (dışa açık, kullanılmayan iletişim kapısı) gibi sorunları bulmaktır. Testler yalnızca yetkili test (yazılı izinli ve kapsamı belirlenmiş çalışma) olarak, kontrollü ve tercihen laboratuvar ortamında yapılmalıdır. Örneğin, bir ekip laboratuvarda bir akıllı sayacı optik porttan bağlayıp uygun protokol (cihazların nasıl konuşacağını belirleyen kurallar) komutlarıyla erişim kontrolü (kimin neye, nasıl erişeceğini belirleyen kurallar) ve konfigürasyonun doğru olduğunu doğrular. Bu amaçla, akıllı sayaçlar için termineter adlı araç kullanılabilir.
+
+
+
+====== Neden önemlidir?/Ne işe yarar? ======
+- Fabrika hatları, enerji altyapısı ve akıllı sayaçlar gibi kritik sistemlerde güvenlik açıklarını erken bulmayı sağlar.
+- Yanlış konfigürasyon, zayıf kimlik doğrulama ve gereksiz açık port risklerini görünür kılar.
+- Yalnızca yetkili ve kontrollü test yaparak yasal ve etik sınırları korur.
+
+
+
+====== Nasıl çalışır/uygulanır? ======
+- Yetki ve kapsamı netleştir: Yazılı izin al, test sınırlarını belirle (yetkili test).
+- Güvenli ortam kur: Üretimden ayrı, laboratuvar benzeri kontrollü bir test alanı kullan.
+- Cihazı bağla: Örneğin akıllı sayacı optik port üzerinden test ortamına bağla.
+- İletişimi sağla: Cihaza uygun protokollerle bağlan; akıllı sayaçlarda ANSI C12.18/19 kullanılabilir.
+- Kontrolleri yap: Konfigürasyonu gözden geçir; erişim kontrolü ve kimlik doğrulama ayarlarının doğru olduğuna bak; gereksiz açık port olup olmadığını değerlendir.
+- Örnek uygulama: Laboratuvarda, optik prob ile akıllı sayaca bağlan; termineter kullanarak erişim yetkilerinin doğru yapılandırıldığını ve hassas verilerin korunabildiğini doğrula.
+
+
+
+====== Sözlük ======
+- Açık port: Bir cihazın dış dünyaya açık iletişim kapısı.
+- Erişim kontrolü: Kimin neye ve nasıl erişeceğini belirleyen kurallar.
+- Güvenlik testi: Zayıflıkları bulmak için yapılan kontrollü deneme.
+- ICS: Makine ve süreçleri yöneten endüstriyel kontrol sistemi.
+- Kimlik doğrulama: Kullanıcının gerçekten kim olduğunu kanıtlama süreci.
+- Konfigürasyon: Bir cihazın ayarlarının bütünü.
+- Protokol: Cihazların nasıl konuşacağını belirleyen kurallar.
+- SCADA: Uzaktan izleme ve kumanda sistemi.
+- Yetkili test: Yazılı izinli ve kapsamı belirlenmiş çalışma.
+
+
+
+====== Kazanımlar ======
+- Akıllı sayaçları optik port üzerinden bağlayıp ANSI C12.18/19 komutlarıyla mevcut konfigürasyon ve erişim kontrollerini gözden geçirebilirsin.
+- Sayaç üzerindeki erişim yetkilerinin doğru yapılandırıldığını doğrulayabilir, zayıf kimlik doğrulama durumlarını tespit edebilirsin.
+- Hassas verilerin korunup korunmadığını laboratuvar ortamında güvenli şekilde sınayabilirsin.
+- Tüm testleri yalnızca yetkili ve kontrollü şekilde planlayıp yürütme disiplinini kazanırsın.

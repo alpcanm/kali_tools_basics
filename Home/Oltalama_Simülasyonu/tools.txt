@@ -1,0 +1,8 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:58:16+03:00
+
+Sosyal mühendislik / oltalama
+- Açıklama: İnsanları kandırarak parola, oturum bilgisi veya gizli verileri ele geçirmeyi hedefleyen saldırıları gerçek hayata zarar vermeden, izinli ve kontrollü ortamlarda canlandırmak için kullanılır. Amaç; çalışan farkındalığını ölçmek, e-posta güvenliği ve kimlik doğrulama kontrollerini iyileştirmek, riskleri anlamaktır. Bu araçlar yalnızca yetkili testler ve eğitim amaçlı kullanılmalıdır.
+- Örnek: Bir kurum, onaylı bir güvenlik farkındalığı çalışması kapsamında, küçük bir çalışan grubuna eğitim amaçlı bir “parola yenileme” e-postası gönderir. Sonuçlar (kimler tıkladı/raporladı) anonim şekilde raporlanır, ek eğitim verilir ve e-posta güvenlik filtreleri gözden geçirilir. Teknik ekip, kimlik avına dayanıklı MFA seçeneklerini ve alan adı/bağlantı korumalarını güçlendirir.
+- Araçlar: gophish (açık kaynak oltalama kampanyası yönetimi ve raporlama), evilginx2 (araya girme tekniğiyle kimlik avı simülasyonlarını test etmeye yönelik; savunma dayanıklılığı ölçümü), set / Social-Engineer Toolkit (çeşitli sosyal mühendislik senaryolarını laboratuvarda canlandırmaya yönelik modüler çerçeve), phishery (Office/Word şablonları üzerinden basit kimlik avı farkındalığı senaryolarını canlandırma)

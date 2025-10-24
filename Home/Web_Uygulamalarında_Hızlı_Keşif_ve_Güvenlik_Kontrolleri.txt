@@ -1,0 +1,118 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:14:04+03:00
+
+====== Web Uygulamalarında Hızlı Keşif ve Güvenlik Kontrolleri ======
+
+
+
+===== Konu =====
+Amaç, bir web uygulamasını test etmeden önce hızla tanımak ve temel güvenlik kontrollerini yapmaktır. İlk adımda uygulamanın ayakta olup olmadığını, hangi teknolojileri kullandığını ve savunma katmanlarını anlamak gerekir. Ardından görünmeyen yolları bulur, trafiği inceleyip (proxy: araya giren vekil sunucu) istekleri değiştirir, akıllı denemelerle (fuzzing: çok sayıda farklı girdi deneyerek beklenmeyen tepkileri arama) gizli parametreleri (parametre: istekte gönderilen ad=değer bilgisi) keşfedersiniz. Gerekirse otomasyonla (HTTP: webde tarayıcı ve sunucu arasındaki iletişim kuralı; HTTPS: HTTP’nin şifreli hali) API’leri (API: uygulamaların birbiriyle konuşma yüzeyi) test eder, bilinen açıkları (zafiyet: güvenlik açığı) tarar, özel zafiyetleri örneğin SQL enjeksiyonu (veritabanı sorgusuna zararlı girdi sızdırma) ve XSS (kullanıcının tarayıcısında istenmeyen komut çalıştırma) gibi başlıklarla doğrularsınız. Tüm adımlar yalnızca izinli, yasal testler içindir.
+
+
+
+===== Neden önemlidir?/Ne işe yarar? =====
+- Hangi sistemlerin aktif olduğunu ve hangi teknolojilerin kullanıldığını hızlıca görürsünüz (fingerprinting: teknoloji ve sürüm tanıma).
+- Sonraki testleri planlı yapar, zaman kazanırsınız.
+- Gizli dizinleri, dosyaları ve API yollarını (endpoint: belirli bir API adresi) bularak riskleri erkenden yakalarsınız.
+- Çok sayıda alan adını görsel olarak tarayıp önceliklendirebilirsiniz.
+- Tarayıcı–sunucu trafiğini izleyip istekleri değiştirerek uygulamanın gerçek davranışını anlarsınız.
+- Otomasyonla tekrar eden HTTP(S) testlerini kolayca çalıştırır ve doğrularsınız.
+- Bilinen zafiyetleri hızlıca tarar, şüpheli noktaları daha derin doğrularsınız.
+- Savunma katmanlarını (WAF: web saldırılarını filtreleyen güvenlik duvarı) tanıyıp test gürültüsünü ayarlarsınız.
+- Eğitim/laboratuvar ortamında zarar vermeden pratik yaparsınız.
+
+
+
+===== Nasıl çalışır/uygulanır? =====
+- Genel keşif ve teknoloji tespiti:
+  - Site ayakta mı, hangi sunucu ve yazılımlar kullanılıyor bakılır (fingerprinting).
+  - Savunma katmanı var mı anlaşılır (WAF).
+  - Örnek: Bir şirketin alt alanlarından hangileri aktif ve hangileri WordPress (CMS: içerik yönetim sistemi) kullanıyor görmek.
+
+- İçerik ve dizin keşfi:
+  - Görünmeyen yollar ve dosyalar aranır: /admin, /backup.zip, /api/v1/users gibi (URL: web adresi).
+  - Otomatik geziciler (crawler: sayfaları kendiliğinden gezen yazılım) link, parametre ve endpoint toplar.
+
+- Görsel keşif ve raporlama:
+  - Çok sayıda site/alt alan için ekran görüntüsü alınır; giriş ekranı mı, hata mı, hızlıca ayırt edilir.
+
+- Proxy ve tarayıcı tabanlı testler:
+  - Proxy (araya giren vekil sunucu) ile istekler yakalanır, parametreler görülür/değiştirilir.
+  - Örnek: Giriş formunun gönderdiği gizli parametreleri görüp hatalı giriş yanıtlarını incelemek.
+
+- Fuzzing ve parametre keşfi:
+  - Gizli parametreler bulunur; ör. page, sort, debug.
+  - Dizin geçişi (path traversal: ../ ile yetkisiz dosyalara erişmeye çalışma) gibi durumlar denenir.
+
+- Web ve HTTP test otomasyonu:
+  - Tanımlı HTTP(S) isteklerini dosyadan çalıştırır, API endpoint’lerini doğrularsınız.
+  - Örnek: Bir REST (API tasarım stili) API’sine farklı yetkilendirme (kimin hangi kaynağa erişeceğini belirleme) başlıklarıyla istek atıp durum kodlarını (HTTP yanıt numarası) ve yanıt alanlarını kontrol etmek.
+
+- Otomatik web zafiyet taraması:
+  - Bilinen yanlış yapılandırmalar ve açıklar hızlıca taranır; sonuçlar manuel doğrulanır.
+
+- Enjeksiyon ve spesifik zafiyet doğrulama:
+  - Şüpheli noktalar hedefli araçlarla test edilir; ör. SQL enjeksiyonu, XSS.
+  - Örnek: Bir arama parametresindeki tuhaf davranışı SQL enjeksiyonu olup olmadığı açısından doğrulamak.
+
+- CMS ve özel platform kontrolleri:
+  - WordPress gibi CMS’lerin sürüm ve eklenti durumları sorgulanır; bilinen açıklar eşleştirilir.
+
+- WebDAV ve sunucu bileşenleri:
+  - WebDAV’ın (HTTP üzerinde dosya yönetim uzantısı) açık olup olmadığı ve yazma/yükleme izni test edilir.
+
+- İstismar sonrası ve kalıcılık (yalnızca izinli testler!):
+  - Etkiyi göstermek veya tespit/tepki süreçlerini ölçmek için kontrollü senaryolar kurulur.
+  - Örnek: İzole bir laboratuvarda test amaçlı basit bir web aracı (web shell: sunucuya yüklenen ve komut çalıştırabilen betik) ile tespit sistemlerini denemek.
+  - Not: Bu adımlar yasal izin olmadan kesinlikle yapılmamalıdır.
+
+- Eğitim ve laboratuvar:
+  - DVWA gibi kasıtlı zafiyetli ortamlar üzerinde XSS, SQL enjeksiyonu ve CSRF (kullanıcıyı istemeden istek attırma) pratikleri yapılır.
+
+
+
+===== Sözlük =====
+- API: Uygulamaların birbiriyle konuştuğu kurallı ara yüz.
+- CMS: İçeriği teknik bilgi gerekmeden yönetmeye yarayan sistem.
+- CSRF: Kullanıcının haberi olmadan onun adına istek yaptırma açığı.
+- Crawler: Web sayfalarını otomatik gezip link ve veri toplayan yazılım.
+- Durum kodu: HTTP yanıtındaki 200, 404 gibi anlamlı numara.
+- Endpoint: Erişilebilen belirli bir API adresi.
+- Fingerprinting: Kullanılan yazılım/teknolojiyi ve sürümünü tanıma.
+- Fuzzing: Çok sayıda farklı girdi deneyip beklenmeyen tepkileri arama.
+- HTTP: Tarayıcı ile sunucu arasındaki iletişim kuralı.
+- HTTPS: HTTP’nin şifrelenmiş hali.
+- İstismar: Bir zafiyeti kullanarak etki oluşturma.
+- Kalıcılık: Erişimi uzun süre sürdürebilme durumu.
+- Parametre: İstekle gönderilen ad=değer bilgisi.
+- Path traversal: ../ ile yetkisiz dosyalara erişmeye çalışma.
+- Proxy: İstek/yanıt trafiğinin içinden geçtiği aracı sunucu.
+- REST: API tasarlamak için yaygın basit kurallar bütünü.
+- SQL enjeksiyonu: Veritabanı sorgusuna zararlı girdi sızdırma tekniği.
+- URL: Web adresi.
+- WAF: Web isteklerini filtreleyen ve saldırıları engellemeye çalışan güvenlik duvarı.
+- WebDAV: HTTP üzerinde dosya yönetimi yapmayı sağlayan uzantı.
+- Web shell: Sunucuda komut çalıştırabilen basit web betiği.
+- XSS: Kullanıcının tarayıcısında istenmeyen komut çalıştırma açığı.
+- Yetkilendirme: Kimin hangi kaynağa erişebileceğini belirleme.
+- Zafiyet: Güvenlik açığı.
+
+
+
+===== Kazanımlar =====
+- Aktif alan ve alt alanları hızlıca ayırt edebilme; web servisi verip vermediğini görme.
+- Kullanılan web sunucusu, yazılım ve çatıları tanıyıp teknoloji haritası çıkarma.
+- WAF olup olmadığını saptayıp test hızını ve gürültüsünü buna göre ayarlama.
+- Gizli dizinleri, yedek dosyaları ve API yollarını bulma; riskli varlıkları önceliklendirme.
+- Çok sayıda hedefin ekran görüntülerini toplayıp tek raporda inceleme ve sıralama.
+- Tarayıcı–sunucu trafiğini yakalayıp parametreleri değiştirerek uygulama davranışını analiz etme.
+- Gizli parametreleri keşfetme ve fuzzing ile beklenmeyen yanıtları ortaya çıkarma.
+- Tanımlı HTTP(S) isteklerini dosyadan çalıştırıp API testlerini otomatikleştirme; durum kodu ve içerik doğrulaması yapma.
+- Farklı yetkilendirme senaryolarını deneyip erişim kontrolü hatalarını yakalama.
+- Bilinen web zafiyetlerini hızlıca tarama; yanlış pozitifleri eleyip bulguları manuel doğrulama.
+- SQL enjeksiyonu, XSS ve dizin geçişi gibi hedefli zafiyetleri derinlemesine doğrulama.
+- WordPress gibi CMS’lerde sürüm/eklentileri tarayıp bilinen açıklarla eşleştirme.
+- WebDAV gibi sunucu bileşenlerinde yazma/yükleme gibi kritik yanlış yapılandırmaları tespit etme.
+- İzinli ortamlarda istismar sonrası ve kalıcılık senaryolarını güvenli şekilde canlandırma.
+- DVWA benzeri laboratuvarlarda pratik yaparak ekibi hızla yetkinleştirme.

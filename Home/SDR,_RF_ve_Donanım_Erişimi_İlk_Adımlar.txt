@@ -1,0 +1,85 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:44:32+03:00
+
+====== SDR, RF ve Donanım Erişimi: İlk Adımlar ======
+
+
+
+===== Konu =====
+Bu konu, yazılım tanımlı radyo (SDR: radyo alıcı/vericiyi yazılımla esnek hale getiren cihaz), radyo frekansı (RF: havadan yayılan kablosuz sinyal alanı) sinyallerini yakalama ve sinyal işleme (sinyali yazılımla filtreleyip dönüştürme), ayrıca gömülü cihazlara donanım seviyesinde erişim anlatır. Burada hem kablosuz sinyalleri dinlersiniz hem de cihazın içindeki firmware’e (cihazın içine yazılmış düşük seviye yazılım) ulaşmayı öğrenirsiniz. Öğrenme ve hızlı prototipleme (bir fikri hızla deneyip çalışan basit sürümünü kurma) için uygundur.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+* Kablosuz dünyayı görürsünüz: Hangi frekansta ne var, sinyaller nasıl davranıyor anlarsınız.
+* Basit protokolleri (cihazların anlaşmak için kullandığı konuşma kuralları) çözer, veri çıkarırsınız.
+* Uçak ADS‑B/Mode‑S (uçakların kimlik/konum bilgisi yayan yayın biçimleri) sinyallerini alır, yakınınızdaki uçuşları izlersiniz.
+* SDR kalibrasyonu (ölçüm/doğruluk ayarı) yaparak daha doğru frekans ve güç ölçersiniz.
+* IQ verisini (sinyalin I ve Q adlı iki bileşenden oluşan temsili) kaydedip sonradan incelersiniz.
+* JTAG (çip ile doğrudan haberleşme yolu) ve SWD (ARM çipler için iki telli JTAG benzeri) ile bellek okur, hata ayıklama (yazılımı adım adım inceleyip sorun bulma) yaparsınız.
+* SPI (seri çevrebirimli veri yolu) flash’ı yedekler, dosya sistemi (verilerin disk/bellekte düzenlenme biçimi) çıkarır, ayarları incelersiniz.
+* UART (basit seri haberleşme) ve I2C (iki kablolu kısa mesafe veri yolu) ile konsol (metin tabanlı komut ekranı) açar, register (cihaz içindeki ayar hücresi) ayarı yaparsınız.
+
+===== Nasıl çalışır/uygulanır? =====
+* SDR’yi bilgisayara bağlayın ve sürücüsünü (donanımı çalıştıran yazılım) kurun. Basit bir RF taraması yapın, spektrumda (frekansa göre güç dağılımı) sinyalleri görün.
+* Canlı yayından veya kayıttan IQ verisi alın. Taşıyıcıyı (sinyalin merkez frekansı) ve yan bantları (taşıyıcı çevresindeki bilgi izleri) saptayın, bant genişliğini (sinyalin kapladığı frekans aralığı) ölçün.
+* Temel demodülasyon (modüle edilmiş sinyali içindeki bilgiye çevirme) yapın. Örneğin basit genlik/frekans modülasyonunu deneyin.
+* ADS‑B/Mode‑S için 1090 MHz’e ayarlayın. Sembol hızını (bir saniyedeki işaret/simge sayısı) kabaca ölçün, yayınları çözümleyip konum/irtifa verisi çıkarın. Transponder’den (uçakta otomatik yanıt veren cihaz) gelen paketleri ayıklayın.
+* SDR kalibrasyonu yapın: PPM (milyonda birimle ifade edilen frekans hatası) hatasını ölçüp düzeltin. Gerekirse IQ dengesizliği (I ve Q kanallarının eşit olmamasından doğan hata) düzeltmesi uygulayın.
+* Donanım erişimi için: Hedef cihazda JTAG/SWD pinlerini bulun, bağlanın, bellek haritasını okuyun. Gerekirse BIOS’u (bilgisayarı başlatan temel yazılım) veya diğer bölgeleri doğrulayın.
+* SPI flash yedeği alın. İçinden dosya sistemini çıkarın, yapılandırma dosyalarını ve firmware bölümlerini inceleyin. NOR/NAND (iki farklı flash bellek türü) tipine göre okuma/yazma stratejinizi seçin.
+* Seri haberleşmede: UART ile cihaza bağlanın, önyükleme (cihazın açılış süreci) loglarını (olay kayıtları) izleyin. I2C hattında cihaz adreslerini tarayın, gerekli register ayarlarını yapın.
+* Güvenlik ve yasal sınırlar: Kendi cihazlarınızda ve yasal frekanslarda çalışın. Yetkisiz yayından kaçının.
+
+===== Notlar: =====
+* Hangi işletim sistemi, hangi sürüm ve belirli donanım modeli gerektiği: Dökümandan çıkarılamıyor.
+* Anten seçimi ve saha düzeni ayrıntıları: Dökümandan çıkarılamıyor.
+
+
+===== Sözlük =====
+* ADS‑B: Uçakların kimlik ve konum bilgilerini otomatik yayan yayın biçimi.
+* bant genişliği: Sinyalin kapladığı frekans aralığı.
+* BIOS: Bilgisayarı başlatan en temel yazılım.
+* demodülasyon: Modüle edilmiş sinyali içindeki bilgiye çevirme işlemi.
+* dongle: USB’ye takılan küçük harici cihaz.
+* dosya sistemi: Verilerin depoda nasıl düzenlendiğini belirleyen yapı.
+* firmware: Cihazın içinde çalışan düşük seviye gömülü yazılım.
+* hata ayıklama: Yazılımı adım adım izleyip sorunları bulma işlemi.
+* I2C: İki kabloyla kısa mesafede cihazlar arasında veri aktarımı yapan veri yolu.
+* IQ dengesizliği: I ve Q kanallarındaki güç/faz eşitsizliğinden doğan hata.
+* IQ verisi: Sinyalin I (In‑phase) ve Q (Quadrature) bileşenlerinden oluşan temsili.
+* JTAG: Çip ile doğrudan iletişim kurup bellek ve debug erişimi sağlayan arayüz.
+* kalibrasyon: Ölçüm/doğruluk için sistem ayarlarını gerçeğe yaklaştırma.
+* konsol: Metin tabanlı komut girilen ve çıktı görülen ekran.
+* Mode‑S: Uçakların ikincil radar yanıtlama biçimi; ADS‑B verilerini de taşıyabilir.
+* NAND: Yoğun, hızlı yazılan ama okuma/onarımı farklı olan flash bellek türü.
+* NOR: Rastgele erişime uygun, koddan çalışma için elverişli flash bellek türü.
+* önyükleme: Cihazın açılıp işletim sistemini başlatma süreci.
+* PPM: Milyonda birimle ifade edilen hata/ayrışım ölçüsü.
+* protokol: Cihazların nasıl konuşacağını belirleyen kurallar bütünü.
+* prototipleme: Bir fikri hızla deneyip çalışan basit sürümünü kurma.
+* RF: Havadan yayılan kablosuz sinyal alanı.
+* SDR: Radyo alıcı/vericiyi yazılımla esnek hale getiren cihaz/sistem.
+* sembol hızı: Bir saniyedeki simge (sembol) sayısı.
+* spektrum: Frekansa göre sinyal gücünün dağılımı görünümü.
+* SPI: Seri çevrebirimli, genelde flash bellek ve sensörlerle kullanılan veri yolu.
+* sürücü: Donanımı işletim sistemine tanıtıp çalıştıran yazılım.
+* SWD: ARM tabanlı çipler için iki telli JTAG benzeri debug arayüzü.
+* taşıyıcı: Sinyalin merkez frekansı.
+* transponder: Uçaktaki otomatik kimlik/konum yanıtlayıcı cihaz.
+* UART: Basit, iki telli seri haberleşme yöntemi.
+* yan bant: Taşıyıcı çevresinde bilgiyi taşıyan frekans bileşenleri.
+* sinyal işleme: Sinyali yazılımla filtreleyip dönüştürme.
+* register: Cihaz içindeki ayar/değer tutan küçük bellek hücresi.
+
+===== Kazanımlar =====
+* SDR donanımını bilgisayara tanıtır ve temel RF taraması yaparım.
+* Spektrumda sinyalleri görür, taşıyıcıyı, yan bantları ve bant genişliğini saptarım.
+* Canlı veya kaydedilmiş IQ verisini açar, ölçer ve görselleştiririm.
+* Basit AM/FM demodülasyonunu kurar, ses/veri çıkarırım.
+* ADS‑B/Mode‑S yayınlarını alır, uçak konum/irtifa bilgisini çözerim.
+* SDR frekans hatasını PPM cinsinden ölçer ve kalibre ederim; gerekirse IQ dengesizliğini düzeltirim.
+* Hedef cihazda JTAG/SWD ile bağlantı kurar, bellek okur/yazar ve temel hata ayıklama yaparım.
+* SPI flash içeriğini yedekler, içinden dosya sistemini ve yapılandırma dosyalarını çıkarırım.
+* UART üzerinden cihaza bağlanır, önyükleme loglarını izler ve komut gönderirim.
+* I2C hattındaki cihazları tarar, adreslerini bulur ve gerekli register ayarlarını yaparım.
+* Güvenli ve yasal çalışma sınırlarını değerlendirir, yetkisiz yayın veya erişimden kaçınırım.

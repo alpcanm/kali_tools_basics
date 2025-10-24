@@ -1,0 +1,51 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:12:03+03:00
+
+C2 / Red Team / backdoor ve payload
+
+Yalnızca yetkili sızma testleri, denetimler ve eğitim laboratuvarları için kullanın. Aşağıdaki özetler bilgilendirme amaçlıdır.
+
+Genel amaçlı C2 (Komuta–Kontrol) frameworkleri
+- Açıklama: Hedef makinelerdeki “ajan”ları tek merkezden yönetmenizi sağlar. Komut çalıştırma, dosya aktarma, oturum yönetimi ve yanal hareket gibi işleri bir arayüzden koordine eder.
+- Örnek: Bir kurum içi sızma testinde birden fazla kullanıcı bilgisayarında oturum alındıktan sonra hepsini tek bir panelden izlemek ve komut göndermek.
+- Araçlar: sliver (çoklu platform C2, aktif geliştirme), merlin (HTTP/2 tabanlı C2; server/agent), havoc (modern kırmızı takım C2), villain (çoklu reverse shell toplayıcı; hafif C2 özellikleri)
+
+PowerShell/.NET tabanlı C2 ve post-exploitation
+- Açıklama: Windows odaklı ortamlarda PowerShell, .NET veya JScript/COM üzerinden ajan çalıştırıp komut yürütme, bilgi toplama ve yanal hareket gibi adımları yönetir.
+- Örnek: Active Directory bulunan bir ağda, izinli testte PowerShell tabanlı ajanlarla kullanıcı bağlamında komut çalıştırıp olay günlüklerini nasıl tetiklediğini gözlemlemek.
+- Araçlar: poshc2 (PowerShell/C# ajanları, Windows odaklı), powershell-empire (olgun PowerShell tabanlı C2), covenant-kbx (ASP.NET Core; .NET ajanları), silenttrinity (C# ve IronPython ajanları), koadic (JScript/COM tabanlı “zombie” C2), ibombshell (PowerShell ağırlıklı post-exploitation)
+
+DNS üzerinden C2/tünelleme
+- Açıklama: Sıkı çıkış (egress) kuralları olan ağlarda DNS sorguları üzerinden düşük bant genişlikli bir komut–kontrol kanalı kurmayı dener.
+- Örnek: Sadece DNS’e izin verilen bir segmentte, yetkili laboratuvar testinde DNS tünelinin görünürlüğünü ve tespit edilebilirliğini ölçmek.
+- Araçlar: dnscat2 (client/server) (DNS tüneli üzerinden C2)
+
+Basit backdoor ve ters bağlantı (reverse shell)
+- Açıklama: Küçük ve tek amaçlı arka kapılar; bir port dinler veya dışarıya bağlanır. Bazılarında şifreleme/kimlik doğrulama desteği bulunur.
+- Örnek: İzinli lab ortamında, dışarıya doğru bağlantı kurulabildiğini ve IDS/IPS’in bunu nasıl gördüğünü test etmek için şifrelemeli bir reverse shell başlatmak.
+- Araçlar: dbd (şifrelemeli netcat-benzeri backdoor; reverse/bind), villain (birden çok reverse shell’i tek yerden toplar ve yönlendirir)
+
+Payload ve AV/EDR atlatma üreticileri
+- Açıklama: Savunma ekiplerinin algılama/tepki süreçlerini test etmek için farklı kodlama/gizleme teknikleriyle çalıştırılabilir dosya veya komut dizileri üretir.
+- Örnek: Yetkili bir tatbikatta, farklı payload türlerinin antivirüs/EDR tarafından hangi aşamada yakalandığını karşılaştırmak.
+- Araçlar: veil (veil-catapult, veil-evasion) (payload üretimi ve gizleme/kaçınma modülleri), unicorn-magic (PowerShell/VBA üzerinden shellcode üretimi/enjeksiyonu)
+
+Saldırgan benzetimi (adversary emulation) ve otomasyon
+- Açıklama: Gerçek saldırgan tekniklerini (MITRE ATT&CK gibi) senaryolaştırıp otomatik icra eder; mavi takımın görünürlük ve tepki süresini ölçmeye yarar.
+- Örnek: Kimlik avı sonrası kalıcılık, yanal hareket ve veri sızdırma adımlarını senaryo halinde çalıştırıp SOC’un hangi adımları gördüğünü raporlamak.
+- Araçlar: caldera (MITRE’nin otomasyon/benzetime platformu)
+
+Metasploit işbirliği ve görsel orkestrasyon
+- Açıklama: Metasploit’i ekipçe ve görsel arayüzle kullanmayı kolaylaştırır; oturumları yönetme, görev paylaşımı ve koordinasyon sağlar.
+- Örnek: Takım tatbikatında elde edilen Meterpreter oturumlarını aynı panelde görüp hedeflere görev dağıtımı yapmak.
+- Araçlar: armitage (Metasploit için GUI; ekip içi işbirliği)
+
+
+C2, tünelleme ve gizli iletişim
+- Açıklama: İç/dış ağ kısıtlamalarını aşmak veya kalıcı bağlantı kurmak için trafiği farklı kanallardan (ör. DoH, kurumsal sohbet) geçirir. Yalnızca yetkili sızma testlerinde kullanılmalıdır.
+- Örnek: Proxy/DNS kısıtlamalı bir ortamda, komuta-kontrol trafiğini DNS-over-HTTPS üzerinden geçirerek test ekibinin geri bağlantı alması.
+- Araçlar: godoh$ (DNS-over-HTTPS üzerinden tünelleme/C2), teamsploit$ (Microsoft Teams üzerinden sosyal mühendislik/C2 köprüsü; yetkili testlerde kullanım), tundeep$ (tünelleme amaçlı yardımcı; ayrıntı belirsiz)
+
+
+Not: Bazı araçlar birden fazla kategoriye girer. Örneğin villain hem basit reverse shell’leri yönetebilir hem de hafif bir C2 olarak kullanılabilir; poshc2 ve powershell-empire hem C2 hem de post-exploitation işlevleri sunar.

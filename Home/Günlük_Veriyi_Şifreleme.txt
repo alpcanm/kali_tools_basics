@@ -1,0 +1,43 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:12:16+03:00
+
+====== Günlük Veriyi Şifreleme ======
+
+
+
+====== Konu ======
+Bu araçlar, dosyaları, diskleri ve ağ trafiğini kriptografi (bilgiyi matematikle gizleme ve doğrulama yöntemi) ile korur. Amaç üç şeydir: gizlilik (yetkisiz biri içeriği okuyamaz), bütünlük (verinin değişmediğini kanıtlayabilmek) ve kimlik doğrulama (iletişimdeki kişinin gerçekten o kişi olduğunu göstermek). Günlük kullanımda; dosya şifreleme, USB/disk şifreleme ve sertifika (kimliği ispatlayan dijital belge) ile anahtar (şifreleme/deşifreleme için kullanılan gizli veya açık değer) üretimi öne çıkar. Kimler kullanır? Dökümandan çıkarılamıyor.
+
+====== Neden önemlidir?/Ne işe yarar? ======
+- Cihaz kaybolsa ya da çalınsa bile içerik okunamaz.
+- Paylaşılan dosyaları sadece yetkili kişiler açar.
+- Ağda dinlemeye karşı veriyi korur.
+- Karşı tarafın kimliğini doğrular ve güvenli bağlantı kurar.
+
+====== Nasıl çalışır/uygulanır? ======
+- Dosya şifreleme: Bir dosyayı seç. Güçlü bir parola belirle. Araç dosyayı şifreli bir kopyaya çevirir (bazıları .cpt uzantısı ekler).
+- USB/disk şifreleme (LUKS: disk şifreleme standardı) örneği: Ortamı LUKS ile başlat. Şifreli alanı aç ve bir ad ver. Üzerinde bir dosya sistemi (diskte verileri düzenleyen yapı) oluştur. Sonra kullanıma aç ve dosyalarını kopyala. Örnek komutlar dökümanda: cryptsetup luksFormat /dev/sdX; cryptsetup open /dev/sdX gizli_usb; mkfs.ext4 /dev/mapper/gizli_usb.
+- Ağ ve testler: Gerekirse bir sertifika ve anahtar üret. TLS (internette güvenli bağlantı standardı) ayarlarını test et.
+
+====== Sözlük ======
+- anahtar: Şifreleme veya çözme için kullanılan gizli ya da açık değer.
+- bütünlük: Verinin değiştirilmediğini kanıtlama durumu.
+- dosya sistemi: Verileri diskte düzenleyen yapı.
+- gizlilik: Yetkisiz kişilerin veriyi okuyamaması.
+- kimlik doğrulama: Karşı tarafın gerçekten kim olduğunu kanıtlama işlemi.
+- kriptografi: Bilgiyi matematikle gizleme ve doğrulama yöntemi.
+- LUKS: Disk şifreleme standardı.
+- sertifika: Kimliği ispatlayan dijital belge.
+- TLS: İnternette güvenli bağlantı standardı.
+
+====== Kazanımlar ======
+- Tek tek dosyaları parola ile şifrelemek ve çözmek (ör. şifreli çıkış dosyalarıyla çalışmak).
+- USB bellek veya disk bölümü için şifreli alan hazırlamak ve güvenle kullanmak.
+- Şifreli birimi açmak, içinde dosya sistemi oluşturmak ve veri taşımak.
+- Var olan şifreli birimi yeniden şifrelemek.
+- Şifreli depolamaya bütünlük koruması eklemek ve değişiklikleri tespit etmek.
+- Salt-okunur doğrulama yaparak sadece doğrulanmış veriyi okumak.
+- Sertifika ve anahtar üretmek; bunları uygulama ve testlerde kullanmak.
+- TLS bağlantılarını ve ayarlarını test ederek güvenli iletişimi doğrulamak.
+- Gerektiğinde farklı kripto sağlayıcı modlarını seçip kullanmak (default/legacy/FIPS).

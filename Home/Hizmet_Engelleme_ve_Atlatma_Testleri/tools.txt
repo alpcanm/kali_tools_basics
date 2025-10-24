@@ -1,0 +1,18 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:59:41+03:00
+
+DoS / Evasion / Erişim atlatma
+
+DoS (Hizmet Dışı Bırakma) Saldırıları
+- Açıklama: Hedef sistem ya da ağı çok sayıda istekle veya protokol zayıflıklarını kullanarak meşgul eder, kaynakları tüketir ve hizmet veremez hale getirir. Güvenlik ekipleri bu araçları yalnızca izinli test/lab ortamlarında, savunmaların dayanıklılığını ölçmek için kullanır. Genelde “gürültülü” ve fark edilmesi kolaydır.
+- Örnek: Bir şirket, izni dahilinde test ortamındaki web uygulamasının “yavaş HTTP” türü saldırılara ne kadar dayanıklı olduğunu görmek için yük simülasyonu yapar; WAF ve hız sınırı ayarlarını bu sonuçlara göre sıkılaştırır.
+- Araçlar: goldeneye (HTTP katmanı DoS; yavaş ve kalıcı isteklerle servisi kilitlemeye çalışır), slowhttptest (yavaş başlık/gövde göndererek HTTP bağlantılarını açık tutup kaynak tüketimini ölçer), t50 (birçok protokolde yüksek hacimli paket seli/flood üretir), thc-ssl-dos (TLS/SSL el sıkışma/yeniden görüşme maliyetini sömürerek CPU’yu zorlar), dhcpig (DHCP starvation; IP havuzunu sahte taleplerle doldurur), iaxflood (IAX/VoIP sinyallemesini flood ederek PBX/VoIP servislerini zorlar), thc-ipv6 (IPv6 için DoS dâhil çok sayıda saldırı aracı içerir)
+
+
+Evasion / Erişim atlatma (kaçınma)
+- Açıklama: IDS/IPS, tarayıcılar ve bazı güvenlik kontrollerini şaşırtmak için paketleri bölme, yeniden sıralama, sahte servis gösterme veya trafiği manipüle etme gibi teknikler kullanır. Savunma tarafında, algılama kurallarını ve cihaz ayarlarını doğrulamak için izinli ortamlarda değerlendirme amacıyla kullanılır.
+- Örnek: Güvenlik ekibi, sadece lab ortamında, IDS’in parçalanmış IP paketlerini doğru birleştirip uyarı üretip üretmediğini görmek için kaçınma senaryolarını simüle eder; ardından yeniden birleştirme ve anomali imzalarını iyileştirir.
+- Araçlar: fragrouter (IP parçalama/yeniden sıralama ile IDS/IPS atlatma tekniklerini simüle eder), portspoof (binlerce sahte “açık” port göstererek tarayıcıları oyalayıp yanlış sonuç üretir), sniffjoke (trafiği parçalayıp manipüle ederek pasif dinleyicileri ve bazı IDS/IPS’leri yanıltır), thc-ipv6 (IPv6’da keşif, spoofing ve bazı atlatma tekniklerini kapsayan araç seti)
+
+Not: Bu araçlar yalnızca yetkili, kontrollü ortamlarda ve yasal sınırlar içinde savunma/denetim amaçlı kullanılmalıdır.

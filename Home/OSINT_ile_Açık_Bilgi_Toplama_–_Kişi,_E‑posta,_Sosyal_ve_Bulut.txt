@@ -1,0 +1,69 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:13:26+03:00
+
+====== OSINT ile Açık Bilgi Toplama – Kişi, E‑posta, Sosyal ve Bulut ======
+
+
+
+===== Konu =====
+OSINT (açık kaynak istihbarat: internette herkese açık bilgileri toplama ve bir araya getirme), bir kişi ya da kurumun dijital ayak izini (internette bir kişi/kurum hakkında ortada olan tüm izler ve bilgiler) görmek için kullanılır. Önce pasif toplama (hedefe doğrudan istek göndermeden, üçüncü taraf kaynaklardan veri çekme) tercih edilir; gerekiyorsa ve izin varsa aktif tarama (hedef sisteme doğrudan istek göndererek kontrol yapma) yapılır.
+
+Bu çalışma alan adı (bir sitenin adı, ör. example.com) ve alt alan adı (alan adının başındaki alt kısım, ör. blog.example.com), web arşivi (eski web sayfalarını saklayan hizmet), herkese açık kayıtlar ve arama motorları ile başlar. Bulut (uzaktaki sunucularda çalışan internet hizmetleri) ortamlarında kova/bucket (bulutta dosya tutmak için kullanılan kap) adları ad deneme (brute-force: çok sayıda olası adı tek tek deneme) ile kontrol edilir. Sertifika kayıtları (web sitelerinin yayınladığı güvenlik sertifikalarının herkese açık listeleri) gibi kaynaklar da ipucu verir. Böylece sosyal mühendislik (insanları kandırarak bilgi alma yöntemi) riskleri ve olası veri ihlali (bilgilerin izinsiz olarak açığa çıkması) izleri anlaşılır.
+
+Not: Bazı araç adlarının nasıl çalıştığı dokümandan çıkarılamıyor.
+
+
+
+===== Neden önemlidir?/Ne işe yarar? =====
+* Hakkınızda ya da kurumunuz hakkında dışarıda hangi bilgiler var, hızlıca görürsünüz.
+* Hesap taklidi ve sosyal mühendislik denemelerine kapı açan açıkları erken fark edersiniz.
+* Bilinen veri ihlallerinde yer alan e‑postaları ve profilleri tespit edersiniz.
+* Dışa açık sistemleri ve alt alan adlarını listeleyerek saldırı yüzeyini küçültürsünüz.
+* Bulutta yanlış yapılandırılmış kova/bucket erişimlerini yakalarsınız.
+* E‑posta adresi formatlarını ve sık yapılan yazım hatalarını görerek sahteciliği önlemeye yardımcı olursunuz.
+* Yasal ve etik sınırlar içinde pasif/aktif yaklaşımı ayırmayı öğrenirsiniz.
+
+
+
+===== Nasıl çalışır/uygulanır? =====
+* Hedefi netleştirin: kişi, kurum, marka, alan adı.
+* Anahtar kelimeleri ve alan adı/alt alan adlarını çıkarın.
+* Pasif toplama yapın: arama motorları, web arşivleri, herkese açık kayıtlar, sertifika kayıtları.
+* Genel bakış: sahiplik bilgisi, geçmiş web sayfaları, görünen e‑postalar ve sosyal profiller.
+* E‑posta odaklı bakış: adresin izleri ve olası veri ihlali kayıtları; yalnızca yetkiniz varsa aktif doğrulama yapın.
+* Sosyal/kullanıcı adı bakışı: çalışan isimlerinden kullanıcı adı formatını çıkarın; platformlardaki eşleşmeleri kontrol edin.
+* Bulut bakışı: kendi kurum adlarınıza bağlı olası kova/bucket adlarını ad deneme ile test edin; erişim açık mı bakın (yalnızca yetkiliyseniz).
+* Dışa açık varlık keşfi: pasif kaynaklardan alt alanları ve sanal hostları toplayın; port taraması gibi aktif adımlara geçmeden önce izin alın.
+* Bulguları kanıtıyla kaydedin; riske göre önceliklendirin; düzeltme önerileri yazın.
+
+
+
+===== Sözlük =====
+* ad deneme (brute-force): Çok sayıda olası adı tek tek deneyerek doğru olanı bulma yöntemi.
+* aktif tarama: Hedef sisteme doğrudan istek göndererek kontrol/test yapma.
+* alan adı: Bir web sitesinin adı (ör. example.com).
+* alt alan adı: Alan adının başındaki alt kısım (ör. blog.example.com).
+* bulut: Uzak sunucularda çalışan internet hizmetleri.
+* dijital ayak izi: İnternette bir kişi/kurum hakkında ortada olan tüm izler ve bilgiler.
+* kova/bucket: Bulutta dosya tutmak için kullanılan depolama kabı.
+* OSINT: İnternette herkese açık bilgileri toplama ve bir araya getirme çalışması.
+* pasif toplama: Hedefe doğrudan istek göndermeden üçüncü taraf kaynaklardan veri çekme.
+* sertifika kayıtları: Web sitelerinin yayınladığı güvenlik sertifikalarının herkese açık listeleri.
+* sosyal mühendislik: İnsanları kandırarak bilgi alma yöntemi.
+* varlık keşfi: İnternet üzerindeki sistem ve servisleri bulma süreci.
+* veri ihlali: Bilgilerin izinsiz olarak açığa çıkması.
+* web arşivi: Eski web sayfalarını saklayan hizmet.
+
+
+
+===== Kazanımlar =====
+* Bir alan adı ve marka için “ilk görünüm” raporu hazırlamak: sahiplik, geçmiş sayfalar, görünen e‑postalar ve sosyal profiller.
+* E‑posta adreslerinin bilinen veri ihlallerinde görünüp görünmediğini kontrol etmek; yazım varyasyonlarını ve taklit risklerini belirlemek; izinli senaryolarda adres varlığını ve e‑posta akışını test etmek.
+* Çalışan isimlerinden kurumsal kullanıcı adı formatını türetmek ve yüzlerce sitede aynı kullanıcı adının varlığını hızlıca kontrol etmek.
+* Bulutta olası kova/bucket adlarını denemek, yanlış yapılandırılmış veya açık depolamayı tespit etmek ve maruz kalan içerikleri raporlamak.
+* Pasif kaynaklardan alt alan listesi üretmek, sertifika kayıtlarından yeni alanları çıkarmak ve dışa açık sanal host/servis haritası oluşturmak.
+* Pasif ve aktif yaklaşımlar arasındaki farkı uygulamak; sadece yetkili olduğunuzda aktif test yapmak; işlem günlüklerini ve kanıtları düzenli tutmak.
+* Bulguları kanıt, tarih, kaynak, risk seviyesi ve öneri içeren sade bir rapora dönüştürmek.
+
+Not: Bazı adları anılan araçların ayrıntılı çalışma biçimleri dokümandan çıkarılamıyor.

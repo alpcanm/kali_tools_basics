@@ -1,0 +1,43 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:07:30+03:00
+
+Sistem / yardımcı araçlar (genel) Terminal ve oturum yönetimi
+- Açıklama: Tek bir terminal penceresinde birden çok oturum/pencere açmanızı ve bağlantı kopsanız bile işleri arka planda sürdürmenizi sağlar.
+- Örnek: SSH ile uzak sunucuya bağlanıp tmux içinde uzun süren bir kurulum başlatırsınız; internetiniz kesilse bile geri bağlanıp kaldığınız yerden devam edersiniz.
+- Araçlar: tmux (çoklu pencere/ayrıl-bağlan), screen (oturumu ayırıp sonra geri bağlanma)
+
+Metin düzenleme, kopyalama ve paylaşım
+- Açıklama: Yapılandırma (config) dosyalarını düzenleme, terminaldeki metni panoya kopyalama ve komut çıktısını hızlıca link olarak paylaşma.
+- Örnek: Bir servis ayarını vim ile düzenlersiniz; hata mesajını xclip ile panoya kopyalayıp, ayrıntılı çıktıyı wgetpaste ile paste servisine yükleyip ekip arkadaşınıza link atarsınız.
+- Araçlar: vim (çeşitleri; güçlü metin editörü), xclip (X11 panosuna kopyala/yapıştır), wgetpaste (komut çıktısını paste servisine yükleyip link üretir)
+
+Ağ teşhis ve hızlı bağlantı testleri
+- Açıklama: Açık port kontrolü, basit bağlantı testleri ve ağ arayüz/rota bilgilerini görme.
+- Örnek: Bir sunucunun 443 portu açık mı diye nc -vz example.com 443 ile test eder, ardından netstat/ifconfig ile sistemde hangi portların dinlediğine bakarsınız.
+- Araçlar: netcat (nc; hızlı port/bağlantı testi ve veri gönderme/alma), netcat-traditional (eski nc söz dizimiyle uyumlu sürüm), net-tools (ifconfig, route, netstat gibi klasik ağ komutları)
+
+Ağ yapılandırma ve adresleme
+- Açıklama: IP bloklarını planlama, MAC adresini geçici değiştirme, VLAN arayüzleri oluşturma ve sistemin ağ hizmet/protokol bilgilerini tutma.
+- Örnek: Ofiste VLAN 10 için eth0.10 arayüzünü oluşturur, halka açık Wi‑Fi’da MAC adresinizi geçici olarak rastgeleleyerek bağlanır, bir IP bloğunun /24 mü /25 mi olduğuna whatmask ile karar verirsiniz.
+- Araçlar: whatmask (CIDR/alt ağ maskesi hesaplar), macchanger (geçici MAC adresi değiştirir), vlan (802.1Q VLAN arayüzleri), netbase (ağ protokol/hizmet listeleri; /etc/services, /etc/protocols)
+
+Mobil/USB modem ile internet
+- Açıklama: 3G/UMTS USB modemleri hızlıca tanıyıp internete bağlanmak için yardımcı olur.
+- Örnek: Saha çalışmasında dizüstüne takılı 3G USB modemle birkaç komutla internete çıkarsınız.
+- Araçlar: sakis3g (3G modemleri otomatik yapılandırır ve bağlar)
+
+Dosya ve komut bulma
+- Açıklama: Sistemdeki dosyaları çok hızlı arar; büyük dosya sistemlerinde bile anında sonuç verir.
+- Örnek: Hangi dizinde olduğunu unuttuğunuz bir ayar dosyasını plocate ssh_config komutuyla anında bulursunuz.
+- Araçlar: plocate (indeksli, çok hızlı dosya arama; locate alternatifi)
+
+Sistem temel araçları
+- Açıklama: Linux’un günlük yönetiminde sık kullanılan küçük yardımcı komutları bir arada sunar (disk, bağlama, süreç, günlükler vb.).
+- Örnek: Yeni bir diski lsblk ile görür, fdisk ile bölümlendirir, mkfs ile biçimlendirir ve mount ile bağlarsınız.
+- Araçlar: util-linux (fdisk, lsblk, mount, dmesg, kill vb. çok sayıda yardımcı)
+
+Saat ve zaman dilimi
+- Açıklama: Sistemin doğru zaman dilimi bilgilerini içerir ve bölgenize göre saat ayarlamanıza yardımcı olur.
+- Örnek: Sunucunun yerel saatini doğru göstermek için Europe/Istanbul zaman dilimine geçirirsiniz.
+- Araçlar: tzdata (zaman dilimi veritabanı; dpkg-reconfigure tzdata ile ayarlanır)

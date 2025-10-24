@@ -64,4 +64,4 @@ Bu konu, elinizdeki parola özetlerini yani hash’leri (verinin sabit uzunluklu
 * PDF/ZIP/RAR/7z gibi dosyalar için uygun parola kurtarma akışını kurar ve sonuçları yorumlarsın.
 * Şifreli disk/konteyner ve kripto cüzdan parolaları için izinli kurtarma denemesi planlar ve uygularsın.
 * BIOS/UEFI/CMOS parolalarının yerel kurtarma adımlarını güvenle yürütürsün.
-* Ağ[[Parola-Hash kırma ve wordlist üretimi]]
+* AğParola-Hash kırma ve wordlist üretimi

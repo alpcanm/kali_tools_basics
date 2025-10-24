@@ -1,0 +1,62 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:16:31+03:00
+
+====== Güvenlik testinde çıktı yönetimi ve lab altyapısı ======
+
+
+
+===== Konu =====
+Bu içerik, güvenlik testinde yardımcı olacak dört alanı açıklar: büyük çıktıların akıllıca özetlenmesi, isim çözümleme yönetimi, yan kanal (asıl veri yolu dışında sızan dolaylı işaret) farkındalığı ve altyapı paketleri. Büyük dil modeli (LLM: çok metinle eğitilen, metni anlayıp üreten yapay zeka) destekli yardımcılar, örneğin nmap (ağ tarama aracı) gibi araçların ürettiği uzun raporları özetleyip önceliklendirir. İsim çözümleme (bir alan adını IP adresine çevirme) için hosts dosyası (alan adı ile IP adresini yerelde eşleyen basit metin dosyası) kullanılarak test ortamında alan adları geçici olarak yönlendirilebilir. Yan kanal araştırmaları, akustik (sesle ilgili) gibi alışılmadık yollarla bilgi sızabileceğini laboratuvarda göstermeye yarar. Son olarak kütüphane (başka programların kullandığı hazır kod), meta paket (tek komutla birçok paketi kuran paket) ve servis (arkaplanda çalışan ve istemcilere hizmet veren yazılım) gibi altyapı bileşenleri; derlemek (kaynak koddan program üretmek), bağımlılık (bir programın ihtiyaç duyduğu başka paket) kurmak ve web/DNS/SSH/SMB/RADIUS gibi servisleri hızla ayağa kaldırmak için gereklidir. Bazı paketlerin amacı belirsizdir; bu durumda net kullanım alanı dökümandan çıkarılamıyor.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+- Büyük tarama çıktılarında kritik bulguları hızla görmeyi sağlar.
+- Test alan adlarını güvenle ve geçici olarak kendi lab ortamına yönlendirmeni kolaylaştırır.
+- Ses gibi dolaylı işaretlerden sızıntı olasılığını deneyle göstermeye yardım eder.
+- Bilinmeyen paketleri varsaymadan, doğrulayarak kullanmanı teşvik eder.
+- Gerekli kütüphane ve servisleri hızlıca kurarak lab kurulumunu hızlandırır.
+- PoC (fikir kanıtı; sınırlı özellikli deneme) çalışmalarını kolaylaştırır.
+
+===== Nasıl çalışır/uygulanır? =====
+- Çıktı analizi: LLM tabanlı yardımcıya tarama çıktısını verirsin; o da özet çıkarır, kritik portları ve olası riskleri önceliklendirir.
+- Metin çeşitlendirme: E‑posta veya sosyal mühendislik metinlerini yeniden ifade ettirip (farklı ama aynı anlamda) alternatifler üretirsin.
+- İsim çözümleme: hosts dosyasında hedef alan adı için lab sunucunun IP adresini yazarsın; tarayıcı veya istemci bu IP’ye gider.
+- Staging ortamı (canlıya çıkmadan önceki test ortamı): Geçici yönlendirme yapıp uygulamanın davranışını doğrularsın; işin bitince kaydı silersin.
+- Yan kanal testi: Kontrollü bir odada ses kaydı gibi veriler toplar, yalnızca lab ortamında olası sızıntıyı gösterirsin.
+- Belirsiz paketler: Paket açıklamasını ve proje sayfasını kontrol eder, amaç net değilse lab’da sınırlı ve izole denersin. Net amacı dökümandan çıkarılamayanlar için varsayım yapmazsın.
+- Altyapı paketleri: Gerekli -dev/-doc/-common gibi paketleri kurar, eksik bağımlılıkları tamamlarsın; meta paketlerle geniş araç setini tek seferde yüklersin.
+- Servisler: Web (web sayfası sunan servis), DNS (alan adını IP’ye çeviren sistem), SSH (uzaktan güvenli erişim yöntemi), SMB (Windows dosya paylaşımı), RADIUS (ağ erişimi için kimlik doğrulama sistemi) gibi servisleri kurup başlatır, test senaryolarını çalıştırırsın.
+===== = =====
+===== Sözlük =====
+- Akustik: Sesle ilgili her şey.
+- Alan adı: İnternette bir siteyi tanımlayan okunabilir ad.
+- Bağımlılık: Bir programın çalışması için gereken başka paket veya bileşen.
+- Derlemek: Kaynak kodu çalışabilir programa dönüştürmek.
+- DNS: Alan adını IP adresine çeviren sistem.
+- Hosts dosyası: Alan adlarını belirli IP adreslerine yerelde eşleyen metin dosyası.
+- IP adresi: İnternette cihazları tanımlayan sayısal adres.
+- İsim çözümleme: Alan adını IP adresine çevirme işlemi.
+- Kütüphane: Başka programların kullandığı hazır kod paketi.
+- LLM: Çok metinle eğitilen, metni anlayıp üreten yapay zekâ modeli.
+- Meta paket: Kendi içeriği az olup, birçok paketi birlikte kurduran paket.
+- Nmap: Ağda cihaz ve port taraması yapan araç.
+- PoC: Bir fikrin çalıştığını gösteren küçük ve sınırlı örnek.
+- Servis: Arkaplanda çalışan ve istemcilere hizmet veren yazılım.
+- SMB: Windows dosya ve yazıcı paylaşımı için kullanılan yöntem.
+- SSH: Uzak sistemlere şifreli bağlantı kurma yöntemi.
+- Staging ortamı: Canlıya çıkmadan önce yapılan son test ortamı.
+- Sürüm kontrol sistemi: Kod ve dosya değişikliklerini kaydeden ve yöneten sistem.
+- Yan kanal: Asıl iletişim dışında kalan dolaylı işaretlerle bilgi sızması.
+
+===== Kazanımlar =====
+- Büyük tarama çıktılarından otomatik özet üretip kritikleri önceliklendirme.
+- E‑posta ve sosyal mühendislik metinlerini amaç aynı kalacak şekilde yeniden yazma ve çeşitlendirme.
+- Hosts dosyasıyla belirli bir alan adını geçici olarak kendi test sunucuna yönlendirme.
+- Staging ortamında uygulama davranışını, canlı trafiği etkilemeden doğrulama.
+- Akustik gibi yan kanallardan gelebilecek sızıntı riskini laboratuvarda gösterecek deneyler kurgulama.
+- Belirsiz paketlerin amacını proje sayfası ve paket açıklamasıyla doğrulayıp, varsayımdan kaçınma.
+- Derleme için gereken -dev paketlerini ve eksik bağımlılıkları belirleyip kurma.
+- Meta paketlerle geniş araç setlerini tek komutta kurarak lab’ı hızla ayağa kaldırma.
+- Web, DNS, SSH, SMB, RADIUS gibi servisleri kurup başlatma ve temel testleri yürütme.
+- Python modülleri ve diğer kütüphaneleri yöneterek PoC araçlarını çalışır hale getirme.
+- Dökümandan çıkarılamayan amaçları olan paketler için güvenli, izole deneme süreçleri oluşturma.

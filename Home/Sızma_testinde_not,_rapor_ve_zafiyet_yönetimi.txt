@@ -1,0 +1,53 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:06:45+03:00
+
+====== Sızma testinde not, rapor ve zafiyet yönetimi ======
+
+
+
+===== Konu =====
+Bu içerik, sızma testi (sistemi gerçek saldırgan gibi sınayan güvenlik testi) sırasında bilgi toplama, düzenli not tutma, raporlama (bulguları yazılı ve kanıtlı hale getirme süreci) ve zafiyet (güvenlik açığı) yönetimini açıklar. Amaç, test boyunca üretilen her bilgiyi düzenli saklamak, ekipçe aynı veriye bakmak ve açıkların kapatılmasını izlemektir. Kime yarar? Tek çalışan testçiler ve ekipler; ayrıca bulguları kapatacak güvenlik/BT ekipleri.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+- Notlar ve kanıtlar dağılmaz; rapora dönüştürmek kolaylaşır.
+- Ekip, farklı kaynaklardan gelen çıktıları tek yerde görür ve çakışmaları azaltır.
+- Açıklar önem sırasına girer; sorumlular ve süreler netleşir.
+- Durumu anlık panodan görür, ilerlemeyi sayısal olarak takip edersiniz.
+- Açığı yeniden göstermek için kısa, anlaşılır kanıt videoları üretirsiniz.
+
+===== Nasıl çalışır/uygulanır? =====
+- Not alma: Adım adım ne yaptığınızı yazın. Markdown (düz metni basit işaretlerle biçimlendiren dil) ile okunur notlar tutun. Senkronizasyon (cihazlar arasında veriyi eşitleme) olan araçlarla notlar her cihazda güncel kalsın. Ağaç yapılı sayfalarla test planını ve bulguları ayırın. Notlar arasında bağlantı kurun. Gerekirse komut satırı aracı (CLI: yazılımı metin tabanlı komutlarla kullanma yolu) ile ekleme/içe aktarmayı otomatikleştirin.
+- Raporlama ve işbirliği: Ekip tüm bulguları (tespit edilen sorun ve kanıtı) tek platformda toplar. Farklı güvenlik tarayıcılarının (otomatik zafiyet arayan yazılımlar) çıktıları bir araya gelir. Ortak rapor şablonuna açıklamalar ve kanıtlar eklenir; herkes aynı veriyi görür.
+- Zafiyet yönetimi: Tarayıcılardan ve manuel bulgulardan veri içe alınır. Her bulguya risk puanı (tehlike derecesini sayıya çeviren değer) verilir. Önem sırasına konur ve sorumlulara atanır. Dashboard (durum panosu) ve metrik (ölçüm değeri) ile trendler izlenir. SLA (hizmet seviyesi anlaşması: kapatma için hedef süre) takibi yapılır; iş takip aracında görevler açılır ve güncellenir.
+- Ekran kaydı ve kanıt: Açığı yeniden göstermek için kısa videolar kaydedin. Örneğin bir CSRF (site dışı istek sahteciliği: kullanıcının istemediği isteği onun adına gönderten açık) akışını tekrar ederken ekran ve sesi kaydedip ilgili bulguya ekleyin.
+
+===== Sözlük =====
+- Bulgu: Tespit edilen güvenlik sorunu ve onu destekleyen kanıt.
+- CLI: Komut satırı arayüzü; yazılımı metin tabanlı komutlarla kullanma yolu.
+- CSRF: Site dışı istek sahteciliği; kullanıcının istemediği isteği onun adına gönderen açık.
+- Dashboard: Durum panosu; özet göstergelerin bir arada görüldüğü ekran.
+- Markdown: Düz metni basit işaretlerle biçimlendiren dil.
+- Metrik: Ölçüm değeri; performansı veya durumu sayısal ifade eden bilgi.
+- Raporlama: Bulguları yazılı ve kanıtlı hale getirme süreci.
+- Risk puanı: Bir açığın tehlike derecesini sayıya çeviren değer.
+- Senkronizasyon: Veriyi cihazlar arasında eşitleme işlemi.
+- SLA: Hizmet seviyesi anlaşması; işin belirli sürede tamamlanması hedefi.
+- Sızma testi: Sistemi gerçek saldırgan gibi sınayan güvenlik testi.
+- Tarayıcı: Otomatik zafiyet arayan güvenlik yazılımı.
+- Zafiyet: Güvenlik açığı.
+
+===== Kazanımlar =====
+- Test sırasında komutları, istek/yanıtları, ekran görüntülerini ve notları tek yerde düzenleyebilirsin.
+- Notlarını Markdown ile okunur hale getirip cihazlar arasında senkron tutabilirsin.
+- Notları ağaç yapısında bölümlere ayırıp aradığını saniyeler içinde bulabilirsin.
+- Notlar arasında bağlantılar kurarak ilgili içeriklere hızla geri dönebilirsin.
+- Farklı güvenlik tarayıcılarının çıktısını tek havuzda birleştirip yinelenen bulguları fark edebilirsin.
+- Ekipçe aynı bulguya açıklama ve kanıt ekleyip tek, tutarlı bir rapor üretebilirsin.
+- Taramaları planlayıp sonuçları otomatik toplayabilir, rapor şablonuna aktarabilirsin.
+- Bulguları içe alıp risk puanı vererek önem sırasına koyabilir ve ilgili kişiye atayabilirsin.
+- Dashboard ve metriklerle kapatma sürecini ve trendleri görselleştirerek izleyebilirsin.
+- SLA hedeflerini takip edip geciken işleri erken fark edebilirsin.
+- İş takip aracında otomatik görev açıp durum güncellemelerini senkron tutabilirsin.
+- Açıkların yeniden üretimini kısa ekran kayıtlarıyla belgeleyip bulgulara kanıt olarak iliştirebilirsin.
+- Komut satırıyla not ve çıktı içe aktarma/çıkarma işlemlerini otomatikleştirip zaman kazanabilirsin.

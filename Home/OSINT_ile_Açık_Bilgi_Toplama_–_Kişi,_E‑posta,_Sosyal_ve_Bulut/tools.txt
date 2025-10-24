@@ -1,0 +1,34 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:13:46+03:00
+
+OSINT (kişi, e-posta, sosyal, genel)
+
+Genel OSINT
+- Açıklama: Bir hedef hakkında internette zaten açık olan bilgileri toplar. Amaç; dijital ayak izini görmek, hangi verilerin dışarıda olduğunu anlamak ve sonraki adımlara zemin hazırlamaktır. Çoğu araç, arama motorları, arşivler ve herkese açık kayıtları tarar.
+- Örnek: Yeni çalışmaya başlayacağınız bir şirketin alan adına bakıp kime ait, geçmişteki web sayfaları nasılmış, hangi e‑posta adresleri ve sosyal profiller ortalıkta görünüyor gibi ilk resmi çıkarmak.
+- Araçlar: theHarvester (arama motorlarından e‑posta/isim/alt alan/IP toplar), Maltego (graf tabanlı ilişki analizi; çok sayıda veri kaynağı eklentisi), maltego-teeth (Maltego için ek transform/eklenti seti), Maryam (modüler OSINT çatısı), OSRFramework (kullanıcı adı/e‑posta/telefon arama araç seti), recon-ng (modüler web keşif ve OSINT framework’ü), reconspider (tek komutla çok kaynaktan OSINT toplar), SpiderFoot (otomatik OSINT; yüzlerce entegrasyon), Sherlock (sosyal ağlarda kullanıcı adı araması), Raven (LinkedIn odaklı kişi/kurum bilgisi çekimi), waybackpy (Wayback Machine arşivlerinden eski sayfa sürümleri), whois (alan adı kayıt ve sahiplik bilgisi)
+
+E‑posta/hesap OSINT
+- Açıklama: Bir e‑posta adresine dair ne kadar bilgi bulunduğunu, geçmiş sızıntılarda görünüp görünmediğini ve posta sunucularının nasıl yapılandırıldığını anlamaya yarar. Adreslerin gerçekten var olup olmadığını test etmek için de kullanılır (yasal ve yetkili senaryolarda).
+- Örnek: Kurumunuzdaki adreslerin (ör. ad.soyad@...) yanlış yazımlarla sık taklit edilip edilmediğini ve bilinen veri ihlallerinde görünüp görünmediğini kontrol etmek.
+- Araçlar: h8mail (e‑posta sızıntı/ihlal araması; çoklu hizmet/API), email2phonenumber (e‑postadan olası telefon bilgisi çıkarımı), emailharvester (web sitelerinden e‑posta adresi toplar), smtp-user-enum (SMTP üstünden geçerli kullanıcı/adres doğrulama), ismtp (SMTP konuşmasıyla e‑posta doğrulama/test), mxcheck (MX kayıtları ve posta altyapısı kontrolü), swaks (SMTP testleri için “İsviçre çakısı”), sendemail (komut satırından e‑posta gönderme testi)
+
+Kullanıcı/ad (sosyal) OSINT
+- Açıklama: Kişilerin farklı platformlardaki kullanıcı adlarını, çalışan isimlerinden kurumsal kullanıcı adı formatlarını ve herkese açık profilleri ortaya çıkarmayı hedefler. Sosyal mühendisliğe karşı önlem planlarken ya da hesap taklitlerini tespit ederken faydalıdır.
+- Örnek: LinkedIn’de görülen çalışan isimlerinden şirketin kullanıcı adı formatını (ör. a.soyad, ad.soyad gibi) tahmin etmek ve bu bilgiyle yanlış yapılandırılmış uygulamalarda gereksiz açıkları kontrol etmek.
+- Araçlar: linkedin2username (LinkedIn isimlerinden olası kullanıcı adları üretir), inspy (LinkedIn’den çalışan ve iş ilanı bilgisi çeker), Sherlock (yüzlerce sitede kullanıcı adı mevcut mu bakar), OSRFramework (usufy.py ile kullanıcı adı arar)
+
+Bulut OSINT
+- Açıklama: Şirketlerin bulut üzerindeki herkese açık veya yanlış yapılandırılmış varlıklarını (özellikle depolama kovaları/bucket’lar) keşfetmeye odaklanır. Marka/alan adıyla ilişkili isimlendirmeleri dener ve açık erişim olup olmadığını test eder.
+- Örnek: Şirket adınızı veya ürün adlarınızı içeren olası S3/Azure/GCP depolama kovalarını kontrol edip, yanlışlıkla herkese açılmış dosya var mı diye bakmak (kurum içi denetim amaçlı).
+- Araçlar: cloud-enum (AWS/Azure/GCP depolama ve ad alanı adlarını dener, enumerate eder), cloudbrute (bulut varlık/bucket adı brute‑force keşfi), s3scanner (açık/yanlış yapılandırılmış S3 bucket’ları bulur)
+
+OSINT ve varlık keşfi (dış kaynaklı)
+- Açıklama: Herkese açık kaynaklardan (arama motorları, sertifika kayıtları, hizmet tarayıcıları) hedefe ait alanlar/hostlar/servisler hakkında bilgi toplar.
+- Örnek: Bir şirketin dışa açık sanal hostlarını ve alt alanlarını, aktif tarama yapmadan listelemek.
+- Araçlar: hosthunter$ (pasif kaynaklardan sanal host/vhost keşfi), rekono-kbx (rekono platformu için keşif otomasyonu entegrmanı; ayrıntı belirsiz), wotmate$ (alan adı/URL itibar kontrolü için OSINT; ayrıntı belirsiz), above$ (OSINT/toplama aracı; ayrıntı belirsiz), hubble$ (OSINT keşif; ayrıntı belirsiz), humble$ (OSINT/keşif; ayrıntı belirsiz), certi$ (sertifika/CT kayıtlarıyla ilişkili OSINT; ayrıntı belirsiz), owl$ (pasif gözlem/keşif; ayrıntı belirsiz)
+
+Notlar
+- Birden fazla kategoriye giren araçlar: Sherlock ve OSRFramework hem “Genel OSINT” hem de “Kullanıcı/ad (sosyal) OSINT” altında değerlendirilebilir. Raven ve linkedin2username de “Genel”e ek olarak sosyal/kullanıcı adı çalışmalarında kullanılır.
+- Aktif/pasif ayrımı: whois, waybackpy, theHarvester gibi araçlar çoğunlukla pasif sayılırken; smtp-user-enum, ismtp, cloudbrute gibi araçlar hedefe trafik üretebilir. Her zaman yetkili ve yasal kullanım esastır.

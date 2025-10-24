@@ -1,0 +1,77 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:11:11+03:00
+
+====== Hızlı Güvenlik Denetimi ve Tespit Yöntemleri ======
+
+
+
+===== Konu =====
+Sunucu, masaüstü ve ağlarda şüpheli hareketleri hızlıca görmek için birkaç pratik yöntem vardır. Ana başlıklar şunlar: gizlenen zararlıları bulma (rootkit: kendini saklayan zararlı), sistem ayarlarını güçlendirme (hardening: güvenliği artırma adımları), ağda saldırı tespiti/önleme (IDS: saldırı tespit sistemi; IPS: saldırı önleme sistemi), günlük (log: sistem olay kayıtları) kurallarıyla tespit, ve tuzak sistemler kurma (honeypot: saldırganı çekmek için sahte hedef).
+
+Host’ta (tek bir makinede) gizlenen zararlıları ararken, arka kapı (arka kapı: izinsiz giriş için bırakılan gizli yol) izlerine bakılır. Dosya bütünlüğü (dosyanın değişip değişmediğini gösteren durum) ve çekirdek modülü (çekirdek modülü: işletim sisteminin en temel kısmına eklenen parça) gibi yerler kontrol edilir. Bu taramalar hızlı fikir verir; derin doğrulama için adli analiz (adli analiz: kanıta dayalı detaylı inceleme) gerekir.
+
+Sistem güvenlik yapılandırması denetimi, zayıf ayarları bulur ve net öneriler sunar. Örneğin gereksiz servisleri kapatma ve parola/uzak erişim ayarlarını sıkılaştırma gibi.
+
+Ağ tabanlı tespit/önleme, ağ trafiğini izler. İmza (imza: bilinen saldırı izi) ve kural seti (kural seti: saldırıları tarif eden kurallar listesi) ile şüpheli paketleri işaretler. DMZ (DMZ: dış dünyaya açık, izole ara ağ) içinde bir sensör (sensör: trafiği dinleyen nokta) konumlandırıp, örneğin SQL injection (SQL injection: veritabanı sorgusuna kötü kod katma) gibi saldırıları yakalayabilir veya engelleyebilirsiniz.
+
+Günlük tabanlı tespit için Sigma (Sigma: günlükler için ortak tespit kural dili) kuralları yazılır. Bu kurallar, SIEM (SIEM: güvenlik günlüklerini toplayıp analiz eden sistem) tarafındaki sorgulara çevrilir ve SOC (SOC: güvenlik operasyon merkezi) uyarıları üretir.
+
+Honeypot kurarak saldırgan davranışlarını gözlemleyebilirsiniz. Üretimden yalıtılmış bir yerde sahte servisler açılır; brute-force (brute-force: çok sayıda denemeyle parola tahmini) gibi denemeler kayda geçer. Kablosuz tarafta, sahte SSID (SSID: Wi‑Fi ağ adı) yayınıyla evil twin (evil twin: sahte kopya erişim noktası) gibi tehditler görünür hale gelir.
+
+
+
+===== Neden önemlidir?/Ne işe yarar? =====
+- Gizli zararlıları hızlıca fark edersiniz; müdahale süresi kısalır.
+- Sunucu yayına çıkmadan önce riskli ayarları görür ve düzeltirsiniz.
+- Ağ saldırılarını gerçek zamanlı yakalar, isterseniz anında engellersiniz.
+- Günlüklerden tekrar eden kötü davranışları standart kurallarla yakalarsınız.
+- Tuzaklar sayesinde saldırgan yöntemlerini ve kaynak IP’lerini öğrenirsiniz.
+- Kablosuz ağlarda yanıltma ve oltalama girişimlerini görünür kılarsınız.
+
+
+
+===== Nasıl çalışır/uygulanır? =====
+- Host taraması: Olağan dışı CPU/ağ/diski görünce hızlı bir rootkit taraması başlatın; sistem çekirdeğine ekli bilinmeyen modülleri ve kritik dosyaların bütünlüğünü kontrol edin; çıkan bulguları notlayın; şüpheli durumlarda adli analize geçin.
+- Güvenlik yapılandırması denetimi: Yeni/temizlenmiş bir sunucuda otomatik denetim çalıştırın; rapordaki zayıf ayarları önceliklendirin; gereksiz servisleri kapatın, parola ve uzak erişim ayarlarını sıkılaştırın; tekrar taratıp iyileştirmeyi doğrulayın.
+- Ağ IDS/IPS: DMZ’ye bir sensör yerleştirin; uygunsa “engelleme” modunu açın; güncel kural setlerini yükleyin; uyarıları gözden geçirip yanlış pozitifleri azaltın; örnek: web trafiğinde SQL injection denemelerini engelleyin.
+- Sigma kuralları: İstediğiniz şüpheli davranışı yalın cümlelerle Sigma kuralı olarak yazın; kuralı hedef SIEM sorgusuna çevirip test edin; doğru alarm ürettiğinde üretime alın; bakım için versiyonlayın.
+- Honeypot: Üretimden izole bir sunucuda sahte SSH/FTP gibi servisler açın; gelen denemeleri ve IP’leri kaydedin; engelleme listelerinizi bu verilerle besleyin; verileri saldırı trendleri için analiz edin.
+- Kablosuz honeypot: Sahte SSID’ler yayınlayın; bağlantı denemelerini ve temel cihaz bilgilerini kaydedin; ofis sahasında riskli davranışları tespit edip kullanıcı farkındalığı oluşturun.
+- Kurulum ayrıntıları, desteklenen platformlar ve varsayılan ayarların kapsamı: Dökümandan çıkarılamıyor.
+
+
+
+===== Sözlük =====
+- Adli analiz: Kanıta dayalı, detaylı güvenlik incelemesi.
+- Arka kapı: Saldırganın gizlice giriş yapabildiği, normal dışı erişim yolu.
+- Brute-force: Parolayı çok sayıda denemeyle tahmin etme yöntemi.
+- Çekirdek modülü: İşletim sisteminin çekirdeğine sonradan eklenen parça.
+- DMZ: Dış dünyaya açık ama iç ağa tam bağlı olmayan, izole ara ağ bölgesi.
+- Dosya bütünlüğü: Bir dosyanın değişip değişmediğini gösteren durum.
+- Evil twin: Meşru Wi‑Fi’nin sahte kopyasını kurma saldırısı.
+- Hardening: Sistemin güvenliğini artırmak için yapılan ayar ve kısıtlamalar.
+- Honeypot: Saldırganları çekmek için bilerek cazip görünen sahte hedef.
+- IDS: Saldırı tespit sistemi; şüpheli trafiği uyarır.
+- IPS: Saldırı önleme sistemi; şüpheli trafiği engeller.
+- İmza: Bilinen bir saldırının belirgin izi/deseni.
+- Kural seti: Saldırıları tarif eden kuralların toplu listesi.
+- Log (Günlük): Sistemlerin ürettiği olay ve kayıt mesajları.
+- Sigma: Günlük temelli tehditleri tarif etmek için ortak kural dili.
+- SIEM: Güvenlik günlüklerini toplayan, birleştiren ve analiz eden sistem.
+- Sensör: Ağ trafiğini dinleyen ve analiz eden izleme noktası.
+- SQL injection: Veritabanı sorgusuna kötü amaçlı kod katma saldırısı.
+- SSID: Wi‑Fi ağ adı.
+- SOC: Güvenlik operasyonlarını yürüten ekip ve çalışma ortamı.
+
+
+
+===== Kazanımlar =====
+- Linux sunucularda gizli zararlı izlerini dakikalar içinde tarar, ilk risk fotoğrafını çıkarırım.
+- Bilinen zararlı iz listeleri ve dosya değişiklik kontrolleriyle şüpheli öğeleri hızla ayıklarım.
+- Sunucunun zayıf güvenlik ayarlarını otomatik raporlatır, önerileri uygulayarak riski düşürürüm.
+- UNIX benzeri sistemlerde standart güvenlik kontrollerini hızlıca koşturur, eksikleri kapatırım.
+- DMZ’de bir ağ sensörüyle web/app trafiğini izler, şüpheli istekleri anında uyarır veya engellerim.
+- Günlükler için yazdığım kuralları farklı güvenlik analiz sistemlerine çevirir, test eder ve alarmları devreye alırım.
+- Sahte servisler çalıştırarak saldırgan IP’lerini ve taktiklerini toplar, engelleme listelerini beslerim.
+- Sahte Wi‑Fi ağları yayınlayıp bağlanma denemelerini kaydeder, ofiste kablosuz güvenlik açıklarını görünür kılarım.

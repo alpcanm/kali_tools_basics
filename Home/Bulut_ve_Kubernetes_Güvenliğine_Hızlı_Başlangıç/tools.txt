@@ -1,0 +1,34 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:04:14+03:00
+
+Bulut / Kubernetes / Container / Supply chain (DevSecOps)
+
+Bulut (AWS/Azure) keşfi ve saldırı simülasyonu
+- Açıklama: Bulut hesaplarını (AWS/Azure) envanterlemek, yetkileri anlamak ve zayıf noktaları güvenli şekilde modellemek için kullanılır. Amaç; yanlış yapılandırmaları, gereğinden fazla yetkileri ve olası saldırı yollarını erken fark etmektir.
+- Örnek: Güvenlik ekibi, sızdırılmış bir AWS erişim anahtarıyla nelerin yapılabileceğini “kuru koşu” olarak görmek ister. pacu ile hesapta hangi hizmetlere erişim olduğunu çıkarır, Azure tarafında ise azurehound ile kim-kime-neye erişebilir sorusunu grafik olarak analiz eder.
+- Araçlar: pacu (AWS saldırı/keşif çerçevesi; izinler, privesc zincirleri), azurehound (Azure/Azure AD ilişkilerini grafik olarak çıkarır; yanlış yetkileri bulur)
+
+Kubernetes keşfi, yanlış yapılandırma testi ve saldırı simülasyonu
+- Açıklama: K8s kümelerinde servis hesapları, RBAC (rol/izin) yapısı, pod/secret erişimleri ve operasyonel hataların güvenli şekilde test edilmesi için kullanılır. Ayrıca güvenlik testleri için hızlıca ortam kurup kaldırmayı kolaylaştırır.
+- Örnek: Denetim sırasında düşük yetkili bir servis hesabının neler yapabildiğini görmek için peirates ile keşif yapılır. Ekip, benzer senaryoları güvenli bir test ortamında tekrarlamak için eksctl ile geçici bir EKS kümesi kurar, helm/kustomize ile örnek uygulamaları yükleyip politikaları dener.
+- Araçlar: peirates (K8s saldırı/keşif aracı; token/servis hesabı kötüye kullanım senaryolarını simüle eder), eksctl (EKS kümelerini hızlı kurar/yönetir; test ortamı), kubernetes-helm (K8s paket yöneticisi; test uygulamaları/politikaları kolay dağıtır), kustomize (K8s YAML’larında güvenli varyasyonlar oluşturur; konfig deneyi)
+
+Kubernetes ağ ve CNI politika testleri
+- Açıklama: Pod’lar arası trafik, ağ politikaları ve eBPF tabanlı görünürlük gibi konularda CNI eklentilerini doğrulamak ve “kim kime konuşabilir” sınırlarını test etmek için kullanılır.
+- Örnek: Üretimde yalnızca belirli servislerin konuşması gerekiyordur. Ekip, cilium-cli ile bağlantı testlerini çalıştırır, calico ile ağ politikalarını sıkılaştırır ve calicoctl ile hangi politikanın trafiği engellediğini adım adım çözümler.
+- Araçlar: calico (K8s için ağ politikası/CNI; mikro-segmente eder), calicoctl (Calico yapılandırma/teşhis aracı; politika debug), cilium-cli (Cilium eBPF CNI; bağlantı ve politika testleri)
+
+Container imaj güvenliği ve tedarik zinciri (SBOM, imza/doğrulama)
+- Açıklama: İmajların bileşenlerini çıkarmak (SBOM), zafiyetleri taramak ve imajları imzalayıp doğrulamak için kullanılır. Amaç; zararlı/şüpheli bileşenleri ve supply chain risklerini yayına çıkmadan yakalamaktır.
+- Örnek: Yayın öncesi pipeline’da syft SBOM üretir, trivy ile imaj ve bağımlılık zafiyetlerini tarar, cosign ile imajı imzalar. Kümeye yalnızca imzası doğrulanan imajların çekilmesine izin verilir.
+- Araçlar: syft (SBOM üretir; SPDX/CycloneDX), trivy (container/kod/IaC zafiyet ve yanlış yapılandırma tarayıcısı; hızlı), cosign (OCI imaj imzalama/doğrulama; Sigstore ile keyless destekler)
+
+Gizli bilgi (secret) sızıntısı tespiti
+- Açıklama: Kod depoları, arşivler ve obje depolamada yanlışlıkla bırakılmış API anahtarları, parola ve token’ları bulmak için kullanılır. CI aşamasında “erken uyarı” görevi görür.
+- Örnek: Birleşik depo (monorepo) gözden geçirilirken eski commit’lerde AWS anahtarları kalmış olabilir. Ekip, trufflehog ile geçmişi tarar, patchleaks’i pre-commit olarak ekler; ayrıca sızmış yedeklerde dumpsterdiver/dufflebag ile gizli veri avı yapar. Trivy’nin “secrets” modu da ek bir kontrol olarak çalıştırılır.
+- Araçlar: trufflehog (git geçmişi ve depolarda secret tespiti; bazı anahtarları doğrular), patchleaks (commit aşamasında sızıntı önleyici; kolay CI/CD entegrasyonu), dumpsterdiver (arşivler/S3 benzeri depolarda gömülü anahtar avı), dufflebag (genel S3 bucket’larda kimlik bilgisi arar), trivy (secrets taraması da yapabilir; çok amaçlı)
+
+Notlar
+- Bazı araçlar birden fazla kategoriye girer: trivy hem zafiyet hem de secret taraması yapabilir; helm/kustomize doğrudan “güvenlik aracı” değil ama güvenlik testlerinin tekrar üretilebilir şekilde yürütülmesini kolaylaştırır.
+- Üretim ortamında test yapmadan önce her zaman izne dayalı, izole bir ortam kullanın ve bulguları değişiklik yönetimi süreciyle ele alın.

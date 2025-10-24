@@ -2,7 +2,7 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-10-24T19:34:19+03:00
 
-====== NFC/RFID ile Okuma, Güvenlik Testi ve RF Analizi ======
+====== 4-) NFC-RFID ile Okume,Güvenik Testi ve RF analizi ======
 
 
 

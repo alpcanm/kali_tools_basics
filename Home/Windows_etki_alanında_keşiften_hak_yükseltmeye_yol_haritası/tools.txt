@@ -1,0 +1,57 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:55:17+03:00
+
+Active Directory / Windows (keşif, istismar, yanal hareket, ayrıcalık yükseltme)
+
+Not: Bu araçlar yalnızca izinli ve yetkili güvenlik testlerinde kullanılmalıdır.
+
+Active Directory keşfi ve ilişki haritalama – LDAP/Graph tabanlı envanter
+- Açıklama: Etki alanındaki kullanıcı, grup, bilgisayar ve izin ilişkilerini toplayıp görselleştirir. Zayıf izin zincirlerini (ACL/Ace) tespit etmeye yarar.
+- Örnek: İç denetimde BloodHound ile bir helpdesk hesabının GPO düzenleme yetkisinden başlayıp Domain Admin’e giden bir yol bulundu ve risk raporlandı.
+- Araçlar: bloodhound (AD ilişkilerini grafikle analiz), sharphound (C# ingestor), bloodhound.py (Python ingestor), bloodhound-ce-python (BloodHound CE için Python istemci/ingestor), ldapdomaindump (LDAP ile AD bilgilerini döküm), ldeep (AD/LDAP keşif ve bazı sır analizleri)
+
+Windows/SMB keşfi ve paylaşım/hesap envanteri
+- Açıklama: SMB/NetBIOS/LDAP üzerinden ana makine, paylaşım, kullanıcı ve politika bilgilerini toplar. Hızlı durum resmi çıkarır.
+- Örnek: Ağa yeni bağlanan bir segmentte enum4linux-ng ile paylaşımlar ve kullanıcılar listelenip, erişime açık eski bir yedekleme paylaşımı bulundu.
+- Araçlar: enum4linux (SMB/NetBIOS keşfi), enum4linux-ng (güncel sürüm), smbmap (SMB paylaşımları ve izinleri), ridenum (RID tabanlı kullanıcı enumerasyonu), polenum (Windows politika/hesap bilgileri), crackmapexec (çok amaçlı ağ keşfi/denetim çerçevesi), netexec (CME’nin devamı, çok amaçlı keşif)
+
+Kimlik bilgisi ve sır toplama – LSASS, DPAPI, GPO, LAPS, NTDS
+- Açıklama: Sistemlerden ve AD’den şifre özeti, bilet, DPAPI sırları, GPP/LAPS gibi saklı kimlik bilgilerini çıkarır.
+- Örnek: Yetkili testte bir sunucudan secretsdump ile NTDS’den hash’ler alındı; GPP’deki cpassword gpp-decrypt ile çözülerek yerel admin erişimi teyit edildi.
+- Araçlar: mimikatz (LSASS/ticket/sekme), wce (Windows Credential Editor, eski PTH), dploot (DPAPI sırlarını uzaktan toplar), spraykatz (uzaktan LSASS dökümü/analizi), gpp-decrypt (GPP cpassword çözme), lapsdumper (AD’den LAPS parolalarını alma), impacket (secretsdump/getTGT vb. scriptler), redsnarf (post-exploitation, kimlik bilgisi toplama), ldeep (DPAPI/LSA sır analizi)
+
+Kerberos odaklı saldırılar – roasting, bilet yönetimi, relaying
+- Açıklama: Kerberos biletleriyle ilgili saldırılar (Kerberoast/AS-REP roast), bilet alma/yenileme ve bazı relay senaryoları.
+- Örnek: Hizmet hesabı olan bir SPN’e Kerberoast uygulanıp zayıf parola yakalandı; parola politikası zafiyeti raporlandı.
+- Araçlar: rubeus (bilet işlemleri, roast, S4U), kerberoast (SPN biletlerini çıkarıp offline kırma), krbrelayx (Kerberos relay teknikleri), impacket (getTGT/getST/ticketer gibi Kerberos araçları)
+
+NTLM/IPv6 zehirleme ve kimlik aktarımı (relay)
+- Açıklama: LLMNR/NBNS/MDNS/WPAD ve IPv6 RA gibi mekanizmaları kötüye kullanarak kimlik bilgilerini yakalar/relay eder.
+- Örnek: İzole bir VLAN’da mitm6 + ntlmrelayx ile bir yönetim konsoluna relay yapılarak yalnızca okuma yetkisi alınabildi; segmentler arası filtreleme önerildi.
+- Araçlar: responder (LLMNR/NBNS zehirleme), mitm6 (IPv6 RA + WPAD yolu), impacket (ntlmrelayx.py ile relay), krbrelayx (Kerberos relay), certipy-ad (AD CS’ye relay ve sertifika istismarı)
+
+Parola spreyi ve çevrimiçi oturum açma denemeleri
+- Açıklama: Hesap kilidi riski gözetilerek çok sayıda kullanıcıda sınırlı denemeler yapar; zayıf parolaları tespit eder.
+- Örnek: Bakım penceresinde parola spreyi ile “Mevsim2025!” formatındaki zayıf parola kullanan birkaç kullanıcı belirlendi ve zorunlu parola değişimi uygulandı.
+- Araçlar: spray (parola spreyi), sprayingtoolkit (çok hedefli/servis odaklı spreyleme), sprayhound (spray sonuçlarını BloodHound ile ilişkilendirme), crackmapexec (entegre spreyleme/dogrulama), netexec (entegre spreyleme/doğrulama)
+
+Yanal hareket ve uzaktan komut çalıştırma
+- Açıklama: Yetkili kimlik bilgilerini kullanarak uzak sistemlerde komut/shell çalıştırma ve dosya aktarımı yapar.
+- Örnek: Sınırlı haklarla erişilen bir sunucudan, Domain Users grubundaki bir hesabın WinRM yetkisi kullanılarak başka bir uygulama sunucusunda komut çalıştırıldı.
+- Araçlar: evil-winrm (WinRM üzerinden etkileşimli shell), wmi (WMI ile uzaktan komut), wmi-client (WMI istemcisi), impacket (psexec/wmiexec/smbexec), crackmapexec (RCE/enumeration), netexec (RCE/enumeration), powercat (PowerShell tabanlı nc, dosya/ters bağlantı), windows-binaries (taşınabilir yardımcı ikililer)
+
+Ayrıcalık yükseltme ve yanlış yapılandırma analizi (yerel ve etki alanı)
+- Açıklama: Yerel makinelerde ve AD’de yanlış izinler, zayıf servis yapılandırmaları ve ACL açıkları üzerinden hak yükseltme yollarını bulur.
+- Örnek: winPEAS ile bir hizmetin yazılabilir dizine işaret ettiği görüldü; hizmet ikame tekniği ile yerelde SYSTEM haklarına çıkıldı.
+- Araçlar: peass-ng (winPEAS/linPEAS, privesc keşfi), windows-privesc-check (Windows privesc kontrolleri), linux-exploit-suggester (Linux çekirdek privesc önerileri), powersploit (PowerShell privesc/yanal hareket modülleri), nishang (PowerShell istismar koleksiyonu), bloodyad (AD ACL kötüye kullanım/nesne ele geçirme), hekatomb (AD ACL zincir istismarı/ takeover planları)
+
+AD CS ve sertifika temelli istismar
+- Açıklama: Active Directory Certificate Services (AD CS) yanlış yapılandırmalarını (ESC1-ESC… gibi) kullanarak kimlik taklidi ve kalıcı erişim elde eder.
+- Örnek: Sertifika şablonundaki Enroll/Client Authentication hakları suistimal edilerek kullanıcı adına sertifika alınmış ve Kerberos ile kimlik doğrulama yapılabilmiştir.
+- Araçlar: certipy-ad (AD CS keşif/istismar/sertifika alma), krbrelayx (AD CS ile Kerberos relay senaryoları), impacket (yardımcı Kerberos/PKINIT senaryoları)
+
+Notlar
+- crackmapexec ve netexec çok amaçlıdır; keşif, parola spreyi, RCE ve bazı dump işlemlerinde birden fazla kategoride yer alabilir.
+- impacket “araç takımıdır”: psexec, wmiexec, smbexec, secretsdump, getTGT/getST, ticketer, ntlmrelayx gibi birçok script içerir.
+- Bazı araçlar PowerShell temellidir (powersploit, nishang, powercat); AV/EDR tarafından tespit edilebilir. Testlerde OPSEC ve kurumsal kurallara uyun.

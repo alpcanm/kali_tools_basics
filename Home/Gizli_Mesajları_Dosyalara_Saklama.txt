@@ -1,0 +1,53 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:07:55+03:00
+
+====== Gizli Mesajları Dosyalara Saklama ======
+
+
+
+===== Konu =====
+Steganografi (gizli veriyi normal görünen dosyalara saklama yöntemi), resim ve ses dosyalarına ya da düz metinlere mesaj gizleyip geri çıkarma işidir. Çoğu zaman parola (erişimi koruyan gizli kelime/sayı) ve şifreleme (veriyi anlaşılmaz hale getirme) ile ek güvenlik sağlanır. Düz metinlerde görünmeyen boşluk karakterleri (boşluk/sekme gibi, ekranda görünmeyen yazı işaretleri) kullanılarak da kısa mesajlar saklanabilir.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+* Dosyalar “normal” görünür; dikkat çekmeden bilgi taşıma imkanı verir.
+* Görsel/işitsel kalite genelde fark edilmeyecek kadar az etkilenir.
+* Parola ve şifreleme ile gizli içeriğe yetkisiz erişimi zorlaştırır.
+* Düz metinlerde alan az olsa da, hızla küçük sırları iletmek için pratiktir.
+* Kime yarar? Günlük dosyalar içinde bilgi gizlemek isteyen kullanıcılara; ayrıntılı hedef kitle Dökümandan çıkarılamıyor.
+
+===== Nasıl çalışır/uygulanır? =====
+* Görsel ve ses dosyalarında:
+  - Bir taşıyıcı dosya (gizli veriyi taşıyan, normal görünen dosya) ve saklanacak veriyi seçersiniz.
+  - İsteğe bağlı parola ve şifreleme belirlenir.
+  - Araç, dosya içindeki veriyi çok küçük değiştirerek gizli içeriği gömer; kalite çoğunlukla fark edilmez.
+  - Çıkarma için aynı aracı çalıştırır, gerekiyorsa parolayı girersiniz.
+  - Bazı yöntemler JPEG’lerde istatistiksel izi (sayısal dağılımlardan fark edilebilecek iz) azaltmaya odaklanır.
+* Metin ve boşluk steganografisi:
+  - Düz metnin satır sonlarına görünmeyen boşluk/sekme eklenir; gözle fark etmek zordur.
+  - Kapasite düşüktür; kısa mesajlar için uygundur.
+  - Çıkarma, aynı aracın “çıkar” komutuyla yapılır.
+* Parola kırma ve otomasyon:
+  - Parolayı bilmiyorsanız, sözlük saldırısı (hazır parola listesiyle deneme) veya brute-force (tüm olası parolaları teker teker deneme) ile şansınızı deneyebilirsiniz.
+  - Bu işlem otomatikleştirilebilir ve özellikle belirli gömme araçlarının ürettiği içerik hedeflenir.
+  - Hangi şifreleme türlerinin/ayrıntılarının kullanıldığı Dökümandan çıkarılamıyor.
+* Dokümantasyon:
+  - Resmi kılavuzlar doğru komutları, parametreleri ve örnekleri gösterir; öğrenirken başvuru kaynağıdır.
+
+===== Sözlük =====
+* boşluk karakteri: Ekranda görünmeyen boşluk veya sekme gibi yazı işaretleri.
+* brute-force: Tüm olası parolaları tek tek deneyerek doğru olanı bulma yöntemi.
+* istatistiksel iz: Verideki sayı dağılımından anlaşılabilecek, gömmenin bıraktığı iz.
+* parola: Erişimi koruyan gizli kelime ya da sayı dizisi.
+* şifreleme: Veriyi doğru anahtar olmadan okunamaz hale getirme işlemi.
+* steganografi: Gizli veriyi normal dosyaların içine saklama ve sonra çıkarma yöntemi.
+* sözlük saldırısı: Hazır parola listelerinden tek tek deneyerek parola bulma yöntemi.
+* taşıyıcı dosya: Gizli veriyi içinde saklayan, dışarıdan normal görünen dosya.
+
+===== Kazanımlar =====
+* Resim ve ses dosyalarına veri gizleyip, parolayla ve şifrelemeyle koruyarak geri çıkarma becerisi kazanırsın.
+* JPEG görsellerde, istatistiksel iz bırakmayı azaltan yöntemlerle gömme yapabilirsin.
+* Sürükle-bırak destekli bir arayüzle gizleme/çıkarma işlemlerini kolayca yapabilirsin.
+* Düz metinlerde görünmeyen boşluk/sekme kullanarak kısa mesajlar saklayıp çıkarabilirsin.
+* Gömülü içeriğin parolasını, hazır parola listeleriyle otomatik olarak denersin.
+* Resmi kılavuzları okuyup doğru komut ve parametreleri seçerek işlemleri hatasız uygularsın.

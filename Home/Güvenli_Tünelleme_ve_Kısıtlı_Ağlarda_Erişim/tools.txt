@@ -1,0 +1,40 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:54:56+03:00
+
+Tünelleme / proxy / NAT aşma / port yönlendirme / VPN
+
+VPN ve uygulama bazlı VPN
+- Açıklama: Tüm internet trafiğinizi (veya sadece seçtiğiniz uygulamaların trafiğini) şifreli bir tünelden geçirir. Uzaktaki ağa güvenli erişim sağlar.
+- Örnek: Bir çalışan, otel Wi‑Fi’sinden şirket ağına güvenli şekilde bağlanıp dosya sunucusuna erişir. Ya da sadece bir uygulamayı (ör. bir tarayıcıyı) VPN üzerinden çalıştırır.
+- Araçlar: openvpn$ (yaygın ve kararlı VPN), vpnc (Cisco IPsec VPN istemcisi), vopono$ (uygulama bazlı VPN; Linux network namespace kullanır), sshuttle$ (SSH üzerinden VPN-benzeri, şeffaf yönlendirme)
+
+Proxy ve proxy zincirleme / HTTP(S) üzerinden tünelleme
+- Açıklama: Uygulamaları bir proxy üzerinden internete çıkmaya zorlar veya yalnızca web trafiğine izin veren ağlarda HTTP/HTTPS içinden tünel açar.
+- Örnek: Sadece HTTP/HTTPS’e izin veren bir ağda, proxytunnel ile HTTPS proxy üzerinden uzak bir sunucudaki servise erişmek; ya da proxychains-ng ile bir aracı şirket proxy’si üzerinden çalıştırmak.
+- Araçlar: proxychains-ng (libproxychains4/proxychains4) (uygulamaları SOCKS/HTTP proxy üzerinden çalıştırır), proxify (HTTP(S) trafiğini yakalar/kaydeder/filtreler), proxytunnel$ (HTTPS proxy arkasından CONNECT ile tünel kurar), chisel$ (HTTP(S) üzerinden hızlı TCP/UDP tüneli ve SOCKS5), chisel-common-binaries$ (chisel’in farklı platformlar için hazır ikilileri)
+
+DNS/ICMP üzerinden tünelleme (kısıtlı çıkışlarda)
+- Açıklama: Ağda sadece DNS veya ICMP (ping) serbestse, bu protokoller üzerinden düşük bant genişlikli bir veri kanalı kurar.
+- Örnek: Saha cihazı yalnızca DNS çözümleyebiliyorsa, kısa telemetri verilerini iodine ile merkeze aktarmak.
+- Araçlar: iodine (DNS üzerinden IP tüneli), dns2tcp (DNS üzerinden TCP taşıma), ptunnel$ (ICMP/ping üzerinden TCP tüneli)
+
+NAT aşma ve port yönlendirme olmadan erişim
+- Açıklama: Karşı tarafta modem/yönlendirici ayarı yapmadan (port açmadan) iki uç arasında bağlantı kurar; saha cihazlarına uzaktan erişim için idealdir.
+- Örnek: Ev internetindeki bir Raspberry Pi’ye, yönlendiricide port açmadan uzaktan yönetim bağlantısı kurmak.
+- Araçlar: pwnat$ (NAT delme; port yönlendirme gerekmez), gsocket (Global Socket; NAT arkasında uçtan uca şifreli tünel), secure-socket-funneling (Windows ikilileri dahil) (çok protokollü, şifreli tüneller), chisel$ (reverse port yönlendirme ve tünel)
+
+Genel amaçlı port yönlendirme ve soket köprüleme
+- Açıklama: İki portu/servisi birbirine bağlar, TCP/UDP yönlendirmesi yapar veya hızlıca dinleyici/aktarımı devreye alır.
+- Örnek: Yerel makinede sadece 127.0.0.1:8080’den erişilebilen bir web servisini, uzaktaki bir makinede 0.0.0.0:80 üzerinden erişilebilir hale getirmek.
+- Araçlar: socat (çok yönlü soket/port köprüleyici), udptunnel$ (UDP paketlerini tüneller/aktarır), cryptcat$ (netcat’in şifreli sürümü), chisel$ (genel amaçlı TCP/UDP tüneli)
+
+SSL/TLS sarmalama ve şifreli aktarım
+- Açıklama: Şifresiz çalışan servislerin trafiğini TLS ile korur veya iki uç arasındaki iletişimi şifreler.
+- Örnek: İç ağdaki şifresiz bir servisi stunnel ile TLS altına alıp dış ağdan güvenli erişim sağlamak.
+- Araçlar: stunnel4 (TLS sarmalayıcı), secure-socket-funneling (Windows ikilileri dahil) (şifreli tüneller), gsocket (uçtan uca şifreli soket), cryptcat$ (basit şifreli bağlantı)
+
+IPv6 tünelleme ve özel protokoller
+- Açıklama: IPv4‑only ağlarda bile IPv6 bağlantısı kurmaya yarar; test ve uyumluluk senaryolarında kullanılır, NAT arkasında çalışabilir.
+- Örnek: Sadece IPv4 sağlayan bir ağda, IPv6 gerektiren bir servise erişmek için Teredo üzerinden bağlantı kurmak.
+- Araçlar: miredo (Teredo) (IPv6’yı IPv4 NAT üzerinden tüneller)

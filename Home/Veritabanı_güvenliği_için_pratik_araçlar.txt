@@ -1,0 +1,59 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:43:14+03:00
+
+====== Veritabanı güvenliği için pratik araçlar ======
+
+
+
+===== Konu =====
+Bu içerik, veritabanı (verilerin düzenli saklandığı sistem) güvenliğini ve günlük işlerini kolaylaştıran pratik araç kategorilerini özetler. Grafik arayüz (fare ve pencerelerle kullanılan ekran) kullanan istemci (bir veritabanına bağlanan program) uygulamalarla tabloları görüp hızlı sorgu (veriden isteneni almak için yazılan komut) çalıştırabilirsiniz. Komut satırı (metinle komut yazılan ekran) araçlarıyla sunucu (hizmet veren bilgisayar) üzerinde yedekleme (verinin kopyasını alma), geri yükleme (yedekten veriyi geri getirme) ve veri dönüştürme yaparsınız; bunlar otomasyon (işin insan dokunmadan çalışması) ve betik (küçük komut dosyası) ile iyi gider. Oracle için ağ (bilgisayarların bağlı olduğu iletişim ağı) üzerindeki servis (ağ üzerinden sunulan program) durumunu, özellikle TNS dinleyici (Oracle’ın bağlantıları kabul eden bileşeni) ve sürüm (yazılımın numaralı hali) bilgilerini kontrol etmek mümkündür. İzinli testlerde, parola kontrolleri için sözlük saldırısı (hazır parola listesini deneme) ve kaba kuvvet (çok sayıda parola deneme yöntemi) denenebilir; Oracle’da SID (Oracle veritabanının eşsiz adı) doğrulanabilir. Oracle kurulumlarında yanlış yapılandırma (ayarların yanlış yapılmış olması) ve zafiyet (güvenlik açığı) taraması yapılabilir. Eski veriler için, Access gibi dosyalardan veriyi dışa aktarma (veriyi başka biçime çıkarma) ve CSV (virgülle ayrılmış değerler dosya biçimi) ya da SQL (veritabanı komut dili) çıktısı almak da mümkündür. Tüm güvenlik testleri yalnızca yazılı izin ve tanımlı kapsam (testte izin verilen sınırlar) ile yapılmalıdır. Dökümandan çıkarılamayan detaylar için ayrıca üretici belgelerine bakılmalıdır.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+* Veriyi ve tablo yapısını hızlıca görür, durumu anlamlandırırsınız.
+* Yedekleme/geri yükleme ile veri kaybı riskini azaltırsınız.
+* Oracle servislerinin açık olup olmadığını düşük trafikle doğrularsınız.
+* Zayıf parolaları ve hatalı ayarları erken bulursunuz.
+* Eski dosyalardan veriyi güvenli biçimde taşırsınız.
+
+===== Nasıl çalışır/uygulanır? =====
+* Grafik arayüzlü istemcilerle veritabanına bağlanın; tabloları inceleyin ve basit sorgular çalıştırın. Örn. bir SQLite dosyasını açıp “ne var, ne yok” görün.
+* Komut satırı araçlarıyla yedek alın ve geri yükleyin; bu işleri betiklerle otomasyona bağlayın. Örn. üretim dışı bir MongoDB yedeğini alıp test ortamına geri yükleyin.
+* Oracle servis doğrulaması yapın: TNS dinleyiciye ping (çalışıp çalışmadığını anlamak için kısa istek) atın, erişilebilirlik ve sürüm bilgisi toplayın.
+* Yazılı izinle parola ve SID testleri yapın: sözlük saldırısı ve kaba kuvvet denemeleriyle zayıf parolaları saptayın; Oracle SID adaylarını deneyin.
+* Oracle güvenlik taraması yapın: gereksiz açık servisleri ve yanlış ayarları tespit edip bulguları rapora ekleyin.
+* Veri dönüştürme yapın: Eski Access (.mdb/.accdb) dosyalarını CSV/SQL’e çevirip başka bir veritabanına aktarın.
+
+===== Sözlük =====
+* Ağ: Bilgisayarların bağlı olduğu iletişim ağı.
+* Betik: Küçük komut dosyası.
+* CSV: Virgülle ayrılmış değerler dosya biçimi.
+* Dışa aktarma: Veriyi başka biçime çıkarma.
+* Geri yükleme: Yedekten veriyi geri getirme.
+* Grafik arayüz: Fare ve pencerelerle kullanılan ekran.
+* İstemci: Bir veritabanına bağlanan program.
+* Kaba kuvvet: Çok sayıda parola deneme yöntemi.
+* Kapsam: Testte izin verilen sınırlar.
+* Komut satırı: Metinle komut yazılan ekran.
+* Otomasyon: İşin insan dokunmadan çalışması.
+* Ping: Çalışıp çalışmadığını anlamak için kısa istek.
+* Servis: Ağ üzerinden sunulan program.
+* SID: Oracle veritabanının eşsiz adı.
+* Sorgu: Veriden isteneni almak için yazılan komut.
+* SQL: Veritabanı komut dili.
+* Sunucu: Hizmet veren bilgisayar.
+* Sürüm: Yazılımın numaralı hali.
+* TNS dinleyici: Oracle’ın bağlantıları kabul eden bileşeni.
+* Veritabanı: Verilerin düzenli saklandığı sistem.
+* Yedekleme: Verinin kopyasını alma.
+* Yanlış yapılandırma: Ayarların yanlış yapılmış olması.
+* Zafiyet: Güvenlik açığı.
+
+===== Kazanımlar =====
+* Bir veritabanına grafik arayüzle bağlanmak, tablo yapısını ve veriyi hızlıca görmek, basit sorgular çalıştırmak.
+* Komut satırından MySQL/MariaDB/MongoDB gibi sunuculara bağlanıp yedek almak ve geri yüklemek; bu işleri betiklerle otomatikleştirmek.
+* Oracle ağlarında TNS dinleyici erişilebilirliğini ve temel sürüm bilgisini düşük trafikle doğrulamak.
+* Yazılı izinle sözlük saldırısı ve kaba kuvvet testleri yaparak zayıf parolaları tespit etmek; Oracle SID adaylarını sınamak.
+* Oracle kurulumlarında yanlış yapılandırma ve bilinen zafiyetleri taramak; temel bulguları raporlamak.
+* Eski Access (.mdb/.accdb) dosyalarını CSV/SQL’e dönüştürmek ve başka sistemlere aktarmak.
+* Güvenlik testlerinde yazılı izin ve kapsam yönetimine uygun hareket etmek.

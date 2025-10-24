@@ -1,0 +1,54 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:15:30+03:00
+
+Tersine mühendislik ve kötü amaçlı yazılım analizi
+
+Android APK/DEX analizi
+- Açıklama: Android uygulama paketlerini (APK) açar, kodu okur ve yeniden derlemeden önce neler yaptığını statik olarak anlamaya yardımcı olur. Kod Java/Smali olarak incelenebilir.
+- Örnek: Kimlik avı e-postasıyla gelen bir APK’nın banka bilgilerini sızdırıp sızdırmadığını kontrol etmek için kodu decompile edip hassas izinleri ve ağ isteklerini incelemek.
+- Araçlar: apktool (APK’yi açar; smali ve kaynakları çıkarır, yeniden paketleyebilir), jadx (DEX’i Java benzeri koda decompile eder), dex2jar (DEX’i JAR’a dönüştürür), jd-gui (JAR içindeki Java sınıflarını kaynak gibi gösterir), bytecode-viewer (Java bytecode/Smali için çoklu decompiler arayüzü), quark-engine (APK’larda risk puanlama ve kötü niyet göstergeleri)
+
+Genel tersine mühendislik (yerel ikili dosyalar: ELF/PE/Mach-O)
+- Açıklama: Çalıştırılabilir dosyaları (Windows, Linux, macOS) assembly/pseudo-C seviyesinde inceleyip programın nasıl çalıştığını anlamayı sağlar. Hem komut satırı hem GUI araçlar bulunur.
+- Örnek: “Güncelleme” gibi görünen bir dosyanın içine bakıp komut ve kontrol (C2) alan adını ve şifreleme rutinini bulmak.
+- Araçlar: ghidra (çok mimarili disassembler/decompiler, GUI), radare2 (komut satırı RE çerçevesi; disassemble/debug/patch), rizin (radare2’nin çatallı; benzer işlevler), rizin-cutter (rizin için kolay GUI), rz-ghidra (rizin ile Ghidra’yı entegre eder; iki dünyanın en iyisi), imhex (gelişmiş hex editörü; şablon/pattern dili)
+
+Hata ayıklama ve ikili dosya üzerinde çalışma (debug/patch/hex)
+- Açıklama: Programı adım adım çalıştırma, bellek ve kayıtları izleme, küçük yamalar yapma ve ham byte düzeyinde inceleme.
+- Örnek: Zararlı yazılımın şifre çözme fonksiyonunu tek tek adımlayarak gerçek sunucu adresini (C2) düz metin halinde yakalamak.
+- Araçlar: radare2 (yerleşik debugger ve patch özellikleri), rizin (debug ve patch), rizin-cutter (GUI üzerinden breakpoint/step), ghidra (patch ve script yazımı), imhex (hex düzeyinde düzenleme ve görsel şablonlar)
+
+Windows PE dosyası analizi
+- Açıklama: EXE/DLL gibi PE dosyalarının başlıkları, içe/dışa aktarımları, derleyici bilgisi ve olası paketleme durumunu inceleme.
+- Örnek: Ekte gelen “fatura.exe” dosyasının UPX ile paketlenip paketlenmediğini görmek, açıp içindeki API çağrılarını ve içe aktarımları analiz etmek.
+- Araçlar: readpe (PE başlıklarını ayrıntılı gösterir), pev (PE analizi için komut satırı araçları seti), detect-it-easy (dosya türü/packer/derleyici tespiti), upx-ucl (UPX ile paketleme/açma), yara (imza tabanlı tarama için)
+
+Firmware ve gömülü imaj analizi (IoT/Router vb.)
+- Açıklama: Router/kamera gibi cihazların firmware dosyalarındaki gömülü dosyaları, dosya sistemlerini ve yapılandırmaları ortaya çıkarır.
+- Örnek: Router firmware imajından squashfs dosya sistemini çıkarıp varsayılan şifrelerin düz metin konfigürasyonlarda saklanıp saklanmadığını kontrol etmek.
+- Araçlar: binwalk (firmware içindeki gömülü verileri tespit/çıkarır), unblob (karmaşık/kırılgan arşivleri sağlam açar), imhex (bilinmeyen yapıları hex seviyesinde şablonlarla okumak), ghidra (gömülü mimarilerin kod analizinde)
+
+Paketleyici/obfuscation tespiti ve açma
+- Açıklama: Zararlı yazılımlar kendini gizlemek için paketlenebilir/sıkıştırılabilir. Bu katmanları tespit edip açmak, gerçek kodu görmeyi sağlar.
+- Örnek: UPX ile paketlenmiş bir örneği tespit edip açarak strings ve API çağrılarının görünür hale gelmesini sağlamak.
+- Araçlar: detect-it-easy (packer ve koruma tespiti), upx-ucl (UPX paket açma/paketleme), binwalk (gömülü sıkıştırma/formatları bulur), unblob (çoklu kapsüllü arşivleri açar)
+
+Kural tabanlı avcılık ve imza ile tespit
+- Açıklama: Dosyalarda belirli desenleri/artefaktları arayan kurallar yazarak toplu tarama yapılır. Android için davranış puanlama da mümkündür.
+- Örnek: SOC ortamında indirilen dosyaları YARA kuralları ile taramak; Android tarafında şüpheli izinler ve API kullanımını Quark-Engine ile puanlamak.
+- Araçlar: yara (kural tabanlı imza eşleştirme; toplu tarama), quark-engine (Android APK’larda risk analizi ve davranış göstergeleri)
+
+Dosya türü tanılama ve hızlı ön analiz
+- Açıklama: Elinizdeki bilinmeyen dosyanın ne olduğunu, hangi derleyiciyle üretildiğini ve ilk bakışta risk durumunu hızla anlamak.
+- Örnek: Uzantısı değiştirilmiş bir dosyanın aslında 64-bit PE olduğunun ve UPX ile paketlendiğinin tespit edilmesi.
+- Araçlar: detect-it-easy (dosya türü/derleyici/packer tespiti), readpe (PE yapısı ve metadata), pev (PE için ek metrikler), imhex (şablonlarla başlıkları hızlı okumak)
+
+Sistem/ikili analiz ve geçici yamalama
+- Açıklama: İkili (binary) dosyaları/hex verisini inceleme ve çalışan süreçlere geçici yamalar uygulama gibi gelişmiş analiz/deney araçlarıdır.
+- Örnek: Test ortamında çalışan bir süreçte küçük bir davranış değişikliği denemek (örn. bir güvenlik kontrolünün kancalanması) ve etkisini gözlemlemek.
+- Araçlar: hotpatch (çalışan süreç/binary üzerinde geçici yama uygulama), hexwalk$ (ikili/hex analizi aracı; ayrıntı belirsiz), spire (ikili/analiz veya güvenlik araştırmasına yardımcı; ayrıntı belirsiz), framework2$ (çok amaçlı araştırma çerçevesi; ayrıntı belirsiz)
+
+Notlar:
+- Bir araç birden fazla amaç için uygundur; bu yüzden bazıları birden fazla kategori altında tekrarlandı (örneğin ghidra, radare2/rizin, imhex).
+- Statik analiz her zaman güvenlidir ve hızlıdır; dinamik (debug) analiz ise daha derin bilgi verir ama daha riskli ve zahmetlidir.

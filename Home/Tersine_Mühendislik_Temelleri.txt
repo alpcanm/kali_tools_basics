@@ -1,0 +1,79 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:14:55+03:00
+
+====== Zararlı Yazılımı Anlama: Tersine Mühendislik Temelleri ======
+
+
+
+===== Konu =====
+Tersine mühendislik (mevcut bir yazılımın nasıl çalıştığını içinden okuyarak anlama) ve kötü amaçlı yazılım analizi (zarar vermek için yazılmış programları inceleme) güvenliğe yöneliktir. Statik analiz (programı çalıştırmadan inceleme) hızlı ve güvenlidir. Dinamik analiz (programı çalıştırarak inceleme) daha derindir ama risklidir. Hedef; dosyanın ne yaptığını, nereye bağlandığını ve nasıl saklandığını güvenle ortaya çıkarmaktır.
+
+
+
+===== Neden önemlidir?/Ne işe yarar? =====
+- Şüpheli dosyaların ne yaptığı anlaşılır; olası veri sızıntısı ve kalıcılık tespit edilir.
+- Olay müdahalesinde bulaşma yolu, C2 (komuta-kontrol sunucusu) ve zaman çizelgesi belirlenir.
+- İmzalar (tanımlayıcı desenler) ve kurallar üretilir; benzer örnekler toplu taranır.
+- Paketleme/gizleme (kodu özellikle anlaşılmaz yapma) katmanları açılarak gerçek kod görülür.
+- Geliştiriciler güvenlik hatalarını ve kötüye kullanılabilecek akışları fark eder.
+
+
+
+===== Nasıl çalışır/uygulanır? =====
+- Android dosyaları: APK (Android uygulama paketi) içinden DEX (Android bayt kodu dosyası) çıkarılır ve decompile (derlenmiş kodu okunur hale çevirme) edilerek Java/Smali (Android’in düşük seviye kod dili) bakılır. İzinler ve ağ istekleri taranır.
+- Masaüstü çalıştırılabilirler: ELF/PE/Mach-O (Linux/Windows/macOS ikili biçimleri) dosyaları disassembler (ikiliyi assembly’e çeviren araç) ve decompiler (ikiliyi üst düzey koda çeviren araç) ile incelenir. Assembly (işlemci komut dili) ve yaklaşık C (pseudo‑C: C’ye benzer temsil) görünümünde akış okunur. C2 ve şifreleme (veriyi gizleme tekniği) aramaları yapılır.
+- Hata ayıklama: Debugger (programı adım adım çalıştıran araç) ile fonksiyonlar çalışırken izlenir; bellek ve kayıtlar kontrol edilir. Gerekirse yama (patch: küçük kod değişikliği) yapılır. Hex (onaltılık ham veri görünümü) ile ham içerik görülür.
+- Windows PE odaklı bakış: PE başlıkları ve derleyici (kaynak kodu makine koduna çeviren yazılım) ipuçları okunur; paketleyici (packer: ikiliyi sıkıştırıp gizleyen katman) olup olmadığı kontrol edilir. API (hazır sistem işlev çağrısı) kullanımları değerlendirilir.
+- Gömülü/IoT: Firmware (cihazın içindeki temel yazılım) imajından dosya sistemi (dosyaların düzeni) ve yapılandırma (ayar dosyaları) çıkarılır. SquashFS (sıkıştırılmış dosya sistemi türü) gibi yapılar açılıp varsayılan parolalar aranır. IoT (internete bağlı küçük cihazlar) güvenlik durumu değerlendirilir.
+- Paketleme ve gizleme: Packer/gizleme katmanları tespit edilip açılır; gerçek kod ve strings görünür hale getirilir.
+- Kural tabanlı avcılık: YARA (kural diliyle dosya tarama aracı) ile imzalar yazılır; çok sayıda dosya topluca taranır. Android tarafında riskli davranışlar puanlanarak önceliklendirme yapılabilir.
+- Hızlı ön analiz: Dosya türü, mimari ve olası packer varlığı hızlıca belirlenir; derin analize geçip geçmemeye karar verilir.
+- Geçici yamalama ve deney: Çalışan süreçte küçük davranış değişiklikleri denenir ve etkisi gözlenir. Bazı araçların bu alandaki ayrıntıları: Dökümandan çıkarılamıyor.
+
+
+
+===== Sözlük =====
+- APK: Android uygulama paketi.
+- API: Hazır sistem işlev çağrısı.
+- Assembly: İşlemci komut dili.
+- C2: Komuta-kontrol sunucusu.
+- Decompile: Derlenmiş kodu okunur hale çevirme.
+- Decompiler: İkiliyi üst düzey koda çeviren araç.
+- Derleyici: Kaynak kodu makine koduna çeviren yazılım.
+- DEX: Android bayt kodu dosyası.
+- Dinamik analiz: Programı çalıştırarak inceleme.
+- Disassembler: İkiliyi assembly’e çeviren araç.
+- Dosya sistemi: Dosyaların düzeni ve yapısı.
+- ELF/PE/Mach-O: Linux/Windows/macOS ikili dosya biçimleri.
+- Firmware: Cihazın içindeki temel yazılım.
+- Gizleme (obfuscation): Kodu özellikle anlaşılmaz yapmak.
+- GUI: Grafik kullanıcı arayüzü.
+- Hex: Onaltılık ham veri görünümü.
+- IoT: İnternete bağlı küçük cihazlar.
+- İmza: Dosyayı tanımlayan desen.
+- Komut satırı: Yazıyla komut verilen arayüz.
+- Pseudo‑C: C’ye benzeyen yaklaşık kod temsil biçimi.
+- Statik analiz: Programı çalıştırmadan inceleme.
+- Smali: Android’in düşük seviye kod dili.
+- SquashFS: Sıkıştırılmış dosya sistemi türü.
+- Şifreleme: Veriyi gizleme tekniği.
+- Tersine mühendislik: Mevcut bir yazılımın nasıl çalıştığını içinden okuyarak anlama.
+- Yama (patch): Küçük kod değişikliği.
+- YARA: Kural diliyle dosya tarama aracı.
+
+
+
+===== Kazanımlar =====
+- Android uygulamalarını açıp DEX’i decompile ederek Java/Smali seviyesinde okumak; izinleri ve ağ trafiğini risk açısından değerlendirmek.
+- Windows/Linux/macOS ikililerini disassemble/decompile edip akış, veri yapıları ve şüpheli davranışları çıkarmak.
+- Şüpheli dosyalarda C2 adresleri, şifreleme anahtarları ve gizlenmiş dizeleri bulmak.
+- Debugger ile kodu adım adım izleyip çalışırken veri yakalamak; kritik noktaları güvenle analiz etmek.
+- Hex görünümünde başlıkları ve yapılarını şablon mantığıyla çözmek; bilinmeyen formatları tanımak.
+- PE dosyalarında başlıklar, derleyici izleri ve API kullanımlarına bakarak risk profili çıkarmak.
+- Packer/gizleme katmanlarını tespit edip açarak gerçek kod ve strings’i görünür kılmak.
+- YARA kuralları yazarak dosya depolarını ve uç noktaları toplu taramak; yeni örnekleri hızlıca yakalamak.
+- Firmware imajlarından dosya sistemi ve yapılandırmaları çıkarmak; zayıf parolalar ve sert-kodlanmış anahtarları tespit etmek.
+- Hızlı ön analiz ile dosyanın türünü, mimarisini ve packer durumunu belirleyip doğru analiz yolunu seçmek.
+- Çalışan süreçte geçici yama uygulayarak davranış değişikliklerini test etmek (ör. bir kontrolü etkisizleştirip gözlem yapmak).
+- Bazı ileri seviye araçların kapsam ve kullanım ayrıntıları: Dökümandan çıkarılamıyor.

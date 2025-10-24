@@ -1,0 +1,43 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:50:35+03:00
+
+Bluetooth/BLE
+
+
+Bluetooth/BLE cihaz keşfi ve envanter çıkarma
+- Açıklama: Etraftaki Bluetooth/BLE cihazlarını bulur, adı, üreticisi, sinyal gücü ve desteklediği servisler gibi temel bilgileri toplar. Güvenlik ekiplerinin sahadaki varlıkları haritalamasına yardımcı olur.
+- Örnek: Ofiste kablosuz cihaz politikasına uyumu kontrol etmek için tüm katlarda kısa bir tarama yapıp görülen cihazları envantere eklemek.
+- Araçlar: blue-hydra (aktif/pasif keşif ve kayıt), btscanner (cihaz ayrıntıları ve servis taraması), bluez (bluetoothctl, sdptool vb. temel tarama/test araçları), ubertooth (tüm bileşenleri; donanım destekli BLE yayınlarını görerek keşfe yardımcı)
+
+Gizli (non-discoverable) cihaz tespiti
+- Açıklama: Kendini “görünmez” yapan (non-discoverable) klasik Bluetooth cihazlarını yakalamaya çalışır. Bazı araçlar adres aralıklarını tarayarak veya düşük seviye sinyalleri izleyerek bu cihazları ortaya çıkarır.
+- Örnek: Kayıp bir kurumsal dizüstünün Bluetooth’u görünmez moddayken bile, güvenlik ekibinin cihazın varlığını doğrulamaya çalışması.
+- Araçlar: redfang (non-discoverable cihazları adres brute-force ile bulur), ubertooth (tüm bileşenleri; düşük seviye BLE yayınlarını/spektrumu izlemede yardımcı), bluez (l2ping/btmgmt gibi yardımcı test komutları)
+
+Trafik izleme ve paket yakalama (sniffing/monitoring)
+- Açıklama: Havadan gelen Bluetooth/BLE yayınlarını ve paketlerini izler, günlükler ve analiz eder. Bazı senaryolarda özel donanım (Ubertooth) gerekebilir.
+- Örnek: Bir üretim sahasında IoT sensörlerinin BLE reklam yoğunluğunu ölçerek radyo trafiğinin işletimi etkileyip etkilemediğini görmek.
+- Araçlar: ubertooth (tüm bileşenleri; BLE paket yakalama ve spektrum analizi), blue-hydra (görülen cihazları ve reklamları veri tabanına kaydeder), bluelog (keşfedilebilir cihazları pasif olarak günlükler)
+
+Yakınlık ve varlık takibi
+- Açıklama: Sinyal gücünden (RSSI) yararlanarak bir cihazın yakında olup olmadığını kabaca tahmin eder ve varlığını zaman içinde izler. Fiziksel güvenlik kontrollerinde kullanılır.
+- Örnek: Veri merkezinde belirli saatlerde mobil telefonların yakına gelip gelmediğini takip edip alarm üretmek.
+- Araçlar: blueranger (RSSI ile basit yakınlık/mesafe tahmini), blue-hydra (sinyal gücü ve zaman bazlı cihaz takibi), bluelog (zaman damgalı varlık kaydı)
+
+Kimlik sahteciliği ve profil kopyalama (spoofing)
+- Açıklama: Test amacıyla bir cihazın Bluetooth kimliğini (ad, sınıf, MAC gibi) taklit eder veya değiştirir. Bu, kimliğe dayalı erişim kontrollerinin güvenliğini sınamak için kullanılır.
+- Örnek: Bir güvenlik politikasının yalnızca belli cihaz sınıflarına izin verip vermediğini doğrulamak için sahte bir cihaz profiliyle test yapmak.
+- Araçlar: spooftooph (MAC/ad/cihaz sınıfı spoofing/klonlama), bluez (cihaz adı/sınıfı gibi temel parametreleri değiştirmeye yardımcı komutlar)
+
+Yetkili güvenlik açığı ve sızma testleri
+- Açıklama: Yanlış yapılandırmaları ve zafiyetleri doğrulamak için kontrollü ve yetkili testler yapılır. Amaç, maruziyetleri tespit edip gidermektir; izinsiz kullanım amacı yoktur.
+- Örnek: Kurumsal telefonlarda eski OBEX ayarlarının açık kalıp kalmadığını ve rehber bilgisinin yetkisiz okunup okunamadığını denetlemek.
+- Araçlar: bluesnarfer (OBEX üzerinden rehber/mesaj erişimi riskini test eder), apple-bleee (Apple ekosistemindeki cihazların BLE yayınlarından gereğinden fazla bilgi sızdırıp sızdırmadığını kontrol eder)
+
+Bluetooth yığını ve temel test altyapısı
+- Açıklama: İşletim sistemi düzeyinde Bluetooth’u yöneten yazılımlar ve bunların test araçlarıdır. Diğer araçların büyük kısmı bunlara dayanır veya onlarla entegre çalışır.
+- Örnek: Adaptörün durumu, eşleştirme/ayrışma, servis keşfi gibi temel işlevleri kontrol etmek ve sorun gidermek.
+- Araçlar: bluez (Linux Bluetooth yığını; bluetoothctl, btmgmt, sdptool vb. temel yönetim/test), ubertooth (tüm bileşenleri; donanım ve yardımcı araçlar, diğer yazılımlarla entegre kullanım)
+
+Not: Bu araçlar yalnızca yetkili ve etik güvenlik testleri için kullanılmalıdır. İzinsiz tarama veya dinleme yasalara aykırıdır.

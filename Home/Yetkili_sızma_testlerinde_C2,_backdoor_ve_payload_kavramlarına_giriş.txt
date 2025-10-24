@@ -1,0 +1,65 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:11:42+03:00
+
+====== Yetkili sızma testlerinde C2, backdoor ve payload kavramlarına giriş ======
+
+
+
+===== Konu =====
+Bu özet, C2 (komuta–kontrol: ele geçirilen makineleri uzaktan yönetme), backdoor (arka kapı: sisteme gizli giriş sağlayan yazılım), reverse shell (ters bağlantı kabuğu: hedef sistemin dışarıya bağlanıp komut alması) ve payload (taşınan kod: hedefte çalışacak küçük kod veya dosya) gibi temel kavramları ve bunların yetkili testlerde nasıl kullanıldığını anlatır. C2 araçları, hedeflere yerleştirilen bir ajanı (agent: hedefte çalışan, komut alan küçük program) tek merkezden yönetir; oturum (session: hedefle kurulu kontrol bağlantısı) açar, komut gönderir, dosya taşır ve yanal hareketi (aynı ağda başka makinelerde ilerleme) koordine eder. Ağ kısıtları varsa tünelleme (trafiği başka bir protokolün içine gizleme) yöntemleriyle DNS (alan adı sistemi: isimleri IP’ye çeviren servis) veya DoH (DNS-over-HTTPS: DNS’in HTTPS içinde taşınması) üzerinden iletişim denenebilir. Savunma tarafını ölçmek için AV/EDR (antivirüs/uç nokta algılama: uç noktayı izleyip engelleyen yazılımlar) karşısında farklı payload türleri denenir. Saldırgan benzetimi (gerçek saldırgan davranışlarını canlandırma) senaryoları, MITRE ATT&CK (saldırı teknikleri kataloğu) haritasına göre otomatik koşturularak SOC’un (güvenlik operasyon merkezi: 7/24 izleme birimi) görünürlüğü ve tepki süresi ölçülür. Bazı işlerde görsel arayüzle ekip koordinasyonu da mümkündür. Tüm kullanım yalnızca yetkili sızma testleri, denetimler ve eğitim laboratuvarları içindir.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+- Gerçekçi, uçtan uca saldırı akışlarını güvenli ve kontrollü biçimde canlandırır.
+- Mavi ekiplerin algılama ve müdahale süreçlerini ölçer ve iyileştirme alanlarını gösterir.
+- Ağ kısıtları karşısında hangi iletişim kanallarının daha görünür veya kapalı kaldığını gösterir.
+- Farklı payload ve iletişim tekniklerinin AV/EDR tarafından nasıl yakalandığını karşılaştırır.
+- Ekip içi koordinasyonu ve oturum yönetimini tek merkezden kolaylaştırır.
+
+===== Nasıl çalışır/uygulanır? =====
+- C2 sunucusu kurulur, hedefe bir ajan yerleştirilir ve oturum üzerinden komutlar koşturulur.
+- Windows ağı gibi ortamlarda yerel komut çalıştırma ve bilgi toplama, uygun ajanlarla yönetilir.
+- Çıkış trafiği kısıtlı ağlarda DNS veya DoH gibi alternatif taşıyıcılarla tünelleme denenir.
+- Hızlı bağlantı testleri için basit bir backdoor ya da reverse shell kullanılarak geri bağlantı alınır.
+- Farklı payload’lar üretilip çalıştırılarak AV/EDR tepkileri gözlenir ve kaydedilir.
+- Saldırgan benzetimi senaryoları ATT&CK’e göre otomatik icra edilir; SOC’un tespit ve yanıt süreleri ölçülür.
+- Ekip, görsel arayüzlü orkestrasyonla oturumları paylaşır ve görev dağıtımı yapar.
+- Bazı araçlar birden çok rolü (ör. hafif C2 + shell toplayıcı) destekleyebilir; uygun rol seçilir.
+- Bazı yardımcıların ayrıntılı yetenek kapsamı: Dökümandan çıkarılamıyor.
+
+===== Kime yarar? =====
+- Kırmızı takım (saldırı simülasyonu yapan ekip), mavi ekip (savunma ekibi), denetçiler ve eğitim laboratuvarları.
+
+
+
+===== Sözlük =====
+- Adversary emulation (Saldırgan benzetimi): Gerçek saldırgan davranışlarını senaryolaştırıp canlandırma.
+- Ajan: Hedefte çalışıp C2’den gelen komutları alan küçük program.
+- AV/EDR: Antivirüs ve uç nokta algılama/tepki yazılımları.
+- Backdoor (Arka kapı): Sisteme gizli veya kalıcı giriş sağlayan yazılım.
+- C2 (Komuta–Kontrol): Ele geçirilen makineleri uzaktan yönetme düzeni.
+- DoH (DNS-over-HTTPS): DNS trafiğini HTTPS içine taşıma yöntemi.
+- DNS: Alan adlarını IP adreslerine çeviren temel internet servisi.
+- Kırmızı takım: Kurumda yetkili saldırı simülasyonu yapan ekip.
+- MITRE ATT&CK: Bilinen saldırı tekniklerini sınıflayan açık katalog.
+- Mavi ekip: Kurumun savunma ve izleme faaliyetlerini yürüten ekip.
+- Oturum: Hedef sistemle kurulan kontrol bağlantısı.
+- Payload: Hedefte çalışacak kod veya dosya.
+- Reverse shell (Ters bağlantı kabuğu): Hedefin dışarıya bağlanıp komut alması.
+- SOC: Güvenlik operasyon merkezi; 7/24 izleme ve müdahale birimi.
+- Tünelleme: Bir trafiği başka bir protokolün içine gizleyerek taşımak.
+- Yanal hareket: Aynı ağ içinde başka sistemlere doğru ilerleme.
+
+
+
+===== Kazanımlar =====
+- Çoklu hedefte ajan kurup tek panelden oturum yönetir, komut çalıştırır ve dosya aktarımı yaparsın.
+- Windows odaklı ortamlarda yerel komut çalıştırmayı ve bilgi toplamayı ajanlar üzerinden yönetirsin.
+- Dışa giden trafiği kısıtlı ağlarda DNS veya DoH ile düşük bant genişlikli bir C2 kanalı kurmayı dener, görünürlüğünü ölçersin.
+- Şifrelemeli ve kimlik doğrulamalı basit backdoor/reverse shell bağlantılarıyla savunmanın tepkisini gözlersin.
+- Farklı payload türleri üretip çalıştırarak AV/EDR’in hangi aşamada yakaladığını karşılaştırır ve raporlarsın.
+- ATT&CK’e dayalı otomatik senaryolarla kalıcılık, yanal hareket ve veri çıkarma adımlarının ne kadar görüldüğünü test edersin.
+- Görsel arayüzle oturumları ekipçe paylaşır, görev dağıtımı ve koordinasyon yaparsın.
+- Komuta–kontrol trafiğini DoH veya kurumsal sohbet gibi kanallara taşıyarak kısıtlı ağlarda geri bağlantı alma olasılığını artırır, tespit riskini değerlendirirsin.
+- Bazı araçların birden çok rolü desteklediğini ayırt edip doğru durumda doğru aracı seçme becerisi kazanırsın.
+- Bazı tünelleme yardımcılarının tam yetenek kapsamını belirlemek için ek kaynak incelemen gerekir; dokümandan çıkarılamıyor.

@@ -1,0 +1,34 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:51:08+03:00
+
+RFID/NFC ve benzeri (Proxmark, Mifare,RF)
+
+RFID/NFC kart keşfi ve temel okuma – Envanterleme
+- Açıklama: NFC/RFID etiketini/kartı tespit eder, türünü (örn. MIFARE Classic/Ultralight), temel kimlik bilgilerini (UID vb.) ve bellek yapısını görmenizi sağlar. Hızlı envanter, doğrulama ve bakım işleri için idealdir.
+- Örnek: Depoya gelen NFC etiketli ürünleri tarayıp hangi etiket tipleri kullanıldığını ve UID’leri kayıt altına almak (kendi envanterinizde, izinli şekilde).
+- Araçlar: libnfc (NFC okuyucuları için temel kütüphane; nfc-list/nfc-poll gibi örnek araçlarla gelir), rfdump (etiket/kart belleğini hexdump olarak görüntüleme ve analiz), mfterm (MIFARE odaklı etkileşimli terminal; komut seviyesinde inceleme)
+
+MIFARE Classic güvenlik değerlendirmesi (izinli testler)
+- Açıklama: MIFARE Classic kartların bilinen zayıflıklarına karşı dayanıklılığını değerlendirir. Yanlış yapılandırma ve zayıf anahtar kullanımı gibi riskleri bulmaya odaklanır. Yalnızca yetkili ve izinli güvenlik testlerinde kullanılmalıdır.
+- Örnek: Kurumdaki eski MIFARE Classic tabanlı personel kartlarının risk düzeyini ölçmek ve daha güvenli kartlara geçiş planı yapmak.
+- Araçlar: mfoc (MIFARE Classic güvenlik testi; çevrimdışı analiz odaklı), mfcuk (MIFARE Classic test kiti; farklı analiz tekniklerini dener), proxmark3 (tüm bileşenleri) (donanım + istemci; HF/LF, gelişmiş analiz ve testler)
+
+Protokol analizi, emülasyon ve snifleme – RFID/NFC
+- Açıklama: Kart ile okuyucu arasındaki iletişimi izleme (sniff), kaydetme ve gerektiğinde kartı/okuyucuyu taklit etme (emülasyon) imkanı sağlar. Ürün geliştirme, uyumluluk ve hata ayıklamada kullanılır.
+- Örnek: Laboratuvarda yeni bir turnike okuyucusunu test ederken kart–okuyucu mesajlaşmasını izleyip zamanlama veya uyumluluk sorunlarını bulmak (kendi ekipmanınızla, kapalı test ortamında).
+- Araçlar: proxmark3 (tüm bileşenleri) (sniffer, emülatör ve analiz; 125 kHz ve 13.56 MHz), mfterm (MIFARE komutlarını adım adım deneyimlemek için etkileşimli terminal), libnfc (geliştirici API’siyle kart/okuyucu modlarında denemeler)
+
+NFC/MIFARE uygulama geliştirme kütüphaneleri ve araçları
+- Açıklama: NFC özellikli uygulamalar yazmak veya mevcut sistemlere NFC/MIFARE desteği eklemek için kullanılan yazılım kütüphaneleri ve onlarla gelen küçük yardımcı araçlar.
+- Örnek: Stok takip sistemi için, ürün üzerindeki NFC etiketinden veriyi okuyup veritabanına kaydeden basit bir masaüstü uygulaması geliştirmek.
+- Araçlar: libnfc (genel amaçlı NFC kütüphanesi; çok sayıda okuyucuyu destekler ve örnek araçlar içerir), libfreefare (MIFARE Classic/Ultralight/Desfire gibi aileler için yüksek seviye API ve örnek araçlar)
+
+Genel RF (sub‑GHz) test ve scriptleme – 315/433/868/915 MHz
+- Açıklama: NFC/RFID dışındaki düşük frekanslı (sub‑GHz) kablosuz cihazların (ör. bazı IoT sensörleri, uzaktan kumandalar) sinyallerini test etmek ve analiz etmek için kullanılır. Yalnızca kendi cihazlarınızda ve izinli ortamlarda kullanılmalıdır.
+- Örnek: Kendi hava istasyonunuzun 433 MHz yayınını kaydedip sinyal gücünü ve paket sürekliliğini ölçmek.
+- Araçlar: rfcat (CC1111 tabanlı dongle’ları Python ile kontrol etmeye yarayan araç; paket gönderme/alma ve temel analiz)
+
+Not:
+- proxmark3, mfterm ve libnfc birden fazla kategoriye girer; hem temel okuma/analiz hem de gelişmiş protokol testlerinde kullanılır.
+- Bu araçlar güvenlik araştırması ve ürün geliştirme içindir. Başkalarının kartlarına/cihazlarına izinsiz erişim yasadışıdır.

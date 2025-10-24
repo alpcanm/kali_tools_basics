@@ -1,0 +1,74 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:12:48+03:00
+
+====== Ağını Tanı: Keşfet, Tara, Kontrol Et ======
+
+
+
+===== Konu =====
+Bu içerik, bir ağda hangi cihazların olduğunu, hangi kapıların (port: uygulamaların dinlediği numaralı kapı) açık olduğunu ve bu kapılarda hangi servislerin (ağ üzerinden sunulan uygulama) çalıştığını bulma işini anlatır. Bu işe kısaca ağ keşfi ve parmak izi (küçük ipuçlarından kimliği anlama) denir. Amaç; IP (cihazın ağdaki adresi) çakışmalarını önlemek, gereksiz açıkları kapatmak ve sorunları hızlıca görmek.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+* IP çakışmalarını ve yanlış yapılandırmaları erken fark edersin.
+* Gereksiz açık kapıları (port) bulup kapatarak riski azaltırsın.
+* Hangi servis/sürümün (uygulamanın versiyonu) çalıştığını görür, güncelleme planı yaparsın.
+* Ağ kesintilerinde trafik nerede takılıyor anlayıp hızlı müdahale edersin.
+* Windows paylaşımları, yazıcılar, anahtarlar gibi varlıkların envanterini çıkarırsın.
+* Ağa yeni ve belirsiz bir cihaz bağlandığında sessizce (pasif dinleme: sinyal göndermeden trafiği izleme) tipini anlarsın.
+
+===== Nasıl çalışır/uygulanır? =====
+* Canlı cihazları bul: Yerel ağda ARP (IP’den MAC adresini bulma yöntemi) ile; uzak ağda ICMP (ağda kontrol mesajları) ve TTL (paketin atlayabileceği adım sayısı) ile cihazların cevap verip vermediğini yokla.
+* Açık kapıları tara: Önce hızlı bir genel tarama yap, sonra detaylandır. TCP (bağlantı odaklı internet iletişim kuralı), UDP (bağlantısız internet iletişim kuralı) ve SCTP (özellikle telekomda kullanılan iletişim kuralı) kapılarını kontrol et.
+* Servis ve sürümü tanı: Açık kapılara küçük istekler gönderip verdikleri yanıtlardan hangi servisin ve hangi sürümün çalıştığını çıkar.
+* Sessizce izle: Pasif dinleme ile ağ trafiğini bozmeden işletim sistemi tipini ve ARP/MAC (ağ kartının benzersiz adresi) değişimlerini kaydet.
+* Yol izleme yap: Paketlerin hedefe giderken geçtiği yönlendiricileri (trafiği ileten ağ cihazı) adım adım gör; güvenlik duvarı (trafiği kurallarla süzen sistem) hangi kapı ve kurallara izin veriyor test et.
+* Windows/Paylaşım bilgisi topla: NetBIOS (Windows’un isimlendirme yöntemi) ve SMB (Windows dosya paylaşım yöntemi) üstünden isimler, paylaşımlar, çalışma grupları gibi bilgileri çek.
+* SNMP ile envanter çıkar: SNMP (ağ cihazlarından bilgi toplama yöntemi) açık mı kontrol et; “community” (SNMP’de parola benzeri metin) değerleri tahmin edilirse cihazları toplu halde listele.
+* Özel paketlerle test et: Gerekirse özel hazırlanmış paketler (ağda taşınan veri parçası) göndererek cihazların verdiği tepkileri ölç.
+* Katman 2 kontrolleri: Katman 2 (MAC adresiyle çalışan ağ katmanı) düzeyindeki kuralları ve ayarları test ederek switch’lerin yanlış ayarlarını yakala.
+* Kimlik doğrulamayı doğrula: 802.1X (ağ portunda kimlik doğrulama standardı), EAP (802.1X’te kimlik bilgisi taşıyan yöntemler) ve NAC (ağ erişim kontrolü) akışını, yetkili ve kontrollü bir ortamda doğru çalışıyor mu diye sınar.
+* Not: 802.1X/NAC çevresindeki bazı özel yardımcıların kapsam ve özellikleri Dökümandan çıkarılamıyor.
+
+===== Sözlük =====
+* 802.1X: Ağ portunda cihazı açmadan önce kimlik doğrulayan standart.
+* ARP: IP’den MAC adresini bulmaya yarayan yöntem.
+* EAP: 802.1X içinde kimlik bilgisini taşıyan yöntemler ailesi.
+* ICMP: Ağda kontrol ve hata mesajlarını taşıyan basit mesajlaşma yapısı.
+* IP: Bir cihazın ağdaki sayısal adresi.
+* Katman 2: Cihazların MAC adresiyle konuştuğu ağ katmanı.
+* MAC adresi: Ağ kartının benzersiz donanım adresi.
+* NAC: Cihazın ağa girme şartlarını kontrol eden sistem.
+* NetBIOS: Windows ağlarında isimlendirme ve hizmet keşfi yöntemi.
+* Paket: Ağda taşınan küçük veri parçası.
+* Parmak izi: Küçük ipuçlarından cihazın türünü/uygulamayı tanıma işi.
+* Pasif dinleme: Ağa paket göndermeden trafiği izleme yöntemi.
+* Port: Bir uygulamanın ağdan dinlediği numaralı kapı.
+* SCTP: Özellikle telekomda kullanılan bir iletişim kuralı.
+* Servis: Ağ üzerinden sunulan uygulama.
+* SMB: Windows dosya/paylaşım iletişim yöntemi.
+* SNMP: Ağ cihazlarından bilgi toplamak ve yönetmek için kullanılan basit yöntem.
+* Sürüm: Bir yazılımın belirli çıkışı/versiyonu.
+* TCP: Bağlantı kurarak veri taşıyan internet iletişim kuralı.
+* TTL: Bir paketin ağda kaç adım ilerleyebileceğini belirleyen sayı.
+* UDP: Bağlantı kurmadan veri taşıyan internet iletişim kuralı.
+* Yönlendirici: Trafiği hedefe doğru ileten ağ cihazı.
+* Yol izleme: Bir hedefe giden paketin geçtiği ara noktaları görme işlemi.
+* Güvenlik duvarı: Trafiği kurallara göre engelleyen/izin veren sistem.
+
+===== Kazanımlar =====
+* Yerel ağda bağlı tüm cihazları saniyeler içinde listeleyebilirsin (ARP tabanlı hızlı keşif).
+* Uzak ağlarda çok sayıda IP’yi kısa sürede yoklayıp hangilerinin aktif olduğunu görebilirsin (ICMP/TTL tabanlı keşif).
+* Hızlı genel taramayla açık kapıları bulur, sonra belirli kapılarda ayrıntılı kontrol yapabilirsin (TCP/UDP/SCTP).
+* Bir kapıda hangi servisin ve hangi sürümün çalıştığını öğrenip güncelleme veya kapatma kararı alabilirsin.
+* Ağa ek yük getirmeden pasif dinleme ile yeni/şüpheli cihazları ve işletim sistemi tiplerini saptayabilirsin.
+* ARP/MAC değişikliklerini izleyerek sahtecilik ve beklenmedik adres değişimlerini erken yakalayabilirsin.
+* Yol izleme ile kesintinin hangi adımda yaşandığını tespit eder, hedefe giden rotayı belgelersin.
+* Güvenlik duvarının hangi kapı ve türdeki trafiğe izin verdiğini pratik testlerle doğrulayabilirsin.
+* Windows makineleri, paylaşımları ve çalışma gruplarını hızla keşfedip açık paylaşım risklerini görebilirsin.
+* Ağ cihazlarında SNMP açıksa “community” değerlerini sınayıp yönlendirici/anahtar/yazıcı gibi varlıkların envanterini çıkarabilirsin.
+* SCTP kullanan sistemlerde açık uç noktaları bulur; özel paketlerle cihazların verdiği tepkileri ölçerek sağlamlık testi yapabilirsin.
+* Katman 2 düzeyinde switch güvenliğini gözden geçirir, yanlış veya zayıf ayarları tespit edebilirsin.
+* 802.1X/EAP ve NAC akışını laboratuvar ortamında sınayıp kimlik doğrulamanın gerçekten çalıştığını kanıtlayabilirsin.
+* Tarama sonuçlarını zaman içinde karşılaştırarak yeni açılan/kapanan kapıları ve değişen servisleri hızlıca raporlayabilirsin.
+* Tarama ve keşif işlemlerini grafik arayüzle görselleştirip ekip arkadaşlarınla kolayca paylaşabilirsin.

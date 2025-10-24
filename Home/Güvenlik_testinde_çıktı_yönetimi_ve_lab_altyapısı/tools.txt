@@ -1,0 +1,36 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:16:48+03:00
+
+Diğer
+Çıktı analizi ve otomasyon (LLM destekli yardımcılar)
+- Açıklama: Büyük çıktıları (ör. nmap) anlamlandırma, özetleme ve önceliklendirme için yapay zeka destekli yardımcılar sunar.
+- Örnek: Yüzlerce host’a ait nmap sonuçlarını özetletip öncelikle kritik açık port ve olası zafiyetlere odaklanmak.
+- Araçlar: llm-tools-nmap (nmap çıktılarının özetlenmesi/sorgulanması), rephrase$ (e-posta/sosyal mühendislik metinlerini farklılaştırma; ayrıntı belirsiz)
+
+
+İsim çözümleme ve hosts dosyası yönetimi
+- Açıklama: Test/lab ortamlarında alan adı çözümlemesini yönlendirmek için hosts dosyası gibi yerel mekanizmaları yönetir.
+- Örnek: Staging ortamındaki bir alan adını geçici olarak yerel test sunucunuza yönlendirip uygulama davranışını doğrulamak.
+- Araçlar: hostsman$ (hosts dosyasını yönetme/otomasyon; ayrıntı belirsiz)
+
+Yan kanal/akustik ve farkındalık araçları
+- Açıklama: Alışılmadık kanallardan (ör. akustik) sızıntı/izleme araştırmalarına yönelik deney araçlarıdır. Genellikle araştırma ve farkındalık amaçlıdır.
+- Örnek: Ofis ortamında klavye tıklama seslerinden bilgi sızıntısı riskini laboratuvar ortamında kanıtlama.
+- Araçlar: ohrwurm$ (akustik/yan kanal araştırma aracı; ayrıntı belirsiz)
+
+Belirsiz/çok amaçlı (kategorize edilemeyen veya bilgi yetersiz)
+- Açıklama: Kali deposunda ismi geçen fakat herkese açık kısa özetlerden hedef kullanım alanı netleşmeyen ya da birden fazla alana yayılabilecek araçlar. Proje sayfaları/paket açıklamalarıyla doğrulanması önerilir.
+- Örnek: Proje deposundaki README kontrol edilmeden kullanım alanını varsaymamak; PoC yerine lab ortamında ne yaptığını görmek.
+- Araçlar: above$ (belirsiz), certi$ (belirsiz), framework2$ (belirsiz; çok amaçlı olabilir), hekatomb$ (belirsiz), hubble$ (belirsiz), humble$ (belirsiz), nasty$ (belirsiz), owl$ (belirsiz), proximoth$ (belirsiz), spire (belirsiz), tinja$ (belirsiz), tundeep$ (belirsiz), wotmate$ (belirsiz), hexwalk$ (belirsiz)
+
+Kütüphaneler / meta paketler / geliştirici paketleri (toplu)
+- Açıklama: Bu paketler doğrudan “saldırı aracı” değildir. Diğer araçların çalışması, derlenmesi ve yapılandırılması için gereken kütüphaneleri, geliştirme başlıklarını (-dev), belgeleri (-doc), veri/ortam paketlerini (-common/-data/-runtime) ve Python modüllerini sağlar. Ayrıca tek komutla çok sayıda aracı kuran meta paketler (kali-linux-*, kali-desktop-*, kali-wallpapers-* vb.) ile test/lab kurulumlarında kullanılan “servis yardımcıları” (web/DNS/SSH/SMB/RADIUS sunucuları, sürüm kontrol sistemleri, tarayıcılar) da bu gruptadır. Kısacası, ekosistemi ayakta tutan altyapı ve bağımlılık paketleridir.
+- Örnek: Bir PoC aracı derlemek için libssl-dev ve libc6-dev gibi -dev paketlerini kurup eksik Python modülü python3-requests’i eklemek; ardından lab ortamını hızla genişletmek için kali-linux-large (veya All Kali Tools) meta paketini yüklemek; HTTP testi için apache2’yi, uzak erişim için openssh-server’ı başlatmak.
+- Araçlar: libssl3 (şifreleme kütüphanesi), libpcap0.8 (paket yakalama kütüphanesi), libyara10 (YARA imza motoru kütüphanesi), libwireshark18 (Wireshark çekirdek kütüphaneleri), libclamav12 (antivirüs motor kütüphanesi), libtsk19t64 (adli dosya sistemi kütüphanesi), libexiv2-28 (görsel meta veri kütüphanesi), libbluetooth3 (Bluetooth kütüphanesi), libafflib0t64 (AFF adli disk biçimi kütüphanesi), libc6-dev (C derleme başlıkları), libcapstone-dev (disassembler geliştirme başlıkları), libclang-dev (Clang/LLVM geliştirme başlıkları), libuhd-dev (SDR/USRP geliştirme), libproxychains4 (proxy yönlendirme kütüphanesi), python3-requests (HTTP istemcisi modülü), python3-capstone (disassembler Python bağı), python3-uhd (SDR Python bağı), python3-dfvfs (adli dosya sistemi modülü), kali-defaults (Kali varsayılan ayarları), kali-linux-default (temel araç seti meta paketi), kali-linux-large (geniş araç seti meta paketi), kali-desktop-xfce (masaüstü ortamı meta paketi), kali-wallpapers-* (duvar kâğıtları), All Kali Tools (tüm araçları tek seferde getiren meta paket), offsec-courses (OffSec kurs içerikleri), apache2 (web sunucusu), apache2-utils (web test yardımcıları), bind9 (DNS sunucusu), openssh-server (SSH sunucusu), samba (SMB/Windows paylaşımı), freeradius (RADIUS kimlik doğrulama sunucusu), git (sürüm kontrol sistemi), subversion (SVN sürüm kontrol), chromium (web tarayıcı), firefox-developer-edition (geliştirici odaklı tarayıcı)
+
+
+Notlar
+- Parantez içi kısa bilgiler, bilinen/kaynaklarda yer alan özetlerdir; “belirsiz” olanlar için resmi Kali paket açıklaması veya projenin GitHub sayfasının kontrol edilmesi önerilir.
+- Birden fazla kategoriye girenler: teamsploit$ (C2 ve sosyal mühendislik), rephrase$ (web/payload çeşitlendirme ve LLM destekli yardımcı), hosthunter$ (OSINT; bazı durumlarda iç ağ haritalamaya girişte de fikir verebilir).
+- Tüm kullanım örnekleri, yalnızca yetkili, yasal ve kontrollü test ortamları için verilmiştir.

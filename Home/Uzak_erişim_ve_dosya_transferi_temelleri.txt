@@ -1,0 +1,73 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:04:42+03:00
+
+====== Uzak erişim ve dosya transferi temelleri ======
+
+
+
+===== Konu =====
+Bu metin, uzaktaki bir bilgisayarı görüntüleyip yönetme ve ağ üzerinden dosya taşıma işlerini anlatır. Uzak masaüstü için RDP (uzak masaüstüne bağlanma protokolü: cihazların nasıl konuşacağını belirleyen kurallar) ve VNC’yi (ekran paylaşımına dayalı, farklı sistemlerde çalışan bir protokol) özetler. Dosya aktarımı için FTP’yi (dosya taşıma protokolü) ve TFTP’yi (çok basit dosya taşıma protokolü) tanıtır; gerekiyorsa FTPS/SFTP’yi (şifreli: veriyi sadece yetkililerin okuyabileceği hale getirilmiş sürümler) önerir. Web üzerinden indirme için HTTP/HTTPS’yi (web iletişim protokolü ve onun şifreli sürümü), betik (küçük komut dosyası) ile otomasyonu (işi komutla kendiliğinden yaptırma) ve çok parçalı indirmeyi (aynı dosyanın parçalarını aynı anda indirerek hız kazanma) açıklar. Uzak bir depoyu (repository: dosyaların durduğu klasör) yerel klasör gibi bağlamayı (mount: uzaktaki kaynağı bilgisayarında klasör gibi göstermek; FUSE: kullanıcı düzeyinde dosya sistemi kurmaya yarayan yapı; dosya sistemi: dosya ve klasörlerin düzeni) gösterir. Son olarak arşiv (birden çok dosyayı tek pakete toplama) ve sıkıştırma (dosya boyutunu küçültme) dosyalarıyla çalışmayı ve ISO (optik disk kalıbı dosyası) gibi büyük dosyaları indirmeyi anlatır. RDP genelde Windows’ta yaygındır; VNC ise platformdan bağımsızdır (farklı işletim sistemlerinde çalışır). Görsel işlemler için GUI (grafikli arayüz) üstünden çalışan hizmetleri (service: arka planda sürekli çalışan görevler) uzaktan kontrol etmenize yardım eder.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+* Uzaktaki bilgisayarı sanki yanındaymış gibi yönetirsin.
+* Ağ cihazlarının yapılandırmasını hızlıca yedekler ve geri yüklersin.
+* Büyük dosyaları güvenli ve hızlı indirirsin.
+* Uzak bir dosya alanını yerel klasör gibi kullanıp kopyalama ve yedeklemeyi basitleştirirsin.
+* Farklı arşiv formatlarıyla sorunsuz çalışır, gelen dosyaları açarsın.
+
+===== Nasıl çalışır/uygulanır? =====
+* Uzak masaüstü (RDP/VNC):
+  - Hedefte ilgili hizmet açıktır ve erişime izin verir.
+  - Bağlanır, kullanıcı bilgilerini girersin; uzak ekran karşında açılır.
+  - Görsel arayüzden ayar yapar, durum kontrolü yaparsın.
+* Dosya aktarımı (FTP/TFTP):
+  - Bir tarafta sunucu çalışır, diğer tarafta istemci bağlanır.
+  - Dosyayı gönderir (put) veya çeker (get) şeklinde işlem yaparsın.
+  - Mümkünse FTPS/SFTP gibi şifreli seçenekleri kullanırsın.
+* Web’den indirme (HTTP/HTTPS):
+  - Komut satırı indiricisi ile dosyayı alır, gerektiğinde durduğun yerden devam edersin.
+  - Desene göre (ör. .zip) toplu indirme yaparsın.
+  - Çok parçalı indirme ile büyük dosyalarda süreyi kısaltırsın.
+* Uzak depoyu klasör gibi bağlama:
+  - Uzak FTP alanını bir bağlama noktasına iliştirirsin (mount).
+  - Artık kopyalama, silme, düzenleme işlemleri normal klasör gibi çalışır.
+  - Bu sayede senkronizasyon (iki yeri aynı tutma) ve yedekleme kolaylaşır.
+* Arşivleme ve sıkıştırılmış dosyalar:
+  - .7z, .cab, .rar gibi formatları açarsın; desteklenenlerde arşiv de oluşturursun.
+  - Farklı sistemlerden gelen paketleri sorunsuz çıkarırsın.
+
+===== Sözlük =====
+* Arşiv: Birden çok dosyayı tek pakette toplama dosyası.
+* Bağlamak (mount): Uzak kaynağı bilgisayarında yerel klasör gibi gösterme.
+* Betik: Küçük komut dosyası.
+* Çok parçalı indirme: Bir dosyanın farklı parçalarını aynı anda indirme yöntemi.
+* Depo (repository): Dosyaların bulunduğu sunucu klasörü.
+* Dosya sistemi: Dosya ve klasörlerin düzenlenme biçimi.
+* FUSE: Kullanıcı alanında dosya sistemi oluşturmayı sağlayan yapı.
+* FTP: Dosya aktarım protokolü.
+* FTPS: Şifreli FTP.
+* GUI: Grafikli kullanıcı arayüzü.
+* Hizmet (service): Arka planda sürekli çalışan sistem görevi.
+* HTTP: Web iletişim protokolü.
+* HTTPS: Şifreli HTTP.
+* ISO: Optik disk kalıbı dosyası.
+* Otomasyon: İşi komutlarla kendiliğinden yaptırma.
+* Platformdan bağımsız: Farklı işletim sistemlerinde çalışabilen.
+* Protokol: Cihazların nasıl konuşacağını belirleyen kurallar.
+* RDP: Uzak masaüstüne bağlanma protokolü.
+* SFTP: Şifreli dosya aktarım protokolü.
+* Senkronizasyon: İki konumu aynı içerikte tutma işlemi.
+* Sıkıştırma: Dosya boyutunu küçültme işlemi.
+* Sunucu: Hizmet veren bilgisayar/uygulama.
+* TFTP: Çok basit dosya aktarım protokolü.
+* VNC: Ekran görüntüsünü uzaktan paylaşmaya dayalı protokol.
+
+===== Kazanımlar =====
+* Uzaktaki Windows veya Linux sistemlerin ekranına bağlanıp görsel ayar ve kontrol yapabilirsin.
+* Ağ cihazlarının yapılandırmasını TFTP/FTP ile yedekleyip geri yükleyebilirsin.
+* Web’den büyük dosyaları güvenli (HTTPS/FTPS/SFTP) ve kesinti sonrası devam ederek indirirsin.
+* Çok parçalı indirme ile ISO gibi büyük dosyalarda indirme süresini kısaltırsın.
+* Uzak bir FTP alanını yerel klasör gibi kullanıp kopyalama ve günlük yedeklemeyi otomatikleştirirsin.
+* .7z, .cab, .rar gibi yaygın arşivleri açar; gereken formatlarda arşiv oluşturursun.
+* Komut satırıyla toplu indirme ve filtreleme (ör. sadece .zip) yaparak işleri betiklerle otomatikleştirirsin.

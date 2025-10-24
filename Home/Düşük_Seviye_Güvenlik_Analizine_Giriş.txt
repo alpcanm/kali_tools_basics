@@ -1,0 +1,75 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T20:15:50+03:00
+
+====== Yetkili Ortamda Düşük Seviye Güvenlik Analizine Giriş ======
+
+
+
+===== Konu =====
+Bu konu, yazılımlardaki zafiyetleri (güvenlik açığı) anlamak ve güvenli laboratuvar ortamında göstermek için kullanılan yaklaşımları kapsar. Burada exploit (bir zafiyeti tetikleyip istenmeyen davranış üreten teknik), shellcode (bellekten çalışan küçük makine kodu parçası), tersine mühendislik (çalışan bir programın iç yapısını dışarıdan çözmeye çalışma) ve hata ayıklayıcı (programı adım adım izleyen araç) gibi kavramlara giriş yaparsınız. Tüm uygulamalar sadece yetkili, kontrollü ve eğitim/denetimli ortamlarda yapılmalıdır.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+- Bir çöküşün (crash; programın beklenmedik kapanması) kök nedenini (sorunun temel sebebi) bulmayı öğretir.
+- Zafiyetin etkisini küçük bir PoC (kavram kanıtı; “çalışıyor mu?” diyen basit örnek) ile göstermenizi sağlar.
+- Savunma kontrollerinin, örneğin bellek korumalarının (zararlı kod çalışmasını zorlaştıran mekanizmalar) etkisini ölçmenize yardım eder.
+- Eğitimlerde ROP/JOP (mevcut küçük kod parçalarını sıralayarak kontrol akışını yönlendirme teknikleri) gibi modern teknikleri güvenli biçimde anlatmanın yolunu sunar.
+- Red team (kurum savunmasını test eden saldırı simülasyonu ekibi) çalışmalarını izlemek ve raporlamak için düzenli bir çerçeve sağlar.
+- Kime yarar: Güvenlik eğitmenleri, CTF katılımcıları, güvenlik araştırmacıları ve iç denetim ekipleri.
+
+===== Nasıl çalışır/uygulanır? =====
+- Hata ayıklama: Yetkili bir testte, hata ayıklayıcı ile bellek ve register (işlemci içi küçük veri alanları) durumunu izleyip, çöküş anındaki hatalı bellek erişimini yakalarsınız.
+- Düşük seviye kod yazımı: Küçük bir assembly (işlemcinin anladığı en düşük seviyeli yazım dili) örneği yazıp makine koduna (işlemcinin çalıştırdığı ikili komutlar) çevirir, shellcode olarak paketlersiniz; davranışı emülatör (donanımı yazılımla taklit eden program) üzerinde test edilir.
+- Yükleme ve enjeksiyon: Eğitim amaçlı bir payload’u (taşınan asıl etki/kod) bir yükleyici (kodu belleğe alıp çalıştıran küçük program) ile diske yazmadan bellekte çalıştırmanın ne demek olduğunu gösterirsiniz. Gerekirse enjeksiyon (kodu başka bir sürece yerleştirme) tekniklerinin mantığını izole makinelerde sergilersiniz.
+- Koruma altındaki sistemler: NX/DEP (yürütülemez bellek bölgesi koruması) gibi bellek korumaları açıksa, ikili (derlenmiş çalıştırılabilir dosya) içindeki gadget’ları (iş gören çok kısa komut dizileri) bularak temel bir ROP (mevcut dönüş noktalarını kullanma) ya da JOP (atlama noktalarını kullanma) zinciri ile kontrol akışı (programın hangi adımlardan geçeceği) değiştirmenin konseptini anlatırsınız.
+- Platformlar ve biçimler: PE (Windows yürütülebilir dosya biçimi) ve .NET (Microsoft’un yönetilen kod platformu) modüllerinin bellekten yüklenmesi gibi konuları yalnızca laboratuvar ortamında gösterirsiniz.
+- Keşif ve raporlama: Zafiyet taramalarında bulunan CVE’leri (genel açık kimlikleri) PoC ile eşleyip, bulguları bir kampanya raporunda görselleştirirsiniz.
+- İç ağ aşaması: Yetkili bir iç testte, post-exploitation (ilk erişimden sonra yapılan adımlar) kapsamında iç ağ (kurumun özel ağı) içindeki yeni ağları ve rotaları (ağdaki ulaşım yolları) haritalar, yanal hareket (ağda başka sistemlere ilerleme) fırsatlarını belirlersiniz.
+- Belirli araçların ayrıntılı iç çalışması: Dökümandan çıkarılamıyor.
+
+
+
+===== Sözlük =====
+- .NET: Microsoft’un yönetilen kod çalıştırma platformu.
+- Assembly: İşlemcinin anlayacağı en temel düzeyde yazılan komut dili.
+- Bellek korumaları: Zararlı kodun çalışmasını zorlaştıran işletim sistemi/işlemci önlemleri.
+- Crash: Programın beklenmedik şekilde çökmesi.
+- CVE: Güvenlik açıkları için uluslararası standart kimlik.
+- Emülatör: Donanımın davranışını yazılımla taklit eden program.
+- Enjeksiyon: Bir kodu başka bir sürecin belleğine yerleştirme işlemi.
+- Exploit: Bir zafiyeti tetikleyip istenmeyen davranış oluşturan yöntem.
+- Gadget: İkili dosya içinde iş gören çok kısa komut dizisi.
+- Hata ayıklayıcı: Programı adım adım izlemeye ve durumunu görmeye yarayan araç.
+- İkili: Derlenmiş çalıştırılabilir dosya.
+- JOP: Atlama komutlarıyla küçük parçaları zincirleyip kontrol akışını yönlendirme tekniği.
+- Kök neden: Bir sorunun temel, asıl sebebi.
+- Kontrol akışı: Programın hangi adımlardan geçerek çalıştığı yol.
+- Makine kodu: İşlemcinin doğrudan çalıştırdığı ikili komutlar.
+- NX/DEP: Belleğin belirli bölgelerini yürütülemez kılan koruma.
+- Payload: Bir taşıma tekniğinin içinde gönderilen asıl kod/etki.
+- PE: Windows’un yürütülebilir dosya biçimi.
+- PoC: Bir fikrin çalıştığını gösteren küçük ve somut örnek.
+- Post-exploitation: İlk erişimden sonra ağ içinde yapılan keşif ve genişleme adımları.
+- Red team: Kurum savunmasını ölçmek için saldırı simülasyonu yapan ekip.
+- Register: İşlemci içindeki küçük, çok hızlı veri alanı.
+- ROP: Dönüş noktalarını ve küçük parçaları zincirleyerek kontrol akışını yönlendirme tekniği.
+- Shellcode: Bellekten çalışan küçük makine kodu parçası.
+- Tersine mühendislik: Bir sistemin iç yapısını dışarıdan analiz ederek anlamaya çalışma.
+- Yanal hareket: Ağ içinde bir sistemden diğerlerine ilerleme.
+- İç ağ: Kurumun dışa kapalı, özel ağı.
+- Rota: Ağda bir noktadan diğerine ulaşım yolu.
+
+
+
+===== Kazanımlar =====
+- Çöken bir uygulamayı çalışırken izleyip hangi girdiyle ve nerede çöktüğünü saptayabilirsiniz.
+- Bellek ve register durumunu okuyarak hatalı bellek erişimini ve kök nedeni belirleyebilirsiniz.
+- x86/x86_64 için küçük assembly parçaları yazıp makine koduna derleyebilirsiniz.
+- Ürettiğiniz shellcode’un boyutunu ve biçimini kontrol edip emülatörde güvenle test edebilirsiniz.
+- Bir payload’u diske yazmadan bellekte çalıştırma tekniğini laboratuvarda gösterebilirsiniz.
+- Mevcut ikililer içinden gadget bularak temel bir ROP/JOP zinciri tasarlayıp konsepti öğretebilirsiniz.
+- PE ve .NET bileşenlerinin bellekten yüklenmesi ve temel enjeksiyon senaryolarını izole makinelerde deneyebilirsiniz.
+- Zafiyet taraması sonuçlarını ilgili CVE ve PoC’lerle eşleyip, bulguları kampanya raporunda görselleştirebilirsiniz.
+- Yetkili iç testlerde, yeni alt ağları ve rotaları keşfedip yanal hareket için aday hedefleri haritalayabilirsiniz.
+- Farklı mimarilerde hata ayıklama ve düşük seviye analiz yapma alışkanlığı kazanabilirsiniz.
+- Etik ve yasal sınırlar içinde güvenlik eğitimleri ve CTF alıştırmalarını planlayıp yürütebilirsiniz.
