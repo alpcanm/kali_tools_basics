@@ -5,3 +5,44 @@ Creation-Date: 2025-10-24T23:01:14+03:00
 ====== vim ======
 Created Friday 24 October 2025
 
+- Nedir?
+  - Vim, UNIX “vi” editörünün geliştirilmiş sürümüdür. Terminalde çalışan güçlü bir metin düzenleyicidir.
+  - Çok seviyeli geri alma, sözdizimi renklendirme, komut geçmişi, blok işlemleri, katlama, Unicode desteği gibi özellikler sunar.
+  - Bu paket GUI içermez; konsolda çalışır.
+
+- Ne işe yarar (basit örneklerle)?
+  - Sunucuda yapılandırma dosyası düzenleme: /etc/ssh/sshd_config
+  - Hızlı arama/değiştirme: parola = x → parola = y
+  - Kod/log inceleme: renklendirme ile hatayı görmek
+  - Uzak SSH oturumunda hızlı düzeltme: tek satır yamalar
+  - Karşılaştırma: Not Defteri’nden güçlü, IDE’den hafif ve hızlıdır. Nano’dan daha gelişkindir.
+
+- Ne değildir?
+  - Word gibi kelime işlemci değildir.
+  - Tam kapsamlı IDE değildir (derleyici/hata ayıklayıcı entegre değildir).
+  - Dosya yöneticisi değildir.
+  - GUI uygulaması değildir (gVim ayrı).
+
+- Kullanım alanları nedir?
+  - Linux/UNIX sunucular, macOS terminali, WSL
+  - SSH ile uzak yönetim, konteyner ve kurtarma modları
+  - Ağ cihazları/embedded sistemlerin kabuğu
+  - Olay müdahalesi (DFIR), CTF, betik/kod düzenleme
+
+- Neden tercih edilir?
+  - Hızlı, hafif, her yerde bulunur (neredeyse tüm UNIX sistemlerinde hazırdır).
+  - Klavye odaklıdır; verimlilik yüksektir.
+  - Güçlü arama/değiştirme, çok seviyeli undo, katlama, blok düzenleme gibi üretkenlik özellikleri.
+  - Çevrimdışı çalışır; GUI’ye ihtiyaç duymaz.
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - Terminal/kabuk erişimi (yerel veya SSH)
+  - Sistemde vim ya da vi kurulumu
+  - Temel klavye kısayolları bilgisi (i, :wq, :q!, /, dd, yy, p vb.)
+  - İsteğe bağlı hızlı başvuru kılavuzu (:help)
+
+- Öğrenme zorluk seviyesi nedir?
+  - Zor (ortalama 6 ayda öğrenilebilir): Temelleri bir haftada, akıcılık ve kas hafızası aylar alır.
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 6 — Rol-çekirdek zorunlu: Mavi/Kırmızı takım, DFIR, CloudSec, OT gibi terminal ağırlıklı rollerde pratikte şarttır.

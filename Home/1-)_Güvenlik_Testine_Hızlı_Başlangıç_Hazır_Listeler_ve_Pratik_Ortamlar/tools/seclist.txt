@@ -4,4 +4,38 @@ Creation-Date: 2025-10-24T22:05:33+03:00
 
 ====== seclist ======
 Created Friday 24 October 2025
+===== Nedir? =====
+- SecLists, bir program değil; güvenlik testlerinde kullanılan hazır listelerin (kelime listeleri) büyük bir koleksiyonudur.
+- Bir araç kutusundaki vida/çivi çeşitleri gibi, farklı testler için hazır “listeler” sağlar.
+- Tek yerde toplanmış kullanıcı adı, parola, dizin/URL, payload vb. listelerdir.
 
+===== Ne işe yarar (basit örneklerle)? =====
+- Keşif: Gizli dizinleri bulmak (ör: /admin, /backup gibi isimleri denemek).
+- Parola denetimi: Zayıf parolaları politikaya karşı kontrol etmek (ör: “Şirket2024!” gibi yaygın kalıplar).
+- Fuzzing: Girdi hatalarını yakalamak (ör: XSS/SQLi denemelerinde standart içerikler).
+- Eğitim: CTF ve lablarda gerçekçi senaryolar kurmak.
+- Savunma testi: IDS/WAF kurallarını örnek desenlerle görmek.
+
+===== Ne değildir? =====
+- Bir saldırı aracı değildir; tek başına saldırı yapmaz.
+- Otomatik tarayıcı veya exploit aracı değildir.
+- Sihirli anahtar değildir; yanlış kullanılırsa sonuç vermez.
+- Yasal izin olmadan kullanım aracı değildir.
+
+===== Neden tercih edilir? =====
+- Hazır ve kapsamlı: Birçok senaryo için liste arama zahmetini azaltır.
+- Standartlaşmış: Toplulukça bilinen ve güncellenen içerikler.
+- Zaman kazandırır: “Kendi listeni üret” yerine “doğrudan kullan” yaklaşımı.
+- Uyumlu: Pek çok güvenlik aracı listeleri girdi olarak kabul eder.
+
+===== Kullanmak için nelere ihtiyaç vardır? =====
+- Yasal/izinli test ortamı ve kapsam (etik ve hukuki çerçeve).
+- Liste tüketebilen araçlar (ör: dizin bulucu, parola denetleyici, fuzzing aracı).
+- Temel komut satırı ve dosya yapısı bilgisi.
+- Test hedefi ve hangi listeyi seçeceğini belirleyecek temel güvenlik bilgisi.
+
+===== Öğrenme zorluk seviyesi nedir? =====
+- Kolay: Ortalama bir haftada “ne, nerede, hangi liste” mantığı kavranır.
+
+
+https://github.com/danielmiessler/SecLists

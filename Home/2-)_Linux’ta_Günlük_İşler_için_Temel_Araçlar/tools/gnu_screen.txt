@@ -5,3 +5,33 @@ Creation-Date: 2025-10-24T22:43:52+03:00
 ====== gnu screen ======
 Created Friday 24 October 2025
 
+- Nedir?
+  - GNU Screen, tek terminal/SSH bağlantısı içinde birden fazla “sanal pencere” (oturum) açan, kopsa bile komutları çalıştırmaya devam eden terminal çoklayıcıdır.
+
+- Ne işe yarar (basit örneklerle)?
+  - Uzun süren işler (ör. log toplama, nmap taraması) kopsa bile sürer; sonra “geri bağlanıp” kaldığın yerden bakarsın.
+  - Aynı sunucuda bir pencerede log izlerken (tail), diğerinde komut çalıştırırsın.
+  - Her pencerenin ayrı geri kaydırma (scrollback) ve basit kopyala–yapıştırı vardır.
+
+- Ne değildir?
+  - Grafik masaüstü değildir; VM/container değildir; servis yöneticisi (systemd) değildir; güvenlik aracı (IDS/IPS, AV) değildir.
+
+- Neden tercih edilir?
+  - Bağlantı kopmalarına dayanıklıdır; hafif ve neredeyse her Unix’te hazırdır; kurması/başlatması çok hızlıdır.
+  - Kıyas: tmux’a göre daha eski ve her yerde bulunur; tmux daha modern özellikli olabilir. nohup/screen -d yerine Screen etkileşimli yönetim sunar.
+
+- Kullanım alanları nedir?
+  - Ortamlar: Linux/Unix sunucular (SSH üzerinden), macOS Terminal, BSD sistemler, WSL/Cygwin.
+  - Güvenlik senaryoları: uzun pentest taramaları, olay müdahalesinde log izleme, bastion/jump sunucularda çoklu oturum, zayıf ağlarda kesintisiz iş sürdürme.
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - Unix benzeri sistem erişimi, temel terminal/SSH bilgisi, screen paketinin kurulumu, basit kısayolları bilmek (ör. detach/reattach).
+  - İsteğe bağlı: .screenrc ile basit yapılandırma.
+
+- Öğrenme zorluk seviyesi nedir?
+  - Kolay (ortalama bir haftada öğrenilebilir).
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 4 — Kuvvetle tavsiye edilen: Kopmalara dayanıklı uzak oturumlar ve çoklu terminal çalışması için geniş fayda sağlar.
+
+https://www.gnu.org/software/screen/

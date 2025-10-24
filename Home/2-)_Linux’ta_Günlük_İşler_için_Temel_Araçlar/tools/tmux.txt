@@ -5,3 +5,38 @@ Creation-Date: 2025-10-24T22:34:27+03:00
 ====== tmux ======
 Created Friday 24 October 2025
 
+==== Nedir? ====
+- tmux, tek bir terminal penceresinden birden çok “oturum”, “pencere” ve “bölme”yi yönetmeye yarayan bir terminal çoklayıcısıdır (arka planda sunucu-istemci mantığıyla çalışır).
+
+==== Ne işe yarar (basit örneklerle)? ====
+- Uzaktan (SSH) bağlandığınız sunucudan kopsanız bile oturumlarınız çalışmaya devam eder; geri dönüp kaldığınız yerden devam edersiniz.
+- Ekranı yatay/dikey bölüp aynı anda birden fazla komutu izlersiniz (ör. bir bölümde log, diğerinde komut).
+- Aynı oturuma birden fazla kişi bağlanıp birlikte çalışabilir (canlı eş zamanlı terminal paylaşımı).
+
+==== Ne değildir? ====
+- Bir metin editörü değildir (vim/emacs değildir; sadece içlerinde çalıştırırsınız).
+- Bir SSH istemcisi değildir; SSH bağlantınızı yönetmez, bağlantı içindeki oturumlarınızı korur.
+- Bir GUI çoklu sekme yöneticisi değildir; terminal tab’larının yerini daha güçlü şekilde, metin tabanlı alır.
+
+==== Kullanım alanları nedir? ====
+- Sunucular: Linux/Unix sunucularında SSH ile uzun süren işler, log izleme, bakım.
+- Geliştirme/DevOps: CI/CD, container/cluster yönetimi, log ve servis takibi.
+- Güvenlik operasyonları: Olay müdahalesi, adli analiz, red team lab ortamları, sürekli komut/araç çalıştırma.
+- Eğitim/Demolar: Tek ekranda birden çok komut akışını göstermek.
+- Yerel çalışma istasyonları: Terminal ağırlıklı çalışma akışlarını düzenlemek.
+
+==== Neden tercih edilir? ====
+- Dayanıklılık: Bağlantı koptuğunda süreçleriniz kesilmez (screen’e benzer, klasik terminal sekmelerinden daha güvenilir).
+- Verimlilik: Pencere/bölme düzenleriyle çok işi aynı anda görür (GUI sekmelerine göre daha esnek).
+- Tutarlı kısayollar: Vim/Emacs tarzı tuş düzeni seçenekleri; betiklenebilir, otomasyona uygun (screen’e göre daha modern ve belgelidir).
+
+==== Kullanmak için nelere ihtiyaç vardır? ====
+- Linux/Unix benzeri bir sistem (macOS, Linux, BSD) veya WSL; tmux kurulumu.
+- Temel terminal/komut satırı bilgisi; tercihen SSH erişimi (uzaktan kullanım için).
+- İsteğe bağlı: .tmux.conf ile basit yapılandırma ve kısayol alışkanlığı.
+
+==== Öğrenme zorluk seviyesi nedir? ====
+- Orta (ortalama bir ayda öğrenilebilir): Temelleri 1 haftada kavranır; akıcı ve verimli kullanım için pratik gerekir.
+
+==== Aracın siber güvenlik uzmanı için önemi (0–7) ====
+- 4 — Kuvvetle tavsiye edilen: Uzaktan sunucu çalışmaları, olay müdahalesi ve otomasyon akışlarında ciddi verim ve dayanıklılık sağlar.

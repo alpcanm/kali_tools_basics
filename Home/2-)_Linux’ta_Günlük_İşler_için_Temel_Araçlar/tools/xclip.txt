@@ -5,3 +5,38 @@ Creation-Date: 2025-10-24T23:03:47+03:00
 ====== xclip ======
 Created Friday 24 October 2025
 
+- Nedir?
+  - xclip, Linux/UNIX’te X11 kopyala-yapıştır panosunu (clipboard) komut satırından okumaya/yazmaya yarayan küçük bir araçtır.
+
+- Ne işe yarar (basit örneklerle)?
+  - Metni panoya koyar: ‘echo "metin" | xclip -selection clipboard’
+  - Panodan okur: ‘xclip -o -selection clipboard’
+  - Dosyayı panoya koyar: ‘xclip -selection clipboard dosya.txt’
+  - Panodan dosyaya yazar: ‘xclip -o -selection clipboard > çıktı.txt’
+
+- Ne değildir?
+  - Wayland için yerel bir araç değildir (X11 gerekir; Wayland’da XWayland üzerinden çalışır).
+  - Güvenli bir sır yöneticisi değildir; pano içerikleri diğer uygulamalarca okunabilir.
+  - Dosya transfer aracı değildir (sadece pano etkileşimi).
+
+- Kullanım alanları nedir?
+  - X11 tabanlı Linux masaüstleri (GNOME/KDE’nin X11 oturumları).
+  - SSH ile X11 forward edilen uzak oturumlar.
+  - WSL veya container içinde, host X11 sunucusu paylaşıldığında.
+  - Betiklerde/otomasyonda terminalden GUI’ye veya tersine metin köprüsü.
+
+- Neden tercih edilir?
+  - Hafif, basit, boru hattı (pipeline) dostu; çoğu dağıtımda kolay kurulur.
+  - xsel’e benzer; xclip daha yaygın paketlenmiştir, xsel de aynı işi görür.
+  - Wayland’da wl-copy/wl-paste daha uygundur; macOS’ta pbcopy/pbpaste, Windows’ta clip.exe/powershell set-clipboard muadildir.
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - Çalışan bir X11 ortamı (DISPLAY ve yetkilendirme/xauth).
+  - xclip paketinin kurulu olması.
+  - Terminal erişimi; seçim hedefini bilmek: primary, secondary, clipboard.
+
+- Öğrenme zorluk seviyesi nedir?
+  - Kolay (ortalama bir haftada öğrenilebilir).
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 2 — Niş/uzmanlık aracı: Terminal–GUI arasında hızlı pano aktarımı, betikleme, adli/DFIR’da pano alma gibi durumlarda faydalı ama çekirdek zorunlu değil.

@@ -10,7 +10,7 @@ Sistem / yardımcı araçlar (genel) Terminal ve oturum yönetimi
 Metin düzenleme, kopyalama ve paylaşım
 - Açıklama: Yapılandırma (config) dosyalarını düzenleme, terminaldeki metni panoya kopyalama ve komut çıktısını hızlıca link olarak paylaşma.
 - Örnek: Bir servis ayarını vim ile düzenlersiniz; hata mesajını xclip ile panoya kopyalayıp, ayrıntılı çıktıyı wgetpaste ile paste servisine yükleyip ekip arkadaşınıza link atarsınız.
-- Araçlar: vim (çeşitleri; güçlü metin editörü), xclip (X11 panosuna kopyala/yapıştır), wgetpaste (komut çıktısını paste servisine yükleyip link üretir)
+- Araçlar: vim (çeşitleri; güçlü metin editörü), xclip (X11 pa nosuna kopyala/yapıştır), wgetpaste (komut çıktısını paste servisine yükleyip link üretir)
 
 Ağ teşhis ve hızlı bağlantı testleri
 - Açıklama: Açık port kontrolü, basit bağlantı testleri ve ağ arayüz/rota bilgilerini görme.

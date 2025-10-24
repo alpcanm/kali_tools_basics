@@ -1,7 +1,0 @@
-Content-Type: text/x-zim-wiki
-Wiki-Format: zim 0.6
-Creation-Date: 2025-10-24T22:35:55+03:00
-
-====== Diğerleri ======
-Created Friday 24 October 2025
-

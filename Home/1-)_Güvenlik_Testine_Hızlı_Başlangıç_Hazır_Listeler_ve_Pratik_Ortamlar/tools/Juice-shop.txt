@@ -4,4 +4,33 @@ Creation-Date: 2025-10-24T22:02:02+03:00
 
 ====== Juice-shop ======
 Created Friday 24 October 2025
+==== Nedir? ====
+- OWASP Juice Shop, bilerek güvensiz yapılmış bir web mağazasıdır. Eğitim ve test amaçlıdır. Node.js, Express, Angular ile yazılmıştır. OWASP Top 10 ve daha fazla gerçek açık içerir.
 
+==== Ne işe yarar (basit örneklerle)? ====
+- Eğitim: “Görevler” ile açıkları bulup puan toplarsınız (skor tablosu vardır).
+- Farkındalık/CTF: Yarışma ve demo ortamı sağlar.
+- Araç testi: Pentest proxy’leri ve güvenlik tarayıcıları için JS ağırlıklı arayüz ve REST API “deneme tahtası”.
+- Benzetme: Arabalar için çarpışma testi pisti neyse, web güvenliği için Juice Shop odur.
+
+==== Ne değildir? ====
+- Gerçek bir e-ticaret sitesi değildir.
+- Güvenlik duvarı/antivirüs gibi koruma aracı değildir.
+- Yasadışı saldırı rehberi değil; sadece kontrollü eğitim/test ortamıdır.
+
+==== Neden tercih edilir? ====
+- Modern ve kapsamlı açık seti (OWASP Top 10 +).
+- Tamamen JavaScript: güncel SPA ve API senaryolarını içerir.
+- Görev ve puanlı yapı öğrenmeyi eğlenceli kılar.
+- Ücretsiz, açık kaynak, kolay kurulum (Docker/Node).
+
+==== Kullanmak için nelere ihtiyaç vardır? ====
+- Bilgisayar ve web tarayıcısı.
+- Kurulum için: Docker veya Node.js + npm, internet bağlantısı.
+- İsteğe bağlı: Burp/ZAP gibi proxy, güvenlik tarayıcıları.
+- İzinli ve güvenli bir test ortamı.
+
+==== Öğrenme zorluk seviyesi nedir? ====
+- Orta (yaklaşık 1 ay): Kurulum, temel web ve temel güvenlik kavramları + başlangıç görevleri. Not: Tüm görevleri bitirmek ileri seviye olabilir.
+
+https://github.com/juice-shop/juice-shop

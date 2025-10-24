@@ -4,4 +4,33 @@ Creation-Date: 2025-10-24T22:19:31+03:00
 
 ====== payloadsallthethings ======
 Created Friday 24 October 2025
+==== Nedir? ====
+- Web uygulama güvenliği konularını tek yerde toplayan, toplulukça güncellenen bir GitHub bilgi deposu (örnekler, kontrol listeleri, referanslar).
 
+==== Ne işe yarar (basit örneklerle)? ====
+- “Neyi, nerede, nasıl kontrol etmeliyim?” sorusuna hızlı rehberlik sağlar.
+- Test senaryoları için hazır şablon fikri verir (örn. girdi doğrulama, yetkilendirme kontrolleri).
+- Savunma ekiplerine önceliklendirme ve kapsama kontrolü yapmada yardımcı olur.
+- Blog yazıları gibi dağınık bilgiyi derli toplu sunar.
+
+==== Ne değildir? ====
+- Tek tıkla saldırı/aracı değildir.
+- Yasal izin olmadan saldırı rehberi değildir.
+- Sıfırdan teori öğreten bir ders kitabı değildir.
+- Otomatik zafiyet tarayıcısı değildir.
+
+==== Neden tercih edilir? ====
+- Karşılaştırma: Dağınık bloglar (parça parça) < bu depo (derli toplu, güncel); kitaplar (yavaş güncellenir) < bu depo (sürekli güncel).
+- Konu kapsamı geniştir (birçok zafiyet türü tek yerde).
+- Topluluk katkısı sayesinde pratik odaklıdır.
+- Hızlıca örnek ve referans bulmayı sağlar.
+
+==== Kullanmak için nelere ihtiyaç vardır? ====
+- Temel web bilgisi (HTTP, istemci-sunucu).
+- İngilizce okuma becerisi (içerik ağırlıkla İngilizce).
+- Yasal/izni olan bir test ortamı (lab, hedef izni).
+- İsteğe bağlı: proxy ve tarayıcı geliştirici araçlarına aşinalık.
+
+Öğrenme zorluk seviyesi nedir?
+- Zor (ortalama 6 ayda öğrenilebilir): Kapsam çok geniş, birçok kavram ve örnek içerir.
+https://github.com/swisskyrepo/PayloadsAllTheThings
