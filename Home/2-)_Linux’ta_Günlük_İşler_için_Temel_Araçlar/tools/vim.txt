@@ -46,3 +46,4 @@ Created Friday 24 October 2025
 
 - Aracın siber güvenlik uzmanı için önemi (0–7)
   - 6 — Rol-çekirdek zorunlu: Mavi/Kırmızı takım, DFIR, CloudSec, OT gibi terminal ağırlıklı rollerde pratikte şarttır.
+@vim

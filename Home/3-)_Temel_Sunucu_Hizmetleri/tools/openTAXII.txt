@@ -1,0 +1,61 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T00:27:48+03:00
+
+====== openTAXII ======
+Created Saturday 25 October 2025
+
+OpenTAXII (EclecticIQ)
+
+- Siber güvenlik kategorisi nedir?
+  - Threat Hunting (Tehdit Avcılığı)
+  - Security Operations (Güvenlik Operasyonları)
+  - Incident Response (Olay Müdahalesi)
+  - General Cybersecurity (Genel Siber Güvenlik)
+
+- Nedir?
+  - Python ile yazılmış, TAXII (1.x) standartlarına uygun bir tehdit istihbaratı sunucusudur. Cabby istemcisiyle uyumludur. Docker ile hızlıca çalıştırılabilir; varsayılan olarak 9000 portunda ve SQLite ile gelir.
+
+- Ne işe yarar (basit örneklerle)?
+  - Kurum içi/kurumlar arası zararlı IP, alan adı, hash gibi IOC’leri standart bir API ile otomatik paylaşır.
+  - Güvenlik araçlarına (SIEM, SOAR) besleme sağlar.
+  - LAB/test ortamında TAXII istemcilerini denemek için örnek sunucu görevi görür.
+
+- Ne değildir?
+  - Bir saldırı tespit/koruma aracı (SIEM/EDR/IDS) değildir.
+  - TAXII istemcisi değildir; sunucudur.
+  - STIX içeriği üreten/analiz eden bir platform değildir.
+
+- Kullanım alanları nedir?
+  - Tehdit istihbaratı dağıtımı
+  - Güvenlik ekipleri arasında IOC paylaşımı
+  - Entegrasyon noktası (uygulamalar arası veri akışı)
+  - Eğitim ve tatbikat/lab
+
+- Kullanım ortamı nelerdir?
+  - Sunucu veya Docker konteyneri
+  - Varsayılan: Port 9000, yerel SQLite, data-configuration.yml ile servis/koleksiyon/hesap tanımı
+
+- Neden tercih edilir?
+  - Açık kaynak, olgun ve kararlı (özellikleri tamamlanmış)
+  - Pythonic API, Cabby ile tam uyum
+  - Docker ile hızlı kurulum ve basit bakım
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - Docker veya Python 3 çalışma ortamı
+  - Ağ/port erişimi (9000)
+  - Temel STIX/TAXII 1.x kavram bilgisi
+  - Kalıcı depolama (varsayılan SQLite yeterli çoğu küçük kullanımda)
+  - Basit yapılandırma dosyası (data-configuration.yml)
+
+- Öğrenme zorluk seviyesi nedir?
+  - Orta (ortalama bir ayda öğrenilebilir)
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 3 — Durumsal önemli (tehdit istihbaratı paylaşan/alan ekiplerde gerekli)
+
+- Alternatifleri nelerdir?
+  - Medallion (OASIS TAXII 2.x referans sunucusu)
+  - MISP’in TAXII sunucu özelliği/eklenti
+  - Ticari platformların TAXII uçları (ThreatConnect, Anomali, EclecticIQ Platform)
+  - Standart dışı basit paylaşım yöntemleri (API/CSV) — kolay ama TAXII uyumlu değildir

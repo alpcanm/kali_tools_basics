@@ -1,0 +1,53 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T01:27:03+03:00
+
+====== dnsgen ======
+Created Saturday 25 October 2025
+
+Siber güvenlik kategorisi nedir?
+- Penetration Testing (Sızma Testi), Web Application Testing (Web Uygulaması Testi), Security Operations (Güvenlik Operasyonları)
+
+Nedir?
+- dnsgen, verilen alan adlarından (domain/alt alan adı) ve kelime listelerinden yola çıkarak muhtemel yeni alt alan adı kombinasyonları üreten bir araçtır; bir “isim türetici” gibi çalışır.
+
+Ne işe yarar (basit örneklerle)?
+- Keşif aşamasında aday alt alan adları üretir.
+- Örnek: elinizde shop.example.com varsa “dev-shop.example.com”, “shop-staging.example.com”, “test-shop.example.com” gibi varyasyonlar üretir.
+- Böylece gerçek ama henüz keşfedilmemiş alt alanları bulma şansınızı artırır.
+
+Ne değildir?
+- DNS çözümleyici/tarama aracı değildir (ürettiklerinin varlığını doğrulamaz).
+- Zafiyet tarayıcısı veya sömürü (exploit) aracı değildir.
+- Tek başına kapsamlı envanter/keşif sağlamaz; diğer araçlarla birlikte kullanılır.
+
+Kullanım alanları nedir?
+- Sızma testi ve bug bounty’de dış saldırı yüzeyi keşfi.
+- Kurumsal varlık envanteri genişletme (EASM).
+- Web uygulaması testlerinde alt alan adı keşfi öncesi aday üretimi.
+
+Kullanım ortamı nelerdir?
+- Komut satırı (özellikle Kali/Linux, WSL/Docker da mümkün).
+- Çoğunlukla massdns/puredns/subfinder/amass gibi çözücülerle aynı iş hattında.
+
+Neden tercih edilir?
+- Hızlı, hafif, kurması kolay.
+- Kelime listesi + otomatik çıkardığı kelimelerle zengin kombinasyon üretir.
+- Keşif kapsamını ucuz şekilde genişletir.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Giriş listesi (bildiğiniz domain/alt alan adları).
+- İsteğe bağlı kelime listesi.
+- Kurulu ortam (örn. Kali’de apt ile).
+- Doğrulama için ayrı bir DNS çözümleme aracı (örn. massdns/puredns).
+
+Öğrenme zorluk seviyesi nedir?
+- Kolay (ortalama bir haftada öğrenilebilir).
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 4 — Kuvvetle tavsiye edilen: Keşif kalitesini artırır; özellikle kırmızı takım/bug bounty’de sık kullanılır.
+
+Alternatifleri nelerdir?
+- Altdns, Gotator, goaltdns (benzer türetme araçları)
+- Amass, Subfinder, Assetfinder (genel alt alan adı keşfi)
+- Puredns, Massdns (çözümleme/filtreleme için, iş hattı tamamlayıcısı)

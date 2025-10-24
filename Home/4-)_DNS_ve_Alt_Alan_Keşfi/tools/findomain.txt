@@ -1,0 +1,67 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T01:16:24+03:00
+
+====== findomain ======
+Created Saturday 25 October 2025
+
+Findomain
+
+Siber güvenlik kategorisi nedir?
+- General Cybersecurity (Genel Siber Güvenlik)
+- Penetration Testing (Sızma Testi)
+- Web Application Testing (Web Uygulaması Testi)
+- Security Operations (Güvenlik Operasyonları)
+- Threat Hunting (Tehdit Avcılığı)
+
+Nedir?
+- Alan adı/alt alan adı keşfi ve takibi yapan hızlı bir araçtır. CT (Certificate Transparency) logları ve çoklu API’leri kullanır; uyarı ve raporlama yapabilir. (Ekran görüntüsü ve port tarama gibi ek özellikler premium’da.)
+
+Ne işe yarar (basit örneklerle)?
+- sirketiniz.com’un tüm alt alanlarını saniyeler içinde bulur.
+- Hangi alt alanların gerçekten çalıştığını (DNS çözümleyenleri) ayıklar.
+- Yeni alt alan çıkarsa Slack/Discord/Telegram’a anlık bildirim gönderir.
+- IP ve açık port bilgilerini toplayarak yüzey haritası çıkarmanıza yardım eder.
+
+Ne değildir?
+- Zafiyet tarayıcısı veya sömürü (exploit) aracı değildir.
+- WAF atlatma, istismar veya saldırı otomasyonu yapmaz.
+- Kurumsal ASM platformunun (envanter, risk skoru, workflow) tam karşılığı değildir.
+
+Kullanım alanları nedir?
+- Sızma testinde keşif (recon) ve saldırı yüzeyi çıkarma.
+- Bug bounty’de hızlı alt alan toplama.
+- Mavi takım için dış varlık envanteri ve değişiklik takibi.
+- Markalama/sahte alan adı takibi (brand protection) destekleme.
+
+Kullanım ortamı nelerdir?
+- Komut satırı: Linux, macOS, Windows; Docker/CI-CD’de kolayca çalışır.
+- Bulut/Sunucu üzerinde sürekli izleme (webhook’larla).
+- Düşük kaynakla çalışır; iyi ağ koşullarında çok hızlıdır.
+
+Neden tercih edilir?
+- Çok hızlı: CT + çoklu API + çok iş parçacığı.
+- Doğruluk: wildcard tespiti ve yalnızca çözümlenenleri filtreleme.
+- Esneklik: birden çok API anahtarı, özel DNS, sessiz mod, çoklu çıktı.
+- İzleme/uyarı: Slack/Discord/Telegram entegrasyonları.
+- Kıyas: Amass genelde daha kapsamlı; Findomain genelde daha hızlı ve hafif.
+
+Kullanmak için nelere ihtiyaç vardır?
+- İnternet erişimi olan bir sistem ve komut satırı.
+- (Tercihen) API anahtarları: VirusTotal, SecurityTrails vb. için.
+- (İsteğe bağlı) webhook URL’leri (Slack/Discord/Telegram).
+- (İsteğe bağlı) brute force için wordlist ve hızlı DNS çözümleyiciler.
+- Kurulum için ikili (binary) veya Docker (derlemek isterseniz Rust).
+
+Öğrenme zorluk seviyesi nedir?
+- Kolay (ortalama bir haftada öğrenilebilir).
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 5 — Kurumsal standart: Recon/varlık keşfi için güçlü şekilde beklenir.
+
+Alternatifleri nelerdir?
+- OWASP Amass: Daha kapsamlı kaynaklar ve grafik; genelde daha yavaş.
+- ProjectDiscovery Subfinder: Hızlı, API ağırlıklı; Findomain’e benzer.
+- assetfinder (tomnomnom): Çok hızlı, daha sınırlı kapsam.
+- Chaos (ProjectDiscovery veritabanı): Topluluk temelli alt alan verisi.
+- Tamamlayıcılar: dnsx (çözümleme), httpx (servis doğrulama), Naabu/Nmap (port), Aquatone/EyeWitness (ekran görüntüsü).

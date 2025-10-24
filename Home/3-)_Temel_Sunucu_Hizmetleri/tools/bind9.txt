@@ -58,3 +58,5 @@ BIND 9
   - Yetkili: NSD, Knot DNS, PowerDNS Authoritative, Microsoft DNS.
   - Yönetilen hizmet: Cloudflare DNS, AWS Route 53, Google Cloud DNS.
   - Not: BIND 9 hem yetkili hem çözücü yapabilir; Unbound sadece çözücü, NSD/Knot çoğunlukla yetkilidir.
+
+@bind9

@@ -54,3 +54,6 @@ Alternatifleri nelerdir?
 - Nmap’in nmap-services dosyası (daha kapsamlı, araç-özel).
 - Diğer işletim sistemi “services/protocols” dosyaları (Windows/macOS).
 - Uygulama içi özel eşleme tabloları veya doğrudan port numarası kullanımı.
+
+
+@netbase

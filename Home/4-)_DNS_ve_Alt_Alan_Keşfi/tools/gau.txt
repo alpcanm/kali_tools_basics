@@ -1,0 +1,71 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T01:56:44+03:00
+
+====== gau ======
+Created Saturday 25 October 2025
+
+getallurls (gau)
+
+Siber güvenlik kategorisi nedir?
+- General Cybersecurity (Genel Siber Güvenlik)
+- Web Application Testing (Web Uygulaması Testi)
+- Penetration Testing (Sızma Testi)
+- Security Operations (Güvenlik Operasyonları)
+- Incident Response (Olay Müdahalesi)
+- Threat Hunting (Tehdit Avcılığı)
+- Secure Development (Güvenli Geliştirme)
+
+Nedir?
+- Bir alan adı için kamuya açık arşiv ve tehdit istihbarat kaynaklarından (örn. Wayback Machine, Common Crawl, OTX, URLScan) bilinen URL’leri toplayan komut satırı aracıdır. Amaç, alan adına ait geçmiş ve mevcut uç noktaların listesini çıkarmaktır.
+
+Ne işe yarar (basit örneklerle)?
+- Gizli/unutulmuş uç noktaları bulma: örn. /admin-old, /api/v1/legacy
+- Parametreli URL’leri keşfetme: örn. /search?q=
+- Eski dosya ve dizinleri ortaya çıkarma: örn. yedek .zip, .bak
+- Olay sonrası, geçmişte indekslenmiş potansiyel sızıntıları gözden geçirme
+
+Ne değildir?
+- Otomatik zafiyet tarayıcısı değildir.
+- Sömürü (exploit) aracı değildir.
+- Canlı tarama/crawl yapan bir bot değildir; çoğunlukla arşiv/veri sağlayıcılarına dayanır.
+- DNS/port keşfinin yerine geçmez; onu tamamlar.
+
+Kullanım alanları nedir?
+- Keşif (recon) ve saldırı yüzeyi haritalama
+- Web uygulaması testi kapsamını genişletme
+- Olay müdahalesinde olası sızıntı uç noktalarını geriye dönük inceleme
+- Tehdit avcılığında dış varlık envanterini zenginleştirme
+- Geliştiriciler için miras (legacy) endpoint temizliği ve yönlendirme denetimi
+
+Kullanım ortamı nelerdir?
+- Komut satırında (Linux, macOS, Windows)
+- Otomasyon/CI hatlarında ve betiklerle
+- Konteyner içinde çalıştırılabilir
+- Sağlayıcıları sorgulamak için internet bağlantısı gerektirir
+
+Neden tercih edilir?
+- Birden çok kaynağı tek seferde birleştirir (zaman kazandırır).
+- Hızlı ve hafiftir, çıktısı kolayca boru hatlarına aktarılabilir.
+- Tarih aralığı, durum kodu, MIME türü gibi süzme yetenekleri vardır.
+- Geçmiş görünürlük sağlar; güncel taramaların kaçırdığını yakalayabilir.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Hedef alan adı(ları)
+- İnternet bağlantısı
+- Temel komut satırı bilgisi
+- İsteğe bağlı: basit bir yapılandırma dosyası veya konteyner ortamı
+
+Öğrenme zorluk seviyesi nedir?
+- Kolay (ortalama bir haftada öğrenilebilir)
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 4 — Kuvvetle tavsiye edilen: Keşif ve kapsam genişletmede geniş fayda sağlar.
+
+Alternatifleri nelerdir?
+- waybackurls (Tomnomnom)
+- waymore
+- katana (ProjectDiscovery)
+- hakrawler
+- gauplus
+- URLScan, Wayback, Common Crawl gibi API/indeks sorgu araçları ve betikleri

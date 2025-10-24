@@ -35,3 +35,5 @@ Created Friday 24 October 2025
   - 4 — Kuvvetle tavsiye edilen: Kopmalara dayanıklı uzak oturumlar ve çoklu terminal çalışması için geniş fayda sağlar.
 
 https://www.gnu.org/software/screen/
+
+@gnuscreen

@@ -1,0 +1,57 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T00:24:10+03:00
+
+====== WsgiDAV ======
+Created Saturday 25 October 2025
+
+WsgiDAV
+
+- Siber güvenlik kategorisi nedir?
+  - General Cybersecurity (Genel Siber Güvenlik)
+  - Security Operations (Güvenlik Operasyonları)
+  - Web Application Testing (Web Uygulaması Testi)
+
+- Nedir?
+  - Python tabanlı, WSGI uyumlu bir WebDAV sunucusudur; klasörleri ağ üzerinden dosya paylaşımı için yayınlar.
+  - Kimlik doğrulama (Basic/Digest) ve SSL destekler; tarayıcı arayüzü ve Office belgelerini çevrimiçi düzenleme desteği vardır.
+
+- Ne işe yarar (basit örneklerle)?
+  - Bir klasörü ekip içinde hızlıca paylaşma (ör. belgeleri MS Word ile ağ üzerinden açıp kaydetme).
+  - Lab/POC ortamlarında WebDAV hizmeti taklit ederek istemci ve yetkilendirme ayarlarını test etme.
+  - Geçici ve kontrollü dosya alışverişi noktası oluşturma (iç ağda).
+
+- Ne değildir?
+  - Zafiyet tarayıcısı, saldırı/aracı, EDR/antivirüs, yedekleme/senkronizasyon çözümü değildir.
+  - Kurumsal dosya yönetimi (DLP, versiyonlama, karmaşık izin modeli) aracı değildir.
+
+- Kullanım alanları nedir?
+  - İç ağ dosya paylaşımı, test/lab ortamları, entegrasyon denemeleri.
+  - WebDAV’a bağlı uygulama/istemci davranışlarını ve yetkilendirmeyi doğrulama.
+
+- Kullanım ortamı nelerdir?
+  - Windows, Linux, macOS; Docker konteyner; ters vekil (reverse proxy) arkasında.
+  - WSGI sunucuları (örn. cheroot, gunicorn/uWSGI) ve SSL sertifikası ile.
+
+- Neden tercih edilir?
+  - Çok hızlı kurulur ve hafiftir; standart uyumludur (litmus test geçer).
+  - Esnek mimari (özel depolama/kimlik doğrulama sağlayıcıları yazılabilir).
+  - Çapraz platform, açık kaynak, tarayıcı arayüzü ve Office entegrasyonu.
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - Python 3 ve bir WSGI sunucusu; paylaştırılacak bir klasör ve ağ erişimi.
+  - İsteğe bağlı: SSL sertifikası, kullanıcı/veritabanı veya sistem temelli kimlik doğrulama.
+
+- Öğrenme zorluk seviyesi nedir?
+  - Kolay (ortalama bir haftada öğrenilebilir).
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 3 — Durumsal önemli (lab, test, kontrollü paylaşım senaryoları için faydalı).
+
+- Alternatifleri nelerdir?
+  - Apache HTTP Server + mod_dav
+  - Microsoft IIS WebDAV
+  - Nginx + WebDAV (dav_ext gibi modüllerle)
+  - SabreDAV (PHP)
+  - Nextcloud / ownCloud (yerleşik WebDAV sunuculu dosya platformları)
+  - Davenport (Java tabanlı WebDAV sunucusu)

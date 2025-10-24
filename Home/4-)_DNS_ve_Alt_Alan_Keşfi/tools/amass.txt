@@ -1,0 +1,48 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T01:05:33+03:00
+
+====== @amass ======
+Created Saturday 25 October 2025
+
+amass
+
+- Siber güvenlik kategorisi nedir?
+  - General Cybersecurity, Penetration Testing, Web Application Testing, Security Operations, Threat Hunting
+
+- Nedir?
+  - Açık kaynak bilgiler ve bazı aktif yoklama teknikleriyle kurumun internet üzerindeki alan adı/alt alan/IP gibi dış varlıklarını toplayıp saldırı yüzeyini haritalayan bir keşif aracıdır (OWASP Amass).
+
+- Ne işe yarar (basit örneklerle)?
+  - example.com’a ait alt alanları bulur (mail.example.com, api.example.com).
+  - Sertifika kayıtları ve DNS’den sızan sistemleri ortaya çıkarır.
+  - Arama motorları, CT logları, güvenlik API’leri ve web arşivlerinden kanıt toplar.
+
+- Ne değildir?
+  - Zafiyet tarayıcısı, sömürü (exploit) aracı veya DAST/SAST değildir.
+  - İç ağ keşif aracı değildir; genelde dış internet varlıklarına odaklanır.
+
+- Kullanım alanları nedir?
+  - Sızma testi ön keşfi, bug bounty reconnaissance, Attack Surface Management, shadow IT tespiti, IR’de etki alanı kapsamını doğrulama.
+
+- Kullanım ortamı nelerdir?
+  - Komut satırı (Linux/macOS/Windows), Docker/CI-CD üzerinde otomasyon, internet erişimi olan sunucular.
+
+- Neden tercih edilir?
+  - Çok kaynaklı ve derin keşif yapar (DNS, arama, CT log, API, arşiv).
+  - Pasif+aktif yöntemleri harmanlar, otomasyona uygundur, toplulukça desteklenir.
+  - Kıyas: Subfinder daha hızlı/pasif; Amass daha kapsamlı/derin.
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - Hedef etki alanı, sağlam internet bağlantısı.
+  - Opsiyonel API anahtarları (Shodan, VirusTotal, SecurityTrails vb.) ve hızlı DNS çözümleyiciler.
+  - İzin/yasal uygunluk ve temel CLI bilgisi.
+
+- Öğrenme zorluk seviyesi nedir?
+  - Orta (ortalama bir ayda öğrenilebilir).
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 5 — Kurumsal standart (kırmızı takım/ASM için fiilen 6).
+
+- Alternatifleri nelerdir?
+  - Subfinder, Assetfinder, Findomain, Sublist3r, theHarvester, Recon-ng, SecurityTrails/Censys/Shodan (API tabanlı), ProjectDiscovery Chaos.

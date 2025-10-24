@@ -59,3 +59,5 @@ plocate
   - find (daha yavaş, indeks yok)
   - fd (hızlı dosya adı arama, indeks siz)
   - ripgrep/grep (içerik arama; dosya adı odaklı değildir)
+
+@plocate

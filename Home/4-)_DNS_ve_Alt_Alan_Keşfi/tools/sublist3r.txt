@@ -1,0 +1,66 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T01:23:11+03:00
+
+====== @sublist3r ======
+Created Saturday 25 October 2025
+
+Sublist3r
+
+Siber güvenlik kategorisi nedir?
+- General Cybersecurity (Genel Siber Güvenlik)
+- Penetration Testing (Sızma Testi)
+- Web Application Testing (Web Uygulaması Testi)
+- Security Operations (Güvenlik Operasyonları)
+
+Nedir?
+- Bir alan adının alt alan adlarını (subdomain) toplamak için kullanılan, Python ile yazılmış OSINT aracıdır.
+- Birçok arama motoru ve açık kaynak veritabanını tarar; isteğe bağlı olarak sözlük tabanlı brute-force yapabilir.
+
+Ne işe yarar (basit örneklerle)?
+- Hedef “example.com” için “shop.example.com”, “api.example.com” gibi gizli/unutulmuş alt alanları bulur.
+- Saldırı yüzeyini çıkarır; test edilecek sistem listesini hızlıca oluşturur.
+- İsteğe bağlı basit port kontrolüyle (örn. 80, 443) canlı hizmetleri ayıklar.
+- Kıyas: OSINT tabanlı olduğu için aktif tarama araçlarına göre daha “sessiz”dir; brute-force modu nispeten daha “gürültülü”dür.
+
+Ne değildir?
+- Hackleme, istismar ve erişim sağlama aracı değildir.
+- DDoS, parola kırma, zafiyet sömürü aracı değildir.
+- Tüm alt alanları %100 bulma garantisi vermez (OSINT kapsamı ve wordlist’e bağlıdır).
+
+Kullanım alanları nedir?
+- Sızma testi ön keşfi (recon)
+- Bug bounty hedef keşfi
+- Kurumsal varlık envanteri ve gölge BT keşfi
+- Saldırı yüzeyi yönetimi için başlangıç listesi üretimi
+
+Kullanım ortamı nelerdir?
+- Windows, Linux, macOS üzerinde komut satırında çalışır.
+- İnternet erişimi gerektirir (arama motorları ve OSINT kaynakları için).
+- Küçükten orta ölçeğe hedeflerde hızlı; çok büyük hedeflerde daha kapsamlı araçlarla birlikte kullanılabilir.
+
+Neden tercih edilir?
+- Hızlı kurulum, basit kullanım, açık kaynak.
+- Birden çok OSINT kaynağını aynı anda kullanır; kapsama artar.
+- Entegre brute-force ile (subbrute) ek bulgular yakalayabilir.
+- Kıyas: Amass gibi araçlar genelde daha kapsamlıdır ama daha ağır/karmaşık olabilir; Sublist3r hafif ve pratiktir.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Python çalışma ortamı.
+- Temel Python modülleri (örn. HTTP isteği ve DNS çözümleme kütüphaneleri).
+- İnternet bağlantısı ve hedef alan adı.
+- Yasal yetki/izin (kendi olmayan hedeflerde etik ve hukuki sınırlar).
+
+Öğrenme zorluk seviyesi nedir?
+- Kolay (ortalama bir haftada öğrenilebilir).
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 5 — Kurumsal standart: Pek çok pozisyonda güçlü şekilde beklenir; bilmek avantaj sağlar.
+
+Alternatifleri nelerdir?
+- Amass: Daha kapsamlı kaynaklar ve ilişkilendirme; daha ağır, daha derin.
+- findomain: Çok hızlı, pratik; kapsam Amass’tan dar olabilir.
+- assetfinder: Hızlı OSINT tabanlı; basit kullanım, sınırlı kapsam.
+- Knockpy: Wordlist tabanlı brute-force odaklı.
+- crt.sh/CertSpotter: Sertifika şeffaflığı kayıtlarından alt alan keşfi (servis/OSINT kaynağı).
+- DNSDumpster, VirusTotal, Netcraft: Web tabanlı/OSINT veri kaynakları; tekil kullanıldığında kapsam sınırlı, birlikte iyi tamamlayıcı.

@@ -2,7 +2,7 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-10-24T23:54:07+03:00
 
-====== sakisi3g ======
+====== sakis3g ======
 Created Friday 24 October 2025
 
 Sakis3G

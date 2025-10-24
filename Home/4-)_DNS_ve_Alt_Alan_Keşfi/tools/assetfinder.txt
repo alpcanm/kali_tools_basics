@@ -1,0 +1,62 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T01:18:33+03:00
+
+====== assetfinder ======
+Created Saturday 25 October 2025
+
+assetfinder
+
+Siber güvenlik kategorisi nedir?
+- General Cybersecurity
+- Penetration Testing
+- Web Application Testing
+- Security Operations
+
+Nedir?
+- Bir alan adına bağlı alan adları ve alt alan adlarını, kamuya açık veri kaynaklarından toplayan komut satırı aracıdır.
+
+Ne işe yarar (basit örneklerle)?
+- example.com için shop.example.com, api.example.com gibi alt alanları listeler.
+- Dağınık sistemleri görmeye, unutulmuş test/demoları fark etmeye yardımcı olur.
+
+Ne değildir?
+- Zafiyet tarayıcısı veya sömürü aracı değildir.
+- Tam kapsama garanti eden bir keşif sistemi değildir.
+- Ağ trafiği üretip aktif saldırı yapmaz; sadece isim toplar.
+
+Kullanım alanları nedir?
+- Varlık envanteri çıkarma
+- Saldırı yüzeyi haritalama
+- Bug bounty ön keşfi
+- Olay sonrası etki alanı kapsamını hızla görmek
+
+Kullanım ortamı nelerdir?
+- İnternete bağlı terminal (Linux/macOS/Windows)
+- Otomasyon/CI boru hatları
+- Laboratuvar ve keşif script’leri
+
+Neden tercih edilir?
+- Hızlı ve basit; tek komutla sonuç verir.
+- Birçok kaynaktan veri toplayarak kapsama artırır (crt.sh, certspotter, hackertarget, threatcrowd, Wayback Machine, dns.bufferover.run, Facebook Graph API, Virustotal, findsubdomains).
+- Hafif kurulum, sade çıktı; diğer araçlara kolay beslenir.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Hedef alan adı üzerinde kullanım izni
+- Komut satırı ve internet bağlantısı
+- Bazı kaynaklar için isteğe bağlı API anahtarları
+
+Öğrenme zorluk seviyesi nedir?
+- Kolay (ortalama bir haftada öğrenilebilir)
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 6 — Rol-çekirdek zorunlu (kırmızı takım, bug bounty, AppSec keşif, mavi takım varlık yönetimi)
+
+Alternatifleri nelerdir?
+- amass: Daha kapsamlı ve derin; daha ağır/yavaş.
+- subfinder: Çok hızlı ve modüler; geniş kaynak desteği.
+- findomain: Hızlı ve pratik; düşük kaynak kullanımı.
+- Sublist3r: Basit ve eski; yine de işe yarar.
+- Chaos (chaos-client): Topluluk veri kümeleri; kapsam veri setine bağlı.
+- knockpy: Sözlük tabanlı brute-force; kaynak gerektirmez ama kapsama sınırlı.
+- Censys/Shodan aramaları: IP/servis odaklı; genelde API/ücret gerektirir.

@@ -1,0 +1,64 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T01:33:37+03:00
+
+====== @Subjack ======
+Created Saturday 25 October 2025
+
+Subjack
+
+Siber güvenlik kategorisi nedir?
+- Penetration Testing (Sızma Testi)
+- Web Application Testing (Web Uygulaması Testi)
+- Security Operations (Güvenlik Operasyonları)
+
+
+
+Nedir?
+- Alt alan adlarında (subdomain) “ele geçirilebilir” yanlış yapılandırmaları otomatik tarayan bir araçtır.
+- Go diliyle yazılmıştır; çoklu iş parçacığı ile hızlı toplu tarama yapar.
+
+Ne işe yarar (basit örneklerle)?
+- Örnek 1: Şirket “blog.sirket.com” için bir hizmeti kapatır ama DNS’te CNAME kaydı kalır. Bu boş hizmet, başkası tarafından sahiplenilebilir mi diye kontrol eder.
+- Örnek 2: “yardim.sirket.com” var ama hedeflediği alan artık yok (NXDOMAIN). Bu alan adının kaydedilip ele geçirilip geçirilemeyeceğini işaretler.
+- Yanlış pozitifleri azaltmak için HTTPS kontrolü ve imza (fingerprint) kullanır; yine de manuel doğrulama gerektirir.
+
+Ne değildir?
+- Bir güvenlik duvarı, antivirüs veya kapsamlı zafiyet tarayıcı değildir.
+- Otomatik sömürü aracı değildir; tespit eder, düzeltmez/istismar etmez.
+- DNS kayıt operatörü veya alan adı kayıt (registrar) aracı değildir.
+- “Manuel kontrol gerekmez” diyen bir araç değildir (yanlış pozitif olabilir).
+
+Kullanım alanları nedir?
+- Sızma testi ve bug bounty’de alt alan ele geçirme riskini bulma.
+- Kurumsal varlık envanterinde sahipsiz/ölü CNAME kayıtlarını tespit etme.
+- Güvenlik operasyonlarında sürekli alan adı hijyen kontrolü.
+
+Kullanım ortamı nelerdir?
+- Komut satırı ortamı (Linux/macOS/Windows).
+- Büyük alt alan listelerini paralel tarama için uygun ağ bağlantısı olan sistemler.
+
+Neden tercih edilir?
+- Hızlı ve eşzamanlı tarama yapar (Go’nun performansı).
+- Geniş hizmet imzaları ve özelleştirilebilir fingerprint desteği.
+- NXDOMAIN/boş kayıtları işaretleyerek “tehlikeli” adayları öne çıkarır.
+- HTTPS zorlaması ve konfigürasyon dosyasıyla esnektir.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Go kurulu bir ortam.
+- Taranacak alt alan listesi (ör. keşif araçları/kurumsal envanterden).
+- İnternet bağlantısı ve yasal/izinli kapsam (sadece yetkili olduğunuz alanlarda).
+
+Öğrenme zorluk seviyesi nedir?
+- Orta (ortalama bir ay): Aracı çalıştırmak kolay; DNS/CNAME/NXDOMAIN mantığını anlamak için kısa bir öğrenme gerekir.
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 4 — Kuvvetle tavsiye edilen: Özellikle sızma testi, AppSec ve kurumsal alan adı hijyeni için yüksek fayda.
+
+Alternatifleri nelerdir?
+- Subzy
+- tko-subs
+- Nuclei (subdomain takeover şablonlarıyla)
+- SubOver
+- Aquatone (takeover kontrolleri)
+- “can-i-take-over-xyz” imza listeleri (araç değil, bilgi kaynağı)

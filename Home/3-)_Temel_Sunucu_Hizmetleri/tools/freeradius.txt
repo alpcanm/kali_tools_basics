@@ -1,0 +1,66 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T00:15:54+03:00
+
+====== freeradius ======
+Created Saturday 25 October 2025
+
+FreeRADIUS
+
+Siber güvenlik kategorisi nedir?
+- General Cybersecurity
+- Security Operations
+
+Nedir?
+- Ağ erişimi için kimlik doğrulama, yetkilendirme ve muhasebe (AAA) yapan RADIUS sunucusudur.
+- Açık kaynaklıdır, çok ölçekli çalışır; ISP ve kampüs ağlarının temel taşlarındandır.
+
+Ne işe yarar (basit örneklerle)?
+- Ofis Wi‑Fi’a şirket hesabıyla bağlanmayı sağlar (WPA2/WPA3-Enterprise, 802.1X).
+- VPN’e girişte kullanıcı adı/şifre + tek kullanımlık kod (OTP) doğrular.
+- Üniversitelerde eduroam roaming’i çalıştırır.
+- ISP’lerde PPPoE/DSL kullanıcılarını doğrular, oturumlarını kaydeder.
+
+Ne değildir?
+- Güvenlik duvarı, antivirüs, IDS/IPS değildir.
+- Wi‑Fi denetleyicisi veya VPN sunucusu değildir; onlarla konuşan arka uç sunucudur.
+- Active Directory/LDAP’ın yerine geçen bir dizin değildir (genelde onlarla entegre olur).
+- “Kutudan çıkar çıkmaz” görsel yönetim konsolu olan NAC ürünü (Cisco ISE/ClearPass) değildir.
+
+Kullanım alanları nedir?
+- Kurumsal Wi‑Fi ve kablolu 802.1X erişim kontrolü (NAC).
+- VPN, ağ cihazı yönetici erişimi (RADIUS/TACACS+ benzeri).
+- ISP/telco abonelik doğrulama ve oturum muhasebesi.
+- Eduroam ve misafir ağları.
+
+Kullanım ortamı nelerdir?
+- Linux sunucu/VM/container üzerinde, tekil ya da küme (HA) kurulumu.
+- AD/LDAP/SQL ile entegrasyon; sertifika tabanlı EAP (EAP‑TLS/PEAP).
+- Bulut VM’lerinde veya şirket içi veri merkezlerinde; uzak ofislerde proxy/relay.
+
+Neden tercih edilir?
+- Açık kaynak ve çok ölçeklenebilir; lisans maliyeti yoktur (ticari destek mevcut).
+- Çok geniş cihaz/standart uyumluluğu; modüler ve esnek politika yazımı.
+- Kurumsal NAC paketlerine göre daha düşük maliyet, daha yüksek esneklik; fakat daha fazla uzmanlık ister.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Linux bilgisi ve bir sunucu/VM.
+- RADIUS konuşan ağ ekipmanı (AP, switch, VPN, NAS).
+- Dizin/kimlik kaynağı (AD/LDAP/SQL) ve gerekiyorsa sertifika altyapısı (PKI).
+- Doğru saat senkronu (NTP), ağ erişimi ve RADIUS portları (UDP 1812/1813).
+
+Öğrenme zorluk seviyesi nedir?
+- Zor (ortalama 6 ayda öğrenilebilir): 802.1X/EAP, sertifikalar ve politika yazımı öğrenmeyi gerektirir.
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 6 — Rol-çekirdek zorunlu: NAC, ağ güvenliği, ISP/telco, kampüs BT rollerinde kritik.
+
+Alternatifleri nelerdir?
+- Microsoft NPS (Windows Server) — ücretsiz, entegrasyonu kolay; ölçek/esneklik sınırlı.
+- Cisco ISE — kurumsal NAC paketi, güçlü GUI/özellik seti; ücretli ve karmaşık.
+- HPE Aruba ClearPass — kurumsal NAC, zengin politika; ücretli.
+- Radiator RADIUS Server — ticari, çok esnek ve betiklenebilir.
+- Juniper SBR Carrier-Grade — ISP odaklı, ticari.
+- Bulut RADIUS hizmetleri (JumpCloud, Okta RADIUS Agent, SecureW2) — yönetimi kolay; tedarikçiye bağımlılık.
+
+@freeradius

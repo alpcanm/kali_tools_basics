@@ -1,0 +1,57 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T01:57:04+03:00
+
+====== whois ======
+Created Saturday 25 October 2025
+
+Siber güvenlik kategorisi nedir?
+- General Cybersecurity, Security Operations, Threat Hunting, Incident Response, Penetration Testing, Secure Development
+
+Nedir?
+- whois: Alan adı ve IP’lerin kime ait olduğunu WHOIS (RFC 3912) üzerinden sorgulayan komut satırı aracıdır.
+- mkpasswd: Parolaları güvenli özet (hash) biçimine dönüştüren küçük bir yardımcı araçtır (crypt(3) ön yüzü).
+
+Ne işe yarar (basit örneklerle)?
+- Bir domainin sahibi ve iletişim e-postasını bulma (ör. example.com sahibi kim? abuse e-postası ne?).
+- Bir IP aralığının hangi kuruma ait olduğunu öğrenme.
+- Olay incelemede kötü amaçlı IP/domain’in sorumlusuna hızlıca ulaşma.
+- mkpasswd ile parola hash’i üretip yapılandırma dosyalarında kullanma (ör. MD5/sha-512 hash).
+
+Ne değildir?
+- Açık bulma/vulnerabilty tarayıcısı değildir.
+- DNS çözümleme (dig/nslookup) aracı değildir.
+- Gizli bilgileri “hack” eden veya gizlilik engellerini aşan bir araç değildir.
+- Parola kırıcı değildir (mkpasswd sadece hash üretir).
+
+Kullanım alanları nedir?
+- Varlık keşfi ve pasif keşif (recon).
+- SOC/IR’de hızlı sahiplik ve abuse kontağı bulma.
+- Tehdit avcılığı sırasında IP/domain bağlamı.
+- Uygulama/cihaz konfigürasyonlarında parola hash’i üretme (mkpasswd).
+
+Kullanım ortamı nelerdir?
+- Linux/Unix terminali (çoğu dağıtımda paket olarak).
+- Otomasyon/shell script’leri, SIEM/SOAR entegrasyonları.
+- İnternet bağlantısı (whois için); mkpasswd çevrimdışı da çalışır.
+
+Neden tercih edilir?
+- Hızlı, hafif ve standarttır; çoğu kayıt operatörünce desteklenir.
+- Yönlendirmeleri takip ederek doğru WHOIS sunucusuna gider.
+- Komut satırı ve otomasyona uygun.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Temel ağ kavramları: domain, IP, CIDR, AS.
+- Terminal erişimi ve internet (whois).
+- Hangi hash yönteminin gerektiğini bilmek (mkpasswd: md5, sha-512 vb.).
+
+Öğrenme zorluk seviyesi nedir?
+- Kolay (ortalama bir haftada öğrenilebilir).
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 5 — Kurumsal standart: Pek çok pozisyonda beklenir; olay yönetimi ve keşifte büyük pratik değer.
+
+Alternatifleri nelerdir?
+- WHOIS/RDAP: rdap istemcileri, curl ile RDAP API’leri, ARIN/RIPE/APNIC web WHOIS, ICANN Lookup, whoisxmlapi/ipinfo gibi servisler.
+- DNS bağlamı için: dig, nslookup.
+- Parola hash’i için: openssl passwd, Python passlib, htpasswd (Apache).

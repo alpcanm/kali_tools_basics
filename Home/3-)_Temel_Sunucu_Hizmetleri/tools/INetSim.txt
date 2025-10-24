@@ -1,0 +1,64 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T00:31:19+03:00
+
+====== INetSim ======
+Created Saturday 25 October 2025
+
+INetSim: Internet Services Simulation Suite
+
+Siber güvenlik kategorisi nedir?
+- Security Operations (Güvenlik Operasyonları)
+- Incident Response (Olay Müdahalesi)
+- Threat Hunting (Tehdit Avcılığı)
+- General Cybersecurity (Genel Siber Güvenlik)
+
+Nedir?
+- İnterneti taklit eden bir servis paketidir. HTTP, DNS, SMTP, FTP, NTP gibi yaygın protokolleri “sahte ama gerçekçi” cevaplarla simüle eder ve tüm trafiği kaydeder.
+
+Ne işe yarar (basit örneklerle)?
+- Zararlı yazılımı internete çıkarmadan davranışını görmek: Örn. zararlı bir alan adı ister (DNS), INetSim kendi IP’sini döndürür; zararlı web isteği yapar (HTTP), INetSim 200 OK döndürür; siz de hangi adreslere gittiğini loglardan görürsünüz.
+- Eğitim ve laboratuvar ortamında “sahte internet” sağlayarak güvenli test yapılmasını sağlar.
+- Olay müdahalesinde numune dosyanın ağ göstergelerini (IOC) hızlıca toplamanıza yardım eder.
+
+Ne değildir?
+- Gerçek güvenlik duvarı/IDS/antivirüs değildir.
+- Gerçek internet erişimi ya da proxy değildir.
+- Üretim ortamında uçlara açık bırakılacak bir hizmet değildir (kapalı/izole lab içindir).
+- Başlı başına bir sandbox değildir; ağ tarafını simüle eder.
+
+Kullanım alanları nedir?
+- Zararlı yazılımın dinamik analizi
+- SOC/IR’de hızlı IOC çıkarımı
+- Eğitim/demolar için güvenli “sahte internet”
+- Uygulamaların ağ davranışını izole şekilde gözlemleme
+
+Kullanım ortamı nelerdir?
+- İzole laboratuvar ağı veya host-only/VLAN
+- Sanal makineler (REMnux, Debian/Ubuntu gibi Linux dağıtımları üzerinde)
+- İnternete kapalı, kontrollü test ortamları
+
+Neden tercih edilir?
+- Tek pakette birçok servisi sağlar, merkezi ve tutarlı log üretir.
+- Kurulumu ve kullanımı hafiftir; tekrarlanabilir sonuçlar verir.
+- İnternete çıkmadan gerçekçi ağ tepkileriyle numuneyi “ilerletir.”
+- Ücretsiz ve açık kaynak (GPL).
+
+Kullanmak için nelere ihtiyaç vardır?
+- Linux sistem (örn. REMnux, Debian/Ubuntu) ve Perl
+- Yönetici yetkisi ve temel ağ bilgisi (IP yönlendirme/iptables)
+- İzole test ağı, tercihen sanal makine snapshot’ları
+- İsteğe bağlı: paket yakalama araçları (tcpdump/Wireshark)
+
+Öğrenme zorluk seviyesi nedir?
+- Orta (ortalama bir ayda öğrenilebilir): Kurup çalıştırmak kolaydır; güvenli izolasyon ve protokol günlüklerini doğru yorumlamak ek pratik ister.
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 3 — Durumsal önemli: Özellikle malware analizi, IR ve tehdit istihbaratı odaklı rollerde çok faydalı; diğer alanlarda opsiyonel.
+
+Alternatifleri nelerdir?
+- FakeNet-NG (Windows/Linux, benzer amaçla ağ servislerini taklit eder)
+- ApateDNS (yalnızca DNS yönlendirme/cevap taklidi, Windows)
+- OpenCanary/Honeyd/Cowrie (genel amaçlı honeypot/deception; birebir muadil değil ama benzer şekilde “yakalama/simülasyon” için kullanılabilir)
+
+@inetsim

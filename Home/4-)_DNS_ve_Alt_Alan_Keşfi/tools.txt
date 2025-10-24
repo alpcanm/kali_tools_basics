@@ -37,25 +37,25 @@ Kategori: DNS altyapı keşfi, izleme ve zone transfer kontrolleri
 - Açıklama: Alan adının hangi isim sunucularını kullandığını, hatalı yapılandırmaları (ör. açık zone transfer/AXFR) ve genel DNS topolojisini anlamak için kullanılır.
 - Örnek: dnstracer example.com ile hangi yetkili NS’lere ulaşıldığını görür, dnsenum example.com ile AXFR denemesi yapıp yanlış yapılandırmayı tespit edebilirsiniz.
 
-Kategori: Sertifika günlükleri (CT) ve ilişki haritalama
-- Araçlar: certgraph (CT loglardan sertifika/alan/kurum ilişkilerini çıkarır), amass (pasif kaynak olarak CT günlüklerini de kullanabilir).
-- Açıklama: Sertifika Şeffaflığı (CT) günlükleri, bir kurumun farklı alan adları ve alt alanlarını ortaya çıkarabilir. Kurumun varlık haritasını çıkarmaya yardımcı olur.
-- Örnek: certgraph -d example.com çıktısından aynı şirketin sahip olduğu başka alan isimlerini (ör. example.org) ve ortak sertifika kullanımlarını görürsünüz.
+~~Kategori: Sertifika günlükleri (CT) ve ilişki haritalama~~
+~~- Araçlar: certgraph (CT loglardan sertifika/alan/kurum ilişkilerini çıkarır), amass (pasif kaynak olarak CT günlüklerini de kullanabilir).~~
+~~- Açıklama: Sertifika Şeffaflığı (CT) günlükleri, bir kurumun farklı alan adları ve alt alanlarını ortaya çıkarabilir. Kurumun varlık haritasını çıkarmaya yardımcı olur.~~
+~~- Örnek: certgraph -d example.com çıktısından aynı şirketin sahip olduğu başka alan isimlerini (ör. example.org) ve ortak sertifika kullanımlarını görürsünüz.~~
 
-Kategori: IP → Host (aynı IP’deki diğer alanlar) keşfi
-- Araçlar: bing-ip2hosts (Bing aramalarından IP’ye bağlı hostları çıkarır).
-- Açıklama: Hedefle aynı sunucuda barınan diğer siteleri bulursunuz. Yan hedefler veya paylaşılan altyapılar bu şekilde tespit edilebilir.
-- Örnek: bing-ip2hosts 203.0.113.10 ile aynı IP’yi kullanan başka domainleri listeler ve potansiyel yeni hedefler verir.
+~~Kategori: IP → Host (aynı IP’deki diğer alanlar) keşfi~~
+~~- Araçlar: bing-ip2hosts (Bing aramalarından IP’ye bağlı hostları çıkarır).~~
+~~- Açıklama: Hedefle aynı sunucuda barınan diğer siteleri bulursunuz. Yan hedefler veya paylaşılan altyapılar bu şekilde tespit edilebilir.~~
+~~- Örnek: bing-ip2hosts 203.0.113.10 ile aynı IP’yi kullanan başka domainleri listeler ve potansiyel yeni hedefler verir.~~
 
-Kategori: Web arşivi ve URL toplama (web OSINT)
-- Araçlar: getallurls/gau (Wayback, Common Crawl, OTX gibi pasif kaynaklardan URL toplar), waybackpy (Internet Archive/Wayback Machine erişimi).
-- Açıklama: Bir domainin geçmişteki sayfalarını ve uç noktalarını (endpoint) toplamak, gizli veya unutulmuş yolları (ör. /admin, /old) bulmak için idealdir.
-- Örnek: gau example.com | grep -i admin ile geçmişte görülen admin yollarını yakalayıp bugünkü durumu test edebilirsiniz.
+~~Kategori: Web arşivi ve URL toplama (web OSINT)~~
+~~- Araçlar: getallurls/gau (Wayback, Common Crawl, OTX gibi pasif kaynaklardan URL toplar), waybackpy (Internet Archive/Wayback Machine erişimi).~~
+~~- Açıklama: Bir domainin geçmişteki sayfalarını ve uç noktalarını (endpoint) toplamak, gizli veya unutulmuş yolları (ör. /admin, /old) bulmak için idealdir.~~
+~~- Örnek: gau example.com | grep -i admin ile geçmişte görülen admin yollarını yakalayıp bugünkü durumu test edebilirsiniz.~~
 
-Kategori: Arama motoru/dorking ile dosya ve içerik arama
-- Araçlar: goofile (Google’da belirli dosya türlerini arar), sublist3r (arama motorlarını kullanarak alt alan toplar; pasif kategoriye de dahildir).
-- Açıklama: Kurumunuza ait herkese açık dokümanları (PDF, XLS, DOC) veya yanlışlıkla yayımlanmış yapılandırma dosyalarını arama motorları üzerinden bulmaya yarar.
-- Örnek: goofile -d example.com -f pdf ile kamusal PDF’leri bulup içindeki e-posta veya sürüm bilgilerini çıkarabilirsiniz.
+~~Kategori: Arama motoru/dorking ile dosya ve içerik arama~~
+~~- Araçlar: goofile (Google’da belirli dosya türlerini arar), sublist3r (arama motorlarını kullanarak alt alan toplar; pasif kategoriye de dahildir).~~
+~~- Açıklama: Kurumunuza ait herkese açık dokümanları (PDF, XLS, DOC) veya yanlışlıkla yayımlanmış yapılandırma dosyalarını arama motorları üzerinden bulmaya yarar.~~
+~~- Örnek: goofile -d example.com -f pdf ile kamusal PDF’leri bulup içindeki e-posta veya sürüm bilgilerini çıkarabilirsiniz.~~
 
 Kategori: Whois ve kayıt bilgisi OSINT
 - Araçlar: whois (domain sahipliği, kayıt/sonlanma tarihleri, nameserver bilgileri).

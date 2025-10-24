@@ -1,0 +1,58 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T01:31:14+03:00
+
+====== @Altdns ======
+Created Saturday 25 October 2025
+
+Altdns
+
+- Siber güvenlik kategorisi nedir?
+  - Penetration Testing (Sızma Testi)
+  - Web Application Testing (Web Uygulaması Testi)
+  - General Cybersecurity (Genel Siber Güvenlik)
+
+- Nedir?
+  - Bir etki alanının (ör. example.com) alt alan adlarını (subdomain) tahmin etmek için kalıp/permütasyon üreten bir keşif aracıdır. Örn: dev.example.com, test.example.com gibi varyasyonları türetir.
+
+- Ne işe yarar (basit örneklerle)?
+  - Bilinen alt alanlar ve kelime listelerinden yeni adaylar üretir. Örn: “api” ve “staging” kelimeleri + “shop.example.com” verildiğinde “staging-api.shop.example.com” gibi olası adresler üretir.
+  - Üretilen adayları çözümleyip (DNS resolve) hangilerinin gerçekten var olduğunu bulmaya yardımcı olur.
+
+- Ne değildir?
+  - Bir zafiyet tarayıcısı değildir (açık tespiti yapmaz).
+  - İstismar aracı değildir (sisteme sızma yapmaz).
+  - Tam kapsam garanti etmez; sadece olası adaylar üretir.
+  - Başlı başına bir DNS brute-force aracı değildir; daha çok permütasyon üreticidir (isterse çözümleme de yapabilir).
+
+- Kullanım alanları nedir?
+  - Dış saldırı yüzeyi haritalama
+  - Sızma testi ve bug bounty keşif (recon) aşaması
+  - Varlık/envanter keşfi (gözden kaçan alt alanları bulma)
+
+- Kullanım ortamı nelerdir?
+  - Komut satırı tabanlı çalışma (genelde Linux/macOS/WSL)
+  - Büyük veri setleriyle toplu keşif
+  - Keşif/ön hazırlık aşaması (tarama ve testten önce)
+
+- Neden tercih edilir?
+  - Permütasyon/alterasyon üretiminde başarılı; çok sayıda mantıklı aday üretir.
+  - Büyük listelerle iyi ölçeklenir, çok iş parçacıklı çözümleme yapabilir.
+  - Diğer DNS brute-force/çözümleme araçlarına kolay çıktı sağlar.
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - Hedef alan adı (ör. example.com)
+  - Başlangıç alt alan listesi (ne kadar büyükse o kadar iyi)
+  - Kelime listesi (ör. dev, test, staging, api vb.)
+  - İnternet bağlantısı, DNS çözümleyiciler; tercihen ek doğrulama araçları
+
+- Öğrenme zorluk seviyesi nedir?
+  - Kolay (ortalama bir haftada öğrenilebilir): Kavramsal olarak basit; kelime listesi + bilinen alt alanlardan aday üretir.
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 5 — Kurumsal standart: Özellikle sızma testi ve web uygulaması testinde güçlü şekilde beklenir.
+
+- Alternatifleri nelerdir?
+  - dnsgen, gotator: Altdns gibi permütasyon odaklı; benzer amaç, farklı üretim mantıkları.
+  - Amass, Subfinder, Assetfinder, Findomain: Geniş kaynaklı alt alan keşfi; permütasyon içerir ama odakları daha geneldir.
+  - shuffledns, massdns: Hızlı DNS çözümleme/brute-force; Altdns’in ürettiği adayları doğrulamak için sıkça birlikte kullanılır.

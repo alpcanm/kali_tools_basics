@@ -53,3 +53,5 @@ Alternatifleri nelerdir?
 - BusyBox, Toybox (minimal birleşik setler).
 - GNU Core Utilities (kısmi örtüşür; dosya/metin odaklı).
 - procps-ng, iproute2, e2fsprogs, systemd araçları (alanına göre ikame/ tamamlayıcı).
+
+@util-linux

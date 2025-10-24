@@ -26,20 +26,22 @@ Created Friday 24 October 2025
 - Olay müdahale (IR) ve hızlı ağ teşhisi.
 - OT/IoT test tezgahlarında temel erişilebilirlik denemeleri.
 
-==== Neden tercih edilir? ====
+Neden tercih edilir?
 - Çok hafif, çoğu Unix’te hazır veya kolay kurulur.
 - Hem istemci hem dinleyici; TCP ve UDP desteğiyle esnek.
 - Scriptlerle kolay otomasyon; pipe ile diğer araçlarla iyi çalışır.
 - Telnet’ten daha esnek; socat’tan daha basit; curl’dan daha genel amaçlı (ama daha az protokol bilgili).
 - Not: Klasik nc minimaldir; netcat-openbsd ek seçenekler ve iyileştirmeler sunar.
 
-==== Kullanmak için nelere ihtiyaç vardır? ====
+Kullanmak için nelere ihtiyaç vardır?
 - Unix benzeri sistem ve terminal erişimi.
 - Hedef IP/alan adı ve port bilgisi.
 - Uygun ağ/ güvenlik izinleri; temel TCP/UDP, port kavramları.
 
-==== Öğrenme zorluk seviyesi nedir? ====
+Öğrenme zorluk seviyesi nedir?
 - Kolay (ortalama bir haftada öğrenilebilir).
 
 Aracın siber güvenlik uzmanı için önemi (0–7)
 - 6 — Rol-çekirdek zorunlu: Kırmızı/mavi takım ve DFIR’de sıkça beklenir.
+
+@netcat

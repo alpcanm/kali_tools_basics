@@ -1,0 +1,52 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T01:26:25+03:00
+
+====== @urlcrazy ======
+Created Saturday 25 October 2025
+
+urlcrazy
+
+- Siber güvenlik kategorisi nedir?
+  - Genel Siber Güvenlik; Sızma Testi (Keşif); Güvenlik Operasyonları; Tehdit Avcılığı
+
+- Nedir?
+  - Bir alan adı (ör. example.com) için yazım hatasıyla oluşabilecek benzer alan adlarını üretip DNS’te var mı diye kontrol eden araç.
+
+- Ne işe yarar (basit örneklerle)?
+  - exmaple.com, eample.com, example.cm gibi varyasyonları bulur.
+  - Bu alanlar çalışıyor mu (çözülüyor mu) görerek olası typosquatting ve phishing risklerini tespit etmeye yardım eder.
+
+- Ne değildir?
+  - Zafiyet sömürme/hack aracı değildir.
+  - Web uygulaması zafiyet tarayıcısı değildir.
+  - Alan adı satın alma ya da kapatma aracı değildir.
+
+- Kullanım alanları nedir?
+  - Marka/alan adı koruması ve itibar takibi
+  - Phishing/typosquatting tespiti
+  - Kırmızı takım keşfi; mavi takım tehdit izleme
+
+- Kullanım ortamı nelerdir?
+  - Komut satırı; çoğunlukla Kali/Linux (paket olarak mevcut)
+  - İnternet bağlantısı varsa DNS çözümleme yapar; yoksa sadece varyasyon üretir.
+
+- Neden tercih edilir?
+  - Hızlı ve hafif; çok sayıda yazım hatası kuralını destekler (karakter atlama, komşu tuş, uzantı değişimi vb.)
+  - Farklı klavye düzenleriyle (ör. dvorak) üretim yapabilir.
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - Temel komut satırı bilgisi
+  - Hedef alan adı listesi
+  - DNS kontrolü için internet (isteğe bağlı yüksek dosya tanımlayıcı limiti)
+
+- Öğrenme zorluk seviyesi nedir?
+  - Kolay (ortalama bir haftada öğrenilebilir)
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 4 — Kuvvetle tavsiye edilen
+
+- Alternatifleri nelerdir?
+  - dnstwist (daha gelişmiş homograf desteği ve OSINT entegrasyonları)
+  - urlinsane (benzer typo üretimi)
+  - dnsgen, altdns (daha çok alt alan adı permütasyonları, tamamlayıcı)

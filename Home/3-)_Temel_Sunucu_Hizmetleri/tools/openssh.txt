@@ -57,3 +57,5 @@ Alternatifleri nelerdir?
 - Dropbear client (hafif), mosh (daha dayanıklı mobil SSH).
 - SFTP/GUI: FileZilla, WinSCP.
 - Kurumsal: Teleport, AWS SSM Session Manager (SSH alternatifi yaklaşım).
+
+@openssh

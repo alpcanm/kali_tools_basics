@@ -1,0 +1,54 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T01:34:28+03:00
+
+====== dnsTracer ======
+Created Saturday 25 October 2025
+
+Araç: dnstracer
+
+Siber güvenlik kategorisi nedir?
+- General Cybersecurity, Security Operations, Threat Hunting, Incident Response, Penetration Testing
+
+Nedir?
+- Bir alan adının DNS yanıtının kökten yetkili sunucuya kadar hangi sunuculardan geçtiğini adım adım gösteren komut satırı aracı.
+
+Ne işe yarar (basit örneklerle)?
+- www.ornek.org için: ROOT -> .org TLD -> alanın yetkili NS’leri -> nihai kayıt zincirini çıkarır.
+- Sorun noktalarını bulur: zaman aşımı, “lame delegation”, eksik ek kayıt.
+- PTR (ters DNS) ve SOA kayıtlarının hangi yetkili sunucudan geldiğini doğrular.
+
+Ne değildir?
+- DNS sunucusu, paket dinleyici veya zafiyet tarayıcısı değildir.
+- Trafiği değiştirmez; sadece sorgular ve raporlar.
+
+Kullanım alanları nedir?
+- DNS arızası teşhisi, yetkili vs önbellekli (authoritative vs cached) ayrımı.
+- Dış/üçüncü taraf DNS delegasyonlarının doğrulanması.
+- Keşif (recon) aşamasında DNS mimarisini anlamak.
+
+Kullanım ortamı nelerdir?
+- Unix/BSD/Linux, macOS (terminal); Windows’ta WSL/Cygwin.
+- İnternet çıkışı ve 53/UDP (gerektiğinde 53/TCP) erişimi.
+
+Neden tercih edilir?
+- DNS zincirini okunaklı ağaç yapısıyla otomatik gösterir.
+- dig +trace’a kıyasla zinciri daha görsel/özet akışla sunar; sorunları hızlı ayıklar.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Komut satırı erişimi, dnstracer kurulumu (paket yöneticisi).
+- Temel DNS bilgisi: NS, A/AAAA, PTR, SOA, authoritative/cache.
+- Ağ erişimi (53/UDP, gerektiğinde 53/TCP).
+
+Öğrenme zorluk seviyesi nedir ?
+- kolay (ortalama bir haftada öğrenilebilir)
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 2 — Niş/uzmanlık aracı; DNS odaklı görevlerde faydalı.
+
+Alternatifleri nelerdir?
+- dig +trace, drill, delv
+- host, nslookup (daha sınırlı)
+- massdns, dnsx (otomasyon/yoğun sorgu)
+- DNSViz, Zonemaster (doğrulama/görselleştirme)
+- fierce, amass (geniş DNS keşfi; farklı kapsam)

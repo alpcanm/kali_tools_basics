@@ -34,3 +34,4 @@ Created Friday 24 October 2025
 - Orta (yaklaşık 1 ay): Kurulum, temel web ve temel güvenlik kavramları + başlangıç görevleri. Not: Tüm görevleri bitirmek ileri seviye olabilir.
 
 https://github.com/juice-shop/juice-shop
+@eğitim

@@ -1,0 +1,65 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T00:19:46+03:00
+
+====== samba ======
+Created Saturday 25 October 2025
+
+Samba
+
+- Siber güvenlik kategorisi nedir?
+  - General Cybersecurity, Security Operations, Incident Response, Threat Hunting, Penetration Testing
+
+- Nedir?
+  - Linux/Unix üzerinde SMB ve Active Directory (AD) protokollerini sağlayan açık kaynak dosya–yazıcı paylaşım ve kimlik/alan denetimi yazılımıdır. AD DC veya üye sunucu olarak çalışabilir; LDAP ve Kerberos kullanır.
+
+- Ne işe yarar (basit örneklerle)?
+  - Ortak klasör: Windows–macOS–Linux kullanıcıları aynı paylaşıma erişir.
+  - Yazıcı paylaşımı: Ofis yazıcısını ağdan kullanma.
+  - Tek hesapla giriş: Linux sunucuyu Windows etki alanına dahil etme.
+  - Güvenli dosya sunumu: SMB3 imzalama/şifreleme ile veri koruma.
+  - Ölçekleme/HA: Küme ile çok kullanıcıya hızlı ve kesintisiz erişim.
+
+- Ne değildir?
+  - Güvenlik duvarı, antivirüs, IDS/IPS değildir.
+  - Web sunucusu, VPN ya da yedekleme çözümü değildir.
+  - “AD güvenliğini tek başına garanti eden” bir ürün değildir; hatalı kurulum risklidir.
+
+- Kullanım alanları nedir?
+  - Kurumsal dosya/paylaşım sunucusu
+  - AD Domain Controller veya AD üye dosya sunucusu
+  - NAS/SDS/HPC altyapıları
+  - Test/lab ortamında Windows altyapısını taklit etme
+
+- Kullanım ortamı nelerdir?
+  - Linux/Unix sunucular; fiziksel, sanal, konteyner
+  - Modlar: Standalone, Member Server, AD DC, CTDB ile küme
+  - İstemciler: Windows, macOS, Linux (SMB/CIFS)
+
+- Neden tercih edilir?
+  - Açık kaynak ve olgun; Windows AD/SMB ile yüksek uyumluluk
+  - Performanslı ve ölçeklenebilir; geniş topluluk ve kurumsal destek
+  - Güvenlik özellikleri: Kerberos, LDAP, SMB3 imzalama/şifreleme, ayrıntılı ACL
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - Linux/Unix işletim sistemi, yeterli disk/ağ kaynağı
+  - Doğru DNS ve NTP senkronu; Kerberos/LDAP temel bilgisi
+  - Açık portlar: 137–139, 445; AD DC için 53, 88, 389, 636, 464 vb.
+  - smb.conf yapılandırması, yedekleme ve izleme/ günlükleme
+
+- Öğrenme zorluk seviyesi nedir?
+  - Basit dosya paylaşımı: orta
+  - AD entegrasyonlu üye sunucu: zor
+  - AD DC/küme: çok zor
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 5 — Kurumsal standart; mavi takım/IR rollerinde 6’ya yaklaşır.
+
+- Alternatifleri nelerdir?
+  - Microsoft Windows File Server ve Active Directory
+  - NFS (Unix odaklı; SMB’ye alternatif)
+  - Kurumsal NAS: NetApp ONTAP, Dell PowerScale/Isilon, Synology/QNAP (SMB sunar)
+  - FreeIPA/389 Directory (AD alternatifi; SMB sağlamaz)
+  - Bulut: AWS FSx for Windows, Azure Files
+
+@samba

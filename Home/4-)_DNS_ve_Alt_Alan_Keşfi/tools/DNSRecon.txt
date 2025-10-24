@@ -1,0 +1,62 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T01:30:43+03:00
+
+====== DNSRecon ======
+Created Saturday 25 October 2025
+
+Siber güvenlik kategorisi nedir?
+- Penetration Testing (Sızma Testi)
+- Security Operations (Güvenlik Operasyonları)
+- Incident Response (Olay Müdahalesi)
+- Threat Hunting (Tehdit Avcılığı)
+
+Nedir?
+- DNSRecon, DNS kayıtlarını otomatik olarak toplayan (enumeration) açık kaynak bir komut satırı aracıdır (Python).
+
+Ne işe yarar (basit örneklerle)?
+- Bir alan adının NS/MX/A/AAAA/TXT/SPF/SOA/SRV kayıtlarını listeler.
+- Zone transfer açığı var mı kontrol eder.
+- Wordlist ile alt alan adlarını brute force bulur.
+- IP aralıklarında PTR (ters DNS) sorgusu yapar.
+- Wildcard ve TLD varyasyonlarını dener.
+- DNS önbellek sorgusu (cache snooping) yapabilir.
+
+Ne değildir?
+- Sömürü (exploit) aracı değildir.
+- DDoS veya trafik yakalama aracı değildir.
+- DNS sunucusu ya da tam kapsamlı zafiyet tarayıcı değildir.
+
+Kullanım alanları nedir?
+- Sızma testinde keşif ve varlık envanteri.
+- DNS yanlış yapılandırma (özellikle zone transfer) tespiti.
+- Olay müdahalesinde alan adı/altyapı haritalama.
+
+Kullanım ortamı nelerdir?
+- Terminal/CLI; Linux, macOS, Windows.
+- İnternete açık ağlar veya lab ortamları (izinli).
+
+Neden tercih edilir?
+- DNS keşfini hızlı ve kapsamlı yapar.
+- Birçok kayıt tipini tek araçla toplar.
+- Açık kaynak, script’lenebilir; wordlist/brute-force ve cache snooping içerir.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Python 3.12+ yüklü sistem.
+- İnternet/DNS erişimi; hedef domain veya IP aralığı.
+- İsteğe bağlı: wordlist dosyası; sanal ortam/uv kullanımı.
+- Temel terminal bilgisi ve yasal izin.
+
+Öğrenme zorluk seviyesi nedir ?
+- Kolay (ortalama bir haftada öğrenilebilir).
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 4 — Kuvvetle tavsiye edilen: DNS keşfi kritik; araç seçimi esnektir.
+
+Alternatifleri nelerdir?
+- amass, subfinder, Sublist3r
+- dnsenum, fierce
+- massdns, dnsx
+- dig/host/nslookup
+- Nmap NSE dns-brute, gobuster dns
+- assetfinder

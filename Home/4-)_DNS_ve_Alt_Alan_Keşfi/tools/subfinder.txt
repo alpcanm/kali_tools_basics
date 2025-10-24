@@ -1,0 +1,57 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T01:12:44+03:00
+
+====== @subfinder ======
+Created Saturday 25 October 2025
+
+subfinder
+
+- Siber güvenlik kategorisi nedir?
+  - General Cybersecurity, Penetration Testing, Web Application Testing, Security Operations
+
+- Nedir?
+  - İnternetteki pasif kaynakları tarayıp bir alan adının alt alan adlarını (subdomain) bulan hafif ve hızlı bir komut satırı aracıdır.
+
+- Ne işe yarar (basit örneklerle)?
+  - example.com için shop.example.com, vpn.example.com gibi alt alanları toplar.
+  - Pentest/bug bounty’de keşif (recon) yapmayı hızlandırır.
+  - Mavi takımın varlık envanterini güncel tutmasına yardımcı olur.
+
+- Ne değildir?
+  - Zafiyet tarayıcısı değildir.
+  - Aktif brute-force yapmaz; saldırı ya da sömürü (exploit) aracı değildir.
+  - Port tarayıcı veya tam kapsamlı ASM platformu değildir.
+
+- Kullanım alanları nedir?
+  - Keşif ve saldırı yüzeyi haritalama
+  - Varlık envanteri ve gölge BT tespiti
+  - Sürekli izleme ve değişiklik takibi
+
+- Kullanım ortamı nelerdir?
+  - Terminal/CLI (Linux, macOS, Windows)
+  - CI/CD boru hatları, otomasyon script’leri
+  - Bulut koşucularında (runner) toplu taramalar
+
+- Neden tercih edilir?
+  - Pasif olduğundan hızlı ve görece “görünmez”
+  - Hafif kaynak kullanımı; çoklu format çıkış; kolay entegrasyon
+  - Küratörlü çok sayıda kaynak; wildcard ayıklama
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - İnternet bağlantısı ve komut satırı erişimi
+  - Hedef alan adı listesi
+  - (İsteğe bağlı) Pasif kaynaklara ait API anahtarları, DNS çözücü listesi, proxy
+
+- Öğrenme zorluk seviyesi nedir?
+  - Kolay (ortalama bir haftada öğrenilebilir)
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 5 — Kurumsal standart
+
+- Alternatifleri nelerdir?
+  - Amass (daha derin kapsam, daha ağır)
+  - Findomain (hızlı, basit)
+  - Assetfinder (çok hafif, daha az kaynak)
+  - Sublist3r, Knockpy
+  - crt.sh, SecurityTrails/Chaos/Censys/Shodan (kaynak/servis tabanlı)

@@ -1,0 +1,54 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T01:58:40+03:00
+
+====== zonedb ======
+Created Saturday 25 October 2025
+
+ZoneDB (The Public Zone Database)
+
+- Siber güvenlik kategorisi nedir?
+  - General Cybersecurity, Security Operations, Threat Hunting, Secure Development
+
+- Nedir?
+  - Kamuya açık DNS bölgelerinin (TLD, ikinci/üçüncü seviye alanlar) listesi ve metadata’sıdır. Ücretsiz, açık kaynak, her gece güncellenir.
+
+- Ne işe yarar (basit örneklerle)?
+  - Loglarda geçen alan adlarının en üst düzey bölgesini doğru ayırmak (ör. shop.co.uk içinde “co.uk”i tanımak).
+  - Alan adının kayıt otoritesi ve RDAP taban URL’sini bulmak.
+  - Emekli/geri çekilmiş TLD’leri de görüp doğrulama yapmak (ör. hatalı/oltalama alanlarını elemek).
+
+- Ne değildir?
+  - DNS çözümleyici, tehdit istihbaratı, kötü amaçlı alan listesi, WHOIS servisi değildir.
+  - Canlı trafik/veri toplamaz; bir referans veri kümesidir.
+
+- Kullanım alanları nedir?
+  - SIEM/SOAR’da alan adı zenginleştirme ve normalizasyon.
+  - Tehdit avcılığı ve oltalama tespiti (geçerli kamu bölgelerini bilerek yanlış pozitifleri azaltma).
+  - Güvenli geliştirme: URL ayrıştırma, cookie-scope, çoklu etiketli TLD’ler için doğru ayrım.
+  - Kayıt/registrar entegrasyonları ve RDAP sorgularının yönlendirilmesi.
+
+- Kullanım ortamı nelerdir?
+  - Geliştirici makineleri, CI/CD hatları, veri işleme boru hatları, SIEM zenginleştirme katmanı, offline analiz.
+
+- Neden tercih edilir?
+  - Kapsamlıdır (mevcut, emekli, geri çekilmiş bölgeler). Metadata ve RDAP tabanlarını içerir.
+  - Açık kaynak + her gece otomatik güncellenir.
+  - Karşılaştırma: IANA TLD listesi sadece kök TLD’lere odaklıdır; PSL suffix-eşleştirme için iyidir ama ZoneDB kadar zengin metadata içermez.
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - Veri olarak: zones.txt (IDN ve küçük harf), metadata/{zone}.json dosyaları.
+  - CLI/Go için: Go (min. 1.19+), make, git; GOPATH/bin’i PATH’e eklemek; make install; go run cmd/zonedb/main.go -h.
+  - Güncelleme akışı: make normalize, zonedb -update ile metadata güncelleme.
+
+- Öğrenme zorluk seviyesi nedir?
+  - Kolay (ortalama bir haftada öğrenilebilir).
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 3 — Durumsal önemli. DNS ile yoğun çalışan, log/URL ayrıştıran veya RDAP/registrar entegrasyonu yapanlar için belirgin fayda.
+
+- Alternatifleri nelerdir?
+  - Mozilla Public Suffix List (PSL): Suffix eşleştirme için standart; metadata sınırlı.
+  - IANA Root Zone/TLD List: Resmi ve güncel TLD’ler; emekli/alt seviye kapsamı sınırlı.
+  - ICANN CZDS: Yetkili zone dosyaları erişimi (başvuru gerekir); ham zone verisi, farklı amaç.
+  - RDAP Bootstrap kayıtları (IANA): RDAP uçları için temel; ZoneDB kadar kapsamlı alan listesi sağlamaz.

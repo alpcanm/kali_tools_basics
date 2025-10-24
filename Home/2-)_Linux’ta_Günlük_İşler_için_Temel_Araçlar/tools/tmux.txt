@@ -40,3 +40,5 @@ Created Friday 24 October 2025
 
 ==== Aracın siber güvenlik uzmanı için önemi (0–7) ====
 - 4 — Kuvvetle tavsiye edilen: Uzaktan sunucu çalışmaları, olay müdahalesi ve otomasyon akışlarında ciddi verim ve dayanıklılık sağlar.
+
+@tmux

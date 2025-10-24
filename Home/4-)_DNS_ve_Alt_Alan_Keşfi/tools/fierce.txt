@@ -1,0 +1,68 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T01:29:12+03:00
+
+====== @fierce ======
+Created Saturday 25 October 2025
+
+Fierce
+
+Siber güvenlik kategorisi nedir?
+- Penetration Testing (Sızma Testi)
+- Web Application Testing (Web Uygulaması Testi)
+- Security Operations (Güvenlik Operasyonları)
+- General Cybersecurity (Genel)
+
+Nedir?
+- DNS tabanlı keşif aracıdır. Alan adlarına bağlı alt alan adlarını ve ilişkili IP aralıklarını bulur; yakın IP bloklarını tarayıp “dağınık” (non-contiguous) adres alanlarını ortaya çıkarır.
+
+Ne işe yarar(basit örneklerle)?
+- Bir şirketin admin.example.com, mail.example.com gibi alt alan adlarını bulur.
+- Bulunan bir IP’nin yakınındaki (/24 gibi) diğer adreslerde olası alan adlarını ve servisleri işaret eder.
+- Hatalı yapılandırılmış DNS’lerde zone transfer gibi sızıntıları dener ve raporlar.
+- Nmap gibi taramalara başlamadan “nereleri taramalıyım?” sorusunu yanıtlar.
+
+Ne değildir?
+- Sömürü (exploit) aracı değildir.
+- Tam kapsamlı port tarayıcı değildir.
+- Tüm interneti rastgele taramaz; hedefe odaklıdır.
+- Tek başına zafiyet doğrulama/istismar yapmaz.
+
+Kullanım alanları nedir?
+- Harici saldırı yüzeyi haritalama (asset discovery)
+- OSINT ve ön keşif (red team/bug bounty)
+- DNS yanlış yapılandırmalarını kontrol etme (mavi takım)
+- İç ağda IP bloklarını ve adlandırmayı anlamlandırma
+
+Kullanım ortamı nelerdir?
+- Komut satırı, Python 3
+- Linux, macOS, Windows
+- İnternet erişimi (dış hedefler) veya iç DNS’e erişim (iç hedefler)
+
+Neden tercih edilir?
+- Hızlı, hafif ve DNS odaklıdır.
+- Yakın IP gezintisi (traverse/wide) ile “gözden kaçan” hedefleri yakalar.
+- Nmap/nikto gibi araçlardan önce kapsamı hızla daraltır.
+- Zone transfer gibi kritik yanlış yapılandırmaları kolayca dener.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Hedef alan adı veya DNS sunucusu bilgisi
+- Python 3 ve gerekli kütüphaneler (örn. dnspython)
+- Temel DNS kavramları bilgisi (NS, SOA, AXFR gibi)
+- Yetkili ve etik kullanım izni
+
+Öğrenme zorluk seviyesi nedir ?
+- Kolay (ortalama bir haftada öğrenilebilir)
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 4 — Kuvvetle tavsiye edilen (özellikle sızma testi ve dış yüzey keşfi için)
+
+Alternatifleri nelerdir?
+- Amass: Daha kapsamlı OSINT + pasif/aktif toplama; geniş kapsam, daha ağır.
+- Subfinder/Sublist3r: Hızlı alt alan adı bulma; DNS’e ek olarak çoklu kaynak kullanır.
+- dnsenum: Klasik DNS keşif; wordlist + brute-force’a yatkın.
+- massdns: Çok hızlı DNS çözümleme; ölçek için iyi, tek başına mantık eklemez.
+- Nmap NSE (dns-brute, dns-zone-transfer): Nmap ekosisteminde benzer kontroller.
+- Gobuster (dns modu): Wordlist ile hızlı alt alan adı denemesi.
+
+Kıyas kısa notu: Amass/Subfinder daha geniş veri kaynaklı keşifte güçlü; Fierce DNS’e odaklı, yakın IP gezintisi ve hedefi hızlı daraltmada pratiktir.
