@@ -2,24 +2,24 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-10-24T20:06:21+03:00
 
-Wordlist/Referans/Eğitim/Döküm
+===== Wordlist/Referans/Eğitim/Döküm =====
 
-Wordlist depoları – Şifre/kelime/dizin listeleri
+==== Wordlist depoları – Şifre/kelime/dizin listeleri ====
 - Açıklama: Testlerde denenecek hazır kelime ve şifre listelerini içerir. Parola denemeleri, dizin/alt yol bulma (dir busting) ve kullanıcı adı keşfi gibi işlerde zaman kazandırır.
 - Örnek: Bir web uygulamasında gizli klasörleri bulmak için seclists içindeki bir “directory” listesini kullanmak; parola testi için rockyou.txt’yi denemek.
 - Araçlar: seclists (kapsamlı wordlist koleksiyonu: şifre, kullanıcı, dizin, fuzz vb.), wordlists (Kali’nin standart wordlist paketi; rockyou.txt ile bilinir), payloadsallthethings (bazı zafiyet türleri için hazır listeler/payload setleri de içerir)
 
-Payload referans koleksiyonları – Zafiyet türlerine göre deneme girdileri
+==== Payload referans koleksiyonları – Zafiyet türlerine göre deneme girdileri ====
 - Açıklama: XSS, SQLi, SSTI gibi zafiyet türlerine göre örnek payload’lar ve pratik notlar sunar. Filtreleri aşma yöntemleri, kenar durumları ve kontrol listeleri içerir.
 - Örnek: Bir form alanında XSS şüphesi varsa, payloadsallthethings’deki örnekleri inceleyip bağlama uygun bir payload seçerek denemek (yetkili ve kontrollü test ortamında).
 - Araçlar: payloadsallthethings (XSS, SQLi, SSTI vb. için geniş payload arşivi ve notlar), seclists (bazı zafiyetlere özel payload/kelime listeleri de barındırır)
 
-Eğitim amaçlı zafiyetli uygulamalar – Pratik yapma ortamları
+==== Eğitim amaçlı zafiyetli uygulamalar – Pratik yapma ortamları ====
 - Açıklama: Bilerek zafiyetli tasarlanmış uygulamalardır. Güvenli ve yasal bir ortamda pratik yapmayı, zafiyetleri tanımayı ve düzeltmeyi öğretir.
 - Örnek: Juice Shop üzerinde görevleri çözerek kimlik doğrulama, girdi doğrulama ve erişim kontrolü zafiyetlerini uygulamalı öğrenmek.
 - Araçlar: juice-shop (OWASP’ın bilerek zafiyetli web uygulaması; eğitim ve pratik için)
 
-Referans/Döküm – Kısa bilgi paketleri ve özetler
+==== Referans/Döküm – Kısa bilgi paketleri ve özetler ====
 - Açıklama: Temel kavramları, kurulum adımlarını ve giriş seviyesindeki bilgileri derleyen kaynaklardır. Ekip içi paylaşım ve hızlı hatırlatma için idealdir.
 - Örnek: Python’a yeni başlayan birine, what-is-python paketiyle “Python nedir, nasıl kurulur, temel sözdizimi nedir?” gibi soruların özet cevabını göstermek.
 - Araçlar: what-is-python (Python nedir, nasıl başlanır – bilgi paketi), payloadsallthethings (uygulamalı notlar ve referans bağlantılarıyla doküm niteliği de taşır), seclists (liste kapsamları referans amaçlı da incelenebilir)

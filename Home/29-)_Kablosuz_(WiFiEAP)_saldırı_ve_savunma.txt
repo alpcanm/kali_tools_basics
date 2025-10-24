@@ -2,7 +2,7 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-10-24T18:29:08+03:00
 
-====== 2-) Kablosuz (WiFiEAP) saldırı ve savunma ======
+====== 29-) Kablosuz (WiFiEAP) saldırı ve savunma ======
 
 
 

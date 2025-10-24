@@ -2,7 +2,7 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-10-24T19:40:17+03:00
 
-====== Güvenli Tünelleme ve Kısıtlı Ağlarda Erişim ======
+====== 17-) Güvenli Tünelleme ve Kısıtlı Ağlarda Erişim ======
 
 
 

@@ -2,7 +2,7 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-10-24T20:07:20+03:00
 
-====== Linux’ta Günlük İşler için Temel Araçlar ======
+====== 2-) Linux’ta Günlük İşler için Temel Araçlar ======
 
 
 

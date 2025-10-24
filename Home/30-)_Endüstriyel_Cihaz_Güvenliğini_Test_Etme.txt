@@ -2,7 +2,7 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-10-24T19:44:09+03:00
 
-====== Endüstriyel Cihaz Güvenliğini Test Etme ======
+====== 30-) Endüstriyel Cihaz Güvenliğini Test Etme ======
 
 
 

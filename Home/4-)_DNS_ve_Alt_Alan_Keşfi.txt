@@ -2,7 +2,7 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-10-24T17:59:45+03:00
 
-====== DNS ve Alt Alan Keşfi ======
+====== 4-) DNS ve Alt Alan Keşfi ======
 Created Friday 24 October 2025
 
 

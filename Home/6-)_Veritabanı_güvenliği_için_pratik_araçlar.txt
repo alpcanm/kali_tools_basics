@@ -2,7 +2,7 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-10-24T19:43:14+03:00
 
-====== Veritabanı güvenliği için pratik araçlar ======
+====== 6-) Veritabanı güvenliği için pratik araçlar ======
 
 
 

@@ -2,7 +2,7 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-10-24T20:04:42+03:00
 
-====== Uzak erişim ve dosya transferi temelleri ======
+====== 16-) Uzak erişim ve dosya transferi temelleri ======
 
 
 

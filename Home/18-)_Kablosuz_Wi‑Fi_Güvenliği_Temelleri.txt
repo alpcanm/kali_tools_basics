@@ -2,7 +2,7 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-10-24T19:43:43+03:00
 
-====== Kablosuz Wi‑Fi Güvenliği Temelleri ======
+====== 18-) Kablosuz Wi‑Fi Güvenliği Temelleri ======
 
 
 

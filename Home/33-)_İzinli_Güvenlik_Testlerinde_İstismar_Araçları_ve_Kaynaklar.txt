@@ -2,7 +2,7 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-10-24T19:41:07+03:00
 
-====== İzinli Güvenlik Testlerinde İstismar Araçları ve Kaynaklar ======
+====== 33-) İzinli Güvenlik Testlerinde İstismar Araçları ve Kaynaklar ======
 
 
 

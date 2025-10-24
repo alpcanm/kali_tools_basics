@@ -2,7 +2,7 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-10-24T20:16:31+03:00
 
-====== Güvenlik testinde çıktı yönetimi ve lab altyapısı ======
+====== 22-) Güvenlik testinde çıktı yönetimi ve lab altyapısı ======
 
 
 

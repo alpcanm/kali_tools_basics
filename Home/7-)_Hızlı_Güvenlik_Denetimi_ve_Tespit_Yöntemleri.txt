@@ -2,7 +2,7 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-10-24T20:11:11+03:00
 
-====== Hızlı Güvenlik Denetimi ve Tespit Yöntemleri ======
+====== 7-) Hızlı Güvenlik Denetimi ve Tespit Yöntemleri ======
 
 
 

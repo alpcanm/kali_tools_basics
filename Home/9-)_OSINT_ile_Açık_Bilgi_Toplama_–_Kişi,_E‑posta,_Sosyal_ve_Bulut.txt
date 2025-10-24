@@ -2,7 +2,7 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-10-24T20:13:26+03:00
 
-====== OSINT ile Açık Bilgi Toplama – Kişi, E‑posta, Sosyal ve Bulut ======
+====== 9-) OSINT ile Açık Bilgi Toplama – Kişi, E‑posta, Sosyal ve Bulut ======
 
 
 

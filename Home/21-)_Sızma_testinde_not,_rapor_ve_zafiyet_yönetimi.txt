@@ -2,7 +2,7 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-10-24T20:06:45+03:00
 
-====== Sızma testinde not, rapor ve zafiyet yönetimi ======
+====== 21-) Sızma testinde not, rapor ve zafiyet yönetimi ======
 
 
 
