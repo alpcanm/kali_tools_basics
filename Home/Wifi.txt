@@ -1,0 +1,87 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T18:29:08+03:00
+
+====== Kablosuz (Wi‑Fi/EAP) saldırı ve savunma ======
+
+
+
+== Konu ==
+Kablosuz güvenlik testi, Wi‑Fi (yaygın kablosuz ağ standardı) ağlarında zayıflıkları bulup gidermeye odaklanır. Amaç; hataları görüp düzeltmek, kullanıcıları bilinçlendirmek ve savunmayı güçlendirmektir. Tüm uygulamalar yalnızca yazılı izinle ve kontrollü ortamlarda yapılmalıdır.
+
+
+== = ==
+== Neden önemlidir?/Ne işe yarar? ==
+* Yetkisiz erişim noktalarını (AP: kablosuz ağa bağlanmayı sağlayan cihaz) ve ağ adlarını (SSID: Wi‑Fi’nin yayın adı) hızlıca ortaya çıkarır.
+* Yoğun kanalları (kanal: radyo frekans aralığı) ve zayıf ayarları görüp performans ve güvenliği iyileştirmenizi sağlar.
+* Parola dayanımını (parola politikası: şifre uzunluk/karmaşıklık kuralları) ölçer; zayıf şifreleri tespit eder.
+* WPS (buton/PIN ile kolay eşleştirme özelliği) açıklarını belirleyip kapatmaya yardımcı olur.
+* Kullanıcıların sahte ağlara (Evil Twin: meşru ağa benzeyen sahte ağ) ve kimlik avına (kimlik avı: kandırma ile bilgi toplama) karşı farkındalığını ölçer.
+* Kurumsal kimlik doğrulamada (802.1X: kurumsal kablosuz kimlik doğrulama standardı; EAP: ağlarda kimlik doğrulama yöntemi) yanlış yapılandırmaları yakalar.
+* Dayanıklılık testleriyle 802.11 (Wi‑Fi iletişim standardı ailesi) altyapınızın saldırı anındaki tepkisini görmenizi sağlar.
+* Bulguları anlaşılır görseller ve raporlarla paylaşmayı kolaylaştırır.
+
+
+
+== Nasıl çalışır/uygulanır? ==
+* Keşif ve izleme: Çevredeki AP’leri, SSID/BSSID’leri (BSSID: AP’nin benzersiz cihaz kimliği), kanalları, şifrelemeyi (şifreleme: veriyi okunamaz yapma) ve istemci (istemci: ağa bağlanan cihaz) bağlantılarını pasif dinleyerek tespit edersiniz. Trafiği (trafik: ağdaki veri akışı) üretmeden ağın resmini çıkarırsınız.
+* Parola gücü testi: PSK (paylaşılan Wi‑Fi şifresi) kullanan ağlarda el sıkışma (handshake: bağlantı sırasında doğrulama mesajlaşması) veya PMKID (doğrulamada kullanılan kısa kimlik parçası) verisi toplanır. Offline analiz (ağdan bağımsız dosya üzerinden çalışma) ile sözlük/maske testleri (önceden bilinen şifre listeleri/kalıplarıyla deneme) yapılarak parola politikası uyumu ölçülür.
+* WPS testleri: WPS açıksa PIN (kişisel doğrulama numarası) tahmini yapılır; brute force (tüm adayları tek tek deneme) veya Pixie Dust (WPS’in zayıf rastgeleliğinden yararlanan yöntem) gibi yaklaşımlarla risk seviyesi görülür. Sonuçlara göre WPS kapatılır ya da güçlendirilir.
+* Sahte AP ve captive portal: Evil Twin kurup captive portal (ağa girince açılan kimlik/kurallar sayfası) ile kullanıcı davranışı ve kimlik avı riskleri test edilir. Mavi takıma savunma senaryoları ve uyarı eğitimleri üretilir.
+* Kurumsal (WPA2‑Enterprise): 802.1X/EAP yapılandırmalarında sertifika doğrulaması (sunucu kimliğini kontrol etme) zorunlu mu kontrol edilir. MSCHAPv2 (Microsoft’un parola tabanlı yöntemi) gibi zayıf EAP türleri kullanılıyorsa riskler raporlanır.
+* Dayanıklılık ve tespit: 802.11 çerçeve enjeksiyonu (ağa sahte paket gönderme) ile deauthentication (bağlantı kesme sinyali) ve beacon flood (sahte ağ ilanı yağmuru) senaryoları denenir. WIDS/WIPS’in (WIDS: kablosuz saldırı tespit sistemi; WIPS: kablosuz saldırı önleme sistemi) alarm ve karşı önlemleri gözlemlenir. Bu adımlar yalnızca izole lab ortamında yapılmalıdır.
+* Görselleştirme ve rapor: AP‑istemci ilişkileri, topoloji (bileşenlerin bağlanma şekli) ve roaming (cihazın AP’ler arasında dolaşması) davranışları grafiklere dökülür; yönetim için net raporlar hazırlanır.
+* Laboratuvar altyapısı: Sürücüler ve sanal arayüzler (sanal arayüz: yazılımsal ağ kartı) ile güvenli test ortamı kurulur. RF (radyo frekansı) kalibrasyonu (ölçüm ayarı) yapılır; kayıtların doğruluğu artırılır.
+
+Not: Her test faaliyeti, yazılı izinle ve yasal sınırlar içinde yürütülmelidir. Adım adım saldırı yönergeleri bu kapsamda verilmez.
+
+
+
+== Sözlük ==
+* 802.11: Wi‑Fi iletişimini tanımlayan standart ailesi.
+* 802.1X: Kurumsal ağlarda istemci kimlik doğrulama standardı.
+* AP (Erişim noktası): Kablosuz ağa bağlanmayı sağlayan cihaz.
+* Beacon flood: Çok sayıda sahte ağ ilanı gönderme saldırısı.
+* BSSID: Bir erişim noktasının benzersiz cihaz kimliği.
+* Brute force: Tüm olası adayları tek tek deneme yöntemi.
+* Captive portal: Ağa bağlanınca otomatik açılan kimlik/kurallar sayfası.
+* Çerçeve enjeksiyonu: Ağa sahte kablosuz paketler gönderme.
+* Deauthentication: Bir istemciyi ağdan koparan kontrol sinyali.
+* DoS: Bir hizmeti geçici olarak kullanılamaz hale getirme.
+* EAP: Ağlarda kimlik doğrulamak için kullanılan yöntemler ailesi.
+* El sıkışma (handshake): Bağlantı sırasında tarafların doğrulama mesajlaşması.
+* Evil Twin: Meşru ağa benzeyen sahte kablosuz ağ.
+* İstemci: Ağa bağlanan kullanıcı cihazı.
+* Kanal: Kablosuz iletişimde seçilen frekans aralığı.
+* Kimlik avı: Kandırma yoluyla hassas bilgi elde etme.
+* MSCHAPv2: Microsoft’un parola tabanlı kimlik doğrulama yöntemi.
+* Offline analiz: Toplanan dosya üzerinde ağdan bağımsız çalışma.
+* Parola politikası: Şifre uzunluk ve karmaşıklık kuralları bütünü.
+* Pixie Dust: WPS’in zayıf rastgeleliğinden yararlanan saldırı yöntemi.
+* PMKID: WPA doğrulamasında kullanılan kısa kimlik bilgisi parçası.
+* PSK: Paylaşılan Wi‑Fi ağı parolası.
+* RF: Radyo frekansı sinyallerine ilişkin alan.
+* Roaming: Cihazın erişim noktaları arasında dolaşması.
+* Sertifika doğrulaması: Sunucunun gerçekliğini kontrol etme işlemi.
+* SSID: Kablosuz ağın yayın adı.
+* Şifreleme: Veriyi yetkisiz kişiler için okunamaz yapma işlemi.
+* Topoloji: Ağ bileşenlerinin birbirine bağlanma düzeni.
+* Trafik: Ağ üzerindeki veri akışı.
+* WIDS: Kablosuz saldırı tespit sistemi.
+* WIPS: Kablosuz saldırı önleme sistemi.
+* WPA2‑Enterprise: 802.1X kullanan kurumsal Wi‑Fi güvenlik modu.
+* WPS: Buton/PIN ile kolay eşleştirme özelliği.
+
+
+== = ==
+== Kazanımlar ==
+* Çevredeki AP/SSID/BSSID/kanal/şifreleme ve istemci trafiğini pasif şekilde keşfetmek ve izlemek.
+* Yoğun kanalları ve parazit kaynaklarını bularak frekans planlaması yapmak.
+* WPA/WPA2‑PSK el sıkışma ve PMKID verisi toplayıp, offline sözlük/maske testleriyle parola politikası uyumunu ölçmek.
+* Varsayılan anahtar kalıpları ve modem kaynaklı PSK hesaplamalarına karşı risk değerlendirmesi yapmak.
+* WPS açıklarını PIN brute force ve Pixie Dust yöntemleriyle test edip kapatma/güçlendirme önerileri üretmek.
+* Evil Twin ve captive portal senaryolarını güvenli laboratuvarda kurup, kimlik avı farkındalığını ve kullanıcı tepkilerini ölçmek.
+* WPA2‑Enterprise/802.1X/EAP ağlarında sertifika doğrulaması zorunluluğunu ve MSCHAPv2 gibi zayıf yöntemleri tespit etmek.
+* 802.11 çerçeve enjeksiyonu ile deauthentication ve beacon flood senaryolarını simüle edip WIDS/WIPS tepkilerini doğrulamak.
+* AP‑istemci ilişkilerini, topolojiyi ve roaming davranışını görselleştirip yönetim dostu raporlar hazırlamak.
+* Sürücü yönetimi, sanal arayüz oluşturma ve RF kalibrasyonu yaparak fiziksel AP olmadan da güvenli test ortamı kurmak.

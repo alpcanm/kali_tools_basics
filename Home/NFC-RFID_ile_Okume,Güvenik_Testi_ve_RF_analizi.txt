@@ -1,0 +1,68 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:34:19+03:00
+
+====== NFC/RFID ile Okuma, Güvenlik Testi ve RF Analizi ======
+
+
+
+== Konu ==
+Bu içerik, RFID (radyo dalgalarıyla temassız tanıma) ve NFC (çok yakın mesafede temassız iletişim) kartlarını ve etiketlerini bulma, okuma, güvenliğini değerlendirme, iletişimi izleme ve genel RF (radyo frekansı; kablosuz sinyallerin frekans alanı) testleri için pratik bir özet sunar. MIFARE Classic (yaygın bir NFC kart türü) ve MIFARE Ultralight (düşük maliyetli NFC etiket ailesi) gibi kart tiplerini tanıyabilir, UID (kartın benzersiz kimliği) ve bellek yapısı (kart içindeki veri alanlarının düzeni) gibi bilgileri görebilirsiniz. Ayrıca envanterleme (hızlı liste çıkarma) yapabilir, güvenlik değerlendirmesi (zayıflıkları bulmaya yönelik izinli test) uygulayabilir, protokol (cihazların konuşma kuralları) seviyesinde sniffleme (haberleşmeyi pasif dinleme) ve emülasyon (cihazı taklit etme) yapabilirsiniz. Geliştirme tarafında API (hazır programlama arayüzü) ve kütüphane (yeniden kullanılabilir kod paketi) kullanarak uygulama yazabilirsiniz. NFC/RFID dışındaki sub‑GHz (1 GHz altı radyo frekansları) RF testlerinde de IoT (internete bağlı küçük cihazlar) sensörlerinin paket (kablosuz veri birimi) sinyallerini izleyebilirsiniz.
+
+== Neden önemlidir?/Ne işe yarar? ==
+* Hızlı envanter, doğrulama ve bakım işlerini kolaylaştırır.
+* Eski MIFARE Classic kartlardaki zayıf anahtar (erişimi kontrol eden gizli bilgi) ve yanlış yapılandırmaları bulmayı sağlar.
+* Ürün geliştirme ve testte protokol uyumluluğunu (standartlara uygunluk) ve hata ayıklamayı (sorunu bulma ve düzeltme) hızlandırır.
+* Kendi sub‑GHz cihazlarınızın sinyal gücü ve paket sürekliliğini ölçmenize yardım eder.
+* Yalnızca yetkili ve izinli ortamlarda kullanılmalıdır; başkalarının kart/cihazlarına izinsiz erişim yasadışıdır.
+== = ==
+== Nasıl çalışır/uygulanır? ==
+* Envanterleme: Okuyucuyu bağlayın. Kartı/etiketi yaklaştırın. Kart tipini, UID’yi ve bellek yapısını görüntüleyin.
+* Güvenlik: İzinli test ortamında MIFARE Classic kartlara erişim anahtarlarını ve erişim kurallarını kontrol edin; zayıf anahtarları ve yanlış izinleri belirleyin.
+* Protokol analizi: Kart–okuyucu trafiğini sniffleyin, kaydedin, zamanlamaları inceleyin. Gerekirse kartı veya okuyucuyu emüle ederek test edin.
+* Geliştirme: API ve kütüphanelerle okuma/yazma yapan basit uygulamalar yazın; farklı okuyucuları tek bir kod tabanından sürün.
+* Genel RF (sub‑GHz): USB RF cihazını bağlayın. 315/433/868/915 MHz’de paketleri dinleyin, kaydedin; sinyal gücü ve sürekliliği ölçün. Kendi cihazınıza kontrollü paket gönderip alım testleri yapın.
+* Sınırlar: Dökümandan çıkarılamıyor. (Örneğin hangi spesifik kartların yazılabildiği veya tüm destekli okuyucu listeleri belirtilmiyor.)
+
+== Kime yarar? ==
+* Depo, üretim ve lojistik ekipleri
+* Kurumsal BT ve güvenlik ekipleri
+* Ar‑Ge, test ve entegrasyon ekipleri
+* Saha bakım ve destek ekipleri
+
+
+== Sözlük ==
+* API: Programcıların kullanacağı hazır komutlar ve işlevler seti.
+* Bellek yapısı: Kart içindeki veri alanlarının nasıl bölündüğü ve düzenlendiği.
+* Emülasyon: Bir cihazın davranışını yazılım veya donanımla taklit etme.
+* Envanterleme: Kısa sürede çok sayıda etiketi/kartı tarayıp listeleme.
+* Güvenlik değerlendirmesi: Bir sistemdeki zayıflıkları izinli şekilde test edip ölçme işi.
+* Hata ayıklama: Bir sistemdeki hataları bulup düzeltme süreci.
+* IoT: İnternete bağlı, küçük ve amaç odaklı cihazlar ekosistemi.
+* Kütüphane: Yazılımda tekrar kullanılabilir fonksiyonlar/komutlar paketi.
+* MIFARE Classic: Yaygın bir NFC kart türü; erişim anahtarları ve sektör yapısı içerir.
+* MIFARE Ultralight: Düşük maliyetli, basit bellekli NFC etiket ailesi.
+* NFC: Çok kısa mesafede çalışan temassız iletişim teknolojisi.
+* Paket: Kablosuz ağlarda taşınan küçük veri birimi.
+* Protokol: Cihazların nasıl ve ne sırayla konuşacağını belirleyen kurallar.
+* RF: Radyo frekansı; kablosuz sinyallerin frekans aralığı.
+* RFID: Radyo dalgalarıyla temassız kimlik tanıma ve veri aktarımı tekniği.
+* Sniffleme: İki cihaz arasındaki haberleşmeyi pasif şekilde dinleme.
+* Sub‑GHz: 1 GHz’in altındaki radyo frekans bantları.
+* UID: Kartın benzersiz kimlik numarası.
+* Uyumluluk: Bir sistemin ilgili standart ve kurallara uygun çalışması.
+* Anahtar: Erişimi kontrol eden gizli bilgi; doğru değilse erişim verilmez.
+
+== = ==
+== Kazanımlar ==
+* NFC/RFID etiket ve kartları hızlıca tarayıp tip ve UID bilgisini toplayabilme.
+* Kartın bellek yapısını okuyup veri alanlarını ve izinlerini ayırt edebilme.
+* MIFARE komutlarını adım adım gönderip verilen yanıtlardan davranışı çözümleyebilme.
+* MIFARE Classic kartlarda zayıf anahtarları ve hatalı erişim kurallarını tespit edebilme.
+* Kart–okuyucu iletişimini dinleyip kaydederek zamanlama ve uyumluluk sorunlarını bulabilme.
+* Kart veya okuyucu rolünü emüle ederek yeni cihazları kapalı ve izinli ortamda test edebilme.
+* NFC/MIFARE okuma‑yazma yapan basit masaüstü veya komut satırı uygulamaları geliştirebilme.
+* Farklı marka/Model NFC okuyucularını tek bir API üzerinden sürüp işlemleri standartlaştırabilme.
+* 315/433/868/915 MHz cihazlardan paket yakalayıp temel analiz yapabilme; sinyal gücü ve sürekliliğini ölçebilme.
+* Kendi RF cihazınıza kontrollü paket gönderip bağlantı ve kapsama testleri yapabilme.
+* İzinli test prensiplerini uygulayarak yasal ve etik çalışma alışkanlığı kazanma.

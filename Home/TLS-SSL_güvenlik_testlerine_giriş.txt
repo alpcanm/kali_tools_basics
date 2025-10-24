@@ -1,0 +1,62 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:35:32+03:00
+
+====== TLS/SSL güvenlik testlerine giriş ======
+
+
+
+===== Konu =====
+TLS/SSL (internet trafiğini güvenceye alan bir protokoldür (iletişimin kurallar bütünü)) bağlantılarının güvenliğini anlamak ve doğrulamak için yapılan temel test ve analizlerin özetidir. Amaç: sunucu ve istemci tarafındaki hataları görmek, riskleri azaltmak ve sorunları hızlıca bulmak.
+
+
+
+===== Neden önemlidir?/Ne işe yarar? =====
+* Sunucunuzun güvenli ayarlarını hızlıca kontrol edersiniz.
+* Hatalı sertifikaları ve zayıf şifrelemeyi erken yakalarsınız.
+* İstemci–sunucu uyumsuzluklarını teşhis edersiniz.
+* Ağ kısıtları varken bile erişimi düzenlersiniz.
+* Dayanıklılık ve DoS (hizmeti aksatma saldırısı) risklerini ölçersiniz.
+* Testleri yetkili ve kontrollü biçimde yaparak üretime zarar vermeden sağlık kontrolü sağlarsınız.
+
+
+===== = =====
+===== Nasıl çalışır/uygulanır? =====
+* Sunucu yapılandırma taraması ve zafiyet kontrolü: Desteklenen TLS sürümlerini ve şifre takımlarını (cipher: bağlantıda kullanılacak şifreleme/doğrulama yöntemlerinin seti) listeler; zafiyetleri (saldırganın kötüye kullanabileceği açık) işaretler. Sertifika (sunucu kimliğini kanıtlayan dijital belge) ayrıntılarını raporlar.
+* Trafiği yakalama ve hata ayıklama: TLS el sıkışmasını (handshake: bağlantı başında tarafların nasıl şifreleşeceğine karar verdiği süreç) ve oturum (bağlantı sırasında paylaşılan durum bilgisi) ayrıntılarını kaydeder. Gerekirse özel anahtar (sadece sahibinde tutulan gizli anahtar) ile trafiğin şifresini çözerek sürüm ya da sertifika uyumsuzluğunu bulmanıza yardım eder.
+* Aktif araya girme testi: MITM (araya girip trafiği izleyip değiştirme) senaryolarını laboratuvarda canlandırır; uygulamanın sahte/yanlış sertifikalara ve doğrulama (kimliği kurallara göre kontrol etme) hatalarına tepkisini ölçer. Yalnızca yetkili ve kontrollü ortamlarda uygulanmalıdır.
+* TLS istemcisi doğrulama/sertifika denetimi: İstemcinin sunucu sertifikasını ve sertifika zincirini (sertifikayı güvenilen köke bağlayan ara belgeler dizisi) doğru değerlendirip değerlendirmediğini sınar; hatalı kabul/ret durumlarını ortaya çıkarır.
+* Protokol çoklama ve yönlendirme: Protokol çoklama (tek porttan hangi protokol geldiğini anlayıp doğru yere aktarma) ile tek bir portu (bilgisayardaki hizmet kapısı numarası) hem HTTPS hem SSH için kullanır, gelen bağlantıları doğru arka uca yollar.
+* Dayanıklılık ve DoS testi: TLS katmanında kaynak tüketimini zorlayan isteklerle sistemi stresler, zayıf noktaları görür. Bu testler sadece yetkili kapsamda yapılmalıdır.
+
+
+
+===== Sözlük =====
+* DoS: Hizmeti erişilemez kılmaya çalışan saldırı.
+* doğrulama: Kimliğin kurallara göre doğru olup olmadığını kontrol etme.
+* el sıkışma (handshake): Bağlantı başında şifreleme ayrıntılarında anlaşılan süreç.
+* MITM: Araya girip trafiği izleyen veya değiştiren saldırgan/teknik.
+* oturum: İki uç arasındaki bağlantının sürdüğü süre ve durumu.
+* özel anahtar: Sadece sahibinde bulunan gizli şifreleme anahtarı.
+* port: Bilgisayarda bir servisin dinlediği numaralı kapı.
+* protokol: İletişimin nasıl yapılacağını belirleyen kurallar bütünü.
+* protokol çoklama: Tek porttan gelen farklı protokolleri ayırt edip doğru servise yönlendirme.
+* sertifika: Bir tarafın kimliğini kanıtlayan dijital belge.
+* sertifika zinciri: Sertifikayı güvenilen köke bağlayan ara sertifikalar dizisi.
+* şifre takımı (cipher): Bağlantıda kullanılacak şifreleme ve doğrulama yöntemlerinin seti.
+* TLS/SSL: İnternet trafiğini güvenceye alan iletişim protokolü.
+
+
+
+===== Kazanımlar =====
+* Bir sunucunun desteklediği TLS sürümlerini ve şifre takımlarını tek komutla çıkarırsın.
+* Zayıf/tehlikeli ayarları ve bilinen TLS açıklarını hızlıca raporlarsın.
+* Sertifikanın süresi, isim eşleşmesi ve zincirindeki eksikleri doğrularsın.
+* “Handshake failure” gibi hataların nedenini paket düzeyinde adım adım görürsün.
+* Gerekli anahtarlar sağlandığında şifreli oturumları okuyarak istemci–sunucu uyumsuzluklarını teşhis edersin.
+* Laboratuvarda araya girme senaryoları kurar, uygulamaların sahte/yanlış sertifikalara verdiği tepkileri ölçersin.
+* Tek 443 portu üzerinden birden fazla hizmeti ayırt edip doğru arka uçlara yönlendirirsin.
+* TLS katmanında stres ve temel DoS koşullarını oluşturarak sistemin dayanıklılığını ölçersin.
+* Bu kontrolleri düzenli sağlık taraması olarak çalıştırıp sonuçları raporlamayı standartlaştırırsın.
+
+Dökümandan çıkarılamıyor: Belirli işletim sistemi/kurulum adımları, çıktı formatları ve lisans detayları.

@@ -1,0 +1,78 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T17:59:45+03:00
+
+====== DNS ve Alt Alan Keşfi ======
+Created Friday 24 October 2025
+
+
+
+== Konu ==
+Bu konu, DNS (internet adlarını IP adreslerine çeviren sistem) ve web OSINT’i (herkese açık kaynaklardan bilgi toplama) kullanarak alt alan adlarını (bir alan adının noktayla ayrılan alt parçası; örn. help.example.com) bulmayı ve doğrulamayı anlatır.
+
+== Neden önemlidir?/Ne işe yarar? ==
+* Unutulmuş veya yanlış yapılandırılmış alt alanları bulursunuz.
+* Sahte veya benzer yazımlı alanları fark edersiniz.
+* Hangi alt alanların gerçekten çalıştığını görürsünüz.
+* DNS tarafındaki hataları ve riskleri erken yakalarsınız.
+
+== Nasıl çalışır/uygulanır? ==
+* Pasif keşif (hedefe neredeyse hiç istek göndermeden dış kaynaklardan toplama): Arama motorları, Sertifika Şeffaflığı (CT) günlükleri (verilen SSL sertifikalarının herkese açık kaydı) ve web arşivleri üzerinden alt alan listeleri çıkarılır.
+* Aktif keşif (hedefe doğrudan sorgu gönderme): DNS çözümleme (alan adını IP adresine çevirme işlemi) yaparak bulunan alt alanların gerçekten var olup olmadığını doğrularsınız.
+* Brute-force (hazır bir kelime listesinden çok sayıda tahmin deneme yöntemi): “dev, test, stage” gibi yaygın adları deneyerek gizli alt alanları yakalarsınız.
+* Permütasyon (mevcut adlardan türev üretme) ve typosquatting (yazım hatası taklidi): Markanıza çok benzeyen yazımları üreterek sahte alanları tespit edersiniz.
+* Subdomain takeover (boşta kalan yönlendirme nedeniyle alt alanın ele geçirilmesi) kontrolü: CNAME (DNS’te başka bir ada işaret eden kayıt) üzerinden bir bulut kaynağı silinmişse, o alt alanın ele geçirilebilip geçirilemeyeceğini test edersiniz.
+* DNS altyapı kontrolleri: Nameserver’ları (DNS’te alan adından sorumlu yetkili sunucu) inceler, AXFR (DNS’te tüm zone’u topluca alma yöntemi) açık mı diye bakarsınız; zone’u (bir alanın DNS kayıtlarının tam listesi) yanlışlıkla dışarı verip vermediğini kontrol edersiniz.
+* İlişki haritalama: CT günlüklerinden aynı kurumla ilişkili başka alan adlarını ve alt alanları ortaya çıkarırsınız.
+* IP adresi (internet üzerindeki sayısal adres) → host incelemesi: Aynı IP üzerinde barınan diğer alan adlarını bulursunuz.
+* Web arşivi ve URL toplama: Geçmişte görülen endpoint’leri (web uygulamasındaki bir yol/URL ucu; örn. /admin) çıkarır, bugün hâlâ açık olup olmadığını denersiniz.
+* Dorking (arama motorlarında özel arama kalıplarıyla hedef arama): Kuruma ait herkese açık PDF, XLS gibi dosyaları aratır, içlerinden faydalı ipuçları toplarsınız.
+* Whois (alan adının resmi kayıt bilgisi sorgusu): Sahiplik, kayıt tarihi ve kullanılan nameserver’lar gibi bilgileri görürsünüz.
+* TLD (.com gibi üst seviye alan) ve SLD (.com.tr’deki com.tr gibi ikinci seviye alan) bilgileri: Hangi adlandırma düzeninin geçerli olduğunu anlayıp test kapsamınızı genişletirsiniz.
+
+== Kimlere yarar? ==
+* İzinli sızma testi yapanlar, mavi ekipler ve güvenlik analistleri.
+* Alan adı ve DNS yöneten sistem yöneticileri.
+* Marka koruma ve itibar yönetimi ekipleri.
+
+
+
+== Sözlük ==
+* AXFR: DNS’te tüm zone’u tek seferde indirme yöntemi.
+* Aktif keşif: Hedefe doğrudan sorgu/istek göndererek bilgi toplama.
+* Alt alan adı: Bir alan adının noktalarla ayrılan alt parçası (ör. help.example.com).
+* Brute-force: Hazır kelime listesinden çok sayıda tahmin deneme yöntemi.
+* CNAME: DNS’te bir alan adını başka bir ada yönlendiren kayıt türü.
+* DNS: İnternet adlarını IP adreslerine çeviren sistem.
+* DNS çözümleme: Bir alan adını IP adresine çevirme işlemi.
+* Dorking: Arama motorlarında özel kalıplarla hedefli arama yapma.
+* Endpoint: Web uygulamasındaki belirli yol veya URL ucu (ör. /login).
+* IP adresi: İnternette bir cihazın sayısal adresi.
+* Nameserver (isim sunucusu): Bir alan adından yetkili olarak sorumlu DNS sunucusu.
+* OSINT: Herkese açık kaynaklardan bilgi toplama yaklaşımı.
+* Pasif keşif: Hedefe istek göndermeden dış kaynaklardan bilgi toplama.
+* Permütasyon: Mevcut adlardan benzer türevler üretme.
+* Sertifika Şeffaflığı (CT) günlüğü: Verilmiş SSL sertifikalarının herkese açık kaydı.
+* SLD: İkinci seviye alan; TLD’nin bir altındaki ad katmanı.
+* Subdomain takeover: Boşta kalan yönlendirme nedeniyle alt alanın ele geçirilmesi.
+* TLD: Üst seviye alan; .com, .org gibi en üst katman ad.
+* Typosquatting: Yazım hatasına benzeyen alan adlarıyla taklit yapma.
+* Whois: Alan adının resmi kayıt bilgilerini veren sorgu.
+* Zone: Bir alanın tüm DNS kayıtlarının bulunduğu liste.
+
+== Kazanımlar ==
+* Pasif kaynaklardan alt alan listesi çıkarabilirim.
+* Bulduğum alt alanları DNS çözümleme ile hızlıca doğrulayabilirim.
+* Brute-force yöntemiyle kelime listelerinden yeni alt alanlar keşfedebilirim.
+* Permütasyon ve typosquatting varyasyonları üreterek sahte/benzer alanları tespit edebilirim.
+* CNAME kayıtlarını inceleyerek subdomain takeover risklerini belirleyebilirim.
+* Nameserver yapılarını kontrol edip AXFR gibi yanlış yapılandırmaları saptayabilirim.
+* CT günlüklerinden kurumla ilişkili diğer alan ve alt alanları çıkarabilirim.
+* Aynı IP adresinde barınan diğer alan adlarını bulup yeni hedefler keşfedebilirim.
+* Web arşivlerinden geçmiş endpoint’leri toplayıp güncel durumda test edebilirim.
+* Dorking ile herkese açık doküman ve yapılandırma izlerini arayıp bilgi toplayabilirim.
+* Whois sonuçlarını okuyup sahiplik ve tarih bilgileriyle alanların meşruluğunu değerlendirebilirim.
+* TLD/SLD yapısını anlayıp test kapsamını ülke ve alan düzenlerine göre genişletebilirim.
+* Tüm bu adımları etik ve yasal çerçevede, yalnızca izinli hedeflerde uygulayabilirim.
+
+

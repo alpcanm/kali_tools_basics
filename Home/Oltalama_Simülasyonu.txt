@@ -1,0 +1,53 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:42:18+03:00
+
+====== İzinli Oltalama Simülasyonu ======
+
+
+
+===== Konu =====
+Sosyal mühendislik (insanları kandırarak bilgi almaya çalışma) ve oltalama (sahte e-posta/mesajla bilgi çalma) simülasyonları (gerçeği güvenli şekilde canlandırma), parola (hesap şifresi), oturum bilgisi (giriş yaptığını gösteren geçici veri) veya gizli verileri (sadece yetkili kişilerin görmesi gereken bilgi) ele geçirme girişimlerini zarar vermeden ve yetkili test (kurum onayıyla yapılan deneme) olarak canlandırır. Amaç; çalışan güvenlik farkındalığını (kullanıcıların riskleri tanıma düzeyi) ölçmek, e-posta güvenliğini (e-postaları tehditlerden koruma) ve kimlik doğrulama (kullanıcının kim olduğunu kanıtlama) önlemlerini iyileştirmek, riskleri (zarar görme olasılıkları) anlamaktır. Bu çalışmalar sadece izinli ve kontrollü ortamlarda yapılmalıdır.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+* Çalışanların sahte mesajları fark etme becerisini ölçer ve geliştirir.
+* E-posta güvenliği ve kimlik doğrulama önlemlerindeki açıkları görünür kılar.
+* Kurumun oltalama kaynaklı risklerini sayısal olarak ortaya koyar.
+* Gerçek hasar vermeden, güvenli biçimde öğrenme sağlar.
+
+===== Nasıl çalışır/uygulanır? =====
+* Planla ve izin al: Amaç, kapsam ve takvimi netleştir; kurumsal onayı yazılı al.
+* Senaryoyu hazırla: Örneğin “parola yenileme” konulu, zararsız ama ikna edici bir e-posta hazırla.
+* Gönder ve izle: Küçük bir gruba gönder; kim tıkladı ve kim şüpheli olarak bildirdi takip et.
+* Sonuçları paylaş: Sonuçları anonim (kimlik belirtilmeden) olarak paylaş; kimseyi ifşa etme.
+* Eğit ve iyileştir: Ek eğitim ver; e-posta filtrelerini gözden geçir; kimlik avına dayanıklı MFA (oltalamaya karşı dirençli çok faktörlü doğrulama) seçeneklerini değerlendir; alan adı (site adı) ve bağlantı koruması (zararlı linkleri engelleme önlemleri) ayarlarını güçlendir.
+* Gelişmiş testler: Gerekirse araya girme tekniği (iki taraf arasına gizlice girip veriyi kopyalama yöntemi) içeren simülasyonlarla savunmanın dayanıklılığını ölç.
+* Kime yarar? Çalışanlar ve teknik ekip. Diğer paydaşlar için Dökümandan çıkarılamıyor.
+
+===== Sözlük =====
+* alan adı: Bir web sitesinin adı.
+* anonim: Kimlik belirtilmeden yapılan işlem.
+* araya girme tekniği: İki taraf arasına gizlice girip verileri kopyalama yöntemi.
+* bağlantı koruması: Zararlı internet bağlantılarını engelleme önlemleri.
+* e-posta güvenliği: E-postaları tehditlerden koruma uygulamaları.
+* gizli veri: Sadece yetkili kişilerin erişmesi gereken bilgi.
+* güvenlik farkındalığı: Kullanıcıların riskleri tanıma ve kaçınma düzeyi.
+* kimlik avına dayanıklı MFA: Oltalamaya karşı dirençli çok faktörlü doğrulama yöntemi.
+* kimlik doğrulama: Kullanıcının gerçekten o kişi olduğunu kanıtlama işlemi.
+* oltalama: Sahte e-posta/mesajla bilgi çalma yöntemi.
+* oturum bilgisi: Bir kullanıcının giriş yaptığını gösteren geçici veri.
+* parola: Hesaba giriş yapmak için kullanılan şifre.
+* risk: Zarar görme olasılığı.
+* simülasyon: Gerçek durumu güvenli biçimde canlandırma.
+* sosyal mühendislik: İnsanları kandırarak bilgi almaya çalışma.
+* yetkili test: Kurum onayıyla yapılan güvenlik denemesi.
+
+===== Kazanımlar =====
+* İzinli bir oltalama çalışması tasarlayıp, hedef kitleye göndererek tıklama ve bildirim oranlarını ölçebilme.
+* Sonuçları anonim şekilde toplayıp paylaşarak ek eğitim ihtiyacını belirleyebilme.
+* E-posta güvenlik önlemlerinin hangi aşamada yetersiz kaldığını görüp iyileştirme planı çıkarabilme.
+* Oltalamaya dayanıklı çok faktörlü kimlik doğrulama seçeneklerini deneyip devreye alabilme.
+* Alan adı ve bağlantı korumalarını test edip güçlendirebilme.
+* Gelişmiş kimlik avı denemelerine karşı (iletişimin arasına girme gibi) savunmanın dayanıklılığını ölçebilme.
+* Office/Word şablonları üzerinden basit farkındalık senaryoları hazırlayıp eğitim verebilme.
+* Laboratuvar ortamında farklı sosyal mühendislik senaryolarını güvenle canlandırıp pratik yapabilme.

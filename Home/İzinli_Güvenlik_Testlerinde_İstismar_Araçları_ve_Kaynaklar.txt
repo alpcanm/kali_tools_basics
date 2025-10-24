@@ -1,0 +1,73 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:41:07+03:00
+
+====== İzinli Güvenlik Testlerinde İstismar Araçları ve Kaynaklar ======
+
+
+
+===== Konu =====
+Bu içerik, izinli sızma testlerinde (sızma testi: sistem sahibi izin verince yapılan saldırı benzetimi) kullanılan istismar çerçevelerini (istismar çerçevesi: açıkları test etmeyi kolaylaştıran yönetim platformu) ve ilgili kaynakları anlatır. Amaç, bir güvenlik açığı (güvenlik açığı: sistemdeki zayıflık) gerçekten istismar (istismar: bir açığı kullanarak sisteme etki eden kod/teknik) edilebilir mi diye, sadece lab ortamında (lab ortamı: kapalı ve güvenli test alanı) kontrol etmektir.
+
+İstismar çerçeveleri, hazır modüllerle (modül: tek bir işi yapan hazır parça) gelir. Bu modüller, belirli açıkları dener ve gerekirse hedefe küçük bir payload (payload: hedefte çalışacak kod/komut) gönderir. Böylece tekrarlayan işler otomatikleşir, sonuçlar düzenli toplanır ve raporlanır.
+
+Exploit referansları, toplulukça paylaşılan PoC’ları (PoC: çalıştığını gösteren kısa kanıt kodu) bir araya getirir. Burada belirli bir CVE (CVE: dünya çapında standart açık kimliği) için PoC var mı hızlıca görülebilir. Bu da risk değerlendirmesini hızlandırır.
+
+Bazı PoC’ların derlenmiş ikili (derlenmiş ikili: çalıştırılabilir hazır dosya) halleri, lab ve sandbox (sandbox: izole edilen güvenli çalıştırma kutusu) ortamlarında davranış analizi yapmak ve EDR’yi (EDR: uç noktadaki saldırıları tespit ve yanıtlayan güvenlik sistemi) test etmek için kullanılır.
+
+Güvenlik makaleleri ve whitepaper’lar (whitepaper: ayrıntılı teknik rapor), zafiyet türlerini ve savunma yollarını sade biçimde açıklar. Örneğin bir yığın taşması (yığın taşması: belleğe sığmayacak kadar veri yazma hatası) yazısını okuyup, benzer hataları kodda nasıl önleyeceğinizi öğrenebilirsiniz.
+
+Son olarak, payload oluşturma araçları eğitim ve lab senaryolarında zaman kazandırır; şablonlar sayesinde hızlı ve tutarlı üretim yapmanızı sağlar. Tüm bu işler sadece izinli ve kontrollü ortamlarda yapılmalıdır.
+
+
+
+===== Neden önemlidir?/Ne işe yarar? =====
+- Açığı gerçekten sömürülebilir mi hızlıca doğrular.
+- Yamaların önceliğini kanıta dayalı belirlemenizi sağlar.
+- Tehdit avı ve EDR kurallarını güvenli biçimde test etmeye imkan verir.
+- Geliştiricilere somut örneklerle güvenli kodlama geri bildirimi sağlar.
+- Eğitimlerde standardize ve güvenli lab içerikleri üretmenize yardım eder.
+
+
+
+===== Nasıl çalışır/uygulanır? =====
+- Yetki ve kapsam al: Test edilecek sistem ve süreyi yazılı onayla belirle.
+- Güvenli alan kur: Lab/sandbox’u izole et, geri dönüş için anlık kopya al.
+- Araştır: İlgili CVE’yi bul, PoC var mı kontrol et.
+- Doğrula: Uyan modülü lab ortamında çalıştır; çıktıyı ve kanıtı kaydet.
+- Değerlendir: Sonuca göre riski ve yamayı önceliklendir.
+- Tespitleri güçlendir: Derlenmiş PoC’ları sandbox’ta çalıştırıp EDR uyarılarını gözle.
+- Öğren ve önle: Makalelerden edindiğin teknikleri kod incelemesi ve yapılandırmada uygula.
+- Eğitim hazırla: Eğitim/lab için gerekli payload’ları üret; sadece izinli test makinelerinde kullan.
+
+Not: Hangi işletim sistemlerinin veya sürümlerin desteklendiği gibi ayrıntılar dökümandan çıkarılamıyor.
+
+
+
+===== Sözlük =====
+- CVE: Dünya çapında her açıklığa verilen standart kimlik.
+- Derlenmiş ikili: Çalıştırılabilir hale getirilmiş hazır dosya.
+- EDR: Uç noktadaki saldırıları tespit eden ve yanıtlayan güvenlik sistemi.
+- Güvenlik açığı: Sistemde saldırganın kötüye kullanabileceği zayıflık.
+- İstismar: Bir açığı kullanarak sisteme etki eden kod veya teknik.
+- İstismar çerçevesi: Açıkları test etmeyi kolaylaştıran yönetim platformu.
+- Lab ortamı: Kapalı ve güvenli test alanı.
+- Modül: Tek bir işi yapan hazır parça.
+- Payload: Hedefte çalışacak kod veya komut.
+- PoC: Çalıştığını gösteren kısa kanıt kodu.
+- Sandbox: İzole edilen güvenli çalıştırma kutusu.
+- Sızma testi: Sistem sahibi izin verince yapılan saldırı benzetimi.
+- Whitepaper: Ayrıntılı teknik rapor.
+- Yığın taşması: Belleğe sığmayacak kadar veri yazma hatası.
+
+
+
+===== Kazanımlar =====
+- Hazır modüllerle izinli ortamlarda bir açığı dakikalar içinde doğrulayabilirim.
+- Belirli bir CVE için PoC var mı hızla arayıp risk önceliği belirleyebilirim.
+- Derlenmiş PoC’ları izole lab’da çalıştırıp EDR’nin alarm üretimini test edebilirim.
+- Test çıktılarından düzenli rapor ve kanıt üreterek yama planlamasını hızlandırabilirim.
+- Güvenlik makalelerinden öğrendiklerimle kod incelemesinde zafiyetleri daha erken yakalayabilirim.
+- Eğitim ve demo için ihtiyaca uygun payload’ları hızlı ve tutarlı şekilde üretebilirim.
+- Ağ cihazlarına özel açıkları, odaklı testlerle güvenli şekilde değerlendirebilirim.
+- Tekrarlayan test adımlarını otomatikleştirip zaman kazanabilirim.

@@ -1,0 +1,67 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T18:20:13+03:00
+
+====== Parola/Hash kırma ve wordlist üretimi ======
+
+
+
+== Konu ==
+Bu konu, elinizdeki parola özetlerini yani hash’leri (verinin sabit uzunluklu özet temsili) analiz edip, uygun yöntemi seçerek parolayı tahmin etme ve kurtarma işini anlatır. İlk adım, hash türünü (hangi özet yöntemi) anlamaktır. Ardından, çevrimdışı kırma (hedefe bağlanmadan, kendi bilgisayarında deneme) ya da çevrimiçi deneme (hedef servise istek göndererek deneme) yöntemlerinden biri uygulanır. Gerekirse belgeler, arşivler, şifreli disk/konteyner ve kripto cüzdan (dijital para anahtarlarını tutan şifreli dosya) parolaları için özel süreçler kullanılır. Son olarak, denemelerde kullanılacak wordlist (denenecek olası parolalar listesi) üretilir, temizlenir ve iyileştirilir. Bu içerik yalnızca izinli testler (yazılı onayla ve yasal çerçevede yapılan güvenlik çalışması) içindir.
+
+== Neden önemlidir?/Ne işe yarar? ==
+* Unutulan parolaları kurtarmaya yardım eder.
+* Güvenlik denetimlerinde zayıf parola riskini görünür kılar.
+* Adli incelemelerde veriye erişimi mümkün kılabilir (yasal izinle).
+* Çevrimdışı kırma hedef sisteme yük bindirmez, daha güvenlidir.
+* Kurumların parola politikalarını iyileştirmesine veri sağlar.
+
+== Nasıl çalışır/uygulanır? ==
+* Hash türünü belirle: Özetin biçimine bakarak olası türleri daralt. Gerekirse bütünlük (verinin değiştirilmemiş olma durumu) için yeni hash üretip karşılaştır.
+* Çevrimdışı kırmayı kur: GPU (ekran kartı işlemcisi) varsa hız kazanırsın. Sözlük saldırısı (hazır parola listesiyle deneme), brute-force (tüm olasılıkları tek tek deneme) ve hibrit saldırı (listeye ekler/kurallarla varyasyon deneme) yöntemlerini uygun sırayla uygula. Rainbow table (önceden hesaplanmış hash-parola tablosu) gerekiyorsa değerlendir.
+* Belgeler ve arşivler: PDF, ZIP, RAR, 7z dosyalarında parola kurtarma için o formatlara uygun kırma süreci çalıştır.
+* Disk/konteyner ve cüzdan: Tam disk şifreleme (diski tamamen şifreleyen sistem) ve konteyner (şifreli veri içeren dosya) için uygun denemeleri başlat; kripto cüzdanlar için de aynı şekilde izinli kurtarma akışını uygula.
+* Sistem/Donanım parolaları: Gerekirse BIOS (bilgisayarı başlatan temel yazılım), UEFI (BIOS’un yeni nesil karşılığı) ve CMOS (anakarttaki ayar belleği) parolalarını yerel araçlarla kurtarmayı dene.
+* Ağ ve servis üzerinden: Protokol (cihazların konuşma kuralları) düzeyinde çalışan servislerde kimlik doğrulama (kullanıcının gerçekten o kişi olduğunu kanıtlama) denemelerini çok sınırlı ve kurallara uygun yap. Gerekli yerlerde passing-the-hash (parola yerine hash kullanarak oturum açma tekniği) uygula. Hız sınırlarına ve hesap kilitlenmesine dikkat et.
+* Wordlist üretimi: Hedeften toplanan kelimelerle ve genel kalıplarla gerçekçi listeler oluştur. Rakam/özel karakter ekleme gibi varyasyonlar üret. Listeleri birleştir, tekrarları sil, kısa/uzun ayrımı yap ve en olası adayları üste taşı.
+
+== Kimlere yarar? ==
+* Güvenlik testi yapan ekipler.
+* Sistem ve ağ yöneticileri.
+* Adli inceleme ekipleri (hukuki izinle).
+* Yardım masası/IT operasyon ekipleri (unutulan parolalar için).
+* Güvenlik politikası yazan/iyileştiren yöneticiler.
+
+
+
+== Sözlük ==
+* BIOS: Bilgisayarı başlatan temel yazılım.
+* brute-force: Tüm olası parolaları tek tek deneme yöntemi.
+* bütünlük: Verinin değiştirilmemiş olma durumu.
+* çevrimiçi deneme: Hedef servise istek göndererek parola denemesi yapma.
+* çevrimdışı kırma: Hedefe bağlanmadan, kendi bilgisayarında parola denemesi yapma.
+* CMOS: Anakarttaki ayarları tutan küçük bellek.
+* GPU: Ekran kartı üzerindeki işlemci.
+* hash: Verinin sabit uzunluklu özet temsili.
+* hash türü: Kullanılan özet yönteminin sınıfı/biçimi.
+* hibrit saldırı: Sözlük denemelerine ekler/kurallarla varyasyon katma yöntemi.
+* kimlik doğrulama: Kullanıcının gerçekten o kişi olduğunu kanıtlama süreci.
+* konteyner: Şifreli veri içeren dosya/kapsayıcı.
+* kripto cüzdan: Dijital para anahtarlarını tutan şifreli dosya.
+* passing-the-hash: Parola yerine hash ile oturum açma tekniği.
+* protokol: Cihazların haberleşme kuralları.
+* rainbow table: Önceden hesaplanmış hash-parola eşleşmeleri tablosu.
+* tam disk şifreleme: Diski tamamen şifreleyen sistem.
+* wordlist: Denenecek olası parolalar listesi.
+
+
+
+== Kazanımlar ==
+* Elindeki bir özetin hangi hash türü olduğunu hızla ayırt eder ve doğru kırma yolunu seçersin.
+* Dosya veya metin için hash üretip, bütünlük kontrolü ve karşılaştırma yaparsın.
+* GPU/CPU ile çevrimdışı kırma kurar; sözlük, brute-force ve hibrit denemeleri doğru sırayla uygularsın.
+* Rainbow table kullanımının ne zaman işe yarayacağını ve disk/memory ihtiyacını değerlendirirsin.
+* PDF/ZIP/RAR/7z gibi dosyalar için uygun parola kurtarma akışını kurar ve sonuçları yorumlarsın.
+* Şifreli disk/konteyner ve kripto cüzdan parolaları için izinli kurtarma denemesi planlar ve uygularsın.
+* BIOS/UEFI/CMOS parolalarının yerel kurtarma adımlarını güvenle yürütürsün.
+* Ağ[[Parola-Hash kırma ve wordlist üretimi]]

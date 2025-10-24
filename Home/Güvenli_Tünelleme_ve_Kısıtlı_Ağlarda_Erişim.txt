@@ -1,0 +1,56 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:40:17+03:00
+
+====== Güvenli Tünelleme ve Kısıtlı Ağlarda Erişim ======
+
+
+
+===== Konu =====
+Bu metin, tünelleme (veriyi başka bir iletişim kanalı içine sarıp geçirerek taşıma yöntemi), proxy (aracı sunucu; trafiği kendi üzerinden iletir), NAT (birden çok cihazın tek IP ile internete çıkmasını sağlayan adres çevirme), port yönlendirme (modemin dış bağlantıları içteki belirli cihaza iletmesi) ve VPN (uzaktaki ağa güvenli, şifreli tünel kuran sistem) gibi yöntemlerle, kısıtlı veya güvensiz ağlarda nasıl güvenli ve esnek erişim sağlanacağını anlatır. Uygulama bazlı VPN (sadece seçilen uygulamanın trafiğini VPN’den geçiren yöntem) gibi daha ince ayar seçeneklerden, sadece HTTP (web için iletişim kuralı) ve HTTPS (şifreli HTTP) açık olan ağlarda tünel açmaya kadar farklı çözümleri özetler. Bazı durumlarda DNS (alan adını IP adresine çeviren sistem) veya ICMP (ağ kontrol ve ping mesajları için kullanılan kural) gibi protokoller (cihazların nasıl konuşacağını belirleyen bir iletişim kuralı) üzerinden düşük hızlı tüneller kurulur. Şifreleme (veriyi sadece yetkili kişilerin okuyacağı hale çevirme) ile şifresiz servisler TLS (internet trafiğini şifreleyen güvenlik katmanı) altına alınabilir. Ayrıca IPv4 (eski nesil internet adresleme sürümü) olan bir ağda bile IPv6 (yeni nesil, daha geniş adres alanlı internet adresleme sürümü) erişimi sağlamak için Teredo (IPv6’yı IPv4 üzerinden taşıyan yöntem) gibi tünelleme seçenekleri kullanılabilir.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+* Güvensiz Wi‑Fi gibi ortamlarda veriyi şifreleyip güvenle çalışmanızı sağlar.
+* Şirket ağı, evdeki cihaz gibi uzaktaki sistemlere güvenli erişim sunar.
+* Sadece web çıkışına izin veren kısıtlı ağlarda bile diğer servislere ulaşmanızı mümkün kılar.
+* Modemde ayar yapmadan, NAT arkasındaki cihazlara uzaktan bağlanmayı kolaylaştırır.
+* Şifresiz çalışan servisleri TLS ile koruyarak veri sızıntısını önler.
+* IPv4‑only ağlarda IPv6 gerektiren servisleri test etmeyi ve kullanmayı sağlar.
+
+===== Nasıl çalışır/uygulanır? =====
+* VPN ve uygulama bazlı VPN: Bir istemci, bir sunucuya bağlanır; trafik şifreli bir tünelden akar. İsterseniz tüm trafiği, isterseniz sadece seçtiğiniz uygulamayı bu tünele dahil edersiniz.
+* Proxy ve HTTP/HTTPS üzerinden tünelleme: Uygulamayı bir proxy’e yönlendirirsiniz. Sadece HTTP/HTTPS serbest olan ağlarda, HTTPS içinden tünel kurarak başka servis veya sunuculara ulaşabilirsiniz. Gerekirse birden fazla proxy’yi ardışık kullanabilirsiniz.
+* DNS/ICMP üzerinden tünelleme: Ağda sadece DNS veya ICMP serbestse, bu protokoller üzerinden düşük hızlı bir veri kanalı kurulur. Küçük telemetri veya acil yönetim işleri için uygundur.
+* NAT aşma (port yönlendirme olmadan): İki uç, dışarıya doğru bağlantı kurar; arada bir köprü oluşur. Böylece modem/yönlendirici ayarı yapmadan NAT arkasındaki cihaza erişirsiniz.
+* Genel port yönlendirme ve soket köprüleme: Yerel bir portu uzak bir porta bağlarsınız. Örneğin sadece 127.0.0.1’de dinleyen bir servisi, başka bir makinede herkesin erişebileceği bir adrese aktarabilirsiniz.
+* TLS ile koruma: Şifresiz bir servisin trafiğini TLS katmanı ile sarmalayıp dış dünyaya güvenli biçimde sunarsınız.
+* IPv6 tünelleme: IPv4‑only bir ağda, Teredo gibi yöntemlerle IPv6 trafiğini taşıyarak IPv6 isteyen servislerle konuşursunuz.
+
+===== Sözlük =====
+* DNS: Alan adını IP adresine çeviren sistem.
+* HTTP: Web için iletişim kuralı.
+* HTTPS: Şifreli HTTP.
+* ICMP: Ağ kontrol ve ping mesajları için kullanılan kural.
+* IPv4: Eski nesil internet adresleme sürümü.
+* IPv6: Yeni nesil, daha geniş adres alanlı internet adresleme sürümü.
+* NAT: Birden çok cihazın tek IP ile internete çıkmasını sağlayan adres çevirme.
+* Port yönlendirme: Modemin dış bağlantıları içteki belirli cihaza iletmesi.
+* Protokol: Cihazların nasıl konuşacağını belirleyen iletişim kuralı.
+* Proxy: Aracı sunucu; trafiği kendi üzerinden iletir.
+* Şifreleme: Veriyi sadece yetkili kişilerin okuyacağı hale çevirme.
+* TCP: Bağlantı odaklı taşıma kuralı.
+* Teredo: IPv6’yı IPv4 üzerinden taşıyan yöntem.
+* TLS: İnternet trafiğini şifreleyen güvenlik katmanı.
+* Tünelleme: Veriyi başka bir iletişim kanalı içine sarıp geçirerek taşıma yöntemi.
+* UDP: Bağlantısız, hızlı taşıma kuralı.
+* Uygulama bazlı VPN: Sadece seçilen uygulamanın trafiğini VPN’den geçiren yöntem.
+* VPN: Uzaktaki ağa güvenli, şifreli tünel kuran sistem.
+
+===== Kazanımlar =====
+* Otel, kafe gibi güvensiz ağlarda tüm trafiğinizi veya seçtiğiniz uygulamaları şifreli tünelden geçirip güvenle çalıştırabilirsiniz.
+* Kurumsal proxy arkasında çalışan uygulamaları internete çıkarabilir; sadece HTTP/HTTPS açık ağlarda bile diğer servislere tünel kurabilirsiniz.
+* Sadece DNS veya ICMP serbest olan sahalarda, küçük veri akışını bu kanallardan iletip telemetri ve temel yönetim yapabilirsiniz.
+* Modemde ayar yapmadan, NAT arkasındaki cihazlara uzaktan bağlanıp yönetim ve bakım işlemlerini gerçekleştirebilirsiniz.
+* Yerel ve uzak servisler arasında port köprüleri kurarak içteki servisleri dışa açabilir veya erişimi güvenli bir noktaya toplayabilirsiniz.
+* Şifresiz servisleri TLS ile koruyup, dış ağdan güvenli ve gizli bağlantılar sunabilirsiniz.
+* IPv4‑only ağlarda IPv6 gerektiren servisleri çalıştırabilir, test ve uyumluluk denemeleri yapabilirsiniz.

@@ -1,0 +1,73 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:36:14+03:00
+
+====== Ağ Trafiğini Yakalama ve MITM Temelleri ======
+
+
+
+===== Konu =====
+Ağ trafiği (cihazlar arasında gidip gelen veri) paketlerden (bu verinin küçük parçaları) oluşur. Paket yakalama/sniffing (paketleri anlık yakalayıp kaydetme) ile bu paketleri görürüz. Trafik analizi (kaydedilmiş trafiği inceleyip anlam çıkarma) ile ne olduğunu anlarız. MITM (iletişimin iki ucu arasına girme) ve spoofing (kimliğini sahte gösterme) ile iletişimi izleyebilir, yönlendirebilir veya değiştirebiliriz. Bu işler, sorun giderme, güvenlik incelemesi ve eğitim için kullanılır. Yalnızca yetkili ve kontrollü ortamlarda kullanılmalıdır.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+- Ağ yavaşlığının kaynağını hızlıca bulmayı sağlar.
+- Olay müdahalesi ve adli analiz (olay sonrası teknik inceleme) için kanıt üretir.
+- Güvenlik açıklarını yetkili sızma testi (yetkili saldırı simülasyonu) ile gösterir.
+- Yanlış yapılandırılmış güncelleme süreçlerindeki riski ortaya koyar.
+- Eğitim ve farkındalık çalışmalarında somut örnek üretir.
+
+===== Nasıl çalışır/uygulanır? =====
+- Paket yakalama ve canlı izleme: Canlı trafiği yakalar ve filtrelersin. Hangi IP (cihazlara verilen ağ adresi) ve portun (aynı cihazda uygulama kapısı) en çok konuştuğunu görürsün.
+- Trafik analizi ve yeniden birleştirme: pcap (paket kayıt dosyası formatı) dosyalarını açarsın. Oturumları (iki uç arasındaki süreklilik) ve akışları (aynı iletişimin ardışık paketleri) çıkarırsın. TCP’yi (yaygın bağlantı kuran iletişim kuralı) ayırır, hangi sitelere gidildiğini ve trafiğin içindeki dosyaları bulursun.
+- MITM ve spoofing: Aynı ağda istemci (ağdan hizmet alan cihaz) ile ağ geçidi (ağı diğer ağa, genelde internete bağlayan cihaz) arasına girersin. ARP (ağda IP ile donanım adresini eşleyen sistem) veya DNS’i (alan adını IP’ye çeviren sistem) manipüle ederek trafiği üzerinden geçirirsin.
+- Trafik manipülasyonu, enjeksiyon ve yeniden oynatma: Enjeksiyon (veriye sonradan parça ekleme/değiştirme) yapar veya yeniden oynatma (kayıtlı trafiği tekrar gönderme) uygularsın. IDS/IPS’yi (saldırı tespit/önleme sistemi) test eder, uygulamanın beklenen davranışı verip vermediğini doğrularsın.
+- Oturum ve kimlik bilgisi odaklı yakalama: Şifrelenmemiş HTTP (web’in şifresiz iletişim kuralı) trafiğinde çerezleri (oturumu tanıtan küçük veri) ve kimlik bilgilerini (kullanıcı adı/parola gibi bilgiler) tespit eder, riski raporlarsın. HTTPS’te (şifreli HTTP) yalnızca yetkili bir proxy (istemci ile sunucu arasına giren ara sunucu) ile ve izinli şekilde inceleme yapılır.
+- İzleme ve görselleştirme: Trafiği özetler, metrik çıkarır, görselleştirme (veriyi grafikle anlatma) ile hangi hedef ve portların öne çıktığını hızlıca gösterirsin.
+- Tedarik zinciri/güncelleme güvenliği testleri: Sahte güncelleme sunucusu kurar, doğrulama (gerçekliğini kontrol etme) olmayan istemcilerin nasıl kandırılabileceğini kontrollü bir ortamda gösterirsin.
+- Yasal ve etik: Bu yöntemler güçlü ve çift kullanımlıdır. Yalnızca kendi ağında, laboratuvarda veya yazılı izinli resmi çalışmalarda uygula. Aksi kullanım yasal değildir.
+
+
+
+===== Sözlük =====
+- adli analiz: Olay sonrası teknik inceleme.
+- ağ geçidi: Ağı diğer bir ağa, genelde internete bağlayan cihaz.
+- ağ trafiği: Cihazlar arasında gidip gelen veri.
+- akış: Aynı iletişimin ardışık paketleri.
+- ARP: IP ile donanım (MAC) adresini eşleyen sistem.
+- çerez: Oturumu tanıtan küçük veri.
+- DNS: Alan adını IP adresine çeviren sistem.
+- doğrulama: Bir şeyin gerçekliğini ve bütünlüğünü kontrol etme.
+- enjeksiyon: Veriye sonradan parça ekleme veya değiştirme.
+- HTTP: Web’in şifresiz iletişim kuralı.
+- HTTPS: HTTP’nin şifreli hali.
+- IDS/IPS: Saldırı tespit/önleme sistemi.
+- IP: Cihazlara verilen ağ adresi.
+- istemci: Ağdan hizmet alan cihaz.
+- kimlik bilgisi: Kullanıcı adı, parola gibi bilgiler.
+- MITM: İletişimin iki ucu arasına girme.
+- oturum: İki uç arasındaki süreklilik.
+- paket: Verinin küçük parçası.
+- paket yakalama/sniffing: Paketleri anlık yakalayıp kaydetme.
+- pcap: Paket kayıt dosyası formatı.
+- port: Aynı cihazda uygulama kapısı.
+- protokol: Cihazların iletişim kurallarının bütünü.
+- proxy: İstemci ile sunucu arasına giren ara sunucu.
+- sızma testi: Yetkili saldırı simülasyonu.
+- spoofing: Kimliğini sahte gösterme.
+- tedarik zinciri: Ürünün tedarikten kullanıcıya uzanan süreci.
+- trafik analizi: Kaydedilmiş trafiği inceleyip anlam çıkarma.
+- TCP: Yaygın bağlantı kuran iletişim kuralı.
+- görselleştirme: Veriyi grafikle anlatma.
+- yeniden oynatma: Kayıtlı trafiği tekrar gönderme.
+
+
+
+===== Kazanımlar =====
+- Canlı ağ trafiğini yakalayıp filtreleyerek en çok konuşan IP ve portları hızlıca tespit edebilirsin.
+- pcap dosyalarını açıp TCP akışlarını oturumlara ayırabilir, hangi sitelere gidildiğini ve geçen dosyaları çıkarabilirsin.
+- Aynı ağda kontrollü bir MITM kurup ARP/DNS üzerinden trafiği üzerine alarak HTTP zafiyetlerini gözlemleyebilirsin.
+- Trafiğe müdahale ederek belirli isteklere yanıt enjekte edebilir veya kayıtlı saldırı trafiğini yeniden oynatıp IDS/IPS kurallarını doğrulayabilirsin.
+- Şifrelenmemiş trafiği inceleyerek çerez ve kimlik bilgisi sızıntılarını tespit edip somut risk raporu üretebilirsin.
+- Trafiği özetleyip grafiklerle hangi hedeflerin ve portların öne çıktığını gösteren kısa durum raporları hazırlayabilirsin.
+- Sahte güncelleme senaryosu kurarak doğrulama eksikliği olan istemcilerin nasıl kandırılabileceğini güvenli bir laboratuvar ortamında gösterebilirsin.
+- Tüm bu çalışmaları yalnızca yazılı izinli ve kontrollü ortamlarda yürüterek hukuki ve etik gerekliliklere uyum sağlayabilirsin.

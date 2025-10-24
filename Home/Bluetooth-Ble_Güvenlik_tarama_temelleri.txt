@@ -1,0 +1,70 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:33:28+03:00
+
+====== Bluetooth/BLE Güvenlik Tarama Temelleri ======
+
+
+
+== Konu ==
+Bluetooth (kısa menzilli kablosuz bağlantı standardı) ve BLE (Bluetooth Low Energy, az enerji harcayan sürüm) için sahada keşif ve güvenlik testleri yapılır. Amaç, çevredeki cihazları bulmak, temel bilgilerini toplamak, trafiği (ağdaki veri akışı) izlemek ve zayıflıkları izinli şekilde doğrulamaktır. Bu çalışmalar; cihaz keşfi, görünmez (non-discoverable, kendini listelemeyen) cihazları arama, paket toplama, yakınlık takibi, kimlik sahteciliği (spoofing, başka cihaz gibi görünme) denemeleri ve yetkili sızma testleri (izinli zafiyet doğrulama çalışması) gibi adımları içerir.
+
+== Neden önemlidir?/Ne işe yarar? ==
+* Ortamdaki Bluetooth/BLE cihazlarını ve risklerini görür, varlık haritası çıkarırsınız.
+* Görünmez moda alınmış cihazların varlığını da anlamaya çalışırsınız.
+* Radyo trafiğini izleyip parazit, yoğunluk ve yanlış yapılandırmaları fark edersiniz.
+* Yakınlık takibi ile fiziksel güvenlik politikalarının ihlallerini tespit edersiniz.
+* Kimliğe dayalı erişim kontrolü (bir kaynağa kimin erişeceğine karar verme) mekanizmalarının ne kadar sağlam olduğunu test edersiniz.
+* Eski veya yanlış açık servisleri bulup kapatarak veri sızıntısını önlersiniz.
+
+== Nasıl çalışır/uygulanır? ==
+* Cihaz keşfi ve envanter: Tarama yapar; cihaz adı, üreticisi, sinyal gücü ve servisleri (cihazın sunduğu işlev) gibi bilgileri toplarsınız.
+* Gizli cihaz tespiti: MAC adresi (ağ kartının benzersiz kimliği) aralıklarını deneyerek brute-force (tüm olasılıkları deneme yöntemi) veya düşük seviye sinyal izlemesi ile görünmez cihazları ararsınız.
+* Trafik izleme ve paket yakalama: Reklam (advertising, cihazın yayınladığı kısa tanıtım bilgisi) ve paketleri (küçük veri parçası) havadan toplayıp kaydedersiniz; gerektiğinde donanım destekli izleme (sinyali özel alıcıyla yakalama) kullanırsınız.
+* Yakınlık ve varlık takibi: RSSI (sinyal gücü göstergesi) değerlerini zaman içinde izleyip eşiklere göre “yakın/uzak” uyarıları üretirsiniz.
+* Kimlik sahteciliği: Cihaz adı, sınıfı ve MAC gibi kimlik öğelerini değiştirip kimliğe dayalı erişim kurallarını sınarsınız.
+* Yetkili güvenlik testleri: OBEX (Bluetooth üzerinden dosya/rehber aktarım yöntemi) gibi eski servislerin açık olup olmadığını dener, yetkisiz veri okunabiliyor mu kontrol edersiniz; IoT (internete bağlı küçük cihazlar) yayınlarında gereksiz bilgi sızıntısı var mı bakarsınız.
+* Temel altyapı ve sorun giderme: Bluetooth yığını (işletim sisteminde Bluetooth’u yöneten yazılım katmanı) üzerinden adaptör durumunu izler, eşleştirme (iki cihazın güvenli bağ kurması) ve servis keşfi (cihazın sunduğu işlevleri bulma işlemi) yapar, arızaları giderirsiniz.
+
+== Kime yarar? ==
+* Kurumsal güvenlik ve BT operasyon ekipleri
+* Fiziksel güvenlik ekipleri
+* Red team/pentest ekipleri
+* Denetim ve uyum ekipleri
+
+Yasal/etik not: Bu işlemler yalnızca yetkili ve etik güvenlik testleri kapsamında yapılmalıdır. İzinsiz tarama veya dinleme yasalara aykırıdır.
+
+
+== = ==
+== Sözlük ==
+* BLE: Bluetooth’un az enerji tüketen sürümü.
+* Bluetooth: Kısa menzilli kablosuz bağlantı standardı.
+* Bluetooth yığını: İşletim sisteminde Bluetooth’u yöneten yazılım katmanı.
+* Brute-force: Tüm olasılıkları tek tek deneyerek arama yöntemi.
+* Erişim kontrolü: Bir kaynağa kimin erişeceğine karar veren mekanizma.
+* Eşleştirme: İki cihazın güvenli bağ kurması.
+* IoT: İnternete bağlı küçük cihazlar.
+* Kimlik sahteciliği (spoofing): Başka bir cihaz gibi görünme yöntemi.
+* MAC adresi: Bir ağ arayüzünün benzersiz kimliği.
+* Non-discoverable: Kendini taramalarda listelemeyen görünmez mod.
+* OBEX: Bluetooth üzerinden dosya ve rehber aktarım yöntemi.
+* Paket: Ağda iletilen küçük veri parçası.
+* Reklam (advertising): Cihazın yayınladığı kısa tanıtım bilgisi.
+* RSSI: Alınan sinyal gücünü gösteren değer.
+* Servis: Cihazın sunduğu belirli işlev.
+* Servis keşfi: Cihazın sunduğu işlevleri bulma işlemi.
+* Trafik: Ağdaki veri akışı.
+
+
+== = ==
+== Kazanımlar ==
+* Çevredeki Bluetooth/BLE cihazlarını aktif/pasif tarayarak envanter çıkarabilmek.
+* Görünmez (non-discoverable) cihazları adres aralığı denemeleri ve sinyal izleme ile tespit edebilmek.
+* BLE reklamlarını ve paketlerini yakalayıp zaman damgalı kayıt ve temel analiz yapabilmek.
+* RSSI’ye göre kabaca mesafe/yakınlık tahmini yapıp eşik bazlı uyarılar üretebilmek.
+* Cihaz adı/sınıfı/MAC gibi kimlik alanlarını değiştirerek kimliğe dayalı politika kontrollerini sınayabilmek.
+* OBEX gibi eski servislerin açık kalıp kalmadığını denetleyip yetkisiz veri erişimini kanıtlayabilmek.
+* Bluetooth adaptörünü yönetmek, eşleştirme sorunlarını gidermek ve servis keşfi yapabilmek.
+* Donanım destekli dinleme kurup radyo trafiğinden kanıt toplayabilmek.
+* Tarama ve izleme sonuçlarını sinyal gücü, üretici ve zaman bilgisiyle anlaşılır raporlayabilmek.
+* Testleri yasal ve etik çerçevede planlayıp izin ve kapsam yönetimini uygulayabilmek.

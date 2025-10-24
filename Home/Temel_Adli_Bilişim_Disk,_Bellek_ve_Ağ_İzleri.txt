@@ -1,0 +1,65 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:41:51+03:00
+
+====== Temel Adli Bilişim: Disk, Bellek ve Ağ İzleri ======
+
+
+
+===== Konu =====
+Adli bilişim (dijital ortamda kanıt toplama ve inceleme) ile bilgisayar, bellek, ağ ve uygulamalardan izleri toplar, korur ve yorumlarız. Önce imaj (diske ait birebir kopya) alır, sonra bu kopya üzerinde çalışırız. Dosya sistemi (dosyaların disk üzerinde nasıl düzenlendiği) incelenir, artefakt (uygulama ve sistemlerin bıraktığı küçük iz) toplanır, hash (dosyadan üretilen sabit uzunluklu parmak izi) ile delil korunur. Ağ izlerinde PCAP (ağ trafiği kayıt dosyası) kullanılır, oturum (iki uç arasında süren iletişim akışı) ve protokol (cihazların konuşma kuralları) çözümlemesi yapılır. Bellekte RAM (bilgisayarın geçici çalışma belleği) kopyası alınır. Farklı kaynaklar tek bir zaman çizelgesi (olayların tarih-saat sırasındaki listesi) halinde birleştirilir. Tarayıcı geçmişi ve çerez (sitelerin tarayıcıda tuttuğu küçük veri) ile e‑posta arşivleri incelenir. Gerekirse carving (dosya imzasına bakarak ham veriden dosya çıkarma) ve fuzzy hash (benzer içeriği bulan parmak izi) kullanılır.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+* Olayın ne zaman, nasıl ve kim tarafından yapıldığını kanıtla gösterir.
+* Silinen ya da bozuk verileri geri getirir.
+* Delil bütünlüğünü hash ile kanıtlar; mahkemede güven sağlar.
+* Ağ üzerinden veri sızdırma, kimlik bilgisi çalma gibi hareketleri ortaya çıkarır.
+* Kullanıcı etkinliklerini (USB takma, son açılan dosyalar, gezilen siteler) netleştirir.
+* Zaman çizelgesiyle “önce-ne oldu” sorusunu açık eder.
+===== = =====
+===== Nasıl çalışır/uygulanır? =====
+* Disk/dosya: İmaj al; imaj üzerinde çalış. Dosya sistemini incele. Gerekirse carving ile silineni kurtar. Hash hesapla ve sakla.
+* Bellek: RAM kopyası al. Geçici verileri (oturum bilgileri, anahtarlar, süreç izleri) çıkar.
+* Windows: Windows Registry (Windows’un ayar veritabanı) içinden USB, otomatik başlatma ve son erişimler gibi izleri topla.
+* Ağ: PCAP dosyalarını incele. Oturumları yeniden kur, protokolleri çöz, taşınan dosyaları ve kimlik bilgilerini ara.
+* Zaman çizelgesi: Dosya zaman damgaları, loglar, tarayıcı ve Registry gibi kaynakları tek bir zaman çizelgesinde birleştir.
+* Tarayıcı/e‑posta: Geçmiş, çerez, indirmeler ve e‑posta arşivlerinden ekleri ve etkinlikleri çıkar.
+* Bütünlük ve benzerlik: Hash ile değişmediğini doğrula; fuzzy hash ile benzer dosyaları eşle.
+
+===== Kime yarar? =====
+* Olay müdahale ve adli inceleme ekipleri.
+* Sistem/ ağ yöneticileri ve SOC analistleri.
+* BT denetim/uyum ve hukuk birimleri.
+
+
+
+===== Sözlük =====
+* Adli bilişim: Dijital kanıtı toplama, koruma ve inceleme işi.
+* Artefakt: Sistem ve uygulamaların geride bıraktığı küçük iz, dosya veya kayıt.
+* Carving: Ham veriden imza/başlıklara bakarak dosya çıkarma yöntemi.
+* Çerez: Bir sitenin tarayıcıda tuttuğu küçük veri.
+* Dosya sistemi: Dosyaların disk üstünde nasıl saklandığını ve adlandırıldığını belirleyen yapı.
+* Fuzzy hash: Birbirine benzer dosyaları bulmaya yarayan parmak izi türü.
+* Hash: Bir veriden üretilen sabit uzunluklu parmak izi.
+* İmaj: Disk veya bölüme ait bit düzeyinde birebir kopya.
+* Oturum: İki uç arasında belirli süre süren iletişim akışı.
+* PCAP: Kaydedilmiş ağ paketlerini içeren dosya biçimi.
+* Protokol: Cihazların nasıl iletişim kuracağını belirleyen kurallar.
+* RAM: Bilgisayarın geçici çalışma belleği.
+* Windows Registry: Windows’un yapılandırma veritabanı.
+* Zaman çizelgesi: Olayların tarih-saat sırasıyla listelenmiş hali.
+
+
+
+===== Kazanımlar =====
+* Bozuk ya da okuma hatalı disklerden güvenli imaj çıkarma ve kopyayı doğrulama.
+* ext ve FAT dosya sistemlerinde silinmiş dosyaları kurtarma; fotoğraf ve belge türlerini imzaya bakarak parçadan çıkarma.
+* Kayıp bölümleri tespit edip geri yükleme; imajları bağlayıp sanal disk gibi inceleme.
+* BitLocker korumalı sürücüleri açıp içeriğini okuma.
+* CD/DVD ve hafıza kartlarından kayıp fotoğraf ve verileri kurtarma.
+* RAM dökümü alma; içinden oturum bilgileri ve şifreleme anahtarlarını bulma.
+* Windows Registry’den takılan USB’ler, otomatik başlatma noktaları ve son erişilen dosyalar hakkında rapor üretme.
+* PCAP dosyalarından uygulama katmanı verisini ve dosya aktarımını çıkarma; olası kimlik bilgisi sızıntılarını belirleme.
+* Farklı kaynaklardan ayrıntılı zaman çizelgesi üretip ilk bulaşma ve yayılma anlarını gösterme.
+* Tarayıcı geçmişi, çerezler ve kayıtlı parolaları analiz etme; e‑posta arşivlerinden ekleri çıkarma.
+* Hash ile delil bütünlüğünü kanıtlama; fuzzy hash ile benzer zararlı veya varyantları eşleştirme.

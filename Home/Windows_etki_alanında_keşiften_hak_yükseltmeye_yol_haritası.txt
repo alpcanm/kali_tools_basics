@@ -1,0 +1,79 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:40:44+03:00
+
+====== [Windows etki alanında keşiften hak yükseltmeye yol haritası] ======
+
+===== Konu =====
+Bu metin, Active Directory (Microsoft’un ağdaki kullanıcı ve bilgisayarları yöneten dizin sistemi) olan Windows ağlarında, keşif (hedef hakkında bilgi toplama), istismar (açığı kullanarak yetki alma), yanal hareket (bir makinadan diğerine sıçrama) ve ayrıcalık yükseltme (daha fazla yetki edinme) adımlarının ne olduğunu ve nasıl yapıldığını özetler. Yalnızca izinli ve yetkili güvenlik testlerinde kullanılmalıdır.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+- Yanlış izinleri ve zayıf ayarları erken bulur, riskleri azaltır.
+- Zayıf parola ve kimlik bilgisi sızıntılarını ortaya çıkarır.
+- Saldırganın kullanabileceği yolları önceden görüp kapatmayı sağlar.
+- Denetim ve uyum (compliance) çalışmalarına somut veri üretir.
+
+===== Nasıl çalışır/uygulanır? =====
+- AD keşfi ve ilişki haritalama: LDAP (dizin bilgisi sorgulama protokolü) ile kullanıcı, grup, bilgisayar ve izinleri toplar. Sonra bunları bir graf (düğümler ve bağlantılardan oluşan harita) üzerinde gösterir. ACL (erişim kontrol listesi, bir nesne üzerindeki izinler) ve ACE (izin kaydının tek tek satırı) zincirleri ile zayıf yolları işaretler. GPO (grup ilkesi nesnesi, merkezi ayar) üzerinden Domain Admin (etki alanında en yetkili grup) gibi hedeflere giden yetki zincirlerini arar.
+- Windows/SMB keşfi: SMB (Windows dosya/paylaşım iletişim protokolü), NetBIOS (Windows isim/servis keşif sistemi) ve LDAP üzerinden makineleri, paylaşımları ve bazı politika bilgilerini toplar. Hızlı bir envanter resmi çıkarır.
+- Kimlik bilgisi ve sır toplama: Kimlik bilgisi (oturum açmak için gereken kullanıcı/parola/anahtar) arar. LSASS (Windows oturum bilgilerini tutan süreç) ve DPAPI (Windows veri koruma sistemi) içeriğini analiz eder. GPP (GPO içindeki tercihler; bazen parola saklar) ve LAPS (yerel yönetici parolasını AD’de tutan çözüm) verilerini yoklar. NTDS (AD veritabanı dosyası) içinden hash (parolanın tek yönlü özeti) ve bilet (Kerberos giriş jetonu) çıkarabilir.
+- Kerberos odaklı işlemler: Kerberos (ağda biletle kimlik doğrulama sistemi) kullanır. SPN (hizmet adı tanımlayıcısı) olan hizmet hesaplarından Kerberoast (hizmet bileti özetini alıp parola denemek) yapar. AS-REP roast (ön-doğrulama kapalı hesabın özetini alıp parola denemek) ile zayıf parolaları dener. Bilet alma/yenileme işlemlerini yönetir.
+- NTLM/IPv6 zehirleme ve relay: NTLM (Windows kimlik doğrulama yöntemi) trafiğini hedef alır. LLMNR (yerel ad çözümleme), NBNS (NetBIOS ad çözümleme), mDNS (yerel çok noktaya yayın ad çözümleme) ve WPAD (proxy otomatik bulma) gibi mekanizmaları zehirleme (sahte yanıt vererek yönlendirme) ile kandırır. IPv6 RA (yönlendirici duyurusu) ile trafiği kendi üzerinden geçirip relay (birinin kimliğini başka hedefe aktarma) dener. VLAN (mantıksal ağ bölümü) izolasyonunu sınar.
+- Parola spreyi: Parola spreyi (birçok kullanıcıya az sayıda yaygın parola denemek) yaparak kilit tetiklemeden zayıf parolaları bulur. Bakım pencerelerinde ve izinli aralıklarda çalıştırılır.
+- Yanal hareket ve uzaktan komut: WinRM (Windows uzaktan yönetim servisi) ve WMI (Windows yönetim altyapısı) ile RCE (uzaktan komut çalıştırma) yapar. shell (uzaktan komut satırı oturumu) açar, dosya aktarır. Gerekirse PowerShell (Windows betik ve komut dili) ile işlemleri otomasyonlaştırır.
+- Ayrıcalık yükseltme: Yerelde servis yanlış yapılandırması (bir hizmetin güvensiz ayarı) ve ACL açıkları arar. Yazılabilir hizmet dizini gibi hatalarla SYSTEM (Windows’ta en yüksek yerel yetki) seviyesine çıkar. Etki alanında hatalı izin zincirlerini kullanır.
+- AD CS ve sertifikalar: AD CS (Active Directory Sertifika Hizmetleri) kurulumunu inceler. Sertifika (kimlik doğrulamak için verilen dijital belge) şablonlarındaki yanlış ayarlarla sertifika alıp Kerberos’u sertifika temelli kimlikle kullanmayı test eder. Yanlış yapılandırmalar varsa kimlik taklidi ve kalıcılık riskini gösterir.
+
+===== Sözlük =====
+- ACE: Bir nesne üzerindeki tek bir izin kaydı.
+- ACL: Bir nesneye kimlerin ne yapabileceğini listeleyen izinler dizisi.
+- AD CS: Active Directory’nin sertifika üretip dağıtan bileşeni.
+- Active Directory: Ağdaki kullanıcı, grup ve bilgisayarları yöneten dizin sistemi.
+- AS-REP roast: Kerberos’ta ön-doğrulaması kapalı hesaplardan parola özeti alma tekniği.
+- Ayrıcalık yükseltme: Var olan yetkiden daha yüksek yetki elde etme.
+- Bilet: Kerberos’ta oturum açmayı kanıtlayan jeton.
+- DPAPI: Windows’ta verileri kullanıcı/makine anahtarıyla koruyan sistem.
+- Domain Admin: Etki alanındaki en yetkili yönetici grubu.
+- GPO: Windows istemcilere merkezi ayar gönderen grup ilkesi nesnesi.
+- GPP: GPO içinde yer alan ve bazen parola tutan tercih ayarları.
+- Graf: Düğümler ve bunları bağlayan çizgilerden oluşan ilişki haritası.
+- Hash: Parolanın geri çevrilmesi zor olan tek yönlü özeti.
+- Kerberoast: Kerberos hizmet bileti özetlerinden parola deneme tekniği.
+- Kerberos: Ağda biletle kimlik doğrulama sağlayan protokol.
+- Kimlik bilgisi: Oturum açmak için gereken kullanıcı adı, parola veya anahtar.
+- LAPS: Yerel yönetici parolasını AD’de rastgele ve gizli tutan çözüm.
+- LDAP: Dizin verilerini sorgulayıp alan iletişim protokolü.
+- LLMNR: Yerel ağda isim çözümleme yöntemi.
+- LSASS: Windows’ta oturum açma ve kimlik bilgilerini yöneten süreç.
+- mDNS: Yerel ağda çok noktaya yayınla isim çözümleme yöntemi.
+- NetBIOS: Eski Windows isim ve servis keşif sistemi.
+- NTDS: Active Directory veritabanı dosyası.
+- NTLM: Windows kimlik doğrulama yöntemi.
+- Parola spreyi: Çok kullanıcıya az sayıda yaygın parola denemek.
+- PowerShell: Windows komut satırı ve betik dili.
+- RCE: Uzak bir makinede komut çalıştırma.
+- Relay: Birinin kimlik doğrulamasını alıp başka hedefte kullanma.
+- Sertifika: Kimliği doğrulayan dijital belge.
+- Shell: Komut yazıp çalıştırdığın etkileşimli oturum.
+- SMB: Dosya/paylaşım erişimi için kullanılan Windows protokolü.
+- SPN: Kerberos’ta bir hizmeti tanımlayan benzersiz isim.
+- SYSTEM: Windows’ta en yüksek yerel yetki seviyesi.
+- VLAN: Aynı fiziksel ağ üzerinde mantıksal ağ bölümü.
+- WinRM: Windows’un uzaktan yönetim servisi.
+- WMI: Windows sistem yönetimi altyapısı.
+- WPAD: İstemcilerin proxy ayarını otomatik bulma yöntemi.
+- Zehirleme: Sahte cevap vererek trafiği kendine çekme tekniği.
+- IPv6 RA: IPv6 ağlarda yönlendirici duyurusu mesajı.
+- Yanal hareket: Bir makineden diğerine geçerek ağ içinde ilerleme.
+
+===== Kazanımlar =====
+- AD’de kullanıcı, grup, bilgisayar ve izin ilişkilerini toplayıp görselleştirerek zayıf izin zincirlerini hızla bulursun.
+- SMB/NetBIOS/LDAP üzerinden ağdaki makineleri, paylaşımları ve temel politikaları hızlıca envanterlersin.
+- Yetkili ortamlarda LSASS/DPAPI/GPP/LAPS/NTDS kaynaklarından kimlik bilgisi toplayıp doğrularsın.
+- Kerberos biletlerini alır, yeniler ve Kerberoast/AS-REP roast ile zayıf hizmet parolalarını test edersin.
+- LLMNR/NBNS/mDNS/WPAD ve IPv6 RA vektörleriyle kimlik yakalama ve izinli relay denemeleri yapar, segment izolasyonunu sınarsın.
+- Parola spreyi ile hesap kilidine yol açmadan zayıf parola kalıplarını tespit edersin.
+- WinRM/WMI/SMB kanallarıyla uzaktan komut çalıştırır, dosya aktarır ve yanal hareket gerçekleştirirsin.
+- Servis yanlış yapılandırmaları ve ACL açıklarından yararlanarak yerel veya etki alanı seviyesinde ayrıcalık yükseltme yolları belirlersin.
+- AD CS yanlış yapılandırmalarını keşfedip sertifika temelli kimlik doğrulamayı kötüye kullanım riskine karşı test edersin.
+- Bulguları kanıtlarla destekleyip, uygulanabilir düzeltme önerileriyle raporlayabilirsin. Dökümandan çıkarılamayan kurumsal süreç detayları için kurum prosedürlerine bakılmalıdır.

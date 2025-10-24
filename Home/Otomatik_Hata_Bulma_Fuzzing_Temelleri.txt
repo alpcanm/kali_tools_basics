@@ -1,0 +1,65 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:41:31+03:00
+
+====== [Otomatik Hata Bulma: Fuzzing Temelleri] ======
+
+
+
+===== Konu =====
+Fuzzing (programa beklenmeyen/bozuk girdiler verip tepkisini otomatik izleyen test tekniği) yazılımların nerede hata verdiğini ya da çöktüğünü bulmaya yarar. Üç yaygın yaklaşım öne çıkar:
+- Kapsam yönlendirmeli (coverage‑guided: hangi kodun çalıştığını ölçüp buna göre yeni girdiler üreten) fuzzing. Çoğunlukla enstrümantasyon (programa ölçüm kodu ekleme) yapar. Dosya ayrıştırıcıları (girdiyi yapılandırılmış parçalara bölen yazılım), CLI (komut satırı aracı) ve kütüphaneler (başka yazılımların kullandığı kod paketi) için çok etkilidir.
+- Ağ/protokol fuzzing (protokol: cihazların/verilerin nasıl konuşacağını belirleyen kurallar). TCP/UDP (internet veri taşıma kuralları) üstünde şablon (önceden tanımlı istek kalıbı) mantığıyla çalışır ve enjeksiyon (veriye beklenmeyen içerik ekleme) dener. Örneğin, hatalı istek dizileriyle DoS (hizmetin geçici olarak aksaması) gibi sorunları ortaya çıkarabilir.
+- Web/HTTP odaklı fuzzing. HTTP (web iletişim kuralı) istek/yanıt başlıkları ve parametreleri üzerinde çalışır. CRLF (satır sonu karakter çifti) ile CRLF Injection (bu karakterlerle yanıta istenmeyen satır/başlık eklettirme) ve yanıt ayırma (yanıtın beklenmedik şekilde bölünmesi) gibi sorunları hedefler.
+
+===== Neden önemlidir?/Ne işe yarar? =====
+- Hataları ve çökmeleri erkenden yakalar.
+- Güvenlik açıklarını, özellikle giriş doğrulama (kullanıcı verisini kurala uygun kontrol etme) zayıflıklarını bulur.
+- Gerçek dünyadaki “kirli” girdileri taklit eder; test kapsamını artırır.
+- Üretim ortamında yaşanacak kesintilerin önüne geçer.
+- Geliştirici, güvenlik ve test ekiplerine zaman kazandırır.
+
+===== Nasıl çalışır/uygulanır? =====
+- Yalnızca izinli ortam ve hedeflerde çalıştırın. Test sınırlarını ve loglamayı net belirleyin.
+- Hedefi seçin: dosya ayrıştırıcı, CLI aracı, kütüphane, ağ servisi ya da web uç noktası.
+- Başlangıç girdileri hazırlayın. Küçük değişiklikler (mutasyon: girdide küçük değişiklik yapma) ile onlardan yeni girdiler üretin.
+- Kapsam yönlendirmeli modda, programı enstrümante edin; kapsam verisine göre daha çok yol açan girdilere ağırlık verin.
+- Ağ/protokol testlerinde istek şablonları kurun; alanlara beklenmedik değerler ve sıradışı uzunluklar enjekte edin.
+- Web/HTTP testlerinde başlık ve parametrelerde CRLF Injection ve yanıt ayırma gibi durumları tarayın.
+- Çökmeleri, hataları ve anormallikleri toplayın; tekrar üretilebilir en basit girdiyi ayıklayıp raporlayın.
+
+
+
+===== Sözlük =====
+- Ayrıştırıcı: Girdiyi yapılandırılmış parçalara bölen yazılım.
+- CLI: Komut satırından çalışan araç.
+- CRLF: Satır sonunu belirten karakter çifti.
+- CRLF Injection: CRLF karakterleriyle yanıta istenmeyen satır/başlık eklettirme tekniği.
+- DoS: Hizmetin geçici olarak aksaması.
+- Enjeksiyon: Veriye beklenmeyen içerik ekleme.
+- Enstrümantasyon: Programa ölçüm kodu ekleme.
+- Giriş doğrulama: Kullanıcı verisini kurala uygun kontrol etme.
+- HTTP: Web üzerinde istek‑yanıt iletişim kuralı.
+- İkili: Derlenmiş çalıştırılabilir program dosyası.
+- Kapsam (coverage): Koddaki hangi kısımların çalıştığının ölçümü.
+- Kapsam yönlendirmeli: Kapsam verisine bakarak yeni girdiler üreten yaklaşım.
+- Kütüphane: Başka yazılımların kullandığı kod paketi.
+- Mutasyon: Girdide küçük değişiklik yapma.
+- Protokol: Cihazların/verilerin nasıl konuşacağını belirleyen kurallar.
+- Şablon: Önceden tanımlı istek kalıbı.
+- TCP/UDP: İnternette veri taşımaya yarayan iki temel iletişim kuralı.
+- Yanıt ayırma: Yanıtın beklenmedik şekilde bölünmesi.
+
+
+
+===== Kazanımlar =====
+- Kapsam yönlendirmeli bir fuzzing oturumu kurma ve çalıştırma.
+- Programı kaynak kodu ya da ikili seviyede enstrümante ederek kapsam verisi toplama.
+- Dosya ayrıştırıcıları, CLI araçları ve kütüphaneler için uygun test girdileri üretme.
+- Ağ servisleri için istek şablonları tasarlayıp alanlara beklenmedik değerler enjekte etme.
+- TCP/UDP tabanlı özel protokoller üzerinde güvenli ve izinli fuzzing yürütme.
+- Web/HTTP başlık ve parametrelerinde CRLF Injection ve yanıt ayırma durumlarını tarama.
+- Çökme ve hata çıktılarından tekrar üretilebilir en basit girdiyi ayıklama ve raporlama.
+- DoS riski oluşturan istek dizilerini kontrollü biçimde tespit etme.
+- Testleri izole ve loglanan ortamlarda güvenle planlama ve sınırları belirleme.
+- Farklı hedef türlerine uygun stratejiyi (kapsam yönlendirmeli, şablonlu, web odaklı) seçip uygulama.

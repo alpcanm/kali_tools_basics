@@ -1,0 +1,68 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-24T19:34:57+03:00
+
+====== VoIP Sistemlerini Keşfetme ve Test Etme ======
+
+
+
+===== Konu =====
+Bu metin, internet üzerinden telefon görüşmeleri yapan sistemleri (VoIP: internet üzerinden telefon görüşmesi) güvenlik ve performans için nasıl inceleriz onu anlatır. VoIP aramaları genelde SIP (çağrı kurup yönetme standardı) ile başlar. Bazı kurulumlarda IAX (Asterisk telefon santralinin kullandığı VoIP protokolü) da bulunur. Ses ve video paketleri RTP (ses/video paketlerini taşıyan akış) ile akar. Kurumlar bu yapıyı PBX (kurum içi telefon santrali) üzerinde yönetir. PBX’te her kullanıcıya bir dahili numara (kurum içi kısa telefon numarası) tanımlanır. Bu çalışma; keşif (sistemi tanıma adımı) ve numaralandırma (hangi öğelerin var olduğunu tek tek yoklama) ile harita çıkarır; ardından kimlik doğrulama (kimin kim olduğunu kanıtlama), performans, sağlamlık ve ağ ayrımı testleri ile riskleri gösterir.
+== = ==
+===== Neden önemlidir?/Ne işe yarar? =====
+- Sistemin nerelerde açık verdiğini görürsünüz.
+- Zayıf parolaları ve hatalı kimlik doğrulama ayarlarını erken yakalarsınız.
+- Kapasiteyi, gecikmeyi ve kararlılığı ölçersiniz.
+- Standart dışı mesajlarla çökme risklerini bulursunuz (fuzzing: bozuk veriyle hata arama).
+- Şifreleme yoksa, sesin dinlenmesi veya çağrıya içerik eklenmesi riskini kanıtlarsınız (SRTP: RTP’nin şifreli hali).
+- Ses ve veri ağlarının doğru ayrıldığını doğrularsınız (VLAN: ağı mantıksal bölümlere ayırma).
+- Kimlere yarar: ağ yöneticileri, güvenlik ekipleri, sızma testi uzmanları.
+- Not: Saldırı benzeri testleri sadece yetkili ve izole ortamlarda yapın. Aksi halde etik ve hukuki sorun doğar.
+
+===== Nasıl çalışır/uygulanır? =====
+- Keşif ve numaralandırma: SIP/IAX sunucularını tararsınız. Açık hizmetleri ve desteklenen SIP yöntemlerini (SIP yöntemi: SIP mesaj tipi) belirlersiniz. Numara aralığı deneyip hangi dahili numaraların aktif olduğunu görürsünüz.
+- Kimlik doğrulama ve parola testleri: Hesaplar için brute force (çok deneme ile parola tahmini) ve sözlük saldırısı (hazır parola listesiyle deneme) uygularsınız. Yakalanmış SIP digest (özet) kimlik doğrulama verisine karşı parolaları denersiniz (digest kimlik doğrulama: sunucunun gönderdiği özetle parola doğrulama yöntemi).
+- Trafik üretimi ve yük: Arama kurulumları gönderir, eşzamanlı oturum sayısını arttırır ve yanıt sürelerini ölçersiniz (yük testi: sisteme artan trafikle dayanıklılık ölçümü).
+- Protokol sağlamlık/fuzzing: Standart dışı veya bozuk SIP mesajları yollar, çökme ya da beklenmedik davranış olup olmadığını gözlersiniz.
+- Hizmet engelleme ve dayanıklılık: Yoğun istekle sistemi zorlar, sınırları ölçersiniz (DoS: hizmeti kullanılamaz kılma). Koruma ayarlarının çalıştığını doğrularsınız; rate limit (istek oranını sınırlama), IDS/IPS (saldırı tespit/önleme sistemi) ve SBC (VoIP trafiğini sınırda koruyan cihaz) kurallarını kontrol edersiniz.
+- RTP medya analizi ve manipülasyonu: SRTP kapalıysa, RTP akışını dinler, dosyaya çevirir ve gerekirse küçük bir PoC (kanıt amaçlı küçük gösterim) ile akışa ses eklenebildiğini gösterirsiniz.
+- Ağ ayrıştırma ve VLAN atlama: Ses VLAN’ına yetkisiz geçiş mümkün mü, uç noktalardan test edersiniz (VLAN atlama: yetkisizce başka VLAN’a geçme).
+
+
+
+===== Sözlük =====
+- Brute force: Çok sayıda deneme yaparak parolayı tahmin etme.
+- Dahili numara: Kurum içi kısa telefon numarası.
+- Digest kimlik doğrulama: Sunucunun gönderdiği özetle parolayı doğrulama yöntemi.
+- DoS: Hizmeti aşırı yükle kullanılamaz kılma.
+- Fuzzing: Bozuk/standart dışı verilerle hata arama.
+- IAX: Asterisk’in kullandığı bir VoIP protokolü.
+- IDS/IPS: Saldırı tespit ve önleme sistemi.
+- Keşif: Sistemi tanıma ve bileşenleri bulma adımı.
+- Kimlik doğrulama: Kullanıcının gerçekten o kişi olduğunu kanıtlama.
+- Numaralandırma: Varlıkları tek tek yoklayıp hangilerinin aktif olduğunu bulma.
+- PBX: Kurum içi telefon santrali.
+- PoC: Bir riskin çalıştığını gösteren küçük kanıt uygulaması.
+- Rate limit: Belirli sürede izin verilen istek sayısını sınırlandırma.
+- RTP: Ses/video paketlerini taşıyan akış.
+- SBC: VoIP trafiğini sınırda yöneten ve koruyan cihaz.
+- SIP: VoIP çağrılarını kurup yöneten standart.
+- SIP yöntemi: SIP’te kullanılan mesaj tipi (ör. arama başlatma gibi).
+- SRTP: RTP’nin şifreli hali.
+- VLAN: Ağı mantıksal bölümlere ayırma yöntemi.
+- VLAN atlama: Yetkisizce başka bir VLAN’a geçme.
+- VoIP: İnternet üzerinden telefon görüşmesi.
+- Yük testi: Sistemi artan trafikle zorlayıp kapasite ve kararlılığı ölçme.
+
+===== Kazanımlar =====
+- VoIP ağı üzerinde açık SIP/IAX hizmetlerini tespit edip mevcut dahili numaraları belirleme.
+- Bir aralıktaki numaraları yoklayıp hangi hesapların var ve kayıtlı olduğunu doğrulama.
+- Desteklenen SIP mesaj tiplerini saptayarak hangi fonksiyonların açık olduğunu anlama.
+- Zayıf parolaları sözlük ve brute force denemeleriyle güvenli biçimde test etme.
+- Yakalanmış SIP digest verilerine karşı çevrimdışı parola denemesi gerçekleştirme.
+- Senaryo tabanlı SIP trafiği üretip eşzamanlı çağrı kapasitesini ve yanıt sürelerini ölçme.
+- Bozuk/standart dışı SIP mesajlarıyla sağlamlık testi yapıp çökme ve hata durumlarını kaydetme.
+- INVITE/RTP fırtınası gibi DoS senaryolarına karşı rate limit, IDS/IPS ve SBC kurallarını doğrulama.
+- Şifreleme yoksa, RTP akışını ayıklayıp ses dosyasına çevirme ve kontrollü PoC ile risk gösterimi yapma.
+- Ses ve veri VLAN ayrımını sınayıp yetkisiz VLAN geçişlerinin mümkün olup olmadığını kanıtlama.
+- Tüm testleri izole, yetkili ortamlarda planlayıp yürütme ve bulguları eyleme dönüştürülebilir rapora çevirme.
