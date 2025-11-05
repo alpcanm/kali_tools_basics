@@ -1,0 +1,89 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-05T07:43:31-05:00
+
+LightDM GTK Greeter
+
+---
+
+**Ne amaçla üretildi?**  
+LightDM GTK Greeter (“lightdm-gtk-greeter”), Linux işletim sistemlerinde LightDM adlı oturum yöneticisinin giriş ekranını (login screen) göstermek için üretilmiştir. Kullanıcı adı, parola gibi kimlik doğrulama bilgilerini toplar ve oturumu başlatır. ([wiki.archlinux.org](https://wiki.archlinux.org/title/LightDM?utm_source=openai))
+
+---
+
+**Nedir?**  
+Bir “greeter” ya da “giriş ekranı arayüzü”dür. LightDM yeşil ekran yöneticisi dairenin dış görünüşünü sağlar: tema, arka plan, oturum seçim menüsü gibi bileşenleri. GTK + grafik kütüphanesini kullanır. ([wiki.archlinux.org](https://wiki.archlinux.org/title/LightDM?utm_source=openai))
+
+---
+
+**Ne işe yarar (basit örneklerle)?**  
+- Bilgisayar açıldığında kullanıcıya grafiksel bir giriş ekranı sunar.  
+- Kullanıcı adını ve parolayı alır, hatta farklı masaüstü ortamına geçmek için oturum (session) seçme imkanı sağlar.  
+- Örneğin: Ubuntu’nun Xubuntu veya diğer hafif Linux dağıtımlarında kullanıcı bilgisayarı açar, arka plan resimli bir ekran çıkar, kullanıcı oturumunu seçer, parolasını girer ve masaüstü yüklenir. ([wiki.archlinux.org](https://wiki.archlinux.org/title/LightDM?utm_source=openai))
+
+---
+
+**Ne değildir?**  
+- Bir masaüstü ortamı (DE) değildir; masaüstü öğeleri, uygulamalar vs. sağlamaz.  
+- LightDM'ın çekirdeği değildir; sadece görsel parça.  
+- Sistem hizmeti veya oturum yöneticisinin kendisi değildir. Oturum yöneticisi LightDM; greeter arayüzü bu yöneticiyi kullanır.  
+- GTK dışındaki temalar veya Qt temelli greeterlar gibi alternatif greeterlar değildir. ([github.com](https://github.com/canonical/lightdm?utm_source=openai))
+
+---
+
+**Kullanım alanları nedir?**  
+- Linux dağıtımlarında grafiksel oturum açma ekranı olarak.  
+- Hafif masaüstü ortamlarında (XFCE, LXDE, MATE gibi) tercih edilir.  
+- Özelleştirilmiş sistemler için tema, ikon, arka plan, klavye düzeni gibi görsel ve kullanım ayarları yapılandırılabilir. ([wiki.archlinux.org](https://wiki.archlinux.org/title/LightDM?utm_source=openai))
+
+---
+
+**Kullanım ortamı nelerdir?**  
+- Linux sistemleri, X11 veya bazı durumlarda Wayland ile. (Wayland desteği genellikle sınırlıdır) ([wiki.archlinux.org](https://wiki.archlinux.org/title/LightDM?utm_source=openai))  
+- LightDM’ın kurulu olduğu sistemler.  
+- Ortak kullanım bilgisayarları, kişisel bilgisayarlar, sunucuların GUI yüzü olan makineler.  
+- Görsel tema veya özelleştirme isteyen kullanıcılar.  
+
+---
+
+**Neden tercih edilir?**  
+- Hafif olması: sistem kaynaklarını fazla kullanmaz. ([en.wikipedia.org](https://en.wikipedia.org/wiki/LightDM?utm_source=openai))  
+- GTK tema sistemi ile uyumlu olması: GTK temalarla kolayca stilize edilebilir.  
+- Kolay yapılandırma imkanı: `/etc/lightdm/lightdm-gtk-greeter.conf` gibi dosyalarla tema, arka plan, simge teması gibi ayarlar değiştirilebilir. ([wiki.archlinux.org](https://wiki.archlinux.org/title/LightDM?utm_source=openai))  
+- Geniş dağıtımlarda destek olması; varsayılan veya kolayca kurulabilir bir çözüm.  
+
+---
+
+**Kullanmak için nelere ihtiyaç vardır?**  
+- LightDM paketinin kurulmuş olması.  
+- lightdm-gtk-greeter paketinin kurulması. ([linuxgenie.net](https://linuxgenie.net/install-configure-lightdm-display-manager-arch-linux/?utm_source=openai))  
+- GTK kütüphaneleri ve bağımlılıkları.  
+- Bir masaüstü ortamı veya oturum tipinin sistemde tanımlı olması (örneğin /usr/share/xsessions içindekiler).  
+- Yetkili kullanıcı olarak yapılandırma dosyalarına erişim: `/etc/lightdm/lightdm.conf`, `/etc/lightdm/lightdm-gtk-greeter.conf`.  
+- Temalar, ikonlar, resim dosyaları gibi görsel ögeler. Bunların LightDM kullanıcısı tarafından okunabilir olması. ([wiki.archlinux.org](https://wiki.archlinux.org/title/LightDM?utm_source=openai))
+
+---
+
+**Öğrenme zorluk seviyesi nedir?**  
+Kolay — ortalama bir hafta içinde temel kullanım ve özelleştirme öğrenilebilir. Temalar, ikonlar, yapılandırma dosyası düzenleme gibi işleri öğrendikçe.  
+
+---
+
+**Aracın siber güvenlik uzmanı için önemi (0–7)**  
+4 — Kuvvetle tavsiye edilen. Çünkü sistemin güvenli oturum açma süreci (giriş ekranı), kullanıcı doğrulama, erişim kontrolü gibi unsurları doğrudan etkiler. Özellikle oturum yöneticileri açıklarının, yanlış konfigürasyonlarının saldırılara yol açması mümkündür.
+
+---
+
+**Alternatifleri nelerdir?**  
+- lightdm-webkit2-greeter: HTML/CSS ile temalandırılabilir. ([wiki.archlinux.org](https://wiki.archlinux.org/title/LightDM?utm_source=openai))  
+- Slick Greeter (Linux Mint projeleri): daha şık ve görünüşe odaklıdır. ([github.com](https://github.com/linuxmint/slick-greeter?utm_source=openai))  
+- Pantheon Greeter: elementary OS’da kullanılan. ([wiki.archlinux.org](https://wiki.archlinux.org/title/LightDM?utm_source=openai))  
+- Unity Greeter, KDE Greeter, vs.  
+
+---
+
+Referanslar:
+
+- ArchWiki sayfası üzerindeki LightDM ve greeter açıklamaları. ([wiki.archlinux.org](https://wiki.archlinux.org/title/LightDM?utm_source=openai))  
+- LightDM resmi GitHub bilgileri ve greeter listesi. ([github.com](https://github.com/canonical/lightdm?utm_source=openai))  
+- Tema, arka plan ve konfigürasyon detayları. ([wiki.archlinux.org](https://wiki.archlinux.org/title/LightDM?utm_source=openai))

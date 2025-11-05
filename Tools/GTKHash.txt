@@ -1,0 +1,87 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-05T07:37:37-05:00
+
+**Aracın Adı: GtkHash**
+
+---
+
+**Siber güvenlik kategorisi nedir?**  
+- General Cybersecurity (Genel Siber Güvenlik)  
+- Security Operations (Güvenlik Operasyonları)
+
+---
+
+**Ne amaçla üretildi?**  
+Dosyaların bütünlüğünü doğrulamak (örneğin indirme sırasında bozulup bozulmadığını kontrol etmek), virüs ya da kötü amaçlı değişiklikleri önceden tespit etmek için üretilmiştir.([linuxlinks.com](https://www.linuxlinks.com/gtkhash-utility-computing-message-digests-checksums/?utm_source=openai))
+
+---
+
+**Nedir?**  
+Grafik arayüzü (GTK+) üzerinden çalışan, mhash ya da benzer kriptografik kütüphaneler kullanarak bir dosyanın veya metnin “hash” değerini (özgün bir dijital parmak izi gibi) hesaplayan bir araçtır.([packages.debian.org](https://packages.debian.org/bullseye/gtkhash?utm_source=openai))
+
+---
+
+**Ne işe yarar (basit örneklerle)?**  
+- Bir ISO dosyasını indirdiniz, resmi sitesinde verilen SHA256 değerle sizinki aynı mı kontolü yaparsınız: eğer aynıysa dosya güvenli ve doğru inmiş demektir.  
+- Bilgisayarınızdaki kritik uygulamaların dosyalarının değiştirilip değiştirilmediğini kontrol edersiniz.  
+- Metin girdisi için hash yaratıp bir şifreleme anahtarı yerine kullanılmasını sağlarsınız.([linuxlinks.com](https://www.linuxlinks.com/gtkhash-utility-computing-message-digests-checksums/?utm_source=openai))
+
+---
+
+**Ne değildir?**  
+- Bir antivirüs programı değil: virüsleri çalıştırmadan tespit etmez.  
+- Şifre kırma aracı değil: hash’leri çözemez, sadece hesaplar.  
+- Tüm hash algoritmalarını destekleyen bir araç değil (örnek: bazı SHA3 varyantları veya daha yeni algoritmalar eksik olabilir).([linuxlinks.com](https://www.linuxlinks.com/gtkhash-utility-computing-message-digests-checksums/?utm_source=openai))
+
+---
+
+**Kullanım alanları nedir?**  
+- Yazılım dağıtımları kontrolü (indirme sonrası).  
+- Dijital kanıt yönetimi (örneğin adli bilişim).  
+- Sistem yöneticileri için dosya bütünlüğünün korunması.  
+- Genel kullanıcılar için dosyanın orijinalliğini doğrulama.  
+
+---
+
+**Kullanım ortamı nelerdir?**  
+- Linux masaüstü dağıtımları (örneğin Kali Linux, Debian, vb.).([kali.org](https://www.kali.org/tools/gtkhash/?utm_source=openai))  
+- Windows ve macOS’ta da sınırlı destek veya taşıyıcı versiyonlar üzerinden.([linuxlinks.com](https://www.linuxlinks.com/gtkhash-utility-computing-message-digests-checksums/?utm_source=openai))  
+- Dosya yöneticisi eklentileriyle (örneğin caja-gtkhash, thunar-gtkhash gibi)([kali.org](https://www.kali.org/tools/gtkhash/?utm_source=openai))  
+
+---
+
+**Neden tercih edilir?**  
+- Kullanımı kolay grafik arayüzü sayesinde terminal bilmeyenler için erişilebilir.  
+- Birden fazla hash algoritmasını desteklemesi (MD5, SHA1, SHA256, SHA512, RIPEMD, TIGER, WHIRLPOOL, MD6 vb.).([kali.org](https://www.kali.org/tools/gtkhash/?utm_source=openai))  
+- Dosya yöneticisi ile entegrasyon: sağ-tık üzerinden hash oluşturma veya kontrol etme.([kali.org](https://www.kali.org/tools/gtkhash/?utm_source=openai))  
+
+---
+
+**Kullanmak için nelere ihtiyaç vardır?**  
+- GTK+ grafik ara yüzü çalışan bir işletim sistemi.  
+- Desteklenen hash algoritmalarını sağlayan kriptografik kütüphaneler (mhash, libgcrypt, libnettle gibi).([kali.org](https://www.kali.org/tools/gtkhash/?utm_source=openai))  
+- İndirilecek dosya veya incelenecek metin.  
+
+---
+
+**Öğrenme zorluk seviyesi nedir?**  
+Kolay — Ortalama bir hafta içinde kullanmaya başlanabilir. Temel kavramlar: hash nedir, neden gizli değil (“one-way”) olduğu, nasıl kontrol edilir gibi konular basittir.
+
+---
+
+**Aracın siber güvenlik uzmanı için önemi (0-7):**  
+4 — Kuvvetle tavsiye edilen. Dosya bütünlüğü ve doğrulaması birçok senaryoda önemli, ancak uzmanlık alanına bağlı olarak zorunlu olmayabilir.
+
+---
+
+**Alternatifleri nelerdir?**  
+- Komut satırı araçları: `sha256sum`, `md5sum`, `openssl dgst` gibi.  
+- Diğer GUI hash hesaplayıcılar: HashTab, OpenHashTab (Windows) vb.  
+- Dosya yöneticisindeki yerleşik hash kontrol özellikleri (örneğin KDE Dolphin).
+
+---
+
+**Kaynaklar:**  
+- Kali Linux Tools sayfası – gtkhash açıklaması, hangi fonksiyonları desteklediği vb.([kali.org](https://www.kali.org/tools/gtkhash/?utm_source=openai))  
+- LinuxLinks: araç özellikleri, GUI alternatifi olarak tanımlanması vb.([linuxlinks.com](https://www.linuxlinks.com/gtkhash-utility-computing-message-digests-checksums/?utm_source=openai))

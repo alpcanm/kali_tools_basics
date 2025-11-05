@@ -1,0 +1,87 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-05T07:32:09-05:00
+
+Archive Manager
+
+---
+
+Kategori: Web Application Testing + Security Operations + Incident Response
+
+---
+
+Ne amaçla üretildi?  
+Kuruluşların e-posta trafiğini—gönderilen, alınan ve ekleriyle birlikte—otomatik olarak yakalamak, saklamak, denetlemek ve gerektiğinde geri getirmek için üretilmiş bir araç. Ayrıca hukuki düzenlemelere (örneğin uyumluluk yasaları) uygunluk sağlar. ([support.quest.com](https://support.quest.com/technical-documents/archive-manager/5.10/product-overview/introduction?utm_source=openai))
+
+---
+
+Nedir?  
+Archive Manager, özellikle Microsoft Exchange, Office 365 gibi e-posta sistemleri için geliştirilen e-posta arşivleme yazılımıdır. Mesajları merkezi bir depoya kaydeder, kopyaları kontrol eder, depolamada yer tasarrufu sağlar ve arşivlenmiş veri üzerinde güçlü arama ve erişim özellikleri sunar. ([support.quest.com](https://support.quest.com/technical-documents/archive-manager/5.10/product-overview/how-archive-manager-works?utm_source=openai))
+
+---
+
+Ne işe yarar (basit örneklerle)?  
+- Bir şirket çalışanının iş e-postalarında geçen önemli sözleşme bilgisini arayıp bulmak.  
+- E-posta sistemindeki eski e-postalar nedeniyle sunucunun dolmasını engellemek için eski mesajları arşive taşımak ve gerekirse silmek.  
+- Hukuki bir davada, belirli bir tarih aralığındaki tüm e-postaların eksiksiz olarak sunulması gerektiğinde bunların arşivden hızlı şekilde çıkarılması. ([support.quest.com](https://support.quest.com/technical-documents/archive-manager/5.10/product-overview/introduction?utm_source=openai))
+
+---
+
+Ne değildir?  
+- Gerçek zamanlı zararlı yazılım taraması veya e-postalara saldırı öncesi savunma aracı değil.  
+- Gelen her türlü ağ trafiğini izlemez, genellikle sadece e-postayla ilgili verileri işlemeye odaklanır.  
+- Depolama alanı ya da yedekleme yazılımıyla tamamen aynı şey değildir; işlevi “saklamak, indekslemek ve gerektiğinde erişim sağlamak”tır.  
+
+---
+
+Kullanım alanları nedir?  
+- Kurumsal e-posta arşivleme ve yedekleme  
+- Hukuki uyumluluk ve denetim gereksinimlerini karşılamak  
+- Kurumsal bilgi yönetimi: e-postalar üzerinden bilgiye ulaşmayı kolaylaştırmak  
+- Veri kaybı ya da sunucu arızası durumlarında iş sürekliliği sağlamak  
+
+---
+
+Kullanım ortamı nelerdir?  
+- Microsoft Exchange Server veya Office 365 gibi e-posta sunucularıyla  
+- Windows Server işletim sistemleri üzerinde (2016, 2019, vb.) ([quest.com](https://www.quest.com/products/archive-manager-for-exchange/?utm_source=openai))  
+- SQL Server gibi veritabanı sunucuları ile arşiv verilerini depolamak için  
+- Web arayüzü veya Outlook, mobil cihazlar gibi kullanıcı erişim araçları aracılığıyla  
+
+---
+
+Neden tercih edilir?  
+- Depolamada tasarruf sağlar: birbirinin aynısı olan e-postaları ve ekleri tek kopya olarak saklar. ([support.quest.com](https://support.quest.com/technical-documents/archive-manager/5.10/product-overview/how-archive-manager-works?utm_source=openai))  
+- Denetim uyumluluğu: mesajların değiştirilmezliği, güvenli arşivleme, denetim kayıtları gibi özellikler sunar. ([support.quest.com](https://support.quest.com/technical-documents/archive-manager/5.10/product-overview/introduction?utm_source=openai))  
+- Yönetim kolaylığı: politikalarla otomatik arşivleme ve silme, kullanıcının ya da yöneticinin ihtiyaçlarına göre yapılandırılabilir.  
+
+---
+
+Kullanmak için nelere ihtiyaç vardır?  
+- Uyumlu bir e-posta sistemi (Exchange veya benzeri)  
+- Windows Server ve desteklenen veritabanı (örn. SQL Server)  
+- Kurumsal donanım/alan: arşivleri depolamak için yeterli disk alanı  
+- Yetkili kullanıcılar için roller, erişim kontrolleri  
+- Kurumsal politika tanımları: ne arşivlenecek, ne kadar süreyle saklanacak gibi  
+
+---
+
+Öğrenme zorluk seviyesi nedir?  
+Orta – Bir ay içinde temel kullanımı ve yapılandırması öğrenilebilir. İleri seviye politikalar, entegrasyon ve uyumluluk gereksinimleriyle detaylara hakim olmak için daha fazla deneyim gerekir.
+
+---
+
+Aracın siber güvenlik uzmanı için önemi (0–7)  
+Puan: **6**  
+Neden: E-posta arşivleme, uyumluluk ve delil toplama süreçlerinde kırmızı/mavi takım, olay müdahalesi (Incident Response) ve güvenlik operasyonları (Security Operations) rolleri için temel bir araçtır.
+
+---
+
+Alternatifleri nelerdir?  
+- Veritas Enterprise Vault ([en.wikipedia.org](https://en.wikipedia.org/wiki/Enterprise_Vault?utm_source=openai))  
+- Diğer e-posta arşivleme çözümleri: çeşitli bulut tabanlı arşivleme hizmetleri  
+- Açık kaynak arşivleme araçları veya e-posta yedekleme çözümleri  
+
+---
+
+Kısaca: Archive Manager, kurumların e-posta geçmişini güvenli ve düzenli biçimde saklamasını sağlayan, arama ve uyumluluk ihtiyaçlarını karşılayan bir sistemdir. Bilmeden başlamak için temel kavramlar hızlıca öğrenilir; ancak derinlemesine hâkimiyet için deneyim gerekir.

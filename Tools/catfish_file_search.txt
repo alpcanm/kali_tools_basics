@@ -1,0 +1,86 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-05T07:25:59-05:00
+
+**Aracın Adı: Catfish (File Search Aracı)**
+
+---
+
+**Siber güvenlik kategorisi nedir?**  
+- Security Operations: Dosyalarla ilgili hızlı tespit ve tazminata destek olur, log analizi vb. için kullanılır.  
+- General Cybersecurity: Herhangi bir sistemde kayıp/veri sızıntısı şüphesi gibi genel senaryolarda işe yarar.
+
+---
+
+**Ne amaçla üretildi?**  
+Basitçe, Linux ya da benzeri işletim sistemlerinde dosya ve klasörleri hızlıca bulabilmek için. Komut satırı araçları gibi karmaşık yöntemler yerine grafiksel arayüz sunar.
+
+---
+
+**Nedir?**  
+Catfish, Python ile yazılmış GTK+ arayüzlü bir dosya arama aracıdır. locate, find gibi sistem hizmetlerini kullanır; görsel filtreleme, tarih, dosya türü gibi kriterlerle arama yapabilir. ([docs.xfce.org](https://docs.xfce.org/apps/catfish/introduction?utm_source=openai))
+
+---
+
+**Ne işe yarar (basit örneklerle)?**  
+- Ev kullanıcılarının belgeler klasöründe bir PDF dosyasını bulması.  
+- Görseller klasöründe “jpg” uzantılı tüm dosyaları görmek.  
+- Son hafta içinde oluşturulan dosyaları listeleme.  
+Bu işlerin komut satırıyla uğraşmadan GUI üzerinden yapılmasını sağlar. ([linuxlinks.com](https://www.linuxlinks.com/Catfish/?utm_source=openai))
+
+---
+
+**Ne değildir?**  
+- Bir malware analizi aracı değil; güvenlik açığını bulmaz.  
+- İnternete bağlı kişiler hakkında bilgi toplayan sosyal medya analiz aracı değil.  
+- Dosya içeriğini uyum doğrulama ya da kriptografik taramalar yapan bir anti-virüs değil.
+
+---
+
+**Kullanım alanları nedir?**  
+- Sistem yönetimi: kayıp dosyaları bulma, dosya düzenleme  
+- Adli bilişim: şüpheli verilerin yerini tespit etme  
+- Eğitim: Linux dosya sistemi ve arama araçlarını öğretme
+
+---
+
+**Kullanım ortamı nelerdir?**  
+- GNU/Linux ve BSD tabanlı sistemler  
+- Xfce masaüstü ortamı başta olmak üzere GTK+ destekleyen ortamlar  
+- Terminal desteği olan sistemler ([linuxreviews.org](https://linuxreviews.org/Catfish?utm_source=openai))
+
+---
+
+**Neden tercih edilir?**  
+- Kullanımı kolaydır; grafik arayüzle karmaşıklık azdır.  
+- Hızlıdır; özellikle `locate` kullanarak indeksli arama sağlar.  
+- Hafif bir uygulamadır; sistem kaynaklarını çok tüketmez.  
+- Filtreleme seçenekleriyle daha dar arama yapılabilir. ([docs.xfce.org](https://docs.xfce.org/apps/catfish/introduction?utm_source=openai))
+
+---
+
+**Kullanmak için nelere ihtiyaç vardır?**  
+- Linux ya da BSD işletim sistemi  
+- Python ve GTK+3 gibi bağımlılıklar ([docs.xfce.org](https://docs.xfce.org/apps/catfish/introduction?utm_source=openai))  
+- `locate` ya da `mlocate` database’inin güncel olması gerekiyor (güncel dizin içeriği için)  
+- İstersen tam metin (içerik) araması için ek araçlar
+
+---
+
+**Öğrenme zorluk seviyesi nedir?**  
+orta — ortalama bir ayda temel kullanımını öğrenmek mümkün. Filtrelerle, gelişmiş seçeneklerle deneyerek ustalık kazanılır.
+
+---
+
+**Aracın siber güvenlik uzmanı için önemi (0–7):**  
+= 4  
+(Güvenlik operasyonları ve adli bilişim gibi görevlerde fayda sağlar; ancak her uzman için rol-ceşit bir zorunluluk değildir.)
+
+---
+
+**Alternatifleri nelerdir?**  
+- find ve grep gibi komut satırı araçları (CLI) — daha esnek, öğretici  
+- `Tracker`, `Baloo` gibi masaüstü indeksleme servisleri — sürekli arama sağlar  
+- Everything (Windows için) — benzer şekilde hızlı dosya adı araması ([reddit.com](https://www.reddit.com//r/suckless/comments/1lvwmqs?utm_source=openai))
+
+---

@@ -1,0 +1,83 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-05T07:12:59-05:00
+
+**Bulk Rename**
+
+---
+
+**Siber güvenlik kategorisi:**  
+- Security Operations  
+- Secure Development  
+
+---
+
+**Ne amaçla üretildi?**  
+Birden fazla dosyayı tek seferde isimlendirmeyi değiştirmek için, zamandan kazanmak ve hata riskini azaltmak için.
+
+---
+
+**Nedir?**  
+Bir yazılımsal araç ya da komut/scripting işlemi: klasördeki birçok dosyanın isim kurallarına göre (örneğin tarih, numara, ön ek/son ek) topluca değiştirilmesini sağlar.
+
+---
+
+**Ne işe yarar (basit örneklerle)?**  
+- Binlerce log dosyasının “log_001.txt, log_002.txt…” gibi sıralı olması için.  
+- JPG dosyalarına “tatil_1.jpg, tatil_2.jpg…” gibi isim verme.  
+- Uzantısı yanlış olan (.jpeg yerine .jpg gibi) dosyaları topluca düzeltme.
+
+---
+
+**Ne değildir?**  
+- Dosya içeriklerini analiz eden ya da değiştiren bir araç değildir; sadece isimle çalışır.  
+- Virüs temizliği, şifre kırma, penetrasyon testi gibi aktif saldırı/savunma teknikleri değildir.
+
+---
+
+**Kullanım alanları nedir?**  
+- Sistem yöneticiliği: log dosyalarının düzenlenmesi.  
+- Dijital adli tıp: kanıt dosyalarının standart isimlendirilmesi.  
+- Yazılım geliştirme: dosya sürümleri veya çıktıların otomasyonu.  
+- Büyük medya koleksiyonlarının düzenlenmesi.
+
+---
+
+**Kullanım ortamları nelerdir?**  
+- Komut satırı arabirimleri (shell script, PowerShell)  
+- Grafik ara yüzlü toplu yeniden adlandırma araçları  
+- IDE’ler veya dosya yöneticileri (örneğin Windows Explorer, macOS Finder)  
+- Otomasyon sistemleri/CI/CD süreçleri
+
+---
+
+**Neden tercih edilir?**  
+- Zaman tasarrufu sağlar.  
+- İnsan hatasını azaltır (manuel isimlendirme gibi).  
+- Düzen ve standardizasyon sağlar.  
+- Büyük sayıda dosyayla çalışırken verimliliği yüksek olur.
+
+---
+
+**Kullanmak için nelere ihtiyaç vardır?**  
+- Minimum beceri: dosya sistemine erişim, dosya isminde kullanılacak kuralların anlaşılması.  
+- Araç veya script dili: Windows PowerShell, Bash, Python gibi.  
+- Dosyaların yedeği alınsa iyi olur (özellikle topluca yapılan değişikliklerde risk vardır).
+
+---
+
+**Öğrenme zorluk seviyesi nedir?**  
+Orta – temel komutlar bir haftada öğrenilebilir, karmaşık kurallar ve scripting bir ay içinde kavranabilir.
+
+---
+
+**Aracın siber güvenlik uzmanı için önemi (0–7):**  
+3 — Durumsal önemli: bazı görevlerde faydalıdır, özellikle log yönetimi ve adli analizde.
+
+---
+
+**Alternatifleri nelerdir?**  
+- Manuel yeniden adlandırma (çok sayıda ise verimsiz)  
+- Dosya yönetimi programları (Total Commander, File Explorer ++)  
+- Script dilleriyle özel betikler (Python os.rename() vb.)  
+- Özelleşmiş topyekûn yeniden adlandırma yazılımları (Bulk Rename Utility, Advanced Renamer)
