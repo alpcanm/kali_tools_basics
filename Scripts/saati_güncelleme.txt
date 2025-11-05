@@ -1,0 +1,29 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-05T08:25:54-05:00
+
+====== saati güncelleme ======
+Created Wednesday 05 November 2025
+
+Otomatik (NTP) ile doğru saate geçme:
+1) Saat dilimini ayarla (örnek: İstanbul)
+- sudo timedatectl set-timezone Europe/Istanbul
+
+2) Otomatik senkronizasyonu aç
+- sudo timedatectl set-ntp true
+
+3) Durumu kontrol et
+- timedatectl
+NTPSynchronized=yes görmelisiniz. Gerekirse servisi tazele:
+- sudo systemctl restart systemd-timesyncd
+
+Not: systemd-timesyncd yoksa kur/etkinleştir:
+- sudo apt update && sudo apt install -y systemd-timesyncd
+- sudo systemctl enable --now systemd-timesyncd
+
+Manuel saat ayarlama (internet olmadan):
+1) Saati/tarihi ayarla
+- sudo timedatectl set-time "2025-11-05 14:30:00"
+
+2) Donanım saatine yaz
+- sudo hwclock --systohc

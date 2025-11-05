@@ -1,0 +1,71 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-05T17:15:27+03:00
+
+Kali Tweaks
+
+Ne amaçla üretildi?
+---
+- Kali Linux’u kurduktan sonra temel ayarları hızlı ve güvenli şekilde özelleştirmek için.
+- Elle dosya/ayar kurcalamadan “rehberli” seçimlerle sistemi hazır hâle getirmek için.
+- Yeni başlayanların kırmadan kurulum-sonrası optimizasyon yapabilmesi için.
+
+Nedir?
+---
+- Kali Linux içinde gelen, metin tabanlı bir ayar sihirbazıdır.
+- Paket grupları (metapackage), depo (repository), sanallaştırma/WSL uyarlamaları gibi başlıkları tek ekranda toplar.
+- “raspi-config” benzeri; Kali’ye özel.
+
+Ne işe yarar (basit örneklerle)?
+---
+- Tek tıkla: Sanal makine içindeysen uygun misafir araçlarını önerir/kurar (VirtualBox/VMware entegrasyonu).
+- WSL kullanıyorsan: WSL için uygun ayarları topluca uygular.
+- Araç seti seçimi: “az araç-hafif” vs “geniş araç seti” gibi metapackage’ları kolay seçtirir.
+- Karşılaştırma: Elle sources.list düzenlemek yerine, güvenli depo ayarlarını menüden aç/kapat.
+
+Ne değildir?
+---
+- Bir saldırı/hack aracı değildir.
+- Paket yöneticisinin (apt) yerine geçmez; onu düzgün kullanmana yardım eden bir arayüzdür.
+- Otomasyon/konfigürasyon yönetimi (Ansible, Puppet) seviyesinde toplu orkestrasyon aracı değildir.
+
+Kullanım alanları nedir?
+---
+- Kurulum sonrası hızlı “ilk ayar” (shell, depo, araç seti).
+- Sanal makine, WSL veya çıplak donanımda sürücü/entegrasyon iyileştirmeleri.
+- Depo/kanal (ör. bleeding-edge) geçişlerini güvenli yapmak.
+
+Kullanım ortamı nelerdir?
+---
+- Fiziksel bilgisayar (Kali masaüstü).
+- Sanal makineler (VirtualBox, VMware, KVM).
+- WSL (Windows Subsystem for Linux) üstünde Kali.
+- Bulut imajları (AWS/Azure/GCP Kali).
+
+Neden tercih edilir?
+---
+- Hız: Tek ekranda çok ayarı çözer; zamandan kazandırır.
+- Güvenli: Yanlış dosya düzenlemeleri riskini azaltır.
+- Bağlama duyarlı: VM/WSL gibi ortamı algılayıp uygun öneri sunar.
+- Karşılaştırma: Elle ayar→ esnek ama hata riski yüksek; Ansible→ güçlü ama kurulum/öğrenme gerek. Kali Tweaks→ pratik orta yol.
+
+Kullanmak için nelere ihtiyaç vardır?
+---
+- Güncel bir Kali Linux (tercihen 2021+ sürümleri).
+- Yönetici yetkisi (sudo/root).
+- Paket/bağımlılık kurulumları için internet bağlantısı.
+
+Öğrenme zorluk seviyesi nedir ?
+---
+- Kolay (ortalama bir haftada öğrenilebilir).
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+---
+- 1 — Faydalı ama opsiyonel: Verimi artırır; olmazsa da işler yürür.
+
+Alternatifleri nelerdir?
+---
+- Elle yapılandırma: apt, sources.list düzenleme, metapackage’ları manuel kurma.
+- Debian “tasksel” ve Kali metapackage’ları (kali-linux-default/large vb.) doğrudan apt ile.
+- Otomasyon: Ansible/Chef/Puppet (daha esnek, daha kurumsal).
+- Diğer dağıtım araçları: Parrot OS tarafında parrot-tools metapackage (Kali dışı ekosistem).

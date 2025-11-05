@@ -1,0 +1,86 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-05T08:13:25-05:00
+
+**Cryptsetup**Kaynakları metnin en altında referanslarda belirtebilirsin.
+
+---
+
+Ne amaçla üretildi?  
+- Linux’ta disk bölümlerini (örneğin veriler, ev dizini, swap) güvenli hale getirmek için; yani bu bölümleri şifreleyerek yetkisiz erişime karşı korumak amacıyla geliştirilmiştir. ([en.wikipedia.org](https://en.wikipedia.org/wiki/Dm-crypt?utm_source=openai))
+
+---
+
+Nedir?  
+- “cryptsetup”, Linux çekirdeği altındaki dm-crypt altyapısını kullanan bir komut satırı aracıdır.  
+- Ayrıca LUKS (Linux Unified Key Setup) standardına entegre olarak disk şifreleme işlemlerini kolaylaştırır. ([alem.dynip.sapo.pt](https://alem.dynip.sapo.pt/wiki/content/archwiki/A/Cryptsetup?utm_source=openai))
+
+---
+
+Ne işe yarar (basit örneklerle)?  
+- Bir bölümü veya diski şifreleyerek içine yazılan verilerin bileşimini korur. Örneğin: `/dev/sda1` bölümünü LUKS ile şifreleyip sonrasında parola ile açıp bir dosya sistemi oluşturmak. ([linode.com](https://www.linode.com/docs/guides/encrypt-data-disk-with-dm-crypt/?utm_source=openai))  
+- Bilgisayar açılırken, swap alanları ya da home gibi bölümler otomatik olarak şifre çözülmüş şekilde monte edilir. ([linuxlinks.com](https://www.linuxlinks.com/cryptsetup/?utm_source=openai))
+
+---
+
+Ne **değildir**?  
+- Şifreleme yetkisi olmayan bir aracı değildir; sadece şifreleme sağlar, verileri tamamen direkt koruyan bir antivirüs, veri kurtarma ya da yedekleme aracı değildir.  
+- Bulut, video akışı ya da ağ trafiği şifrelemesini otomatik taşımaz; sadece disk / bölüm (blok cihaz) içindekini şifreler.  
+
+---
+
+Kullanım alanları nelerdir?  
+- Kişisel bilgisayarların sabit disk bölümlerini şifrelemek.  
+- Sunucularda veritabanı, yedekleme diskleri gibi hassas verilerin bulunduğu bölümleri korumak.  
+- Laptop çalınması durumlarında verilerin erişilemez olmasını sağlamak.  
+- Kurumsal ortamlarda gizlilik ve uyumluluk (regülasyonlar) gereği kullanılır.
+
+---
+
+Kullanım ortamı nelerdir?  
+- Linux dağıtımları (Kali, Ubuntu, Arch, Debian vb.).  
+- Yerel diskler, bölümler, LVM ile oluşturulmuş hacimler.  
+- Harici diskler, USB belleği gibi taşınabilir cihazlar.  
+- Genellikle root yetkisiyle kullanılır; önyükleme sırasında parola ya da keyfile ile açılması gereken sistemler.
+
+---
+
+Neden tercih edilir?  
+- Yerleşik (built-in) Linux desteklidir: dm-crypt ve LUKS gibi standartlarla uyumludur. ([en.wikipedia.org](https://en.wikipedia.org/wiki/Dm-crypt?utm_source=openai))  
+- Açık kaynak ve yaygın belgelenmiştir.  
+- Anahtar yönetimi, birden çok parola/key-slot desteği içerir. ([wiki.archlinux.org](https://wiki.archlinux.org/title/Dm-crypt/Device_encryption?utm_source=openai))  
+- Sistem önyükleme güvenliği ile entegrasyon sağlar (initramfs ile root şifreleme gibi).  
+
+---
+
+Kullanmak için nelere ihtiyaç vardır?  
+- Linux tabanlı işletim sistemi.  
+- Desteklenen çekirdek: dm-crypt özelliği aktif olmalı. ([docs.kernel.org](https://docs.kernel.org/admin-guide/device-mapper/dm-crypt.html?utm_source=openai))  
+- Yeterli disk alanı; metadata (başlık) için biraz boşluk gerekir, LUKS formatında bu başlık çok kritik.  
+- Parola ya da anahtar (keyfile) ve tercihen güçlü bir şifreleme algoritması ile hash seçimi.  
+
+---
+
+Öğrenme zorluk seviyesi: **orta**  
+- Basit şifreleme ve açma işlemleri birkaç saat içinde öğrenilebilir.  
+- Karmaşık konular (LUKS anahtar slot’ları, başlık yedekleme, performans optimizasyonları, integrity modları) için yaklaşık bir ay sürebilir.  
+
+---
+
+Aracın siber güvenlik uzmanı için önemi (0-7): **6**  
+- Belirli roller (veri koruma, sistem güvenliği, sunucu güvenliği) için bilinmesi şart.  
+- Mavi takım (defensive security), adli inceleme, sistem yöneticileri için kritik.  
+
+---
+
+Alternatifleri nelerdir?  
+- VeraCrypt (çok platformlu, GUI destekli).  
+- eCryptfs (klasör düzeyinde şifreleme, fakat performans ve esneklik açısından sınırlı).  
+- BitLocker (Windows ortamında).  
+- FileVault (macOS ortamında).  
+
+---
+
+Kaynaklar:  
+- ArchWiki: dm-crypt / Cryptsetup kullanım yolları ve seçenekleri ([wiki.archlinux.org](https://wiki.archlinux.org/title/Dm-crypt/Device_encryption?utm_source=openai))  
+- Linode Docs: dm-crypt ile şifreleme örnekleri ([linode.com](https://www.linode.com/docs/guides/encrypt-data-disk-with-dm-crypt/?utm_source=openai))
