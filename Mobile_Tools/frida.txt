@@ -1,0 +1,14 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-05T23:18:09+03:00
+
+Frida
+Frida, dinamik kod enstrümantasyon araç takımıdır (dynamic code instrumentation toolkit). Frida'nın temel işlevi, halihazırda çalışan (live) yerel (native) uygulamalara kod enjekte ederek onların çalışma zamanı davranışlarını değiştirmek veya izlemektir.
+Frida Nedir?
+* Amaç ve Tanım: Frida, yerel uygulamalar için Greasemonkey olarak tanımlanır ve Windows, macOS, GNU/Linux, iOS, Android gibi çeşitli platformlardaki yerel uygulamalara JavaScript parçacıkları veya kullanıcıya ait kütüphaneleri enjekte etmeye olanak tanır.
+* Çekirdek Yapı: Frida'nın çekirdeği C dilinde yazılmıştır ve hedef süreçlere QuickJS motorunu enjekte eder. Bu JS kodu, bellek erişimine, işlevleri hook'lamaya ve süreç içindeki yerel işlevleri çağırmaya tam yetkiyle sahiptir.
+* İletişim: Uygulamanız ile hedef süreç içinde çalışan JavaScript arasında çift yönlü bir iletişim kanalı bulunur.
+* API Desteği: Frida, JS hata yakalama ve istisna sağlama yeteneği ile hızlı geliştirmeye olanak tanıyan bir Python API'sine sahiptir. Ayrıca C API, Swift API, Go API gibi başka dil binding'leri de mevcuttur.
+* Kod İzleme Motoru (Stalker): Stalker, Frida'nın kod izleme motorudur. İpliklerin (threads) takip edilmesini sağlayarak, yürütülen her işlevi, her bloğu ve hatta her talimatı yakalayabilir. Stalker, AArch64, Intel 64 ve IA-32 mimarilerini destekler.
+Frida Ne Değildir?
+Frida, bir çalıştırılabilir dosya formatı ayrıştırma ve değiştirme kütüphanesi değildir (bu LIEF'in işidir). Frida, çalışma zamanı (runtime) davranışı üzerinde yoğunlaşır ve dinamik müdahale sağlar.

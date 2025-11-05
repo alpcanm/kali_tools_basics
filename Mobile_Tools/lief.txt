@@ -1,0 +1,18 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-05T23:18:15+03:00
+
+LIEF (Library to Instrument Executable Formats)
+LIEF, öncelikli olarak çapraz platform bir kütüphane (cross-platform library) olup, çalıştırılabilir formatları ayrıştırmak (parse), değiştirmek (modify) ve soyutlamak (abstract) amacıyla tasarlanmıştır. LIEF'in operasyonel odağı genellikle statik dosya yapısı üzerinedir.
+LIEF Nedir?
+* Amaç ve Tanım: LIEF'in amacı, ELF, PE ve MachO formatlarını ayrıştırmak, değiştirmek ve soyutlamak için çapraz platform bir kütüphane sunmaktır.
+* Desteklenen Formatlar: ELF, PE, MachO, COFF, OAT, DEX, VDEX ve ART gibi çeşitli formatları ayrıştırabilir.
+* Temel Yetenekler:
+	◦ Ayrıştırma (Parsing): Dahili yapılara erişmek için kullanıcı dostu bir API sağlar.
+	◦ Değiştirme (Modification): Bu formatların bazı kısımlarını değiştirmek için kullanılabilir (örneğin, bir bölüm eklemek, sembol adını değiştirmek gibi).
+	◦ Soyutlama (Abstraction): Bölümler, semboller, giriş noktası gibi ortak özelliklere sahip formatları ortak bir yapıda birleştirir (faktörler).
+* Uygulama Alanları: Kaynaklarda belirtilen konular arasında kötü amaçlı yazılım analizi (malware-analysis), ikili analiz (binary-analysis) ve tersine mühendislik (reverse-engineering) yer alır.
+* Geliştirme Dilleri: Kütüphane çekirdeği C++ ile yazılmıştır ve C++11 genel arayüzüne sahiptir; ayrıca Python ve Rust için binding'ler sunar. Kısıtlı bir C API'si de mevcuttur.
+* Genişletilmiş Özellikler: DWARF/PDB Desteği, Objective-C Metadata, Dyld Shared Cache, ve çeşitli mimariler için Disassembler/Assembler (AArch64, x86/x86-64, ARM, RISC-V, Mips, PowerPC, eBPF) gibi ek özelliklere sahiptir.
+LIEF Ne Değildir?
+LIEF, dinamik bir enstrümantasyon aracı (dynamic instrumentation toolkit) veya canlı süreçlerde kod akışını izlem
