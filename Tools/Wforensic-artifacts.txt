@@ -1,0 +1,64 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-06T21:57:48+03:00
+
+forensic-artifacts / python3-artifacts
+
+Siber güvenlik kategorisi nedir?
+- Incident Response (Olay Müdahalesi)
+- Threat Hunting (Tehdit Avcılığı)
+- Security Operations (Güvenlik Operasyonları)
+- General Cybersecurity (Genel Siber Güvenlik)
+
+Ne amaçla üretildi?
+- Adli analizde “kanıt nerede durur?” bilgisini tek yerde, herkesin anlayacağı ve araçların okuyacağı biçimde toplamak.
+- Bu bilgiyi otomasyona ve araçlara beslemek.
+
+Nedir?
+- Bilgisayarlardaki kanıtların yerini tarif eden, makinece okunabilir kurallar/veri seti.
+- forensic-artifacts: Sadece veri dosyaları.
+- python3-artifacts: Bu verileri Python ile okuma/doğrulama kütüphanesi.
+
+Ne işe yarar (basit örneklerle)?
+- “Windows tarayıcı geçmişi dosyası nerede?” → Yol ve dosya kalıbını verir.
+- “USB geçmişi hangi kayıt defteri anahtarında?” → İlgili kayıt anahtarlarını listeler.
+- “Mac’te son açılan dosyalar?” → İlgili plist/log konumlarını gösterir.
+- Araçlar (ör. Plaso, Velociraptor) bu tanımları kullanarak otomatik toplayıp işler.
+
+Ne değildir?
+- Bir EDR, antivirüs veya tarayıcı değildir.
+- Tek başına delil toplamaz/analiz etmez; bilgi ve şablon sağlar.
+- Sızma testi aracı veya exploit geliştirme kiti değildir.
+
+Kullanım alanları nedir?
+- Olay müdahalesi sırasında hızlı delil toplama/önceliklendirme.
+- Tehdit avcılığı sorgularını doğru dosya/kaynaklara yönlendirme.
+- Adli bilişim eğitimleri ve playbook’ların standardizasyonu.
+- Kurumsal otomasyon boru hatları (toplama → zenginleştirme).
+
+Kullanım ortamı nelerdir?
+- Uç noktalar: Windows, macOS, Linux (ayrıca mobil ve bazı uygulama/artifact’leri).
+- IR/hunting araçları: Plaso (log2timeline), Velociraptor, GRR vb.
+- CI/CD veya SOAR içinde toplama/analiz adımlarına gömülü.
+
+Neden tercih edilir?
+- Topluluk kaynaklı, güncel, sürümlü ve şeffaf.
+- Makinece okunabilir olduğu için otomasyona çok uygun.
+- Araçlar arası ortak dil yaratır; “tribal knowledge” yerine standart sağlar.
+
+Kullanmak için nelere ihtiyaç vardır?
+- forensic-artifacts: Veri dosyalarını kullanabilen bir araç veya kendi betiğiniz.
+- python3-artifacts: Python 3 ortamı ve kütüphaneyi kullanan kod/araç.
+- İsteğe bağlı: Plaso, Velociraptor gibi bu tanımları tüketen yazılımlar.
+
+Öğrenme zorluk seviyesi nedir?
+- Orta (ortalama bir ayda öğrenilebilir): Kavramları, temel işletim sistemi artifact’lerini ve araç entegrasyonunu kavramak için.
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 6 — Rol-çekirdek zorunlu (DFIR/IR, Threat Hunting rolleri için).
+
+Alternatifleri nelerdir?
+- Velociraptor Artifact Repository (VQL artifact’leri)
+- KAPE Targets (tkape/ekape hedef tanımları)
+- OSQuery tabloları + paketleri (sorgu tabanlı yaklaşım)
+- Kurum içi playbook/cheat sheet’ler (standart dışı ama yaygın)

@@ -1,0 +1,57 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T02:11:55+03:00
+
+====== havoc ======
+Created Saturday 25 October 2025
+
+Havoc
+
+Siber güvenlik kategorisi nedir?
+- Penetration Testing: Sızma Testi (post-exploitation C2)
+- Security Operations: Güvenlik Operasyonları (mavi ekip tatbikatları)
+
+Nedir?
+- Modern, uyarlanabilir (malleable) bir “post-exploitation” komuta-kontrol (C2) çerçevesi.
+- Ücretsiz ve açık kaynak; Paul Ungur (C5pider) tarafından yazılıp sürdürülür.
+- İki parçalıdır: Teamserver (sunucu) + Client (kullanıcı arayüzü).
+
+Ne işe yarar (basit örneklerle)?
+- Erişim sağlanmış makinelerdeki “ajanları” yönetir.
+- Komut gönderir, çıktıyı geri alır.
+- Dosya ve ekran görüntüsü indirir.
+- Birden fazla operatörü bağlayıp görevlendirmeleri sıraya koyar.
+
+Ne değildir?
+- İlk erişimi sağlayan exploit aracı değildir; erişim sonrası içindir.
+- Zafiyet tarayıcısı/antivirüs/firewall değildir.
+- SIEM/SOAR gibi log toplama-otomasyon ürünü değildir.
+
+Kullanım alanları nedir?
+- Sızma testi ve kırmızı takım tatbikatları.
+- Mavi takım için C2 davranışlarını gözlemleme/egzersiz.
+
+Kullanım ortamı nelerdir?
+- Teamserver: İnternetten erişilebilir bir VPS üzerinde çalışır.
+- Client: Operatörün sunucuya bağlandığı arayüzdür.
+- Ajanlar: Teamserver’a geri bağlanır, görev alır, çıktı gönderir.
+
+Neden tercih edilir?
+- Modern ve uyarlanabilir mimari.
+- Ücretsiz/açık kaynak (şeffaflık, özelleştirme).
+- Sunucu–istemci ayrımıyla ekip çalışmasına uygun.
+- Bazı alternatifler ücretli/kapalı kaynak; bu daha erişilebilir.
+
+Kullanmak için nelere ihtiyaç vardır?
+- İnternete açık bir VPS’te Teamserver.
+- Client arayüzü ve kayıtlı/yetkili operatörler.
+- Ajanların sunucuya ulaşacağı ağ bağlantısı.
+
+Öğrenme zorluk seviyesi nedir?
+- Zor (ortalama 6 ayda öğrenilebilir): C2 mantığı, ajan görevlendirme ve operasyonel güvenlik kavramları zaman ister.
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 6 — Rol-çekirdek zorunlu: Özellikle kırmızı takım/sızma testi için; mavi takımın da anlaması değerlidir.
+
+Alternatifleri nelerdir?
+- Diğer C2 çerçeveleri: Cobalt Strike (ticari), Sliver, Mythic, Covenant.

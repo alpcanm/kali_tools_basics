@@ -1,0 +1,66 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T02:15:45+03:00
+
+====== villain ======
+Created Saturday 25 October 2025
+
+Villain
+
+- Siber güvenlik kategorisi nedir?
+  - Penetration Testing (Sızma Testi)
+  - Security Operations (Red Team/saldırı simülasyonu)
+  - General Cybersecurity (yardımcı araç)
+
+- Nedir?
+  - Çoklu ters bağlantı (reverse shell) oturumlarını tek yerden yönetmeye yarayan, hafif bir Stage 0/1 C2 çerçevesi.
+
+- Ne işe yarar (basit örneklerle)?
+  - Birden fazla Windows/Linux kabuğu arasında hızlıca geçiş yapma.
+  - Dosya yükleme (http ile) ve komut/komut dosyası çalıştırma (dosyasız).
+  - Windows’ta daha etkileşimli kabuk (ConPtyShell) alma.
+  - Komut hatalarını uyaran “Session Defender”.
+  - Aynı oturumları ekip arkadaşlarıyla paylaşma (multiplayer).
+
+- Ne değildir?
+  - Bir zafiyet tarayıcısı veya antivirüs değildir.
+  - İstismar (exploit) geliştirme kiti değildir.
+  - Kurumsal ölçekte, uzun süreli kalıcılık/implant yönetimi sunan “ağır” C2’ler (ör. Cobalt Strike) kadar kapsamlı değildir.
+
+- Kullanım alanları nedir?
+  - Sızma testi sonrası adımlar (post-exploitation).
+  - Red team saldırı simülasyonları.
+  - Güvenli, izinsiz olmayan lab/egzersiz ortamları.
+  - İç denetim ve eğitim.
+
+- Kullanım ortamı nelerdir?
+  - Operatör: Genelde Linux/macOS üzerinde terminal ortamı.
+  - Hedefler: Windows ve Linux makineler.
+  - Ağ: Geri bağlantı alabilecek erişim (gerekirse port yönlendirme/NAT).
+  - Kontrollü ve yasal yetkili ortamlar.
+
+- Neden tercih edilir?
+  - Hafif ve hızlı başlar; çoklu shell yönetiminde pratiktir.
+  - Şablon tabanlı payload üretimi ve dosyasız çalıştırma destekler.
+  - Hata önleyici kontroller ve ekip paylaşımı verimlilik katar.
+  - Daha “ağır” C2’lere göre kurulum/öğrenim eşiği nispeten düşüktür.
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - Yasal izin ve kapsam.
+  - Temel OS (Windows/Linux) ve ağ (TCP/port) bilgisi.
+  - Uyumlu sistem/bağımlılıklar (ör. Python 3) ve terminal erişimi.
+  - Test/hedef makineler ve geri bağlantı için ağ erişimi.
+
+- Öğrenme zorluk seviyesi nedir?
+  - Zor (ortalama 6 ayda öğrenilebilir): Komuta-kontrol mantığı, OS farkları ve ağ akışını kavramak gerekir.
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 6 — Rol-çekirdek zorunlu: Red team/sızma testi rollerinde güçlü şekilde gereklidir; diğer rollerde isteğe bağlıdır.
+
+- Alternatifleri nelerdir?
+  - Cobalt Strike (ticari, kapsamlı, ağır C2)
+  - Sliver (açık kaynak, çapraz platform C2)
+  - Mythic (modüler, çok dilli ajan desteği)
+  - Empire (PowerShell/Python odaklı)
+  - Covenant (.NET tabanlı C2)
+  - Metasploit/Meterpreter (entegre istismar + oturum yönetimi)

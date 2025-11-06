@@ -1,0 +1,52 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T02:10:52+03:00
+
+====== merlin ======
+Created Saturday 25 October 2025
+
+Siber güvenlik kategorisi nedir?
+- Penetration Testing (Sızma Testi)
+- Security Operations (Güvenlik Operasyonları) – saldırgan davranışı simülasyonu/purple team için
+
+Nedir?
+- Merlin, Go ile yazılmış, yetkili testlerde kullanılan bir “post-exploitation” Komuta-Kontrol (C2) sunucusu ve ajanıdır.
+- Çoklu protokol (HTTP/1.1, HTTP/2, HTTP/3/QUIC), P2P (SMB/TCP/UDP) ve farklı şifreleme/kimlik doğrulama seçeneklerini destekler.
+- Ajan üzerinden komut çalıştırma, .NET/PE/shellcode icrası ve gizlilik/OPSEC odaklı ayarlar sunar; Mythic ile entegre olabilir.
+
+Ne işe yarar (basit örneklerle)?
+- Erişim elde edilen test makineleriyle iletişimi sürdürmek (ör. “komut gönder, çıktı al”).
+- Ağ içinde yetkili test kapsamında yatay hareket simülasyonu yapmak.
+- Mavi takım için gerçekçi saldırgan trafiği ve tespit senaryoları üretmek.
+
+Ne değildir?
+- Açık bulma tarayıcısı, antivirüs, IDS/IPS veya güvenlik duvarı değildir.
+- İzin/destek olmadan saldırı yapmak için değildir.
+
+Kullanım alanları nedir?
+- Kırmızı takım, adversary emulation, purple team tatbikatları.
+- Post-exploitation laboratuvarları ve eğitimler.
+
+Kullanım ortamı nelerdir?
+- Windows/Linux/macOS üzerinde çalışan test/lab ortamları ve yetkili kurumsal değerlendirmeler.
+- HTTP/1.1–HTTP/3/QUIC egress trafiği olan ağlar; P2P için SMB/TCP/UDP erişimi olan segmentler.
+
+Neden tercih edilir?
+- Çoklu platform ve protokol desteği; P2P ile esneklik.
+- Şifreleme, kimlik doğrulama, mesaj doldurma, JA3 değiştirme gibi OPSEC özellikleri.
+- .NET/PE/shellcode icrası ve Mythic entegrasyonu.
+- Kıyas: Sliver/Covenant gibi açık kaynak C2’lere benzer; Cobalt Strike/Brute Ratel’e açık kaynak alternatifi.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Yazılı yetkilendirme, test kapsamı ve kurumsal izinler.
+- C2 sunucusu kurabilecek altyapı, ağ çıkışı ve temel işletim sistemi bilgisi.
+- Operasyonel güvenlik (OPSEC) ve kırmızı takım süreç bilgisi.
+
+Öğrenme zorluk seviyesi nedir?
+- Zor (ortalama 6 ay): C2 mantığı, OPSEC, ağ/protokol bilgisi ve işletim sistemi içgörüsü gerektirir.
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 4 — Kuvvetle tavsiye edilen (özellikle kırmızı/purple team rolleri için).
+
+Alternatifleri nelerdir?
+- Sliver (açık kaynak), Covenant, Empire/PoshC2, Metasploit Meterpreter, Havoc; ticari: Cobalt Strike, Brute Ratel.

@@ -1,0 +1,60 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-10-25T02:08:59+03:00
+
+====== sliver ======
+Created Saturday 25 October 2025
+
+Sliver
+
+- Siber güvenlik kategorisi nedir?
+  - Penetration Testing: Sızma Testi
+  - General Cybersecurity: Genel Siber Güvenlik
+  - Security Operations: Güvenlik Operasyonları
+  - Threat Hunting: Tehdit Avcılığı
+  - Incident Response: Olay Müdahalesi
+
+- Nedir?
+  - Kırmızı takım ve saldırgan taklidi (adversary emulation) için kullanılan, açık kaynaklı bir komuta-kontrol (C2) çerçevesidir.
+  - Bir sunucu üzerinden hedef makinelerde çalışan küçük ajanları (implant) yönetmeyi sağlar.
+
+- Ne işe yarar (basit örneklerle)?
+  - Güvenlik testlerinde “gerçek saldırgan” davranışlarını canlandırır: Örn. bir test bilgisayarına bağlanıp komut çalıştırma, dosya toplama.
+  - Savunma ekiplerinin alarmlarını denemek: Örn. ağ üzerinden gizli iletişim kurulduğunda SIEM uyarıyor mu?
+  - Ağda yatay hareket denemeleri: Örn. bir test kullanıcı hesabıyla diğer test makinelerine sıçrama.
+
+- Ne değildir?
+  - Bir antivirüs, güvenlik duvarı veya sihirli “tek tıkla hack” aracı değildir.
+  - Otomatik zafiyet tarayıcısı değildir.
+  - Yasal izin olmadan kullanım için değildir.
+
+- Kullanım alanları nedir?
+  - Kırmızı/purple team tatbikatları
+  - Adversary emulation senaryoları
+  - Mavi takım algılama/kural doğrulama testleri
+  - Olay müdahale tatbikatları ve laboratuvar eğitimleri
+
+- Kullanım ortamı nelerdir?
+  - İşletim sistemleri: Windows, Linux, macOS (sunucu ve ajanlar).
+  - Ağlar: Kurum içi, bulut, izole lab ortamları.
+  - C2 kanalları: mTLS, WireGuard, HTTP(S), DNS gibi farklı iletişim yolları.
+
+- Neden tercih edilir?
+  - Açık kaynak ve çok platformlu; kurumsal ticari araçlara (örn. Cobalt Strike) göre maliyetsiz ve şeffaf.
+  - Modern C2 özellikleri ve gizleme teknikleri; Metasploit’e göre operasyon-odaklı C2 tarafı daha olgun.
+  - Komut dosyasıyla otomasyon (JavaScript/TypeScript, Python) ve takım çalışması için uygun.
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - Yazılı izinli bir test kapsamı, izole veya kontrollü ağ/lab.
+  - Bir C2 sunucusu kurabilecek temel sistem yönetimi bilgisi.
+  - İstemci(ajan) çalıştırılacak test makineleri ve gerekli yetkiler.
+  - Temel ağ, işletim sistemi ve güvenlik operasyonları bilgisi.
+
+- Öğrenme zorluk seviyesi nedir?
+  - Zor (ortalama 6 ayda öğrenilebilir): C2 kavramları, OPSEC, algılama-kaçınma ve mavi takım etkileşimi gerektirir.
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 5 — Kurumsal standart: Özellikle kırmızı/purple team ve tehdit simülasyonu yapan ekipler için güçlü şekilde beklenir; diğer rollere faydalıdır.
+
+- Alternatifleri nelerdir?
+  - Cobalt Strike (ticari), Brute Ratel (ticari), Mythic (açık kaynak), Covenant (açık kaynak, .NET), Havoc (açık kaynak), Empire (PowerShell), Metasploit Framework (geniş ekosistem, C2 yönü sınırlı).
