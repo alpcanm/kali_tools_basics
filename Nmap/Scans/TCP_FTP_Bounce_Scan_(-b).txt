@@ -1,0 +1,47 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T19:37:56+03:00
+
+====== TCP FTP Bounce Scan (-b) ======
+Created Monday 10 November 2025
+
+Açıklama:
+- TCP FTP Bounce Scan (-b), Nmap’in, savunmasız bir FTP sunucusunu “aracı” yaparak hedefteki portları dolaylı yoldan taramasıdır.
+
+Ne işe yarar?
+- Doğrudan taramanın engellendiği yerlerde, aracı FTP sunucusunun erişimiyle hedefte hangi TCP portların açık/kapalı olduğunu öğrenmeye yarar.
+
+Mantık:
+- FTP’nin proxy/PORT özelliğinden yararlanır. Nmap önce FTP sunucusuna bağlanır, sonra bu sunucudan hedefte belirli portlara “dosya gönder” denemeleri yaptırır. FTP’nin dönen hata/başarı durumundan portun açık/kapalı olduğu anlaşılır.
+
+Ne zaman kullanılır?
+- Yasal ve yetkili sızma testlerinde, doğrudan taramalar filtreleniyorsa.
+- Eski/yanlış yapılandırılmış FTP sunucularının olduğu ortamlarda (günümüzde nadirdir).
+
+Ne zaman kullanılmaz?
+- Yetki yoksa (hukuka aykırıdır).
+- Modern FTP sunucuları bu özelliği kapattıysa (çoğu kapattı).
+- Hız, kapsam ve doğruluk öncelikliyse (yavaştır ve sınırlıdır).
+
+Avantaj:
+- Dolaylı tarama; kaynağın FTP sunucusu gibi görünmesi.
+- Bazı ağ filtrelerini tarihsel olarak aşabildiği durumlar.
+
+Dezavantaj:
+- 1997’de yaygındı; bugün çoğu sunucu korumalı, başarı şansı düşüktür.
+- Yavaştır, sınırlı port aralıklarıyla karşılaşabilir.
+- Etik/hukuki riskler; yalnızca izinli ortamlarda kullanılmalıdır.
+
+Örnek kullanım:
+- Söz dizimi: nmap -Pn -b kullanıcı:şifre@ftp_sunucu:21 hedef
+- Anonim giriş denenmesi: nmap -Pn -b ftp.sunucu.com hedef.com
+  Not: Yalnızca izinli sistemlerde/test ortamlarında deneyin.
+
+Verilen metnin özeti:
+- Nmap’in -b seçeneği, FTP’nin proxy özelliğini kullanarak hedefte port taraması yapar. Artık çoğu FTP sunucusu bunu engeller; bu yüzden sık sık hata mesajları görülür. Yine de nadiren savunmasız sunucular bulunabildiğinden, son çare olarak denenebilir. Başarılı olduğunda, FTP sunucusunun erişim ayrıcalıkları sayesinde hedefteki bazı portların durumunu gösterebilir.
+
+Ekstra öneriler:
+- Yasal izin olmadan kesinlikle kullanmayın; günlükler ve sorumluluk sizde olur.
+- Önce normal tarama yöntemlerini deneyin (ör. SYN/Connect taramaları).
+- Savunma tarafı için: FTP sunucularında bounce/proxy özelliğini kapatın, pasif mod zorunlu tutun, güncel yazılım kullanın.
+- Nmap çıktısını dikkatle yorumlayın; kısıtlı/filtreli portlar yanlış negatiflere yol açabilir.

@@ -1,0 +1,75 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T19:36:50+03:00
+
+====== TCP Idle Scan (-sI) ======
+Created Monday 10 November 2025
+
+Komut: TCP Idle Scan (nmap -sI)
+
+Açıklama:
+- Hedefi, kendi IP’nizi hiç göstermeden, “zombi” denen üçüncü bir makine üzerinden TCP portlarını tarar. IP ID yan kanalını kullanır.
+
+Ne işe yarar?
+- Çok gizli (stealth) port taraması yapmak.
+- IP tabanlı güven ilişkilerini (ör. firewall sadece belirli IP’ye izin veriyorsa) ortaya çıkarmak.
+- IDS/IPS kayıtlarında taramayı yapan gibi zombi IP’sinin görünmesine neden olmak.
+
+Mantık:
+- 3 adım döngüsü:
+  1) Zombi’nin IP ID değerini ölç.
+  2) Zombi’den geliyormuş gibi hedefe SYN gönder (spoof).
+  3) Zombi’nin IP ID’sini tekrar ölç ve artışı yorumla:
+	 - +2 ≈ hedef port open (zombi SYN/ACK alınca RST gönderdi).
+	 - +1 ≈ closed|filtered (ayırt edemez).
+	 - >2 ≈ zombi uygun değil/yoğun trafik var.
+- Çalışması için zombi’nin IP ID’si global ve artan olmalı, zombi düşük trafikli olmalı, ağınız spoofing’e izin vermeli.
+
+Ne zaman kullanılır?
+- Kimliğinizi gizlemek istediğinizde.
+- Hedefin IP-whitelist/ACL ile korunduğu senaryolarda güven ilişkilerini test ederken.
+- Düşük gürültülü tarama gerektiğinde.
+
+Ne zaman kullanılmaz?
+- İzin yoksa (hukuki/etik). Sadece yetkili testlerde kullanın.
+- Uygun zombi bulunamıyorsa (çoğu modern OS IP ID’yi rastgele/per-hedef yapar).
+- ISP’niz çıkışta spoofing’i engelliyorsa (egress filtering).
+- Yüksek gecikme, NAT/ara güvenlik cihazları IP ID’yi bozuyorsa.
+- IPv6 hedeflerde (idle scan IPv4 IP ID’ye dayanır).
+
+Avantaj:
+- Aşırı gizlilik: hedefe sizin gerçek IP’nizden paket gitmez.
+- IDS/IPS’yi atlatma/yanıltma potansiyeli.
+- IP tabanlı güven ilişkilerini ortaya çıkarabilir.
+
+Dezavantaj:
+- Yavaş (dakikalar sürebilir).
+- Uygun zombi bulmak zor olabilir.
+- closed ile filtered ayrıştırılamaz (closed|filtered).
+- Spoofing engellemeleriyle sıkça çalışmaz.
+
+Örnek kullanım:
+- Zombi bulma (IP ID artış tipi için):
+  - nmap -v -O 192.168.1.0/24
+  - veya nmap --script ipidseq 192.168.1.0/24
+  - Çıktıda “IP ID Sequence Generation: Incremental” iyi adaydır (genelde yazıcı/IoT gibi sakin cihazlar).
+- Zombi portunun açık/kapalı ama filtrelenmemiş olduğundan emin olun:
+  - nmap -sS ZOMBI_IP -p 80
+- Taramayı çalıştır:
+  - sudo nmap -Pn -sI ZOMBI_IP:80 HEDEF_IP -p 22,80,443
+  - Daha kapsamlı:
+	- sudo nmap -Pn -sI ZOMBI_IP:80 HEDEF -p- --max-retries 2
+- Notlar:
+  - -Pn gerçek IP’nizden ping atılmasını engeller.
+  - -sV/-O ek probeler gönderir ve kimliği açığa çıkarabilir; zorunlu değilse kullanmayın.
+  - Sonuçta bazı portlar “closed|filtered” görünür; bu normal.
+
+Verilen metnin özeti:
+- Idle scan, IP ID artışlarını kullanarak zombi üzerinden hedefe SYN gönderir; zombi’nin IP ID artış miktarına bakarak hedef port durumunu tahmin eder. +2 open, +1 closed|filtered. Çok gizlidir, güven ilişkilerini saptayabilir; ancak yavaştır, uygun zombi ve spoofing gerektirir. Nmap paralelleştirerek gruplar halinde dener, tutarsızlık görürse yeniden deneyerek hataları azaltır.
+
+Ekstra öneriler:
+- Zombi ve hedefe yakın (düşük RTT) bir zombi seçin; hız ve doğruluk artar.
+- Taramayı küçük port kümeleriyle başlayıp gerekirse genişletin.
+- --packet-trace veya -vv ile sadece laboratuvarda detay inceleyin.
+- Düzenli işletim: iyi çalışan zombileri not edin ve tekrar kullanın.
+- Yasal izin alın; kurumsal politikalara ve yerel yasalara uyun.

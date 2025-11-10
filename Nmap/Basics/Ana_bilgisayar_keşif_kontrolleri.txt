@@ -1,0 +1,61 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T19:56:52+03:00
+
+====== Ana bilgisayar keşif kontrolleri ======
+Created Monday 10 November 2025
+
+Metin **Nmap’in “Host Discovery Controls” (Ana Bilgisayar Keşif Kontrolleri)** konusunu anlatıyor.  
+Nmap, ağda hangi makinelerin aktif olduğunu anlamak için önce **ping taraması (host discovery)** yapar. Bu, daha ileri seviye taramalardan (örneğin port taraması, OS tespiti) önce yapılır.  
+Ancak duruma göre bu davranış değiştirilebilir. Metin bu aşamayı kontrol eden üç önemli Nmap seçeneğini açıklıyor:
+
+---
+
+### 🔹 1. List Scan (-sL)
+- **Ne yapar:** Hedef IP’leri **sadece listeler**, hiçbir paketi hedeflere göndermez.  
+- **Amacı:**  
+  - Hedeflerin doğru olup olmadığını kontrol etmek (örneğin yanlış IP aralığı girmemek).  
+  - Sessiz/zararsız bir ön kontrol yapmak (IDS tetiklemez).  
+- **Özellik:** Sadece DNS sorgusu yapar (isteğe bağlı olarak anonim DNS sunucularıyla da yapılabilir).  
+- **Kısıtlama:** Port taraması, OS tespiti gibi işlemler -sL ile birlikte kullanılamaz.
+
+---
+
+### 🔹 2. Disable Port Scan (-sn)
+- **Ne yapar:** Yalnızca **ping taraması** yapar, **port taraması yapmaz**.  
+- **Amaç:**  
+  - Hangi makinelerin **aktif (online)** olduğunu belirlemek.  
+  - Ağ yöneticilerinin hızlı şekilde **ağ cihazı saymak** veya **sunucu durumu izlemek** istemesi.  
+- **Gönderilen testler:**  
+  - ICMP echo  
+  - TCP SYN (443)  
+  - TCP ACK (80)  
+  - ICMP timestamp  
+- **Avantaj:** Hızlı ve az dikkat çeker.  
+- **Kullanım:** `nmap -sn <hedef>`  
+
+---
+
+### 🔹 3. Disable Ping (-Pn)
+- **Ne yapar:** **Hiçbir host discovery yapmadan** bütün IP’leri aktif varsayarak **tam tarama yapar**.  
+- **Ne zaman kullanılır:**  
+  1. Hedef sistem **ağ güvenlik duvarı nedeniyle ping’lere cevap vermediğinde**.  
+  2. Test edilen makinelerin zaten **aktif olduğu biliniyorsa**.  
+- **Dezavantaj:**  
+  - Çok zaman alır (boş IP’lere de paket gönderir).  
+  - Ağ trafiğini artırır.  
+- **Amaç:** Aktif olabilecek hiçbir sistemi kaçırmamak.
+
+---
+
+### 📘 Özetle:
+| Seçenek | Amaç                      | Gönderilen Paket     | Kullanım Durumu                                    |
+|---------|---------------------------|----------------------|----------------------------------------------------|
+| **-sL** | Hedef IP listesini görmek | Yok                  | Ön kontrol, hata önleme, sessizlik                 |
+| **-sn** | Aktif hostları bulmak     | Hafif ping paketleri | Hızlı ağ keşfi, durum kontrolü                     |
+| **-Pn** | Tüm IP’leri aktif saymak  | Tüm tarama paketleri | Güvenlik duvarını aşmak, hiçbir sistemi kaçırmamak |
+
+---
+
+**Ana fikir:**  
+Nmap, ağ taramasında zamandan kazanmak ve dikkat çekmemek için önce hangi makinelerin aktif olduğunu belirler. Ancak kullanıcı, amacına göre bu davranışı `-sL`, `-sn` veya `-Pn` seçenekleriyle değiştirebilir.

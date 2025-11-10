@@ -1,0 +1,64 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T19:28:18+03:00
+
+====== UDP Scan (-sU) ======
+Created Monday 10 November 2025
+
+Açılımı:
+- UDP Scan (Nmap -sU): UDP port taraması. UDP servislerini (DNS, SNMP, DHCP vb.) tespit eder.
+
+Ne işe yarar?
+- Hedefte hangi UDP servislerinin açık olduğunu bulur.
+- Güvenlik denetimi ve envanter çıkarma için TCP taramalarını tamamlar.
+
+Mantık:
+- Nmap her hedef porta UDP paketi yollar.
+- Yanıta göre durumlar:
+  - open: UDP yanıtı geldi (nadir).
+  - closed: ICMP port unreachable (type 3, code 3).
+  - filtered: ICMP unreachable (type 3, code 1/2/9/10/13).
+  - open|filtered: hiç yanıt yok (açık da olabilir, filtreden de düşmüş olabilir).
+- -sV (veya -A) ile protokol-özgü UDP payload’ları göndererek open|filtered durumlarını çoğu zaman “open” olarak netleştirir.
+
+Ne zaman kullanılır?
+- DNS (53), SNMP (161/162), DHCP (67/68), NTP (123) gibi UDP servislerini ararken.
+- TCP taramasıyla birlikte kapsamlı yüzey analizi yaparken.
+- Ağ envanteri ve zafiyet araştırması sırasında.
+
+Ne zaman kullanılmaz?
+- Çok kısıtlı zamanda tüm 65K UDP portları taramak gerektiğinde.
+- ICMP oran sınırlaması (rate limit) çok sıkıysa ve tarama aşırı yavaşlıyorsa.
+- Yetki/izin olmayan hedeflerde (hukuki ve etik nedenlerle).
+
+Avantaj:
+- TCP ile görünmeyen servisleri ortaya çıkarır.
+- Bazı ortamlarda nispeten “sessiz” olabilir (daha az log).
+
+Dezavantaj:
+- Yavaş olabilir (özellikle ICMP rate limit yüzünden).
+- open|filtered belirsizliği yaygındır.
+- Birçok servis boş UDP pakete yanıt vermez; doğru payload gerekebilir.
+
+Örnek kullanım:
+- Temel UDP taraması: nmap -sU hedef
+- TCP+UDP birlikte: nmap -sS -sU hedef
+- En yaygın 100 UDP portu (hızlı): nmap -sU -F hedef
+- Belirsizliği azalt (sürüm tespiti): nmap -sU -sV hedef
+- Hızlı ve pratik: nmap -sUV -F --version-intensity 0 -T4 hedef
+- Belirli portlar: nmap -sU -p 53,67,68,123,161 hedef
+- Yavaşları atla: nmap -sU --host-timeout 15m hedef
+- Birden çok hedefi paralel tara: nmap -sU --min-hostgroup 100 hedefler
+
+Verilen metnin özeti:
+- -sU, UDP portlarını tarar; çoğu açık UDP portu boş pakete yanıt vermediği için “open|filtered” sık görülür.
+- -sV (veya yeni Nmap’in UDP payload sistemi) doğru uygulama paketleri göndererek portları “open” olarak netleştirebilir.
+- UDP taramaları ICMP rate limit nedeniyle yavaşlayabilir; hızlandırmak için -F, --version-intensity 0, -T4, --min-hostgroup, --host-timeout, mümkünse güvenlik duvarının arkasından tarama önerilir.
+
+Ekstra öneriler:
+- Her zaman izinli/ yetkili hedefleri tarayın.
+- Root/administrator olarak çalıştırmak daha doğru sonuç verir.
+- UDP’ye özel NSE script’lerini kullanın (ör. --script snmp-info, ntp-info, dns-recursion).
+- Sonuçları kaydetmek için -oA kullanın.
+- Şüpheli portlar için uygulama araçlarıyla (ör. snmpwalk, dig) manuel doğrulama yapın.
+- Traceroute/nping ile TTL farklarına bakarak bazen open vs filtered ayrımı yapılabilir.

@@ -1,0 +1,41 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T19:55:01+03:00
+
+====== DNS çözümleme ======
+Created Monday 10 November 2025
+
+**Özet (Basit ve Anlaşılır):**
+
+Metin, **Nmap’in DNS çözümleme (DNS Resolution)** özelliğini ve bunun ağ keşfi (host discovery) sırasında nasıl çalıştığını anlatıyor.
+
+### 🔑 Ana Noktalar:
+
+1. **Amaç:**  
+   Nmap’in ilk hedefi, ağda **hangi cihazların aktif (çalışır durumda)** olduğunu bulmaktır. DNS bilgileri, bu cihazlar hakkında **ek bilgi (örneğin isim, konum, işlev)** verebilir.
+
+2. **Varsayılan Davranış:**  
+   Nmap, aktif olan her IP adresi için **otomatik olarak ters DNS çözümleme (reverse-DNS)** yapar.  
+   Eğer `-Pn` seçeneği ile tarama yapılırsa, bu çözümleme **tüm IP’ler için** yapılır.
+
+3. **Performans:**  
+   Nmap kendi **hızlı DNS çözümleyicisini** (parallel stub resolver) kullanır, bu sayede aynı anda birçok sorgu yapabilir ve çözümleme süresini kısaltır.
+
+4. **DNS ile İlgili Dört Seçenek:**
+
+   - `-n` → **DNS çözümlemesini tamamen kapatır.**  
+	 (Taramayı hızlandırır.)
+
+   - `-R` → **Tüm hedefler için çözümleme yapılır.**  
+	 (Aktif olup olmamasına bakılmaz.)
+
+   - `--system-dns` → **Sistemin varsayılan DNS çözümleyicisini** kullanır.  
+	 (Çok yavaştır; genelde gerekmez.)
+
+   - `--dns-servers <server1,server2,...>` → **Özel DNS sunucuları** belirtmek için kullanılır.  
+	 (Özellikle özel ağlarda veya hızlı/stealth taramalar için yararlıdır.)
+
+---
+
+**Kısaca:**  
+Nmap, ağdaki cihazları tanımlamak için DNS çözümlemesi yapar. Bu işlem hem bilgi toplamak hem de hedefleri tanımak için önemlidir. Kullanıcı, çözümlemenin nasıl yapılacağını bu dört seçenekle kontrol edebilir.

@@ -1,0 +1,65 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T18:50:08+03:00
+
+====== sS ve -sT farkı ======
+Created Monday 10 November 2025
+
+-sT (TCP connect) vs -sS (TCP SYN/Stealth) farkı
+
+Kısa karşılaştırma:
+- Çalışma şekli:
+  - -sT: OS’un connect() çağrısıyla tam TCP bağlantısı kurar (SYN → SYN-ACK → ACK).
+  - -sS: Sadece SYN gönderir, yanıtı yorumlar; bağlantıyı tamamlamaz (yarım/açılmamış).
+- Yetki:
+  - -sT: Genelde normal kullanıcıyla çalışır.
+  - -sS: Çoğu sistemde sudo/Administrator gerekir (raw paket).
+- Hız ve gürültü:
+  - -sT: Daha yavaş, hedefte uygulama/log seviyesinde “bağlantı denemesi” olarak görünür.
+  - -sS: Genelde daha hızlı ve daha az iz bırakır; yine de IDS/IPS tarafından tespit edilebilir.
+- Güvenilirlik/uyumluluk:
+  - -sT: Her yerde tutarlı çalışır.
+  - -sS: Bazı firewall’lar SYN’leri daha sıkı filtreleyebilir; bazen sonuç “open|filtered” olur.
+- Kullanım amacı:
+  - -sT: Yetkin yoksa veya ortam SYN’e izin vermiyorsa.
+  - -sS: Hızlı, nispeten sessiz ve verimli port keşfi için “ilk tercih”.
+
+Ne zaman hangisi?
+- Root/Admin yoksa: -sT kullan.
+- Hız/etkinlik ve daha az log gürültüsü istiyorsan: -sS kullan.
+- Ağ cihazları SYN’e agresif davranıyorsa ve -sS belirsiz sonuç veriyorsa: -sT dene.
+
+Örnek:
+- sudo nmap -sS 192.168.1.10 -p 1-1000
+- nmap -sT example.com -p 80,443
+
+Özet:
+- -sT tam bağlantı, yetki gerektirmez ama daha gürültülüdür.
+- -sS yarım bağlantı, yetki ister; genelde daha hızlı ve daha “sessiz”dir.
+
+
+Çıktıları aynı mı ?
+
+Kısa cevap:
+- Çoğu durumda -sT ve -sS aynı port durumlarını (open/closed/filtered) verir.
+- Ancak ağ cihazları ve güvenlik politikaları nedeniyle bazen farklı sonuçlar görebilirsin.
+
+Neden farklı çıkabilir?
+- Stateful firewall/IPS: Yarım bağlantıları (SYN) sınırlayıp düşürebilir → -sS “filtered” veya “open|filtered” görebilir; -sT ise tam bağlantı kurabildiğinde “open” diyebilir.
+- SYN proxy / load balancer: El sıkışmayı tamamlamayan taramalara farklı davranabilir → -sS belirsiz, -sT daha net sonuç verebilir.
+- RST hız sınırlaması: Hedef kapalı portlarda RST’leri kısarsa -sS “open|filtered” görebilir; -sT connect() zaman aşımı/filtered görebilir.
+- Tarpit/defender davranışları: Bazı sistemler SYN’e bilerek geç cevap verir → iki taramada da zamanlamaya bağlı farklılık çıkabilir.
+- Yetki farkı: -sS genelde sudo ister; yetki yoksa Nmap -sT’ye düşebilir ve sonuçların yöntemi değişir.
+
+Hangisine güvenmeli?
+- Genel keşif için önce -sS (sudo ile). Sonra şüpheli/“open|filtered” görünen portları -sT ile doğrula.
+- Hedefte katı güvenlik cihazları varsa iki yöntemi de karşılaştır ve -sV ile servis doğrulaması yap.
+
+Kontrol ve teşhis için öneriler:
+- sudo nmap -sS -p 1-1000 hedef --reason
+- nmap -sT -p 1-1000 hedef --reason
+- Gerekirse ayrıntı: --packet-trace, --max-retries 1-2, --defeat-rst-ratelimit, -Pn, -T3/-T4
+- Belirsiz portları tek tek dene: sudo nmap -sS -p 443 hedef ve ardından nmap -sT -p 443 hedef
+
+Özet:
+- Normal koşullarda sonuçlar aynı olur; farklar genelde firewall/IPS/proxy davranışlarından kaynaklanır. İki yöntemi birlikte kullanmak daha güvenilir bir resim verir.

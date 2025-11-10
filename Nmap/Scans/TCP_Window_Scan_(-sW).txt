@@ -1,0 +1,57 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T19:36:17+03:00
+
+====== TCP Window Scan (-sW) ======
+Created Monday 10 November 2025
+
+Açıklama:
+- TCP Window Scan (-sW), Nmap’in ACK taramasına çok benzeyen bir yöntemidir. Farkı, dönen RST paketindeki “TCP Window” değerine bakarak bazı sistemlerde açık (open) ve kapalı (closed) portları ayırt edebilmesidir.
+
+Ne işe yarar?
+- Bazı hedeflerde, ACK taramasının veremediği “open vs closed” bilgisini verir.
+- FIN/NULL/Xmas taramalarının “open|filtered” belirsizliğini gidermeye yardımcı olabilir.
+
+Mantık:
+- Nmap çıplak bir ACK gönderir.
+- Gelen yanıta şu şekilde bakar:
+  - RST içinde Window > 0 → open
+  - RST içinde Window = 0 → closed
+  - Yanıt yok veya ICMP unreachable (type 3, code 1/2/3/9/10/13) → filtered
+- Bu davranış az sayıdaki TCP yığınının (stack) bir uygulama detayıdır. Her sistemde çalışmaz; bazıları tüm portları closed gösterebilir, nadiren ters davranış bile görülebilir.
+
+Ne zaman kullanılır?
+- ACK taramasından daha ayrıntılı durum bilgisi gerektiğinde.
+- FIN/NULL/Xmas sonuçlarındaki “open|filtered” belirsizliğini ayırmak istediğinizde.
+- Hızlı, görece düşük gürültülü bir kontrol olarak.
+
+Ne zaman kullanılmaz?
+- Hedefin modern bir OS/firewall arkasında olduğu ve bu tekniği destekleme olasılığının düşük olduğu durumlarda.
+- Kesin ve güvenilir sonuç şartsa; tek başına kanıt olarak kullanmak uygun değildir.
+- İzniniz olmayan ağ/hostlarda asla kullanılmamalıdır.
+
+Avantaj:
+- Bazı sistemlerde open/closed ayrımı yapabilir.
+- Bazen FIN+ACK kombinasyonu gerektirmeden aynı sonucu verir.
+- Görece sessizdir (SYN’e göre daha az dikkat çekebilir).
+
+Dezavantaj:
+- Az sayıda sistemde işe yarar; güvenilirliği sınırlıdır.
+- Stateful firewall’lar sonucu bozabilir (yanlış pozitif/negatif).
+- Sadece TCP için geçerlidir; root/administrator ayrıcalıkları gerekebilir.
+
+Örnek kullanım:
+- nmap -sW -T4 hedef.com
+- nmap -sW -p 1-1000 192.0.2.10
+- nmap -sW -vv --reason hedef.com
+- Not: Yalnızca yetkili olduğunuz sistemleri tarayın.
+
+Verilen metnin özeti:
+- Window scan, ACK taramasıyla aynı probu gönderir; farkı, RST paketindeki TCP Window alanına bakarak bazı sistemlerde açık ve kapalı portları ayırabilmesidir. Window>0 genelde open, 0 ise closed; yanıt yok/ICMP unreachable ise filtered sayılır. Bu yöntem az sayıda sistemde çalışır, bazen sonuçlar ters de çıkabilir. Yine de, FIN taramasındaki “open|filtered” belirsizliğini ek taramalara gerek kalmadan gidermek için faydalı olabilir.
+
+Ekstra öneriler:
+- Sonuçları doğrulamak için farklı taramalarla (ör. -sS, -sA, -sF) karşılaştırın.
+- --reason ve -vv ile nedenlendirmeyi görün, pcap ile (Wireshark) paketleri teyit edin.
+- Hedef OS parmak izi (-O) ve servis versiyon taraması (-sV) ile bağlam ekleyin.
+- Çok sayıda “hepsi closed” görürseniz, bunun bu tekniği desteklemeyen bir stack’ten kaynaklanabileceğini unutmayın.
+- Yasal ve etik kurallara uyun; yalnızca izinli ortamlarda kullanın.

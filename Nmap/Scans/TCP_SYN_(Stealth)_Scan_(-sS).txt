@@ -1,0 +1,57 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T18:45:03+03:00
+
+TCP SYN (Stealth) Scan (-sS)
+
+Açılımı:
+- nmap: Ağ tarama aracı.
+- -sS: TCP SYN (Stealth) taraması yapar (yarım el sıkışma/half‑open).
+- Yetki: Ham paket ayrıcalığı ister; genelde root/Administrator ile çalıştırılır. Yetki varsa -sS zaten varsayılandır.
+- Mantık: Hedefe SYN yollar.
+  - SYN/ACK gelirse: open (açık). Nmap bağlantıyı tamamlamaz, RST ile kapatır.
+  - RST gelirse: closed (kapalı).
+  - Yanıt yok veya belirli ICMP unreachable’lar gelirse: filtered (filtreli).
+
+Ne işe yarar?
+- Hedefte hangi TCP portlarının açık/kapalı/filtreli olduğunu hızlı ve nispeten sessizce tespit eder.
+
+Ne zaman kullanılır?
+- Hızlı ve doğru TCP port durumu görmek istediğinizde.
+- Yetkili taramalarda (kendi sistemlerinizde ya da yazılı izin aldığınız ortamlarda).
+- Güvenlik testlerinde, port durumlarını net ayırmanız gerektiğinde.
+
+Ne zaman kullanılmaz?
+- Yönetici ayrıcalığınız yoksa (yerine -sT TCP Connect kullanılabilir).
+- Ağda IDS/IPS/personal firewall’ların SYN taramalarını logladığı çok hassas ortamlarda.
+- İzni olmayan hedeflerde (hukuka ve politikalara aykırıdır).
+
+Avantaj:
+- Çok hızlıdır; binlerce portu kısa sürede tarar.
+- Bağlantıyı tamamlamadığı için daha az iz bırakır.
+- Açık/kapalı/filtreli ayrımını net yapar.
+- Çoğu TCP yığınına karşı tutarlı çalışır.
+
+Dezavantaj:
+- Yine de birçok IDS/IPS tarafından tespit edilebilir; “tamamen gizli” değildir.
+- Ham paket yetkisi gerekir.
+- Bazı ağ cihazları/ACL’ler yanıtsız bırakarak sonuçları “filtered” yapmakta ısrarcı olabilir.
+
+Örnek kullanım:
+- Belirli portlar: sudo nmap -sS -p 22,113,139 scanme.nmap.org
+- İlk 1000 port: sudo nmap -sS TARGET
+- Tüm portlar: sudo nmap -sS -p- TARGET
+- Paket seviyesini görmek (öğrenme/teşhis): sudo nmap -sS --packet-trace -d -p 22,113,139 TARGET
+
+Verilen metnin özeti:
+- SYN taraması, TCP üçlü el sıkışmasını tamamlamadan (SYN gönderip cevaba göre karar vererek) kapı durumlarını belirler.
+- SYN/ACK → açık, RST → kapalı, yanıt yok/ICMP belirli kodlar → filtreli.
+- Hızlı, güvenilir ve nispeten sessizdir; ancak modern güvenlik sistemlerince genelde tespit edilir.
+- --packet-trace ve -d seçenekleri paket akışını ve tanı sürecini anlamaya yardımcı olur.
+
+Ekstra öneriler:
+- Yalnızca izinli hedefleri tarayın.
+- Gürültüyü azaltmak için hedef ve port sayısını sınırlayın (-p, --top-ports).
+- Sonuçları zenginleştirmek için gerekirse -sV (servis/versiyon) ve -O (OS tespiti) ekleyin; bunlar daha fazla trafik üretir.
+- DNS gecikmesini azaltmak için -n kullanabilirsiniz.
+- Ağ güvenilmezse zamanlamayı ayarlayın (-T3/-T4) ve tekrar iletim sayısını Nmap’in otomatiğine bırakın.

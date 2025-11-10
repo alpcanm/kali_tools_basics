@@ -1,0 +1,73 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T19:32:54+03:00
+
+====== TCP FIN, NULL, and Xmas Scans (-sF, -sN, -sX) ======
+Created Monday 10 November 2025
+
+Bu komut(lar), SYN bayrağı kullanmadan TCP portlarının durumunu anlamak için yapılan taramalardır. Nmap’de -sF (FIN), -sN (NULL) ve -sX (Xmas) seçenekleriyle kullanılır.
+
+Açıklama:
+- -sN: Hiç bayrak set edilmez (NULL).
+- -sF: Sadece FIN bayrağı set edilir.
+- -sX: FIN+PSH+URG bayrakları set edilir (noel ağacı gibi “yanar”).
+- Yanıt yorumlama:
+  - RST gelirse: kapalı (closed)
+  - Yanıt yoksa: open|filtered (açık ya da filtreli, ayırt edilemedi)
+  - ICMP unreachable (type 3, code 1/2/3/9/10/13): filtered
+
+Ne işe yarar?
+- Bazı basit/stateless firewall kurallarını (özellikle SYN’i engelleyen) aşarak port durumu hakkında ipucu verir.
+- SYN taramasından biraz daha “sessiz” olabilir.
+
+Mantık:
+- RFC 793’e göre:
+  - Kapalı porta SYN/RST/ACK içermeyen paket gelirse RST döner.
+  - Açık porta bu tip paket gelirse cevap verilmez (sessizce düşürülür).
+- Bu yüzden:
+  - RST ⇒ kapalı
+  - Cevap yok ⇒ açık ya da filtreli
+
+Ne zaman kullanılır?
+- SYN (-sS) taraması engelleniyorsa.
+- Basit paket filtreleri (iptables --syn gibi) varsa.
+- Daha düşük gürültü/stealth isteniyorsa.
+- Firewall davranışını test etmek için.
+
+Ne zaman kullanılmaz?
+- Hedef büyük olasılıkla Windows/Cisco/IBM OS/400 ise (çoğu tümüne RST döner, sonuçlar “kapalı” görünür).
+- Açık ve filtreli portları kesin ayırmanız gerekiyorsa.
+- Modern, stateful firewall/IDS ortamlarında (çoğu tespit eder).
+- Zaten bağlantı kurabilecekseniz; doğrudan SYN taraması genelde daha net sonuç verir.
+
+Avantaj:
+- SYN bitini temizlediği için bazı basit filtreleri geçer.
+- Bir miktar daha “gizli” olabilir.
+- Hızlı ve kolay uygulanır.
+
+Dezavantaj:
+- open ile filtered ayırt edilemeyebilir (open|filtered).
+- Birçok sistem RFC’yi “harfiyen” uygulamadığı için sonuçlar yanıltıcı olabilir (özellikle Windows).
+- Modern IDS/IPS tarafından genelde tespit edilir.
+
+Örnek kullanım:
+- FIN taraması: nmap -sF hedef
+- NULL taraması: nmap -sN hedef
+- Xmas taraması: nmap -sX hedef
+- Port aralığıyla: nmap -sF -p 1-1000 hedef
+- Daha hızlı zamanlama (dikkatli kullanın): nmap -sX -T4 hedef
+- Not: -sV eklemek bazı durumlarda open|filtered’i ayırmaya yardım eder ama stealth azalır.
+
+Verilen metnin özeti:
+- -sF, -sN ve -sX taramaları SYN/RST/ACK içermeyen paketlerle RFC 793 davranışını kullanır.
+- Kapalı port RST döner; açık port çoğunlukla cevap vermez. Cevap yoksa Nmap “open|filtered” der.
+- Basit (stateless) firewall’ları bazen aşar ve SYN taramasından biraz daha gizlidir.
+- Windows ve bazı cihazlarda tüm probelara RST gelir; her şey “kapalı” görünebilir.
+- open ile filtered genelde ayrılamaz; bu yüzden bazen başka tarama türüne geçmek gerekir.
+
+Ekstra öneriler:
+- Yalnızca izinli hedeflerde tarama yapın (yasal ve etik).
+- Hedef OS’nin bu tekniğe uygun olup olmadığını Nmap OS tespitiyle (nmap -O ve T2 testi) çapraz kontrol edin.
+- Sonuçlar belirsizse SYN (-sS) veya Connect (-sT) taramasına geçin; gerekirse -sV ile servis tespiti ekleyin.
+- Firewall analizi için farklı yöntemleri karşılaştırın (örn. -sA, -sW, --scanflags ile özel bayraklar).
+- Gürültüyü azaltmak için düşük hız profilleri kullanın (-T2/-T3), ama tarama süresi uzar.

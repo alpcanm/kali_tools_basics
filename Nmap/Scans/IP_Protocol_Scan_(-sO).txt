@@ -1,0 +1,76 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T19:37:28+03:00
+
+====== IP Protocol Scan (-sO) ======
+Created Monday 10 November 2025
+
+IP Protocol Scan (-sO)
+
+Bu komut, hedef makinelerin hangi IP protokollerini (ICMP, TCP, UDP, GRE, IPsec vb.) desteklediğini görmek için kullanılır.
+
+Açıklama:
+- -sO, portları değil IP protokol numaralarını tarar (0–255).
+- Nmap, farklı protokol numaralarıyla IP paketleri gönderir ve yanıtları yorumlar.
+- -p ile taranacak protokol numaralarını seçebilirsin. -F ile nmap-protocols listesindeki popüler protokolleri tarar.
+- Çıktı, protokol ve durum (open, closed, filtered, open|filtered) tablosu olarak gelir.
+
+Ne işe yarar?
+- Hangi IP protokollerinin açık olduğunu tespit eder (ör. ICMP, GRE, ESP/IPsec).
+- Hedefin tipi hakkında ipucu verir (son kullanıcı makinesi vs. router/firewall/VPN cihazı).
+- Ağdaki filtreleme/paket düşürme davranışını anlamaya yardımcı olur.
+
+Mantık:
+- Her bir IP protokol numarası için bir paket yollar.
+- Yanıtlara göre durum:
+  - Herhangi bir yanıt: open (yanıtın protokolü için)
+  - ICMP protocol unreachable (Type 3, Code 2): closed
+  - Diğer ICMP unreachable (1, 3, 9, 10, 13): filtered
+  - Hiç yanıt yok: open|filtered
+- ICMP yanıtları çoğu sistemde hız sınırlamalıdır (rate limit).
+
+Ne zaman kullanılır?
+- Router, firewall veya VPN cihazlarının hangi L3 protokollerini geçirdiğini/anlattığını görmek istediğinde.
+- TCP/UDP port taramasını, protokol düzeyinde görünürlükle tamamlamak istediğinde.
+- Hedef rolü profillemede (ör. GRE/EIGRP/OSPF görürsen router olabilir).
+
+Ne zaman kullanılmaz?
+- Amacın sadece aktif cihaz bulmaksa (ping sweep/ARP keşfi daha uygundur).
+- Servis/port keşfi istiyorsan (-sS/-sU daha uygun).
+- Ağda ICMP ağır şekilde engellenmişse sonuçlar çok “open|filtered” kalabilir.
+- Yetkin yoksa (ham paket yetkisi/root) veya yasal izinler yoksa.
+
+Avantaj:
+- 256 protokolü kapsar; TCP/UDP dışındaki yüzeyi de gösterir (GRE, ESP vb.).
+- Hedefin ağ rolünü ve filtrelemeyi anlamada faydalı.
+- Genellikle tam UDP port taramasından daha kısa sürer.
+
+Dezavantaj:
+- Servis bilgisini vermez; sadece protokol düzeyi.
+- Sıkça “open|filtered” çıkar; net sonuç az olabilir.
+- ICMP rate limit ve firewall kuralları nedeniyle sessiz kalabilir.
+- Ham paket ayrıcalığı gerektirir (çoğu sistemde root).
+
+Örnek kullanım:
+- Tüm protokoller:
+  - nmap -sO 192.0.2.10
+- Belirli protokoller (ICMP=1, TCP=6, UDP=17, GRE=47):
+  - nmap -sO -p 1,6,17,47 192.0.2.10
+- Popüler protokoller (nmap-protocols):
+  - nmap -sO -F 192.0.2.10
+- Birden çok hedef (izinli ortamlarda):
+  - nmap -sO -F 192.0.2.0/24
+
+Verilen metnin özeti:
+- -sO, IP protokol taramasıdır; port yerine protokol numaraları taranır.
+- Bazı protokoller için gerçek başlıklar eklenir (TCP/UDP/ICMP).
+- Yanıtlara göre durumlar open/closed/filtered/open|filtered olarak atanır.
+- Sonuçlar, cihaz türünü ve filtrelemeyi anlamaya yardım eder (ör. router’larda GRE/EIGRP görülebilir).
+- ICMP yanıtları hız sınırlı olabilir; yine de 256 protokol olduğu için süre yönetilebilir.
+- Komut satırında -sO ile kullanılır; -p ve -F ile kapsam ayarlanabilir.
+
+Ekstra öneriler:
+- Yalnızca izinli hedeflerde ve kendi ağında kullan.
+- Sonuçları zenginleştirmek için diğer taramalarla birleştir: -sS (TCP), -sU (UDP), -O (OS tespiti).
+- ICMP rate limit etkisini azaltmak için sabırlı ol veya hız/timing ayarlarını dikkatli kullan (-T, --max-retries).
+- Çıktıyı kaydet: -oA scan-ipproto gibi.

@@ -1,0 +1,58 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T19:35:52+03:00
+
+====== TCP ACK Scan (-sA) ======
+Created Monday 10 November 2025
+
+TCP ACK Scan (-sA)
+
+Ne işe yarar?
+- Açık portları bulmaz. Amaç, hedefteki güvenlik duvarı kurallarını anlamak: hangi portlar filtreli, hangileri “geçişe açık” (unfiltered).
+- Güvenlik duvarının stateful (durum takipli) mi stateless (durum takipsiz) mi olduğunu anlamaya yardımcı olur.
+
+Mantık:
+- Nmap, ACK bayrağı set edilmiş TCP paketleri yollar.
+- Hedeften RST gelirse: “unfiltered” (ACK paketi geçti, port açık mı kapalı mı belirsiz).
+- Hiç cevap yoksa veya belirli ICMP unreachable kodları gelirse: “filtered”.
+- Stateful duvarlar “durum” görmediği için sahte ACK’i genelde düşürür (filtered). Stateless duvarlar çoğunlukla geçirir (unfiltered).
+
+Ne zaman kullanılır?
+- Güvenlik duvarı davranışını ve filtrelenen portları haritalamak istediğinde.
+- Başka tarama tipleriyle (örn. FIN/SYN) birleştirip mantıksal çıkarım yapmak istediğinde.
+
+Ne zaman kullanılmaz?
+- Amacın “hangi portlar açık?” sorusunun net cevabıysa (SYN -sS veya Connect -sT daha uygundur).
+- Gürültü oluşturmanın kritik olduğu ortamlarda (IDS tetikleyebilir).
+- Ağda ICMP engelli ve paket kaybı yüksekse (yanlış “filtered” sonuçları artar).
+
+Avantaj:
+- Firewall kurallarını görselleştirmede çok etkilidir.
+- Stateful vs stateless ayrımı yapmaya yardımcı olur.
+- Genelde hızlıdır ve hedef servislere tam el sıkışma yapmaz.
+
+Dezavantaj:
+- Açık/kapalı port ayrımı yapamaz.
+- Farklı ağ/duvar ayarlarında sonuçlar tutarsız görünebilir.
+- Ham paket gerektirdiği için bazı sistemlerde yönetici/root izni ister.
+
+Örnek kullanım:
+- Temel:
+  - nmap -sA hedef.com
+- Hız ayarıyla:
+  - nmap -sA -T4 scanme.nmap.org
+- Belirli portlarda:
+  - nmap -sA -p 22,80,443 192.0.2.10
+- İleri seviye (bayrakları özelleştirme, nadiren gerek):
+  - nmap --scanflags ACK,PSH -p 1-1024 198.51.100.5
+
+Verilen metnin özeti:
+- -sA, ACK bayrağıyla tarama yapar ve “açık/kapalı” demek yerine portları “unfiltered” (RST dönenler) veya “filtered” (cevap yok/ICMP hata) olarak sınıflar.
+- Bu sayede güvenlik duvarının durum takibi yapıp yapmadığı ve hangi portları süzdüğü anlaşılır.
+- FIN gibi başka taramalarla birleştirildiğinde, mantıksal çıkarımla bazı portların açık olduğu sonucuna varılabilir; ancak farklı taramalar her zaman tutarlı olmayabilir.
+
+Ekstra öneriler:
+- Önce hızlı bir SYN taraması (-sS), sonra ACK (-sA) ile duvar haritası çıkar; sonuçları karşılaştır.
+- ICMP engelli ağlarda “filtered” oranı artabilir; farklı zamanlarda tekrar deneyip tutarlılığı kontrol et.
+- Hedefte tarama yapmadan önce yetki almayı unutma.
+- Gürültüyü azaltmak için hedef port aralığını daralt ve zamanlamayı dikkatli seç (-T3/-T4).

@@ -1,0 +1,59 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T19:36:39+03:00
+
+====== TCP Maimon Scan (-sM) ======
+Created Monday 10 November 2025
+
+TCP Maimon Scan (-sM)
+
+Açıklama:
+- Bu seçenek, Nmap’in TCP Maimon taramasını (-sM) uygular. Hedefe FIN/ACK bayraklı paket gönderir ve verilen yanıta göre port durumunu çıkarır.
+
+Ne işe yarar?
+- Bazı eski BSD-türev sistemlerde “açık” portlar bu pakete yanıt vermez. Nmap bu davranışı kullanarak portun durumunu açık|filtreli, kapalı veya filtreli olarak yorumlar.
+- Güncel sistemlerde çoğunlukla her porta RST döndüğü için pratikte tüm portlar kapalı görünür.
+
+Mantık:
+- RFC 793’e göre FIN/ACK probuna normalde RST beklenir.
+- Yanıtlar ve yorum:
+  - RST gelirse: closed (kapalı)
+  - Hiç yanıt yoksa (tekrar denemelere rağmen): open|filtered (açık ya da filtreli)
+  - ICMP unreachable (type 3, code 1/2/3/9/10/13): filtered (filtreli)
+
+Ne zaman kullanılır?
+- Eski BSD-tabanlı sistemler, bazı gömülü cihazlar gibi klasik davranışı sergileyen hedeflerde.
+- Güvenlik duvarı/stack anomali testi yapmak, farklı tarama tiplerine göre davranış karşılaştırması yapmak istediğinizde.
+- Düşük gürültülü (az bağlantı izi bırakan) ek bir kontrol olarak.
+
+Ne zaman kullanılmaz?
+- Modern Linux/Windows/çoğu cihazda; çünkü çoğu RST döndürür ve tarama neredeyse hep “kapalı” sonucu verir.
+- Hızlı ve güvenilir sonuç gerektiğinde (SYN scan genellikle daha etkilidir).
+- Yanlış negatif/şüpheli sonuç riski kabul edilemiyorsa.
+
+Avantaj:
+- Bazı eski/uyumsuz TCP yığınlarında işe yarayabilir.
+- Düşük görünürlük (tam el sıkışma yapmaz, genelde daha az dikkat çeker).
+
+Dezavantaj:
+- Günümüzde nadiren faydalı; çoğu hedefte tüm portlar kapalı görünür.
+- “Open|filtered” belirsizliği yüksektir; ek tarama gerektirir.
+- Zaman kaybına yol açabilir.
+
+Örnek kullanım:
+- Tek hedef:
+  - nmap -sM 192.168.1.50
+- Belirli port aralığı ve daha hızlı zamanlama:
+  - nmap -sM -p 1-1000 -T4 target.example.com
+- Daha ayrıntılı çıktı:
+  - nmap -sM -v target
+Not: Yalnızca yetkiniz olan sistemleri tarayın.
+
+Verilen metnin özeti:
+- Maimon taraması FIN/ACK probu kullanır. RFC’ye göre tüm portlar RST vermeli olsa da, eski BSD-tabanlı sistemler açık porta yanıt vermez. Nmap yanıt yoksa open|filtered, RST varsa closed, belirli ICMP hatalarında filtered der. Modern sistemlerde genelde tüm portlar kapalı görünür.
+
+Ekstra öneriler:
+- Daha güvenilir sonuç için SYN scan (-sS) veya bağlantı taraması (-sT) tercih edin.
+- Filtre/duvar davranışını görmek için ACK taraması (-sA) ve diğer “NULL/FIN/Xmas” (-sN/-sF/-sX) tipleriyle karşılaştırın.
+- Şüpheli sonuçlarda farklı zamanlama (-T0–T4) ve tekrar sayılarıyla yeniden deneyin.
+- Etik ve yasal sınırlar içinde, yazılı izinle tarama yapın.

@@ -1,0 +1,62 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T19:35:40+03:00
+
+====== Custom Scan Types with --scanflags ======
+Created Monday 10 November 2025
+
+Konu: Nmap’te --scanflags ile Özel Tarama Tipleri
+
+Ne işe yarar?
+- Nmap’in klasik tarama tipleriyle sınırlı kalmadan, istediğiniz TCP bayraklarını (SYN, FIN, RST, PSH, URG, ACK) kullanarak özel taramalar yapmanızı sağlar.
+- Amaç: Yetkili testlerde ağ/duvar korumasının davranışını anlamak, RFC uyumluluğunu gözlemek, araştırma ve hata ayıklama.
+
+Mantık:
+- --scanflags ile hangi TCP bayraklarının set edileceğini belirlersiniz.
+- İsteğe bağlı bir “temel tarama tipi” (-sS, -sF vb.) seçersiniz. Yanıtların yorumlanması bu temel tipe göre yapılır.
+  - Örn: SYN taraması (–sS) yanıtsız portu “filtered” sayarken, FIN taraması (–sF) aynı durumu “open|filtered” sayar.
+- Temel tip belirtmezseniz varsayılan SYN taraması mantığı kullanılır.
+
+Ne zaman kullanılır?
+- Kendi ağınızda/izinli hedeflerde güvenlik testi ve davranış analizi.
+- Basit “yalnızca SYN’i düşür” gibi filtrelerin gerçek etkisini ölçmek.
+- OS davranışı ve firewall kural setlerini araştırmak (lab ortamında).
+
+Ne zaman kullanılmaz?
+- İzni olmayan ağlarda/hostlarda (hukuka ve politikalara aykırı olabilir).
+- Üretim ortamında gereksiz karmaşıklık yaratıp alarm tetikleyebilecek durumlarda.
+- Net sonuç gereken durumlarda; bazı özel bayrak kombinasyonları “open|filtered” gibi belirsiz sonuç verir.
+
+Avantaj:
+- Esneklik: İstediğiniz TCP bayrak kombinasyonunu deneyebilirsiniz.
+- Davranış analizi: Basit filtreleri ve uç sistemlerin RFC’ye uyumunu test eder.
+- Bazı durumlarda daha fazla yüzey/yanıt gözlemi sağlar.
+
+Dezavantaj:
+- Sonuçlar belirsiz olabilir (özellikle FIN/NULL/Xmas türevlerinde open|filtered).
+- IDS/IPS alarmlarını tetikleyebilir; yanlış pozitif/negatifler mümkün.
+- Tüm sistemlerde tutarlı çalışmayabilir; OS’e ve ara cihazlara bağlıdır.
+- Gereksiz karmaşık komutlar bakım zorluğu yaratır.
+
+Örnek kullanım:
+- SYN/FIN özel taraması (temel: SYN):
+  - nmap -sS --scanflags SYNFIN -p 80,443 192.0.2.10
+- PSH taraması (temel: FIN mantığıyla yorumlanır):
+  - nmap -sF --scanflags PSH 198.51.100.25
+- Xmas eşleniğini --scanflags ile taklit etme:
+  - nmap -sF --scanflags FINPSHURG 203.0.113.5
+Not: Yalnızca izinli hedeflerde ve test/lab ağlarında kullanın.
+
+Verilen metnin özeti:
+- --scanflags ile TCP bayraklarını sayısal ya da sembolik (URG, ACK, PSH, RST, SYN, FIN) olarak belirleyip özel taramalar yapabilirsiniz.
+- Bir temel tarama tipi seçerseniz (örn. -sS, -sF), Nmap yanıtları o tipin kurallarına göre yorumlar; seçmezseniz SYN varsayılanıdır.
+- SYN/FIN gibi kombinasyonlar bazı basit firewall kurallarını (yalnızca SYN’i düşüren) aşmasa bile farklı davranışları ortaya çıkarabilir ve bağlantı kurulmasına dahi izin verebilen sistemler vardır.
+- FIN/NULL/Xmas mantığı, PSH/URG gibi farklı kombinasyonlarla da uygulanabilir; sonuçlar genelde benzer, bazen tespit sistemlerinden kaçınma olasılığı doğar.
+- Aşırı karmaşık komutlar pratikte nadiren ek fayda sağlar.
+
+Ekstra öneriler:
+- Her zaman yazılı izin alın; loglama ve değişiklik pencereleri planlayın.
+- Küçük ve kontrollü port aralıklarıyla başlayın; gürültüyü azaltın.
+- Hedef OS/servis ve ağ cihazı çeşitliliği nedeniyle sonuçları çapraz doğrulayın (örn. klasik -sS ve -sT ile karşılaştırın).
+- IDS/IPS ve rate-limit etkilerini not edin; gerektiğinde hız ayarlarını (örn. -T3/-T4) dikkatle kullanın.
+- Komutlarınızı belgeleyin; tekrar edilebilirlik için bayrak setlerini net yazın.

@@ -1,0 +1,56 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T19:24:30+03:00
+
+TCP Connect Scan (-sT)
+
+Açılımı:
+- Nmap’in TCP bağlantı (connect) tabanlı port taraması. Raw paket yerine işletim sisteminin connect() çağrısını kullanır.
+
+Ne işe yarar?
+- Hedefteki TCP portların durumunu (open/closed/filtered) tespit eder.
+- Açık porta tam TCP el sıkışması yapar; bazen hizmet banner’ı da alınabilir.
+
+Ne zaman kullanılır?
+- Root/administrator ayrıcalığı yoksa (raw paket izni yok).
+- IPv6 taramalarında.
+- Basit, uyumlu ve “her yerde çalışsın” istediğinizde.
+- Açık portla gerçekten oturum kurulup kurulamadığını görmek istediğinizde.
+
+Ne zaman kullanılmaz?
+- “Daha gizli ve hızlı” tarama (örn. -sS SYN) yapabilecek ayrıcalığınız varsa.
+- Hedef sistemlerin bağlantıları sıkı şekilde logladığını biliyorsanız.
+- Çok büyük ağlarda en yüksek hız öncelikliyse.
+
+Avantaj:
+- Yetkisiz (unprivileged) kullanıcıyla çalışır.
+- Çoğu platformda desteklenir, kurulum/izin derdi az.
+- Tam bağlantı nedeniyle banner alma olasılığı daha yüksek.
+
+Dezavantaj:
+- -sS’ye göre daha yavaş ve daha fazla paket üretir.
+- Kolayca loglanır ve IDS/IPS tarafından fark edilir.
+- Kötü yazılmış hizmetleri tetikleyebilir (nadir de olsa).
+
+Örnek kullanım:
+- Temel: nmap -sT scanme.nmap.org
+- Belirli portlar: nmap -sT -p 22,80,443 192.168.1.10
+- IPv6: nmap -6 -sT 2001:db8::10
+- Önce canlıları bul, sonra tara:
+  - nmap -sn 192.168.1.0/24 -oG - | awk '/Up$/{print $2}' > live.txt
+  - nmap -sT -iL live.txt --open
+- Daha hızlı zamanlama: nmap -sT -T4 target
+
+Verilen metnin özeti:
+- -sT, SYN taraması mümkün değilse varsayılan TCP taramasıdır.
+- OS’nin connect() çağrısını kullanır; açık portlarda tam el sıkışmayı tamamlar ve sonra RST ile kapatır.
+- Açık bir port için SYN taramasına göre daha fazla paket ve zaman harcar; loglanma olasılığı yüksektir.
+- Çıktı formatı SYN taramasıyla neredeyse aynıdır.
+- Yetkisiz kullanıcıların kullanabildiği az sayıdaki tarama türünden biridir (diğeri FTP bounce).
+
+Ekstra öneriler:
+- Her zaman izinli ağ/hostları tarayın.
+- Ayrıcalığınız varsa genelde -sS’yi tercih edin; hız ve gizlilik daha iyidir.
+- Gürültüyü azaltmak için belirli port aralıkları (-p) ve --open kullanın.
+- Zamanlama/kararlılık için --host-timeout ve --max-retries değerlerini ihtiyaca göre ayarlayın.
+- Büyük ağlarda önce -sn ile canlı ana makineleri tespit edip sonra -sT uygulayın.
