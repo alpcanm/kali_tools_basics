@@ -1,0 +1,66 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T21:59:05+03:00
+
+====== zaman yönetimi ======
+Created Monday 10 November 2025
+
+**Metnin Geniş Özeti (Detaylı ve Açıklayıcı)**  
+
+Bu metin, **Nmap ile yapılan uzun süren ağ taramaları** sırasında nasıl başa çıkılacağını ve zamanı nasıl daha verimli kullanılacağını anlatıyor. Nmap, ağ güvenliği testlerinde kullanılan güçlü bir tarama aracıdır, ancak özellikle **binlerce host (makine)**, **tüm TCP ve UDP portlarının (65.536 port)** veya **versiyon/system tespiti** dahil edildiğinde taramalar oldukça uzun sürebilir. Metin, bu gibi **uzun süren taramaları yönetmek için uygulanabilecek stratejilere** odaklanmaktadır.  
+
+---
+
+### 🔹 1. Çok Aşamalı (Multi-stage) Yaklaşım
+Metin, uzun süren taramaları yönetmenin en etkili yollarından birinin **çok aşamalı bir tarama stratejisi** olduğunu vurguluyor.  
+- **Tam kapsamlı bir güvenlik denetimi**, her protokol (TCP ve UDP) için tüm portların taranmasını gerektirir. Ancak tüm portlar aktif olarak kullanılmaz. Genellikle en fazla **yaklaşık 100 port yaygın olarak kullanılır**.  
+- Bu yüzden önce **-F** parametresiyle hızlı bir tarama (fast scan) yapılması öneriliyor. Bu tarama sadece **yaygın portları** tarar ve daha çabuk sonuç verir.  
+- Bu hızlı tarama sonucunda hangi hostların çevrimiçi (aktif) olduğu ve hangi popüler portların açık olduğu tespit edilir.  
+- Daha sonra arka planda, **-Pn** seçeneğiyle (host’un erişilebilirlik kontrolü yapılmadan) **tüm TCP ve UDP portlarını kapsamlı bir şekilde tarayan** uzun süreli bir tarama başlatılır.  
+- Böylece, uzun tarama sürerken güvenlik uzmanı hızlı taramadan elde ettiği sonuçları analiz edebilir.  
+- Tüm taramalar tamamlandıktan sonra, **hızlı ve kapsamlı tarama sonuçları karşılaştırılarak**, daha önce fark edilmeyen portlar veya sonradan açılan servisler belirlenebilir.  
+
+**Önemli fikir:** Uzun taramaları tek seferde değil, **önce hızlı, sonra detaylı** olmak üzere birkaç aşamada yürütmek hem zamanı daha iyi yönetmeyi hem de analiz sürecini kolaylaştırır.
+
+---
+
+### 🔹 2. Tarama Süresini Tahmin Etme ve Planlama
+İkinci önemli kısım, **taramanın ne kadar süreceğini tahmin etmek ve buna göre planlama yapmaktır.**  
+Uzun taramalar sırasında çoğu kişinin yaşadığı en büyük sıkıntı, **ne zaman biteceğini bilememektir**.  
+
+- Nmap’in **verbose modu (-v)** etkinleştirildiğinde, araç **tarama ilerlemesini ve tahmini kalan süreyi** düzenli olarak bildirir.  
+- Örnek olarak verilen komutta (Example 6.2), Nmap 29 hosta karşı 65.536 portu taramaktadır. Çıktı, taramanın yaklaşık **10 saat 18 dakika** süreceğini göstermektedir.  
+- Bu bilgiyi kullanarak taramanın toplam süresi basitçe **tarama başına ortalama süre × toplam host sayısı** olarak tahmin edilebilir.  
+
+Ayrıca, eğer:
+- **Versiyon tespiti** veya **UDP taraması** yapılıyorsa, tarama süresi daha da uzar; bu durumda diğer bileşenlerin süre tahminlerine de dikkat etmek gerekir.  
+
+---
+
+### 🔹 3. Doğru Tahmin İçin Ek Yöntemler
+Metin, tarama süresini daha doğru biçimde tahmin etmek için şu yöntemleri de öneriyor:  
+- Nmap’in **ilk grup hostları** taramasını bitirmesini bekleyerek; o grubun süresinden tüm ağın süresini **orantısal olarak tahmin etmek.** Bu, zaman açısından oldukça pratik bir yöntemdir.  
+- Ancak, **IP adres aralığına göre yapılacak tahminlerin** yanıltıcı olabileceğine dikkat çekiliyor. Çünkü ağlardaki **aktif hostlar IP aralığına eşit dağılmaz**, belirli kısımlarda “yoğunlaşma” olabilir.  
+- Bu nedenle, eğer tarama **host keşfi (ping taraması)** içeriyorsa, önce tüm ağı ping’lemek ve sonra sadece çevrimiçi hostlara göre tahmin yapmak çok daha doğru sonuç verir.  
+
+---
+
+### 🔹 4. Tarama Sırasında Zamanı Yönetmek
+Nmap, **verbose modda** zaman zaman otomatik olarak kalan süre tahmini verir. Ancak kullanıcı **<Enter>** tuşuna basarak manuel olarak da bu tahmini görebilir.  
+- Eğer kalan süre makul ise, kullanıcı bu sırada başka işlerle uğraşabilir.  
+- Eğer süre çok uzunsa, hemen **optimizasyon yapma** veya **tarama süresini uzatma** kararı alabilir.  
+- Bu tahminlere sahip olmak, **tarama bitmeden önce müdahale etme fırsatı** verir; böylece zaman veya proje teslim süresi aşılmadan önlem alınabilir.  
+
+---
+
+### 🧩 Genel Değerlendirme
+
+Metnin ana mesajı şudur:  
+**Uzun süren Nmap taramaları kaçınılmaz olabilir, ancak doğru stratejiler ve planlama ile bu süreç yönetilebilir.**
+
+Bunun için:
+1. Önce hızlı, ardından ayrıntılı tarama yapılmalı (**multi-stage approach**),  
+2. Süre tahminleri alınmalı ve plan buna göre yapılmalı,  
+3. Tahminler düzenli olarak kontrol edilip gerekirse optimizasyon yapılmalıdır.
+
+Bu yaklaşım, **zaman kaybını azaltır**, **kaynak kullanımını optimize eder** ve **ağ güvenliği analizinde sonuçlara daha sistemli şekilde ulaşmayı** sağlar.

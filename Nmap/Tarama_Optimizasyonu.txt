@@ -1,0 +1,157 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T21:53:59+03:00
+
+====== Tarama Optimizasyonu ======
+Created Monday 10 November 2025
+
+**GENİŞ VE DETAYLI ÖZET**
+
+Bu metin, **büyük bir ağ üzerinde belirli bir TCP portunun açık olup olmadığını** hızlıca bulmanın yöntemini anlatmaktadır. Özellikle, bir güvenlik açığı ya da zararlı yazılım keşfedildiğinde, bu portu kullanan tüm makineleri tespit etmek gerekir. Örneğin:
+- Yeni bir *Microsoft IIS* zafiyeti bulunursa, **port 80** (HTTP) açık olan makineler aranabilir.  
+- Bir sunucuda saldırganın **port 31337**’de arka kapı bırakması durumunda, aynı portu dinleyen diğer makineleri tespit etmek gerekir.  
+
+Tam port taraması tüm portlar için daha sonra yapılabilir; burada amaç **tek bir portu hızlıca bulmaktır.**
+
+---
+
+### **1. Temel Çözüm**
+
+**Kullanılan araç:** Nmap
+
+Basit tarama komutu şu şekildedir:
+```
+nmap -Pn -p<portnumarası> -oG <logdosyası.gnmap> <hedef_ağlar>
+```
+
+Örnek:
+```
+nmap -Pn -p80 -oG logs/pb-port80scan-%D.gnmap 216.163.128.0/20
+```
+
+- **-Pn** : Ping aşamasını atlar (hedeflerin çevrimiçi olup olmadığını kontrol etmeden tarama yapar).  
+- **-p80** : Sadece port 80’i tarar.  
+- **-oG** : Sonuçları “grep” ile kolayca aranabilir formatta kaydeder.  
+- **%D** : Dosya adında tarih eklenmesini sağlar.  
+
+Bu yöntem çalışsa da, **zamanlama (timing) ayarları optimize edilirse** tarama süresi çok daha kısa olur.  
+Örneğin:  
+Normal tarama: **1236 saniye**,  
+Optimize edilmiş tarama: **869 saniye**  
+Aşağıdaki komut kullanılır:
+```
+nmap -T4 -Pn -p80 --max-rtt-timeout 200ms --initial-rtt-timeout 150ms --min-hostgroup 512 -oG logs/pb-port80scan2-%D.gnmap 216.163.128.0/20
+```
+
+Ardından **-n** eklenirse DNS sorguları atlanır, süre **193 saniyeye** kadar düşer.  
+Bu, 4096 IP adreslik bir ağı yaklaşık 3 dakikada taramak anlamına gelir.
+
+---
+
+### **2. Sonuçları Filtreleme**
+
+Tarama sonuçları `.gnmap` dosyasına kaydedilir.  
+Aşağıdaki komutla port 80’in açık olduğu makineler seçilir:
+```
+egrep '[^0-9]80/open' logs/pb-port80scan2-*.gnmap
+```
+Sadece IP adreslerini almak için:
+```
+egrep '[^0-9]80/open' logs/pb-port80scan2-*.gnmap | awk '{print $2}'
+```
+`[^0-9]` ifadesi 3180 gibi yanlış eşleşmeleri önler.
+
+---
+
+### **3. Uygulama Örneği**
+
+Yazıda örnek olarak **Playboy dergisinin ağı** kullanılmıştır.  
+Amaç, 216.163.128.0/20 ağı içindeki makinelerde port 80 açık olanları bulmaktır (muhtemelen web sunucuları).
+
+#### a. IP Aralıklarını Bulma
+
+`whois` komutu kullanılarak Playboy’un IP aralığı bulunur:
+```
+NetRange: 216.163.128.0 - 216.163.143.255
+CIDR:     216.163.128.0/20
+```
+Bu yaklaşık **4096 IP adresi** anlamına gelir.
+
+#### b. Gecikme (Latency) Tahmini
+
+Ping ile ortalama yanıt süresi ölçülür:
+```
+ping www.playboy.com
+```
+Yanıt süresi yaklaşık **57 ms**’dir.  
+Ancak bu IP, taranacak aralıkta değildir.
+
+Bu nedenle DNS kayıtları incelenir (`dig` komutu ile) ve MX (mail) sunucularından iki tanesinin hedef aralıkta olduğu görülür:
+- mx.chi.playboy.com → 216.163.143.4  
+- mx.la.playboy.com → 216.163.128.15  
+
+#### c. Ping Engellendiğinde TCP Ping
+
+Bu sunucular ICMP ping taleplerini reddettiği için, `hping2` aracıyla **TCP Ping (port 25 SYN)** kullanılır.  
+Sonuçlar:
+- Chicago sunucusu: **~58 ms**
+- Los Angeles sunucusu: **~15 ms**
+
+Bu değerler, Nmap için kullanılacak TTL/süre ayarlamasına örnek teşkil eder.
+
+---
+
+### **4. Tarama Ayarlarının Belirlenmesi**
+
+Performansı artırmak için:
+- **--max-rtt-timeout 200ms** → Cevap sürelerinin en fazla 200 ms olmasına izin verir.  
+- **--initial-rtt-timeout 150ms** → İlk denemelerde 150 ms bekler.  
+- **-T4** → Hızlı/agresif zamanlama.  
+- **--min-hostgroup 512** → Aynı anda 512 IP taranır.  
+- **-n** → Ters DNS çözümlemelerini atlar.  
+
+Bu sayede tarama süresi ciddi şekilde azalır.
+
+---
+
+### **5. Taramanın Uygulanması**
+
+Komut:
+```
+nmap -T4 -p80 -Pn --max-rtt-timeout 200ms --initial-rtt-timeout 150ms \
+--min-hostgroup 512 -n -oG pb-port80scan-%D.gnmap 216.163.128.0/20
+```
+
+Tarama 192.97 saniyede (yaklaşık **3 dakika**) tamamlanır.  
+4096 IP’nin çoğu “filtered” (tepkisiz).  
+Açık port 80 sadece **2 IP’de** tespit edilir:
+```
+216.163.140.20
+216.163.142.135 (mirrors.playboy.com)
+```
+İlk sunucu bir Microsoft webmail sistemi, ikincisi ise açık dosya/ISO arşivleri barındırmaktadır.
+
+---
+
+### **6. Sonuç ve Yorum**
+
+- Tek port taraması çok hızlı ve verimlidir.  
+- DNS çözümlemesini ve ping aşamasını atlamak büyük zaman kazandırır.  
+- Nmap’in zamanlama parametreleri (T4, RTT, hostgroup) taramanın performansını ciddi oranda etkiler.  
+- Elde edilen sonuçlar `egrep` ve `awk` gibi araçlarla kolayca analiz edilebilir.  
+- Aynı teknikler, saldırı amacı olmayan durumlarda da (güvenlik denetimi, zafiyet tespiti vb.) çok kullanışlıdır.  
+
+---
+
+### **7. Ek Notlar**
+
+- Bu yöntem sadece **TCP portları** içindir.  
+- UDP için farklı teknikler gerekir.  
+- Belirli uygulama sürümlerini (örneğin güvenlik açığı içeren OpenSSH) bulmak için **versiyon tespiti (version detection)** kullanılabilir.  
+- Tarama performansını optimize etme konusuna detaylı olarak **“Optimizing Nmap Performance”** bölümünde değinilmiştir.  
+
+---
+
+✅ **Özetle:**  
+Bu metin, tek bir TCP portunu (örneğin 80, 22, 25 vb.) büyük bir ağ üzerinde çok hızlı biçimde taramak için Nmap’in optimize parametrelerinin nasıl kullanılacağını, DNS sorgusunu devre dışı bırakmanın ve uygun zamanlama değerleri belirlemenin ne kadar süre kazandırdığını detaylı bir şekilde açıklamaktadır.  
+Amaç, hem güvenlik açıklarını tespit etmek hem de potansiyel olarak tehlikeli sistemleri erkenden fark etmektir.

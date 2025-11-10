@@ -1,0 +1,67 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T22:06:22+03:00
+
+====== Timing template -T ======
+Created Monday 10 November 2025
+
+Bu metin, **Nmap’in zamanlama şablonlarını (-T)** ve bunların tarama hızına, doğruluğuna ve ağ üzerindeki etkiye nasıl yön verdiğini anlatıyor.  
+Aşağıda detaylı ve kapsamlı bir özet bulunmaktadır:
+
+---
+
+### **Genel Anlam**
+Nmap’te hız ve performans ayarlarını manuel olarak yapmak bazen zor ve zaman alıcı olabilir. Bu yüzden Nmap, kullanıcıya kolaylık sağlamak için **altı hazır zamanlama şablonu (timing template)** sunar. Bu şablonlar, `-T` parametresi ile seçilir. Her biri farklı hız, doğruluk ve sistem yükü dengesini temsil eder.
+
+---
+
+### **6 Zamanlama Şablonu (Timing Templates)**
+| Kod                  | Adı                                                                                                                                                                 | Özellik / Kullanım Amacı |
+|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|
+| **-T5 (Insane)**     | Aşırı hızlı tarama yapar. Çok hızlı ağlar için veya kullanıcı hızı doğruluktan daha önemli buluyorsa kullanılır, ama yanlış sonuçlar veya ağ sorunları yaşanabilir. |                          |
+| **-T4 (Aggressive)** | Ağın hızlı ve güvenilir olduğu varsayılır. Taramayı önemli ölçüde hızlandırır. Genellikle modern ağlarda önerilir.                                                  |                          |
+| **-T3 (Normal)**     | Varsayılan moddur. Genellikle dengeli ve güvenlidir. Özel bir -T değeri verilmezse Nmap bu modu kullanır.                                                           |                          |
+| **-T2 (Polite)**     | “Kibar” moddur, ağın veya hedefin yükünü azaltmak için taramayı yavaşlatır. Daha az bant genişliği ve CPU kullanımı hedeflenir.                                     |                          |
+| **-T1 (Sneaky)**     | IDS’den kaçınmak için hala yavaş çalışır ama T0’den biraz daha hızlıdır.                                                                                            |                          |
+| **-T0 (Paranoid)**   | En yavaş moddur. IDS (saldırı tespit sistemleri) fark etmesin diye çok düşük hızda tarama yapar.                                                                    |                          |
+
+---
+
+### **Detaylı Değerlendirme ve Öneriler**
+- **-T0 ve -T1**: IDS’den kaçınmak istiyorsan uygundur, ancak çok yavaştır. Binlerce hedefi taramak günler sürebilir.
+- **-T2 (Polite)**: Bazı kullanıcılar sistemlere zarar vermemek için tercih eder ama bu mod **çok yavaştır** – varsayılan moda göre 10 kata kadar uzun sürebilir.
+- **-T3 (Normal)**: Genelde en güvenli tercihtir. Sistem çökmesi veya bant genişliği sorunu çok nadirdir.
+- **-T4 (Aggressive)**: Geniş ağlar ve hızlı bağlantılar için önerilir. Genellikle pratikte en uygun ayar budur.
+- **-T5 (Insane)**: Çok hızlı ama risklidir; doğruluk azalabilir veya ağ çökmelere neden olabilir.
+
+---
+
+### **Teknik Değerler**
+Her şablon, içsel olarak farklı zamanlama değerleri (örneğin **rtt-timeout**, **scan-delay**, **max-retries**) belirler.  
+Bazı önemli farklar:
+- **-T4 ve -T5**, TCP port taramalarında gecikmeyi (scan delay) sırasıyla 10 ms ve 5 ms ile sınırlar.
+- Bu değerler, **hassas zamanlama ayarlarıyla da birlikte kullanılabilir** — eğer kullanıcı özel bir değer belirlerse o, şablonun üzerini yazar.
+- Bazı değişkenler, bu şablonlardan etkilenmez (örneğin **min-rate**, **min-hostgroup** vb.).
+
+---
+
+### **Yazarın Tavsiyesi**
+- Eğer **modern ve hızlı bir ağ** kullanıyorsan → **`-T4`** önerilir.  
+- Eğer daha temkinliysen ama çok yavaş olmasın istiyorsan → **`-T3`** yeterlidir.  
+- **`-T2`** ve daha düşükleri IDS kaçınması dışında genelde önerilmez.  
+- **Versiyon tespiti** (service version detection) kapatmak, sistem çökmesi riskini azaltmak için timing oynamalarından daha etkilidir.
+
+---
+
+### **Temel Mesaj**
+Bu bölümün anlatmak istediği şey:
+> Nmap’in -T zamanlama şablonları, kullanıcıya hız–doğruluk dengesini kolayca ayarlama imkanı verir. Genellikle -T4 en uygun seçenektir, ancak hedef ağın koşullarına göre daha düşük veya yüksek şablonlar seçilebilir.  
+
+**Kısaca:**  
+- Düşük değerler → Daha yavaş, daha gizli  
+- Yüksek değerler → Daha hızlı, daha riskli  
+
+---
+
+**Sonuç:**  
+Bu metin, Nmap taramalarında zamanlama yönetimini kolaylaştıran -T şablonlarını tanıtmakta, her seviyenin avantaj–dezavantajını açıklamakta ve pratikte en uygun olanın genelde `-T4` olduğunu vurgulamaktadır.

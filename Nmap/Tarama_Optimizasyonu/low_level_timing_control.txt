@@ -1,0 +1,153 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T22:04:41+03:00
+
+====== low level timing control ======
+Created Monday 10 November 2025
+
+Bu metin, **Nmap’in düşük seviyeli zamanlama (Low-Level Timing) kontrollerini** anlatıyor. Nmap, ağ taraması yapan bir araçtır ve bu ayarlar, taramanın **hızını, zamanlamasını ve davranış biçimini** çok hassas bir şekilde kontrol etmeye yarar.  
+
+### Metnin Ana Fikri
+- Nmap’in tarama hızını artırmak ya da azaltmak için birçok ayrıntılı seçenek vardır.  
+- Bu ayarlar genelde **tarama süresini kısaltmak** için kullanılsa da, bazı durumlarda **yavaşlatmak da avantajlı** olabilir.  
+- Tarama hızını düşürmek; **güvenlik sistemlerine yakalanmamak (IDS’leri atlatmak)**, **ağ yükünü azaltmak** ya da **ağ koşulları kötü olduğunda doğruluğu artırmak** gibi durumlarda işe yarar.  
+
+### Detaylı Açıklama ve Önemli Noktalar
+1. **Hostgroup boyutu (aynı anda taranan hedef grubu):**  
+   - Seçenekler: `--min-hostgroup`, `--max-hostgroup`  
+   Nmap aynı anda birden fazla hedefi tarayabilir. Bu seçenekler, tek seferde kaç hedefin birlikte işlenebileceğini belirler.  
+
+2. **Paralel olarak başlatılan sorgu (probe) sayısı:**  
+   - Seçenekler: `--min-parallelism`, `--max-parallelism`  
+   Nmap aynı anda kaç sorgu paketini gönderip alabileceğini kontrol eder. Paralellik artırılırsa tarama hızlanır, azaltılırsa hız düşer ama doğruluk artabilir.  
+
+3. **Sorguların zaman aşımı (timeout) değerleri:**  
+   - Seçenekler: `--min-rtt-timeout`, `--max-rtt-timeout`, `--initial-rtt-timeout`  
+   Bu ayarlar, Nmap’in bir yanıt beklerken ne kadar süre bekleyeceğini kontrol eder. Ağ yavaşsa bu değerleri artırmak, yanlış “cevap yok” (timeout) sonucunu engeller.  
+
+4. **Tekrar deneme (retransmission) sayısı:**  
+   - Seçenek: `--max-retries`  
+   Bir sorgunun cevap almadığı durumda, Nmap’in aynı sorguyu kaç kez yeniden göndereceğini belirler.  
+
+5. **Bir host’tan tamamen vazgeçme süresi:**  
+   - Seçenek: `--host-timeout`  
+   Bir hedefin yanıt vermemesi halinde Nmap’in o hedefi tamamen bırakacağı maksimum süreyi tanımlar.  
+
+6. **Her sondaj (probe) arasında bekleme süresi:**  
+   - Seçenekler: `--scan-delay`, `--max-scan-delay`  
+   Her paket arasında belli bir gecikme ekleyerek taramayı yavaşlatabilir, böylece hedef sistemin fark etmesini zorlaştırabilir veya ağın kararlılığını artırabilir.  
+
+7. **Birim zamanda gönderilen paket sayısı (oran):**  
+   - Seçenekler: `--min-rate`, `--max-rate`  
+   Nmap’in saniyede minimum ve maksimum kaç paket göndereceğini kontrol eder. Bu da doğrudan tarama hızını etkiler.  
+
+8. **Hedefin RST (Reset) cevap sınırlarını aşma:**  
+   - Seçenek: `--defeat-rst-ratelimit`  
+   Hedef sistemin belirli aralıklarla RST paketleri (bağlantı sıfırlama) göndermesini sınırlayan ayarları aşmaya yarar.  
+
+### Genel Sonuç
+Metin, Nmap kullanıcılarına ağ taramalarını **çok ince ayarlamalarla optimize etme** imkânı verir.  
+Bu ayarlarla kullanıcılar:  
+- Tarama süresini hızlandırabilir,  
+- Güvenlik duvarlarından ve IDS sistemlerinden gizlenebilir,  
+- Ağın yoğunluğuna veya kararlılığına göre daha doğru sonuçlar alabilir.  
+
+Kısaca, düşük seviyeli zamanlama kontrolleri, Nmap’i hem **verimli** hem de **işlevsel** biçimde kullanmak için **ileri seviye kullanıcıların** elindeki güçlü araçlardır.
+
+
+Elbette.  
+Aşağıda Nmap’in **Low-Level Timing Controls (düşük seviyeli zamanlama ayarları)** açıklamaları **ve varsayılan (default)** değerleriyle birlikte detaylı şekilde verilmiştir.  
+Not: Değerler Nmap sürümlerine göre küçük farklar gösterebilir ama temel mantık hep aynıdır.  
+
+---
+
+### 🔹 1. **Hostgroup (Aynı anda taranan hedef sayısı)**
+- **Seçenekler:** `--min-hostgroup`, `--max-hostgroup`  
+- **Varsayılan (default):**  
+  - Nmap bu değeri **otomatik olarak ağ hızı ve tepki süresine göre ayarlar.**  
+  - Genellikle **64** civarında başlar, performansa göre dinamik ayarlanır.  
+- **Açıklama:**  
+  Nmap aynı anda birçok host üzerinde çalışabilir. Bu sayıyı düşürmek taramayı yavaşlatır ama daha az ağ yükü oluşturur.
+
+---
+
+### 🔹 2. **Parallelism (Aynı anda gönderilen sorguların sayısı)**
+- **Seçenekler:** `--min-parallelism`, `--max-parallelism`  
+- **Varsayılan (default):** Otomatik adaptif ayar (Nmap kendi belirler).  
+  - Genelde birkaç probe (örn. 10–20 civarı) ile başlar.  
+- **Açıklama:**  
+  Nmap ağdan aldığı dönüş hızına göre paralellik miktarını otomatik ayarlar. Manuel belirlenmediğinde “akıllı” biçimde optimize eder.
+
+---
+
+### 🔹 3. **RTT (Round-trip time) Timeout değerleri**
+- **Seçenekler:**  
+  - `--initial-rtt-timeout`  
+  - `--min-rtt-timeout`  
+  - `--max-rtt-timeout`  
+- **Varsayılan (default):**
+  - `--initial-rtt-timeout`: **100 milisaniye (ms)**  
+  - `--min-rtt-timeout`: **50 ms**  
+  - `--max-rtt-timeout`: **1000 ms (1 saniye)**  
+- **Açıklama:**  
+  Nmap’in gönderdiği pakete yanıt gelmesi için beklediği süredir.  
+  Ağ yavaşsa artırılabilir, hızlıysa düşürülüp tarama hızlandırılabilir.
+
+---
+
+### 🔹 4. **Max Retries (yeniden deneme sayısı)**
+- **Seçenek:** `--max-retries`  
+- **Varsayılan (default):** **10**  
+- **Açıklama:**  
+  Nmap bir probe’dan cevap alamazsa onu tekrar yollar. 10 kez denedikten sonra cevapsız kabul eder.
+
+---
+
+### 🔹 5. **Host Timeout (Bir host’tan tamamen vazgeçme süresi)**
+- **Seçenek:** `--host-timeout`  
+- **Varsayılan (default):** **Belirlenmemiştir (sınırsız)**  
+  - Yani Nmap, süresiz olarak denemeye devam eder.  
+- **Açıklama:**  
+  Belirli bir süre sonunda cevapsız kalan host’u taramadan çıkar. Örneğin `--host-timeout 30m` dersen, 30 dakika içinde bitmeyen taramayı iptal eder.
+
+---
+
+### 🔹 6. **Scan Delay (Her sorgu arası bekleme süresi)**
+- **Seçenekler:** `--scan-delay`, `--max-scan-delay`  
+- **Varsayılan (default):** **0 saniye**  
+- **Açıklama:**  
+  Nmap paketleri arka arkaya gönderir, özel bir gecikme koymaz.  
+  Eğer hedef üzerinde IDS/IPS sistemi varsa fark edilmemek için gecikme eklenebilir (örneğin `--scan-delay 500ms`).
+
+---
+
+### 🔹 7. **Rate Limit (Saniyede gönderilen paket sayısı sınırı)**
+- **Seçenekler:** `--min-rate`, `--max-rate`  
+- **Varsayılan (default):** **Belirlenmemiş (sınırsız)**  
+  - Nmap sistem ve ağ koşullarına göre kendi hızını ayarlar.  
+- **Açıklama:**  
+  `--min-rate 1000` dersen, saniyede en az 1000 paket göndermeye çalışır.  
+  `--max-rate` üst limit belirler, ağ yükünü azaltabilir.
+
+---
+
+### 🔹 8. **Defeat RST Ratelimit (Hedefin RST yanıt süresini aşma)**
+- **Seçenek:** `--defeat-rst-ratelimit`  
+- **Varsayılan (default):** **Kapalı (off)**  
+- **Açıklama:**  
+  Bazı sistemlerde TCP RST paketleri (bağlantı sıfırlama) saniyede sınırlı sayıda gönderilir.  
+  Bu seçeneği açarak Nmap bu sınırlamayı aşmaya çalışır.
+
+---
+
+### 🔸 Genel Sonuç
+Varsayılan (default) ayarlar, çoğu kullanıcı için **dengeyi koruyan ve ağ koşullarına duyarlı** şekilde ayarlanmıştır.  
+Nmap bu değerleri otomatik olarak optimize eder; ancak:
+- Ağ çok yavaşsa **timeout ve retry** değerlerini artırmak,  
+- Tespit edilmek istenmiyorsa **scan-delay** eklemek,  
+- Hız gerekliyse **min-rate ve parallelism** değerlerini yükseltmek  
+mantıklıdır.
+
+---
+
+İstersen bu bilgileri tablo formatında da hazırlayabilirim (örneğin hızlıca bakmak için). İster misin tablo halinde de vereyim?

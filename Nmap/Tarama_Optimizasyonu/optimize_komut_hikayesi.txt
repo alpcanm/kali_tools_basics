@@ -1,0 +1,102 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T22:10:15+03:00
+
+====== optimize komut hikayesi ======
+Created Monday 10 November 2025
+
+**Geniş Özet: “Scanning 676,352 IP Addresses in 46 Hours”**
+
+Bu metin, **Mayo Clinic’teki Jack L. Mogren** tarafından kaleme alınmış gerçek bir deneyim öyküsüdür. Aynı zamanda bir **öğretici rehber** niteliğindedir. Yazar, çok büyük bir kurumsal ağda **Nmap kullanarak düzenli tarama sistemini** nasıl kurduğunu ve **tarama süresini bir haftadan 46 saate** nasıl düşürdüğünü anlatır.  
+
+---
+
+### ⚙️ Başlangıç Durumu: Devasa ve Karışık Bir Ağ
+
+- **Mayo Clinic** kurumunun Amerika genelinde üç büyük kampüs ve onlarca yan istasyonu bulunan çok geniş bir özel ağı vardır.  
+- Ağ üzerinde **70.000’den fazla aktif IP adresi** bulunmaktaydı.  
+- Ağ yönetimi genellikle **altyapı kurulumu** ile sınırlıydı. Yani “ihtiyacın varsa biz kurarız” anlayışı hakimdi.  
+- Ancak, **ağ içinde nelerin bağlı olduğunu** bilen kimse yoktu. Güvenlik önlemleri sadece dış sınırda güçlüydü; iç ağ zayıf korumaya sahipti (yazar bu durumu "candy bar syndrome" benzetmesiyle açıklar: dışı sert, içi yumuşak).  
+
+---
+
+### 💥 Dönüm Noktası: Slammer Virüsü (2003)
+
+- 2003 yılı başında **Slammer (W32.SQLExp)** isimli bilgisayar kurdu ağa bulaştı.  
+- Bu virüs, **MS SQL Server 2000** ve **MSDE 2000** yüklü sistemleri hedef alıyordu.  
+- Ancak kimse bu hizmetlerin ağ üzerinde **nerede ve kim tarafından yönetildiğini** bilmiyordu.  
+- Bilgi eksikliği nedeniyle, virüsle mücadele **aylarca sürdü.**
+
+Bu olay, kurumun anlayışını değiştirdi. Artık hedef “**Ağda ne olduğunu bilmek (Know what’s on the network)**” olmalıydı.  
+
+---
+
+### 🧰 Çözüm: Nmap ile Düzenli Ağ Tarama Sistemi
+
+Yazar, bu hedefe ulaşmak için açık kaynaklı ve ücretsiz olan **Nmap** aracını kullanmaya karar verdi.  
+- Özellikle **işletim sistemi tespiti (OS fingerprinting)** özelliği ve **kullanıcı katkılarından** faydalanılabileceğini vurgular.  
+- Amaç: Ağ üzerindeki cihazların listesini çıkarmak ve hangi tür cihazlar olduğunu otomatik tanımlamak.
+
+---
+
+### ⚡ Teknik Süreç: Denemeler, Ayarlar ve Optimizasyon
+
+1. **İlk Tarama:**
+   - Kullanılan komut:
+	 ```
+	 nmap -O -PE -v -oX mayo.xml -iL ip_networks.txt
+	 ```
+   - Bu ağda **676.352 IP adresi** mevcuttu.
+   - Tarama çok yavaş ilerliyordu; hızına göre tamamlanması **yaklaşık 1 hafta** sürecekti.
+
+2. **İyileştirmeler:**
+   - **Zamanlama politikası (–T5)**: “insane” hız modu seçildi.
+   - **Hızlı tarama (–F)**: daha az port (1600 yerine yaklaşık 1200) tarıyor.
+   - **–osscan-limit**: yalnızca açık portu olan makinelerde işletim sistemi tespiti yapıyor.
+
+   Yeni komut:
+   ```
+   nmap -O -T5 -PE -F --osscan-limit -v -oX mayo.xml -iL ip_networks.txt
+   ```
+   Buna rağmen tarama hâlâ birkaç gün sürüyordu.
+
+3. **Daha Fazla Kısaltma:**
+   - `nmap-services` dosyası düzenlenerek taranan port sayısı **270’e indirildi.**
+   - Süre **49 saate** düştü.
+
+4. **Son Ayarlar:**
+   - Ayrıntılı çıktı (verbose) kaldırıldı, çıktı dosyası /dev/null’a yönlendirildi.
+   - Bu değişikliklerle **tarama süresi 46 saate** indi.
+
+   Nihai komut:
+   ```
+   nmap -O -T5 -PE -F --osscan-limit --max-rtt-timeout 100ms \
+		--max-parallelism 100 --min-hostgroup 100 \
+		-oX mayo.xml -iL ip_networks.txt
+   ```
+
+- **Sonuç:** 66.558 cihaz aktif olarak tespit edildi.
+
+---
+
+### 📊 Sonuçlar ve Devam Planları
+
+- Yazar, bu taramayı **haftalık olarak** tekrarlamayı planlamaktadır.
+- Çıktılar **XML formatında** kaydedilip bir **MS SQL veritabanına** aktarılacaktır.  
+- Diğer tarama verileriyle birleştirildiğinde, kurum artık **ağın tamamını haritalayabilmekte** ve “ağda ne var” sorusuna yanıt verebilmektedir.
+- Gelecekte tarama yükünü birden fazla sisteme bölmeyi planlamaktadır.
+
+---
+
+### 🎯 Önemli Noktalar
+
+- **Güvenliğin temeli, önce neye sahip olduğunu bilmektir.**
+- **Ağ envanteri** oluşturmadan etkili güvenlik sağlamak mümkün değildir.  
+- **Nmap**, doğru ayarlarla dev ağlarda bile etkili bir araçtır.  
+- **Optimizasyon (port azaltma, hız politikaları, filtreleme)** ciddi zaman kazandırır.  
+- **Slammer olayı**, proaktif ağ güvenliğinin neden gerekli olduğunu göstermiştir.  
+
+---
+
+**Kısaca:**  
+Mayo Clinic, bir virüs saldırısından sonra ağını tam olarak tanımak ve kontrolü ele almak istemiştir. Jack L. Mogren, Nmap aracını kullanarak yüz binlerce IP adresini düzenli ve hızlı biçimde tarayabilecek bir yöntem geliştirmiş, ağın gerçek yapısını ortaya çıkarmayı başarmıştır. Tarama süresi 1 haftadan 46 saate indirilmiş, güvenlik yönetimi ise veriye dayalı hale getirilmiştir.
