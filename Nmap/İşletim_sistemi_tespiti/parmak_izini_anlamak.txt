@@ -1,0 +1,149 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T23:28:30+03:00
+
+====== parmak izini anlamak ======
+Created Monday 10 November 2025
+
+**Geniş ve Detaylı Özet – “Understanding an Nmap Fingerprint”**
+
+Bu metin, Nmap’in (bir ağ keşif ve güvenlik tarama aracı) **işletim sistemi (OS) tespitinde kullandığı “fingerprint” (parmak izi)** sistemini anlatır.  
+Amaç, Nmap’in bir hedef sistemin ağ cevaplarını analiz ederek onun işletim sistemi hakkında tahminde bulunmasını sağlamaktır.
+
+---
+
+### 🔹 1. Nmap Fingerprint Nedir?
+- **Fingerprint**, bir cihazın ağ tepkilerinin özetidir.  
+  Nmap bu tepkileri analiz ederek hedef sistemin hangi işletim sistemine ait olabileceğini çıkarır.
+- Her OS’in TCP/IP protokol davranışları farklıdır, bu yüzden bu farklardan “imzalar” oluşturulur.
+- Nmap, bu imzaları **nmap-os-db** adlı veri tabanında saklar.
+
+---
+
+### 🔹 2. Fingerprint Türleri
+Nmap iki tür fingerprint kullanır:
+
+#### a) **Subject Fingerprint**
+- Nmap’in bir sistemi taradıktan sonra elde ettiği “ham” test sonuçlarıdır.
+- Eğer Nmap bu veriyi veri tabanındaki OS’lerle tam eşleştiremezse, bu fingerprint’i yazdırır.  
+  Kullanıcı bunları Nmap geliştirici ekibine gönderebilir.
+- Daha sade ve spesifiktir (yalnızca o taramaya özgüdür).
+
+#### b) **Reference Fingerprint**
+- Nmap’in kendi veri tabanında kayıtlı, önceden bilinen işletim sistemi imzalarıdır.
+- Genelleştirilebilirler: aynı OS’in farklı varyasyonlarını (örneğin farklı donanım, sürücü veya sürüm) kapsayacak şekilde ayarlanabilir.
+- OS adı, sınıfı ve CPE bilgisi içerir.
+- Subject fingerprint’lerle eşleştirme bu referanslara göre yapılır.
+
+---
+
+### 🔹 3. Subject Fingerprint’in Yapısı
+Bir subject fingerprint, karışık karakterlerden oluşan kısa ve yoğun bir formattadır, ama belirli bir yapıya sahiptir:
+
+- Her satır, bir **test kategorisini** temsil eder.  
+  Örnek:  
+  `SEQ` (TCP sıralama testleri),  
+  `OPS` (TCP seçenekleri),  
+  `WIN` (pencere boyutu),  
+  `T1–T7` (farklı TCP sondaları),  
+  `U1` (UDP testi),  
+  `IE` (ICMP Echo testleri).
+
+- Her testin içinde `<test>=<değer>` şeklinde çiftler bulunur.
+- `%` sembolü testleri birbirinden ayırır.
+- Boş değerler (“Q=”) ya da eksik testler (“T2(R=N)”) alınan yanıt olmaması veya geçersiz sonuç anlamına gelir.
+- Eksik testler, o sistemde ilgili yanıtın alınmadığını veya testin atlandığını gösterir.
+
+---
+
+### 🔹 4. SCAN Satırı
+- `SCAN` satırı taramanın genel bilgilerini içerir, OS hakkında değil, taramanın **koşullarını** gösterir.
+- Bu bilgiler, geliştiricilerin fingerprint gönderimlerini yorumlamasına yardım eder.
+
+Temel alanlar:
+- **V:** Nmap sürümü  
+- **D:** Tarama tarihi  
+- **OT/CT:** Kullanılan açık/kapalı TCP portları  
+- **CU:** Kapalı UDP portu  
+- **PV:** Hedef özel IP alanında mı (RFC1918)?  
+- **DS & DC:** Hedefe olan ağ mesafesi ve hesaplama yöntemi  
+- **G:** Sonuçların gönderilmeye uygun olup olmadığı  
+- **TM:** Unix zaman damgası  
+- **P:** Nmap’in çalıştığı platform (ör. i686-pc-linux-gnu)
+
+---
+
+### 🔹 5. Reference Fingerprint’in Yapısı
+Reference fingerprint’ler subject fingerprint’lere benzer, ama daha kapsamlıdır:
+
+Ek satırlar şunlardır:
+- **Fingerprint:** OS’in serbest biçimli tanımı.  
+  Örnek: “Fingerprint Microsoft Windows XP Professional SP1”
+- **Class:** Hiyerarşik sınıflandırma.  
+  Format: `Vendor | OS Family | OS Generation | Device Type`
+  - Vendor: Üretici (Apple, Cisco, Microsoft)
+  - OS Family: Ürün ailesi (Windows, Linux, IOS)
+  - OS Generation: Sürüm veya jenerasyon (ör. 2.6.X, XP)
+  - Device Type: Cihaz türü (genel amaçlı, yazıcı, yönlendirici vs.)
+- **CPE:** Common Platform Enumeration karşılığı.  
+  Standart formatta OS veya donanım tanımlar (`cpe:/o:apple:mac_os_x:10.2.8` gibi).
+
+---
+
+### 🔹 6. Referans Formatındaki Değişkenlik
+- Aynı işletim sistemi, farklı cihazlarda veya ayarlarda küçük farklar gösterebilir.
+- Bu yüzden reference fingerprint’ler, **genelleştirme** amacıyla:
+  - Bazı testleri çıkarabilir (örneğin yanıt alınmayan testler).
+  - Veya **ifade (expression)** operatörleri kullanabilir:
+	- `|` → “veya” (örn. `W=F424|FAF0`)
+	- `-` → aralık (örn. `SP=7-A`)
+	- `>` ve `<` → karşılaştırma operatörleri.
+
+Bu sayede tek bir fingerprint, bir OS’in çok sayıda varyasyonuyla eşleşebilir.
+
+---
+
+### 🔹 7. OS Tanımlamada Belirsizlikler
+- Aynı fingerprint birkaç farklı cihaza veya OS sürümüne ait olabilir.  
+  Sebepler:
+  - Aynı çekirdek veya sürücülerin farklı cihazlarda kullanılması.  
+  - OEM cihazların yeniden markalanması.
+- Nmap bu durumda birkaç olası eşleşmeyi birden gösterebilir, örneğin:
+  > “Cisco 1200 WAP, HP ProCurve switch veya Xerox printer olabilir.”
+
+---
+
+### 🔹 8. IPv6 Fingerprint’leri
+- IPv6 için farklı bir sınıflandırma sistemi kullanılır.
+- Burada reference fingerprint yoktur; öğrenme (training) algoritması sonucunda **özellik matrisleri** oluşturulur.
+- Subject fingerprint biçimi IPv4’e benzer, ancak farklı alanlar içerir:
+  - **S1–S7:** Alınan her cevabı temsil eder.
+  - Her satırda:
+	- `P`: Paketin içeriği (hex ve kısaltılmış biçimde)
+	- `ST`: Gönderildiği zaman
+	- `RT`: Alındığı zaman
+  - `EXTRA` satırı ek bilgileri saklar (örneğin Flow Label).
+
+- IPv6 fingerprint’ler daha çok **makine öğrenimiyle sınıflandırma** amacıyla kullanılmaktadır.
+
+---
+
+### 🔹 9. Sonuç ve Önemli Noktalar
+- Nmap’in fingerprint yapısı, ham veriyi kısa, taşınabilir ve kolay karşılaştırılabilir biçimde sunmak için tasarlanmıştır.
+- **Subject fingerprint** → tarama sonucu  
+  **Reference fingerprint** → veri tabanı karşılaştırması  
+- **SCAN satırı** taramanın koşullarını;  
+  **SEQ, OPS, T1–T7, U1, IE** gibi bölümler ise sistemin ağ özelliklerini açıklar.
+- Reference fingerprint’lerde:
+  - **Fingerprint**: OS açıklaması  
+  - **Class**: Yapılandırılmış sınıflandırma  
+  - **CPE**: Standartlaştırılmış kimliklendirme
+- IPv6 fingerprinting tamamen farklı yöntemlerle değerlendirilir, istatistiksel bir model kullanılır.
+
+---
+
+✅ **Özetle:**  
+Nmap fingerprint sistemi, bir cihazın OS’ini anlamak için ağ iletişim detaylarını imzaya dönüştürür.  
+Bu imzalar referans veritabanıyla karşılaştırılır.  
+Subject fingerprint, tarama sonucu; reference fingerprint ise bilinen OS tanımıdır.  
+Her iki türün yapısı inceliklidir ama prensip aynıdır: **ağ davranışına göre OS tahmini**.

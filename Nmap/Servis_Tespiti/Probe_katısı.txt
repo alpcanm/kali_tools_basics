@@ -1,0 +1,84 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T23:08:58+03:00
+
+====== Probe katısı ======
+Created Monday 10 November 2025
+
+Bu metin, **Nmap isimli açık kaynaklı ağ tarama aracının sürüm tespiti veritabanının** nasıl geliştirildiğini, topluluk katkılarının önemini ve kullanıcıların bu sürece nasıl dahil olabileceğini anlatıyor.  
+Aşağıda geniş ama sade bir özet yer alıyor:
+
+---
+
+### 🔹 Genel Anlamı
+Nmap, ağlardaki servisleri (örneğin web sunucusu, FTP, posta servisi gibi) tanımlamak için güçlü bir **“servis tespiti”** sistemine sahip. Ancak bu sistemin işe yarayabilmesi için, **çok kapsamlı bir hizmet veritabanına** ihtiyacı var.  
+Bu veritabanı, Nmap geliştiricilerinin tek başına oluşturabileceği bir şey değil; çünkü dünya üzerinde çok farklı cihaz, işletim sistemi ve yazılım kombinasyonu var.  
+
+İşte burada **topluluğun katkısı** (Community Contributions) devreye giriyor.
+
+---
+
+### 🔹 Nmap Topluluğunun Katkı Sağlama Yolları
+Topluluk, Nmap’in sürüm tespiti veri tabanını üç temel şekilde geliştiriyor:
+
+1. **Yeni servis parmak izleri (service fingerprints) göndererek**  
+2. **Veritabanı düzeltmeleri (corrections) göndererek**  
+3. **Yeni tarama sorguları yani “probes” oluşturarak**
+
+---
+
+### 1. Servis Parmak İzi (Fingerprint) Gönderme
+- Nmap bir servisi tanımlayamadığında, **“fingerprint”** adı verilen teknik bir çıktı üretir.  
+- Eğer kullanıcı hangi servisin çalıştığını biliyorsa (örneğin “vsFTPd 3.0.3” gibi), bu fingerprint dosyasını **Nmap’in verdiği bağlantıya gönderir.**
+- Bu gönderim genelde **anonimdir** ve birkaç dakika sürer.  
+- Gönderen kişi isterse, daha ayrıntılı fingerprint almak için `-d` seçeneğini kullanabilir.  
+- Geliştiriciler bu fingerprintleri veritabanına kolaylıkla entegre eder.
+
+🟢 **Amaç**: Tanımlanamayan servislerin de gelecekte tanınabilir hale gelmesi.
+
+---
+
+### 2. Veritabanı Düzeltmeleri Gönderme
+- Bazen Nmap yanlış bir servis adı, sürüm ya da işletim sistemi bilgisi döndürebilir.  
+- Bu durumda kullanıcı, doğru bilgiyi geliştiricilere iletebilir.  
+- Ancak gönderimden önce bazı şeylere dikkat edilmeli:
+  - **Nmap’in yeni sürümünün kullanıldığına emin olun.** (Çünkü hata belki zaten düzeltilmiştir.)
+  - **Gerçekten hangi servisin çalıştığından kesin emin olun.** Yanlış bildirim, veritabanını bozar.
+  - Hangi portta, hangi servisin yanlış tanındığını gösteren detaylı bir komut çıktısı (`nmap -O -Pn -sSV …`) eklenmelidir.
+- Doğrulanan düzeltmeler, veritabanını daha doğru hâle getirir.
+
+🟢 **Amaç**: Tanımlamaların daha genel, doğru ve güncel olmasını sağlamak.
+
+---
+
+### 3. Yeni “Probes” (Yeni Tarama Sorguları) Gönderme
+- Bazen servis hiçbir tanıma tepkisi vermez (yani fingerprint oluşturulamaz).  
+- Bu durumda kullanıcı, **yeni bir probe (sorgu tipi)** oluşturabilir.  
+- Yeni probe, servisten kesin bir tepki almayı kolaylaştırır.
+- Yeni probe oluşturulurken:
+  - Öncelikle Nmap’in **en güncel sürümü indirilmelidir.**
+  - Servisin nasıl çalıştığı ve el sıkışma (handshake) protokolü incelenmelidir. (Gerekirse Wireshark gibi araçlarla)
+  - Uygun bir sorgu dizgisi (probe string) oluşturulur.
+  - Bu sorgu Nmap’e eklenip test edilir.  
+  - Alınan sonuçlar (farklı örneklerle birlikte) **<dev@nmap.org>** adresine gönderilir.
+
+🟢 **Amaç**: Daha önce tanımlanamayan servislerin tespit edilmesini sağlamak, Nmap’e yeni test türleri kazandırmak.
+
+---
+
+### 🔹 Metnin Vurgulamak İstediği Ana Noktalar
+1. **Nmap topluluğunun katkısı** olmadan veritabanı çok sınırlı kalırdı.  
+2. **Kullanıcılar**, ellerindeki bilgiyle kolayca katkı sağlayabilir.  
+3. Katkı yapmanın üç yolu vardır:  
+   - Yeni fingerprint göndermek  
+   - Yanlış bilgileri düzeltmek  
+   - Yeni probe oluşturmak  
+4. **Dikkatli ve doğru bilgi vermek** çok önemlidir; yanlış bilgi veritabanını bozabilir.  
+5. **Sürekli güncelleme** Nmap’i güçlü tutar – bu nedenle son sürümün kullanılması önerilir.  
+
+---
+
+### 🔹 Sonuç
+Bu metin, **Nmap’in başarısının arkasındaki en büyük gücün topluluk olduğunu** vurgular.  
+Teknik olarak güçlü bir araç olmasına rağmen, onu asıl geliştiren şey kullanıcıların aktif katılımıdır.  
+Her kullanıcı birkaç dakikasını ayırarak **daha doğru ve kapsamlı bir hizmet tespit sistemi** oluşmasına katkıda bulunabilir.

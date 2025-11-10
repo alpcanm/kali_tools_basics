@@ -1,0 +1,80 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T22:23:21+03:00
+
+====== Servis Tespit kullanım ======
+Created Monday 10 November 2025
+
+Metnin özeti (geniş ve detaylı):  
+
+Bu bölümde **Nmap’in sürüm tespiti (version detection)** özelliğinin nasıl kullanılacağını, hangi durumlarda ne tür sonuçlar verdiğini ve hangi bilgilerin elde edilebileceğini uygulamalı örneklerle anlatıyor.  
+
+---
+
+### 1. Sürüm tespiti özelliğinin etkinleştirilmesi
+- Nmap’te sürüm tespiti yapmak için **-sV** parametresi eklenir.  
+- Daha gelişmiş bir tarama yapılmak istenirse **-A** seçeneği kullanılabilir. Bu seçenek, sürüm tespiti yanında işletim sistemi tespiti, script tarama ve daha agresif yöntemleri de otomatik olarak devreye sokar.  
+- Komut örneği:  
+  ```
+  nmap -A -T4 -F www.microsoft.com
+  ```
+  Burada:  
+  - **-T4** daha hızlı ve agresif zamanlamayı,  
+  - **-F** sadece önemli (nmap-services’te tanımlı) portların taranmasını sağlar.
+
+---
+
+### 2. Microsoft örneği (Example 7.2)
+Bu örnekte **www.microsoft.com** adresi taranmıştır.  
+Sonuçlarda:  
+- 22. portta **SSH (Akamai-I SSH)**,  
+- 80 ve 443 portlarında **AkamaiGHost HTTP/HTTPS hizmeti** tespit edilmiştir.  
+
+Bu taramada önemli olan nokta:  
+- 443 numaralı port önce SSL olarak tanımlandı, ardından Nmap SSL bağlantısı üzerinden tekrar tarama yaparak arka planda çalışan web sunucusunun **AkamaiGHost** olduğunu belirledi.  
+- Buradan Nmap’in **SSL üzerinden de sürüm ve servis tanıması** yapabildiği anlaşılıyor.
+
+Ayrıca tarama sonucunda cihazın **Linux tabanlı** olduğu, sürüm aralığının da **2.1.x–2.2.x** olduğu tespit edilmiştir.  
+Bu örnek, Nmap’in farklı protokollerde (özellikle SSL ile gizlenmiş servislerde) de etkin çalışabileceğini gösteriyor.
+
+---
+
+### 3. Yerel sistem örneği (Example 7.3)
+Bu örnek daha karmaşık ve çeşitlidir; `localhost` üzerinde yapılan tarama sonucunda birçok servis tespit edilmiştir.  
+
+Taranan ve bulunan hizmetler arasında:  
+- **FTP (WU-FTPD 2.6.1)**  
+- **SSH (OpenSSH 3.1p1)**  
+- **DNS (BIND 9.2.1)**  
+- **HTTP/HTTPS (Apache 2.0.39, mod_perl modülüyle)**  
+- **Printing servisi (CUPS 1.1)**  
+- **Proxy (Junkbuster)**  
+- **X11 erişimi (izin verilmemiş)** gibi çeşitli servisler yer alıyor.
+
+Bazı dikkat çekici durumlar:  
+- **Port 111 (rpcbind)**: Nmap bu portta “brute-force RFC” taramasıyla servis versiyonunu bulmuştur.  
+- **Port 515 (printer)**: Servis adı belirlenmiş ancak sürümü tespit edilememiştir.  
+- **Port 953 (rndc?)**: Servis ismi bile doğrulanamamış, sadece “?” işaretiyle belirsizlik belirtilmiştir.  
+
+Nmap’in burada göstermeye çalıştığı, **servis tespiti bazen kesin olmayabilir**; cevap alınamayan portlarda sadece tahmin yürütülür.  
+Nmap, aldığı yanıtlara göre bir “fingerprint” (parmak izi) oluşturur. Eğer henüz bilinmeyen bir servisle karşılaşırsa, kullanıcıya bu bilgiyi toplulukla paylaşarak Nmap veritabanına ekleme imkânı tanır.
+
+---
+
+### 4. Ek bilgiler ve gözlemler
+- Bazı servisler yalnızca sürüm numarası değil, **daha detaylı bilgi** de üretebilir (örneğin Apache’nin yüklü modülleri, SSH protokol versiyonu, erişim izinleri vb.).  
+- SSL ile sarmalanmış servislerin (örneğin SSH veya finger üzerinden SSL) kullanımı normalde alışılmadıktır; bu örneklerde sadece **Nmap’in SSL tarama yeteneklerini test etmek amacıyla** kullanılmıştır.  
+
+---
+
+### 5. Metnin ana mesajı
+Nmap’in sürüm tespiti özelliği:
+- Sadece açık portları değil, bunların **hangi servis ve sürüme ait** olduğunu da tespit eder.  
+- SSL gibi şifreli protokollerde bile hizmeti çözümleyebilir.  
+- Belirsiz veya yanıt vermeyen portlarda tahmin yapar, bu durumda kullanıcı katkısı (probes yazma) ile sistem geliştirilebilir.  
+- -A parametresiyle birlikte kullanıldığında oldukça kapsamlı bilgi verir.
+
+---
+
+**Sonuç:**  
+Metin boyunca anlatılmak istenen temel fikir, Nmap’in “version detection” özelliğinin son derece güçlü ve esnek olduğudur. Kullanıcılar basit bir komutla hem servis, hem sürüm, hem de sistem detayı elde edebilirler. Ayrıca Nmap, bilinmeyen servisler için topluluk katkısını destekleyerek sürekli gelişen bir yapıya sahiptir.

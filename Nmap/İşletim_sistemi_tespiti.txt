@@ -1,0 +1,116 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T23:25:16+03:00
+
+====== İşletim sistemi tespiti ======
+Created Monday 10 November 2025
+
+Bu metin **Nmap’in işletim sistemi (OS) tespiti** özelliğinin nasıl çalıştığını ve nasıl kullanılacağını açıklıyor. Aşağıda metnin geniş, detaylı ama sade bir özeti yer almaktadır:  
+
+---
+
+### 🔹 Genel Anlam
+Nmap’in OS tespiti, bir sistemin hangi işletim sistemini kullandığını belirlemeye yarar. Teknik olarak karmaşık olsa da, kullanımı oldukça kolaydır. Basitçe **-O** seçeneği eklenerek aktif edilir. **-v** (verbose) seçeneği ise sonuçları ayrıntılı hale getirir.
+
+---
+
+### 🔹 Örnek Kullanım (Example 8.1)
+Komut:  
+```
+nmap -O -v scanme.nmap.org
+```
+Bu komutta:
+- Açık, kapalı ve filtrelenmiş portlar listelenir.
+- Nmap, sistemin **Linux 2.6.X** çalıştığını tespit etmiştir.
+- Ayrıca sistemin **1.6 gün** açık kaldığını (uptime), **10 hop** uzakta olduğunu vb. göstermiştir.
+
+---
+
+### 🔹 Raporun Ana Bileşenleri
+
+#### 🧩 **1. Device type (Cihaz tipi)**
+Nmap, sistemin genel türünü belirler: örneğin **router**, **firewall**, **printer** veya **general purpose** (genel amaçlı bilgisayar).  
+Birden fazla tür varsa aralarına “|” konur.
+
+#### 🧩 **2. Running (Çalışan OS)**
+Bu alan, hangi işletim sistemi ailesi ve sürümünün çalıştığını gösterir.  
+Örneğin: `Linux 2.6.X`  
+Eğer Nmap kesin bir sürüm belirleyemiyorsa tahmin yapar ve doğruluk oranı (%) verir.  
+Kesin sonuç bulamazsa, “JUST GUESSING” ibaresi eklenir.
+
+#### 🧩 **3. OS CPE**
+Bu, **Common Platform Enumeration (CPE)** standardına göre işletim sisteminin kimliğini gösterir.  
+Örnek: `cpe:/o:linux:linux_kernel:2.6.39`  
+`/o` işletim sistemini, `/h` donanımı ifade eder.
+
+#### 🧩 **4. OS details (Detaylar)**
+Sisteme ait tam OS sürümü, model, mimari bilgileri gibi daha insan odaklı açıklamaları içerir.  
+Örnek: `Linux 2.6.20-1 (Fedora Core 5)`  
+Eğer tam eşleşme yoksa Nmap "Aggressive OS guesses" başlığı altında olası sonuçları yüzdeleriyle gösterir.
+
+#### 🧩 **5. Uptime guess (Tahmini çalışma süresi)**
+Nmap, sistemin **ne kadar süredir açık olduğunu** hesaplamaya çalışır.  
+Bu, TCP zaman damgalarına bakarak yapılır.  
+Ancak bazı sistemler rastgele başlangıç değerleri kullandığı için tahmin hatalı olabilir.  
+Yine de çoğu durumda yaklaşık bir sonuç verir. Bu bilgi yalnızca **verbose (-v)** modda gösterilir.
+
+#### 🧩 **6. Network Distance (Ağ mesafesi)**
+Hedefe ulaşmak için kaç yönlendirici (hop) geçtiğini tahmin eder.  
+Yerel makine için 0, aynı ağdaki bir sistem için 1 olur.  
+Hesaplanamıyorsa bu satır atlanır.
+
+#### 🧩 **7. TCP Sequence Prediction**
+Bu, hedef sistemin **TCP oturum numaralarını (ISN)** ne kadar tahmin edilebilir şekilde ürettiğini gösterir.  
+Tahmin edilmesi kolaysa, sistem **TCP spoofing** saldırılarına açık olabilir.  
+Nmap çıktısında “Difficulty” değeri zorluk seviyesini belirtir (0 kolay, yüksek değer zor).  
+Bu bilgi genellikle sadece **-v** modunda görünür.
+
+#### 🧩 **8. IP ID Sequence Generation**
+Sistemin IP paketlerindeki **ID alanını nasıl oluşturduğunu** analiz eder.  
+Bu, bazı saldırılarda (örneğin **TCP Idle Scan**) kullanılabilir.  
+Ancak bu bilgi de genellikle yalnızca **verbose** modda görüntülenir.
+
+---
+
+### 🔹 Alternatif OS Tespiti Yöntemi: Servis Taraması (-sV)
+Eğer IP tabanlı fingerprinting kesin sonuç vermezse, **versiyon taraması (-sV)** ile çalışan servislerin türü ve sürümünden OS anlaşılabilir.  
+**Example 8.2**’de olduğu gibi, FTP servisi bilgileri “HP-UX” işletim sistemini ortaya çıkarır.
+
+---
+
+### 🔹 Hangi yöntemi kullanmalı?
+En etkili yol: **her iki yöntemi birlikte kullanmak**  
+Yani:  
+```
+nmap -A hedef
+```
+`-A` hem **-O (OS tespiti)** hem **-sV (versiyon tespiti)** seçeneklerini birlikte çalıştırır.  
+Böylece sonuçlar daha güvenilir olur. Farklı sonuçlar çıkarsa bu durumun nedenini araştırmak gerekir (örneğin NAT veya proxy olabilir).
+
+---
+
+### 🔹 Ekstra OS Tespit Seçenekleri
+- **--osscan-limit** → Yalnızca açık ve kapalı portları olan hedeflerde OS tespiti yapar; zamandan kazandırır.  
+- **--osscan-guess / --fuzzy** → Nmap, yakın ama tam eşleşmeyen OS’leri tahmin etmeye çalışır.  
+- **--max-os-tries <sayı>** → Nmap’in tespit denemesi sayısını belirler (varsayılan 2–5).  
+  Düşürülürse hız artar, yükseltilirse doğruluk artar.
+
+---
+
+### 🔹 Dikkat Edilmesi Gerekenler
+- Bazı sistemler **OS spoofing** ile Nmap’i kasıtlı olarak yanlış yönlendirebilir.  
+- En doğru sonuç için birden fazla yöntemle doğrulama yapılmalıdır.  
+- Nmap topladığı düşük seviyeli IP yığını (stack) bilgilerini **fingerprint** olarak saklar.  
+  Eğer OS tanınmazsa bu parmak izi Nmap’e gönderilerek veritabanının geliştirilmesi sağlanabilir.  
+  `-d` seçeneği ile bu detaylar görüntülenebilir.
+
+---
+
+### ⚙️ **Sonuç**
+- **OS tespiti (-O)**: Hedef sistemin işletim sistemini tahmin eder.  
+- **Versiyon tespiti (-sV)**: Açık servislerden OS bilgisi çıkarır.  
+- **-A**: Her ikisini birden çalıştırır.  
+- **-v**: Ayrıntılı çıktılar sağlar.  
+- **--osscan-limit / --osscan-guess / --max-os-tries** gibi ek komutlar taramayı optimize eder.  
+
+Bu bölümler, Nmap’in OS tespit sürecinin hem **teknik arka planını** hem de **pratik kullanımını** anlatır. Özellikle “Device type”, “Running”, “OS details” ve “Uptime guess” gibi alanlar sonuç yorumlama açısından en önemli kısımlardır.

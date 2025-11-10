@@ -1,0 +1,141 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T22:48:17+03:00
+
+====== probe ekleme ======
+Created Monday 10 November 2025
+
+Bu metin, **Nmap’in “nmap-service-probes” dosya formatını** ve bu dosyada kullanılan komutların (direktiflerin) nasıl çalıştığını anlatıyor.  
+Bu dosya, **servis ve versiyon tespiti** için Nmap'in hangi veriyi gönderip ne tür cevap beklediğini belirler.  
+Her satır bir kural içerir ve Nmap taramalarda bu kuralları izleyerek açık portlardaki servisleri tanır.  
+
+---
+
+## Genel Yapı
+
+- Dosya **satır bazlıdır**.  
+  `#` ile başlayan yorumlar ve **boş satırlar** dikkate alınmaz.  
+- Geri kalan satırlar çeşitli **direktifleri** içerir.  
+- Her “Probe” (prob) bir testtir; sistem servisine belirli bir mesaj gönderir ve alınan cevaba göre eşleşme yapılır.
+
+---
+
+## Ana Direktifler ve Özellikleri
+
+### 1. **Exclude**
+- **Amaç:** Belirli portları versiyon taramasından hariç tutar.  
+- **Kullanım:** `Exclude <port numaraları>`  
+- Örnek: `Exclude 53,T:9100,U:30000-40000`
+- **Neden önemli:** Özellikle yazıcılar (9100–9107) gibi cihazlarda veri göndermek istemeyiz; aksi halde yazıcı birçok sayfa basabilir.  
+- **Not:** `--allports` seçeneği ile bu hariç tutulmuş portlar da taranabilir.
+
+---
+
+### 2. **Probe**
+- **Amaç:** Hangi mesajın gönderileceğini tanımlar.  
+- **Format:** `Probe <protocol> <probename> <probestring> [no-payload]`  
+- **Parametreler:**
+  - `protocol`: TCP veya UDP
+  - `probename`: insan tarafından okunabilir isim
+  - `probestring`: gönderilecek veri (C/Perl biçiminde kaçış karakterleri desteklenir)
+  - `no-payload`: UDP taramalarında bu probu doğrudan payload olarak gönderme
+- **Örnek:**  
+  `Probe TCP GetRequest q|GET / HTTP/1.0\r\n\r\n|`
+- “NULL probe” sadece pasif dinleme yapar; veri göndermez, servislerin açılış mesajını bekler.
+
+---
+
+### 3. **match**
+- **Amaç:** Gelen cevabın hangi servise ait olduğunu tanımlar.  
+- **Format:** `match <service> <regex> [<versioninfo>]`
+- **İşleyiş:**  
+  - Cevap “Perl tarzı regex” ile analiz edilir (`m/.../i` formatında).  
+  - `svc`, `ftp`, `smtp`, `ssh` gibi servis adlarıyla eşleştirilir.  
+  - `versioninfo` kısmı isteğe bağlıdır, detaylı bilgi sağlar.
+  
+#### versioninfo Alanları
+Her biri belli bir bilgi türünü belirtir:
+| Kısaltma | Anlamı                  | Açıklama                             |
+|----------|-------------------------|--------------------------------------|
+| **p/**   | Ürün veya sağlayıcı adı | “Apache httpd”, “Sun Solaris rexecd” |
+| **v/**   | Versiyon                | Uygulamanın sürüm numarası           |
+| **i/**   | Ek bilgi                | Servisin davranışı veya mod bilgisi  |
+| **h/**   | Hostname                | Servisin beyan ettiği makine adı     |
+| **o/**   | İşletim sistemi         | Servisin çalıştığı OS                |
+| **d/**   | Cihaz türü              | “webcam”, “print server” vb.         |
+| **cpe:** | CPE etiketi             | Yazılım, OS veya donanım kimliği     |
+
+#### Yardımcı Fonksiyonlar
+- `$P(n)`: Yazdırılamaz karakterleri temizler.  
+- `$SUBST(n,"_"," .")`: Değer içinde alt çizgiyi nokta ile değiştirir.  
+- `$I(n,">")`: Bayt dizisini sayıya çevirir (big/little endian destekli).
+
+---
+
+### 4. **softmatch**
+- **Amaç:** Ön tanımlı bir eşleşme bulur ama tarama durmaz. Daha doğru “match” sonuçları bulunabilir.  
+- **Format:** `softmatch <service> <regex>`  
+- Şeklen “match” ile aynıdır, sadece versiyon bilgisi içermez.  
+- Genellikle “muhtemel servis” durumları için kullanılır.
+
+---
+
+### 5. **ports / sslports**
+- **Amaç:** Probun en sık hangi portlarda işe yaradığını belirtir.  
+- **Örnek:**  
+  - `ports 21,43,110`
+  - `sslports 443`
+- SSL için ayrı tanımlanır çünkü aynı servis şifreli çalışabilir (örneğin HTTP → 443 HTTPS).
+
+---
+
+### 6. **totalwaitms**
+- **Amaç:** Nmap’in cevap bekleme süresini milisaniye cinsinden belirler.  
+- **Örnek:** `totalwaitms 6000`  
+- Genelde gerekli değildir, özel durumlar içindir.
+
+---
+
+### 7. **tcpwrappedms**
+- **Amaç:** Bir bağlantı hemen kapanırsa “tcpwrapped” olarak etiketlenir.  
+- Genellikle NULL probe için kullanılır.  
+- Örnek: `tcpwrappedms 3000`
+
+---
+
+### 8. **rarity**
+- **Amaç:** Probun ne kadar nadir veya özel olduğuna puan verir (1–9 arası).  
+- **Yüksek rarity (örneğin 9):** Sadece özel durumlarda denenir.  
+- **Düşük rarity:** Sık kullanılır, temel tespitlerde tercih edilir.
+
+---
+
+### 9. **fallback**
+- **Amaç:** Eşleşme bulunamazsa hangi prob(lar) denenecek belirlenir.  
+- **Format:** `fallback <probelistesi>`  
+- **Örnek:** `fallback GetRequest,GenericLines`  
+- Sıralı olarak belirtilen prob’lar denenir.  
+- TCP’de son çare olarak NULL probe’a düşer, ama UDP’de düşmez.
+
+---
+
+## “Putting It All Together” Bölümü
+Metnin sonunda tüm direktifleri nasıl bir arada kullanıldığını gösteren örnekler bulunur:
+- **Önce ‘Exclude’** ile belirli portlar hariç tutulur.
+- **Sonra “Probe” blokları** gelir:  
+  Her probe, kendi `match`, `softmatch`, `ports`, `rarity` gibi alt direktiflerine sahiptir.
+- Bu örneklerde, FTP, IMAP, printer, MySQL vb. servisler için tanımlamalar yer alır.
+
+---
+
+## **Özetle**
+- `nmap-service-probes` dosyası Nmap’in **“servis ve versiyon tespiti için beyin dosyasıdır.”**
+- Her prob Nmap’in bir bağlantı kurup yanıt analizi yapma yöntemidir.  
+- `match` ve `softmatch` eşleşmeleriyle servisler tanınır,  
+- `versioninfo` alanlarıyla ise detaylı bilgiler raporlanır.  
+- Diğer direktifler (rarity, fallback, totalwaitms vb.) probların çalışma mantığını ve önceliğini yönetir.
+- Dosya, gelişmiş kullanıcıların veya “Nmap hacker”larının **yeni servisler ekleyebilmesi** için tasarlanmıştır.  
+
+---
+
+Bu yüzden bu dosyanın mantığını anlamak, Nmap’i sadece kullanmakla kalmayıp **özelleştirilebilir bir keşif aracı** haline getirmeyi sağlar.

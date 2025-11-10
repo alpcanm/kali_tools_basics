@@ -1,0 +1,100 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T22:32:46+03:00
+
+====== Version-Trace ======
+Created Monday 10 November 2025
+
+Bu metin, **Nmap’in servis versiyon tespiti (service version detection)** özelliğinin nasıl çalıştığını adım adım gösteren bir örnektir. Yani bir hedefteki açık portlarda hangi servislerin (örneğin SSH, SMTP, HTTP, DNS) çalıştığını ve bu servislerin hangi sürümler olduğunu nasıl belirlediğini anlatır.  
+Aşağıda geniş ama anlaşılır bir özet yer alıyor:  
+
+---
+
+### 🔹 Genel Amaç:
+Nmap, sadece portların açık mı kapalı mı olduğunu değil, **o portlarda hangi servislerin ve hangi sürümde** çalıştığını bulmak ister.  
+Bunu yaparken `--version-trace` seçeneği ile yapılan her bağlantı ve veri alışverişi ayrıntılı şekilde gösterilir.  
+Örnekte, hedef **insecure.org (205.217.153.53)** adresidir.
+
+---
+
+### 🔹 İşlem Adımları:
+
+1. **Tarama Başlangıcı:**  
+   Komut:  
+   ```
+   nmap -sSV -T4 -F -d --version-trace insecure.org
+   ```
+   Bu komut, açık portları bulur (`-sS` SYN taraması) ve sonra **servis taraması (`-sV`)** yapar.  
+   Hedef aktif olarak görünüyor. İlk aşamada 4 açık port tespit ediliyor:
+   - 22 (SSH)
+   - 25 (SMTP)
+   - 53 (DNS)
+   - 80 (HTTP)
+
+2. **NULL Probes (başlangıç sorguları):**  
+   Her açık porta, başlangıçta “boş” bir bağlantı (NULL probe) yapılır.  
+   Böylece servis kendiliğinden bir banner veya yanıt verirse, versiyon tespiti kolaylaşır.  
+   Tüm bağlantılar başarıyla yapılır.
+
+3. **Port 22 – SSH:**  
+   Cevap: `SSH-1.99-OpenSSH_3.1p1`  
+   SSH servisi kendini açıkça tanıtmıştır.  
+   Sonuç: **OpenSSH 3.1p1, protokol 1.99**
+
+4. **Port 25 – Mail (SMTP):**  
+   İlk yanıt: `220 core.lnxnet.net ESMTP`  
+   Bu, bir e-posta sunucusudur ama tipi bilinmez. Nmap bu duruma “softmatch” der; yani sadece SMTP’ye özel daha ileri testler yapılır.  
+   Ardından Nmap “HELP” komutunu yollar (`HELP\r\n`).  
+   Sunucu dönüş yapar: `214 qmail home page: http...`  
+   Bu cevap sayesinde servis **qmail smtpd** olarak tanımlanır.  
+   Sonuç: **qmail smtpd**
+
+5. **Port 53 – DNS:**  
+   İlk başta yanıt alamaz. Nmap bu defa DNS serverlardan sürüm öğrenmek için “DNSVersionBindReq” adlı özel bir sorgu gönderir (`version.bind`).  
+   Sonradan gelen yanıtta **BIND 9.2.1** sürümü tespit edilir.  
+   Sonuç: **ISC BIND 9.2.1**
+
+6. **Port 80 – Web (HTTP):**  
+   İlk boş denemede yanıt yoktur. Nmap bir HTTP GET isteği yollar.  
+   Sunucu büyük bir (15 KB) yanıt döndürür, bu bir Apache web sunucusudur.  
+   Ayrıntılarda versiyon okunabilir: **Apache httpd 2.0.39 (Unix) mod_perl/1.99_07-dev**  
+   Sonuç: **Apache web server 2.0.39**
+
+---
+
+### 🔹 Tarama Özeti:
+Tüm süreç yaklaşık 5–7 saniye sürmüştür.  
+Her servis doğru şekilde belirlenmiştir, ek bağlantı açmaya gerek kalmamıştır.  
+
+**Sonuç Tablosu:**
+| Port   | Durum | Servis | Versiyon                                         |
+|--------|-------|--------|--------------------------------------------------|
+| 22/tcp | open  | ssh    | OpenSSH 3.1p1 (protocol 1.99)                    |
+| 25/tcp | open  | smtp   | qmail smtpd                                      |
+| 53/tcp | open  | domain | ISC BIND 9.2.1                                   |
+| 80/tcp | open  | http   | Apache httpd 2.0.39 (Unix, mod_perl/1.99_07-dev) |
+
+---
+
+### 🔹 Önemli Noktalar:
+- `--version-trace` seçeneği, Nmap’in hangi paketi gönderdiğini ve ne yanıt aldığını ayrıntılı şekilde gösterir.  
+- “NULL probe” ifadesi, servisin kendi isteği olmadan versiyon bilgisi gönderip göndermediğini görmek için ilk adımdır.  
+- “Softmatch”, Nmap’in servisin türünü tahmin ettiği ama emin olmadığı durumları gösterir; sonrasında o servise özel ek testler yapılır.  
+- Her portun farklı tanılama yöntemi vardır (örneğin SMTP’de “HELP”, DNS’te “version.bind”, HTTP’de “GET /”).  
+- Nmap’in servis tanıma sistemi, **nmap-service-probes** isimli bir veritabanı kullanır. Burada her servise karşı test edilecek özel sorgular bulunur.  
+
+---
+
+### 🔹 Metnin Anlatmak İstediği:
+Bu örnek, Nmap’in **servis tespiti sürecinin nasıl işlediğini** pratikte göstermektedir:  
+1. Her açık porta sırayla bağlantı yapılır.  
+2. Servislerin kimlik bilgileri (banner, sürüm vb.) analiz edilir.  
+3. Gerekirse ek sorgular (probes) gönderilir.  
+4. Elde edilen bilgilere göre servis ve sürüm kesin olarak belirlenir.  
+
+Sonuçta Nmap, sadece portların açık olduğunu değil, **belirli servislerin ve sürümlerinin** neler olduğunu detaylı biçimde raporlamış olur.
+
+---
+
+📘 **Özetle:**  
+Bu metin, Nmap’in “servis versiyon tespiti”nin iç işleyişini, gönderilen sorguların (probes) ve alınan yanıtların nasıl değerlendirildiğini adım adım gösteren açıklamalı bir uygulama örneğidir.

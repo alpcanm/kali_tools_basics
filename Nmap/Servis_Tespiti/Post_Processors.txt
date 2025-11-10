@@ -1,0 +1,83 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T22:40:08+03:00
+
+====== Post Processors ======
+Created Monday 10 November 2025
+
+**GENİŞ ÖZET – “Post-processors” Bölümü**
+
+Bu metin, **Nmap’in bazı özel hizmetleri (servisleri)** daha derin inceleyebilmek için kullandığı **ek işlem (post-processing) mekanizmalarını** anlatıyor. Normalde Nmap, bir portun açık olup olmadığını ve o portta hangi servis ile hangi versiyonun çalıştığını belirledikten sonra işi bitirir. Ancak bazı servislerde Nmap, daha fazla bilgi toplamak veya özel durumları tespit etmek için ek işlemler yapar. Bu özel işlemler üç ana başlık altında ele alınır:
+
+---
+
+### **1. Nmap Scripting Engine (NSE) Entegrasyonu**
+- **Normal versiyon tespiti** genellikle, Nmap’in bir **prob (deneme sorgusu)** gönderip cevabı **düzenli ifadeler (regex)** ile eşleştirmesi esasına dayanır.  
+- Fakat bazı servisler bu şekilde kolayca tanınamaz:
+  - **Karmaşık el sıkışma (handshake) süreçleri** olan servisler vardır.
+  - **Özel prob mesajları** gerekir.
+  - Bazı servislerin cevabını anlamak için regex’ten daha **karmaşık işlem** gerekir.
+- **Skype v2** buna bir örnektir; tespit edilmesi zor olacak şekilde tasarlanmıştır. Tespiti ancak iki farklı prob göndermek ve cevapları analiz etmekle mümkündür.
+- Diğer örnek: **SNMP servisleri** bazı durumlarda farklı “community name”’ler denenerek (brute force) tanınabilir.
+- Bu tarz görevler **klasik versiyon tespiti** için uygun değildir ancak **Nmap Script Engine (NSE)** ile yapılabilir.  
+- Bu yüzden, Nmap versiyon tespitinde artık otomatik olarak NSE’yi çağırarak bu tür “zor servisleri” analiz eder.
+
+**Önemli nokta:**  
+→ NSE, Nmap’e normalde yapamayacağı karmaşık servis tespitlerini yapabilme gücü kazandırır.
+
+---
+
+### **2. RPC Grinding**
+- **SunRPC (Remote Procedure Call)**, özellikle Unix sistemlerde sıkça kullanılan bir protokoldür (örnek: NFS servisi).
+- Nmap, RPC servislerini tanımak için **yaklaşık 600 program numarası** içeren **nmap-rpc** adlı bir veritabanı kullanır.
+- Bu servisler genellikle **yüksek numaralı portlarda** çalışır ve **UDP/TCP** kullanabilir. Bu da onları **güvenlik açısından riskli** hale getirir.
+- Bazı yöneticiler bu bilgileri gizlemek için **111 nolu port (portmapper/rpcbind)** servisini engeller. Ancak, bu yeterli değildir.
+  
+Nmap bu bilgileri portmapper olmadan da öğrenebilir; şu **3 adımlı bir süreç** izler:
+1. Port taraması ile açık portlar bulunur.  
+2. Versiyon tespiti ile hangi portların RPC kullandığı belirlenir.  
+3. “RPC brute force” işlemiyle her açık RPC portuna 600 program numarasından biriyle “null command” gönderilir.  
+   - Yanlış tahminlerde hata mesajı gelir, Nmap diğer numaraları dener.  
+   - Doğru program numarası tespit edilince bağlantı kurulur ve servis tanımlanır.  
+
+Bu süreç paralel şekilde çalışır ve UDP için tekrarlama mekanizması (retransmission) vardır.  
+Nmap bir RPC portu tespit ederse bu işlem otomatik devreye girer.
+
+**Önemli Noktalar:**
+- RPC servisleri genellikle çok sayıda ve yüksek portlarda bulunur.  
+- Her biri potansiyel güvenlik açığı olabilir.  
+- Nmap, portmapper engellense bile doğrudan RPC portlarıyla iletişime geçerek hangi programların açık olduğunu anlayabilir.  
+
+---
+
+### **3. SSL Post-Processor (SSL Tünelleme)**
+- SSL, şifreli iletişim protokolüdür. Nmap, bir portta **SSL protokolü olduğunu tespit ederse**, o portla **şifreli bir bağlantı kurar** ve bu bağlantı üzerinden normal versiyon tespitini yapar.  
+- Bu sayede, servis sadece SSL üzerinden ulaşılabilir olsa bile Nmap yine de arka plandaki servisin türünü öğrenebilir (örneğin HTTPS, SMTPS vb.).
+  
+**Örnek:**
+- 80 nolu port açık → http servisi  
+- 443 nolu port açık → ssl/http servisi  
+- Her iki porttaki sürüm bilgileri aynı çıkabilir (örneğin Apache 1.3.6 tabanlı Stronghold web sunucusu).  
+
+Eğer SSL desteği:
+- **Tespit edilmezse** → “ssl/unknown” olarak görünür.  
+- **Nmap SSL kütüphaneleriyle derlenmemişse** → sadece “ssl” yazar ve sürüm bilgisi boş olur.
+
+**Teknik Bilgi:**
+- Nmap’in SSL desteği, **OpenSSL kütüphanesine** dayanır.  
+- Linux RPM versiyonlarına dahil edilmez (sistemde eksik olabilir).  
+- Kaynaktan derleme sırasında sistemde OpenSSL bulunursa, Nmap otomatik olarak bu desteği ekler.
+
+**Önemli Nokta:**  
+→ SSL post-processor sayesinde Nmap, şifreli iletişim kullanan servislerin bile arkasındaki protokolü çözümleyebilir.
+
+---
+
+### **Genel Değerlendirme**
+Bu bölümün özetiyle Nmap’in **gelişmiş servis ve versiyon tanıma sürecindeki üç önemli ek bileşeni** öne çıkıyor:
+
+1. **NSE entegrasyonu:** Karmaşık veya özel servislerin tespiti.  
+2. **RPC grinding:** RPC tabanlı servislerin otomatik tanımlanması.  
+3. **SSL tünelleme:** SSL kullanarak çalışan protokollerin çözülmesi.
+
+Bu "post-processors" mekanizmaları sayesinde Nmap, sadece “hangi port açık?” bilgisini değil, **port arkasındaki gerçek servisleri**, **gizli çalışan uygulamaları** ve **olası güvenlik açıklarını** da derinlemesine öğrenebilir.

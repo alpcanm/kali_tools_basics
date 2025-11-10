@@ -1,0 +1,156 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-11T00:20:29+03:00
+
+====== Script Kullanımı ======
+Created Tuesday 11 November 2025
+
+Bu metin, **Nmap Scripting Engine (NSE)**’nin nasıl kullanıldığını, hangi tür betikler (script) içerdiğini ve bunların nasıl seçilip çalıştırılacağını anlatan çok kapsamlı bir teknik açıklamadır.  
+Aşağıda metnin geniş bir özeti verilmiştir:  
+
+---
+
+## 🔹 Genel Bakış
+**Nmap Scripting Engine (NSE)**, ağ keşfi, güvenlik testleri ve servis tespitinde kullanılan otomatik script’lerdir. Nmap’e güçlü bir esneklik kazandırır. Çok karmaşık bir yapıya sahip olmasına rağmen, kullanımı oldukça basittir.
+
+### Temel kullanım:
+- `-sC`: En yaygın (default) script’leri çalıştırır.  
+- `--script`: İstediğiniz belirli script’leri, kategorileri veya dizinleri çalıştırmak için kullanılır.  
+- `--script-args` / `--script-args-file`: Script’lere özel argüman/parametre göndermek içindir.  
+- `--script-help`: Script’ler hakkında açıklama gösterir.  
+- `--script-trace` ve `--script-updatedb`: Genellikle hata ayıklama (debug) veya geliştirme amaçlıdır.  
+- `-A`: “Aggressive scan” seçeneği, otomatik olarak `-sC` taramasını da içinde barındırır.
+
+Script taramaları genellikle port taramalarıyla birlikte yapılır. Ancak `-sn` (sadece host keşfi) ile port taraması olmadan da çalıştırılabilir.
+
+⚠️ **Güvenlik uyarısı:** NSE script’leri “sandbox” içinde çalışmaz, yani zararlı veya hatalı script’ler sisteminize zarar verebilir. Bu nedenle üçüncü taraf script’leri sadece güvenilir kaynaklardan alınmalıdır.
+
+---
+
+## 🔹 Script Kategorileri
+Her Nmap script’i bir veya birden fazla **kategoriye** aittir. Bu kategoriler, script’in amacını veya risk seviyesini belirtir.
+
+| Kategori      | Açıklama                                                                         | Örnek Script’ler                     |
+|---------------|----------------------------------------------------------------------------------|--------------------------------------|
+| **auth**      | Kimlik doğrulama bilgileriyle ilgilenir.                                         | ftp-anon, oracle-enum-users          |
+| **broadcast** | Yerel ağ üzerinden hedef arar.                                                   | Yeni hedefleri taramaya ekleyebilir. |
+| **brute**     | Brute-force saldırıları yapar (şifre deneme).                                    | http-brute, snmp-brute               |
+| **default**   | `-sC` veya `-A` ile çalışan temel script setidir.                                | ftp-anon, http-auth                  |
+| **discovery** | Ağ yapısı ve servis bilgisi keşfeder.                                            | smb-enum-shares, html-title          |
+| **dos**       | Servisleri çökertme (Denial of Service) testi yapar.                             |                                      |
+| **exploit**   | Açıkları aktif şekilde kötüye kullanır.                                          | http-shellshock                      |
+| **external**  | Üçüncü taraf servislere (örneğin Whois) sorgu gönderir.                          | whois-ip                             |
+| **fuzzer**    | Servislere rastgele veya hatalı veri gönderip hata arar.                         | dns-fuzz                             |
+| **intrusive** | Ağ yöneticileri tarafından saldırı olarak algılanabilecek agresif testler yapar. | snmp-brute                           |
+| **malware**   | Kötü amaçlı yazılım göstergelerini tespit eder.                                  | auth-spoof                           |
+| **safe**      | Güvenli, zararsız testlerdir.                                                    | ssh-hostkey, html-title              |
+| **version**   | Servis sürümleriyle ilgilidir, `-sV` ile birlikte çalışır.                       |                                      |
+| **vuln**      | Bilinen güvenlik açıklarını tespit eder.                                         | realvnc-auth-bypass                  |
+
+### Default kategorisine script eklenme kriterleri:
+Script’in varsayılan (default) olarak çalışabilmesi için:
+- **Hızlı** olmalı, sistemi yavaşlatmamalı.  
+- **Yararlı** ve anlamlı bilgi üretmeli.  
+- **Çok konuşkan (verbose)** olmamalı, sade çıktı vermeli.  
+- **Güvenilir** sonuçlar vermeli, yanlış pozitif az olmalı.  
+- **Güvenli (non-intrusive)** olmalı, sistem çökmesine yol açmamalı.  
+- **Gizlilik** ihlali yapmamalı, üçüncü taraflara bilgi sızdırmamalı.
+
+---
+
+## 🔹 Script Tipleri ve Çalışma Aşamaları
+
+NSE script’leri dört farklı aşamada çalışabilir:
+
+1. **Prerule scripts:**  
+   Tarama başlamadan önce çalışır. Ağ genelinde hedef toplamak için kullanılır (örnek: `dns-zone-transfer`).
+
+2. **Host scripts:**  
+   Belirli bir host’un keşfi tamamlandıktan sonra çalışır.  
+   Örnek: `whois-ip`, `path-mtu`.
+
+3. **Service scripts:**  
+   Belirli portlarda veya hizmetlerde çalışır. En yaygın script türüdür.  
+   Örnek: HTTP sunucularına özel script’ler.
+
+4. **Postrule scripts:**  
+   Tüm tarama bittikten sonra, sonuçları özetlemek veya ilişkilendirmek için çalışır.  
+   Örnek: `ssh-hostkey`’nin postrule kısmı, aynı anahtarları kullanan host’ları raporlar.
+
+---
+
+## 🔹 Komut Satırı Argümanları
+
+### 1. `-sC`
+Varsayılan script’leri (default category) çalıştırır.  
+
+### 2. `--script`
+Belirli script’leri, kategorileri veya dizinleri çalıştırmak için kullanılır.  
+Karmaşık seçimler “and/or/not” mantığıyla yapılabilir.  
+Örnekler:  
+- `--script default,safe` → Bu iki kategorideki tüm script’leri çalıştırır.  
+- `--script "not intrusive"` → Güvenli olanları çalıştırır, intrusive olanları hariç tutar.  
+- `--script "http-*"` → İsmi “http-” ile başlayan tüm script’leri çalıştırır.  
+
+### 3. `--script-args`
+Script’lere parametre gönderir.  
+Örnek:  
+`--script-args broadcast-ping.timeout=300ms,creds.snmp=admin`
+
+### 4. `--script-args-file`
+Argümanları bir dosyadan okur.
+
+### 5. `--script-help`
+Belirli script’lerin veya kategorilerin açıklamasını gösterir.  
+Örnek:  
+`--script-help ssl-enum-ciphers`
+
+### 6. `--script-trace`
+Script’lerin ağ üzerindeki iletişimini detaylı şekilde gösterir (debug amaçlı).  
+
+### 7. `--script-updatedb`
+Script veritabanını (`scripts/script.db`) günceller. Yeni script eklerseniz bunu çalıştırmanız gerekir.
+
+---
+
+## 🔹 Script Argümanlarının Kullanımı
+Script’lere dinamik parametreler verilebilir.  
+Yapı, Lua söz dizimine benzer.  
+
+Örnek:  
+```
+--script-args 'user=foo,pass=",{}=bar",paths={/admin,/cgi-bin}'
+```
+Bu ifade şu veri tablosunu oluşturur:
+```
+user = "foo"
+pass = ",{}=bar"
+paths = {"/admin", "/cgi-bin"}
+```
+Argümanlar genellikle script adıyla başlar (örnek: `xmpp-info.server_name`), böylece karışmaz.
+
+---
+
+## 🔹 Uygulama Örnekleri
+| Komut                                                                    | Açıklama                                                              |
+|--------------------------------------------------------------------------|-----------------------------------------------------------------------|
+| `nmap -sC example.com`                                                   | Varsayılan script setiyle tarama                                      |
+| `nmap -sn -sC example.com`                                               | Port taraması yapmadan sadece host script’leri                        |
+| `nmap -Pn -sn -sC example.com`                                           | Host keşfi ve port taraması olmadan çalışma                           |
+| `nmap --script smb-os-discovery --script-trace example.com`              | Belirli bir script’i trace ile çalıştırma                             |
+| `nmap --script snmp-sysdescr --script-args creds.snmp=admin example.com` | Script’e özel argümanla çalıştırma                                    |
+| `nmap --script mycustomscripts,safe example.com`                         | Kendi dizininizdeki ve “safe” kategorideki tüm script’leri çalıştırma |
+
+---
+
+## 🔹 Özetle
+- NSE, Nmap’in en esnek ve güçlü bileşenidir.  
+- Script’ler otomatize güvenlik testleri, keşif işlemleri ve zafiyet analizleri yapar.  
+- Kategoriler, güvenlik ve kullanım amacına göre sınıflandırılmıştır.  
+- Parametreler (args) ile script davranışı özelleştirilebilir.  
+- Bazı script’ler güvenli, bazıları ise saldırgan veya tehlikelidir.  
+- Bu yüzden **yetkisiz sistemlerde script taraması yapmak sakıncalıdır**.
+
+---
+
+Kısacası bu metin, Nmap’in **NSE (Nmap Scripting Engine)** özelliğini kavratmak, betiklerin mantığını, türlerini ve doğru kullanım şeklini öğretmek için hazırlanmış ayrıntılı bir kullanım rehberidir.

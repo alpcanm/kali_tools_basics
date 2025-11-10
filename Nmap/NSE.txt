@@ -1,0 +1,95 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T23:33:32+03:00
+
+====== NSE ======
+Created Monday 10 November 2025
+
+**Geniş ve detaylı özet:**
+
+**Metnin konusu:**  
+Bu metin, **Nmap Scripting Engine (NSE)** adındaki Nmap aracının en güçlü ve esnek özelliklerinden birini tanıtmaktadır. NSE sayesinde kullanıcılar, ağla ilgili birçok işlemi otomatikleştirmek için küçük betikler (scriptler) yazabilir veya mevcut scriptleri kullanabilir. Bu sayede Nmap’in tarama hızından ve verimliliğinden yararlanarak gelişmiş analizler yapılabilir.
+
+---
+
+### **NSE’nin Temel Amacı ve Kullanım Alanları**
+
+NSE, Nmap’in sadece port taraması yapan bir araç olmaktan çıkıp çok yönlü bir ağ analiz platformuna dönüşmesini sağlar. NSE aşağıdaki görevleri yerine getirmek için tasarlanmıştır:
+
+1. **Ağ keşfi (Network discovery):**  
+   - Hedef domain için *whois* sorguları yapılabilir,  
+   - IP adresinin sahipliği ARIN, RIPE, APNIC gibi kayıt kuruluşlarından öğrenilebilir,  
+   - SNMP, NFS, SMB, RPC gibi servisler sorgulanabilir,  
+   - Paylaşılan dosya ve servisler listelenebilir.  
+   Bu, Nmap’in temel uzmanlık alanıdır.
+
+2. **Daha gelişmiş sürüm tespiti (Version detection):**  
+   - Nmap’in klasik sürüm tespiti sistemi binlerce servisi tanıyabilir, ancak bazı özel durumlarda yetersiz kalır.  
+   - Örneğin, *Skype v2* servisini belirlemek için birden fazla sorgu gerekir; bu, geleneksel sistemle yapılamaz ama **NSE** bunu başarabilir.  
+   - Aynı şekilde, SNMP servislerini çok sayıda potansiyel “community name” deneyerek tanımlamak da NSE ile mümkündür.  
+
+3. **Zafiyet (vulnerability) tespiti:**  
+   - Yeni güvenlik açıkları çıktığında bunları hızlıca taramak çok önemlidir.  
+   - NSE, tam kapsamlı bir zafiyet tarayıcı olmasa da birçok güvenlik açığını bulabilecek güçtedir.  
+   - Örneğin, ünlü **Heartbleed** açığı bulunduğunda, Nmap geliştiricileri iki gün içinde “ssl-heartbleed” script’ini yayınlamıştır.  
+   - Bu tarz script’ler sunuculardaki bilinen açıkları tespit etmeye yarar.
+
+4. **Arka kapı (backdoor) tespiti:**  
+   - Zararlı yazılımlar veya hacker’lar, sistemlere yeniden giriş yapmak için arka kapılar bırakabilir.  
+   - Bazı basit olanları klasik Nmap sürüm tespiti ile fark edilebilir, fakat karmaşık olanlar için NSE’nin gelişmiş yetenekleri gerekir.  
+   - Örneğin NSE, **Double Pulsar (NSA kaynaklı)** SMB arka kapısını ve arka kapılı versiyonları olan **UnrealIRCd, vsftpd, ProFTPd** gibi yazılımları tespit edebilir.
+
+5. **Zafiyetlerin istismarı (Vulnerability exploitation):**  
+   - NSE sadece açıkları bulmakla kalmaz, bazı durumlarda bunları istismar etmek için de kullanılabilir.  
+   - Bu, özellikle sızma testi (penetration test) yapanlar için faydalı olabilir.  
+   - Ancak Nmap, **Metasploit** gibi tam bir saldırı/istismar platformuna dönüşmeyi planlamamaktadır.
+
+---
+
+### **NSE’nin Teknik Temelleri**
+
+- Scriptler **Lua 5.4** programlama diliyle yazılır.  
+- Lua dili hakkında ayrıntılı kaynaklar mevcuttur (örnek: *Programming in Lua* kitabı ve çevrimiçi *Lua Reference Manual*).  
+- Nmap dokümantasyonunda yalnızca Nmap’e özgü Lua uzantıları anlatılır.
+
+---
+
+### **NSE’nin Çalıştırılması**
+
+- NSE, `-sC` parametresiyle veya `--script` komutuyla çalıştırılır.  
+  - `-sC` varsayılan script setini çalıştırır.  
+  - `--script` ise kullanıcıya özel scriptlerin seçilmesini sağlar.
+- Çıktılar hem normal Nmap raporuna hem de XML formatına entegre edilir.
+
+**Örnek kullanım:**
+```
+nmap -sC -p22,111,139 -T4 localhost
+```
+Bu komutta Nmap, hem SSH (22), hem RPC (111), hem de SMB (139) portlarını tarar.  
+- `ssh-hostkey` script’i sistemin SSH anahtarlarını gösterir.  
+- `rpcinfo` script’i mevcut RPC servislerini listeler.  
+- `smb-os-discovery` ise SMB üzerinden işletim sistemi ve ağ bilgilerini toplar.  
+Bu örnekte tüm bilgiler yalnızca **0.33 saniyede** elde edilmiştir — NSE’nin ne kadar hızlı ve verimli olduğunu gösterir.
+
+---
+
+### **Ek Kaynaklar**
+
+Fyodor ve David Fifield’in 2010’da Defcon ve Black Hat konferanslarında sunduğu **38 dakikalık bir NSE tanıtım videosu** vardır.  
+Erişim adresi: [https://nmap.org/presentations/BHDC10/](https://nmap.org/presentations/BHDC10/)
+
+---
+
+### **Özetle Metnin Vurguladığı Ana Noktalar**
+
+- **NSE**, Nmap’i basit bir tarama aracından gelişmiş bir analiz sistemine dönüştürür.  
+- **Esneklik**, **hız**, ve **otomasyon** en önemli avantajlarıdır.  
+- Kullanım alanları: ağ keşfi, sürüm belirleme, zafiyet tespiti, arka kapı tespiti ve gerektiğinde istismar.  
+- Lua diliyle yazılır; kullanıcı tarafından özelleştirilebilir.  
+- Varsayılan veya özel script setleriyle hızlı sonuçlar elde edilebilir.  
+- NSE’nin gücü, topluluk tarafından sürekli geliştirilen script çeşitliliğinden gelir.
+
+---
+
+**Sonuç:**  
+Nmap Scripting Engine (NSE), ağ güvenliği uzmanlarına büyük esneklik ve hız kazandırarak hem bilgi toplama hem de güvenlik testi görevlerini çok daha etkili hale getirir. Kullanıcılar ister kendi scriptlerini yazabilir, ister topluluk tarafından hazırlanmış mevcut scriptlerden yararlanabilir. Bu yapı, Nmap’i sadece bir tarayıcıdan öte, güçlü bir siber güvenlik aracı haline getirmektedir.

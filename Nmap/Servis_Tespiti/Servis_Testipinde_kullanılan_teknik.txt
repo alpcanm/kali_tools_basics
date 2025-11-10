@@ -1,0 +1,105 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T22:30:19+03:00
+
+====== Servis Testipinde kullanılan teknik ======
+Created Monday 10 November 2025
+
+**GENİŞ ÖZET – NMAP SÜRÜM TESPİTİ (Version Detection) TEKNİĞİ**
+
+Bu metin, **Nmap’in sürüm tespiti (version detection)** sürecinin nasıl çalıştığını, kullandığı teknikleri ve bu tekniklerin nasıl optimize edildiğini açıklar. Aşağıda metnin geniş ve detaylı bir özeti yer almaktadır.
+
+---
+
+### 1. **Nmap Sürüm Tespiti Nedir?**
+Nmap’in sürüm tespiti özelliği, bir ağ üzerinde açık olan portlarda hangi servisin ve hangi versiyonun çalıştığını belirlemeye yarar. Bu işlem hem **hızlı, ölçeklenebilir** hem de **doğru** olacak şekilde tasarlanmıştır.  
+Nmap önce bir **port taraması** yapar, ardından **açık (open)** veya **açık/filtreli (open|filtered)** portları **hizmet tarama modülüne (service scanning module)** gönderir.
+
+---
+
+### 2. **Port Tespiti ve Başlangıç Kontrolleri**
+- Nmap önce, belirli portların tarama dışı bırakılıp bırakılmadığını (**Exclude** yönergesi) kontrol eder.  
+- Eğer TCP portu taranıyorsa, Nmap portla bağlantı kurmayı dener.  
+  - Bağlantı başarılı olursa portun durumu **open** olarak değiştirilir.  
+- Ardından yaklaşık **5 saniye bekler**. Bu bekleme süresinde birçok sunucu (FTP, SSH, SMTP vb.) bağlantı sonrası kendini tanıtan bir **karşılama mesajı (banner)** gönderir.  
+- Nmap bu aşamada hiçbir veri göndermediği için buna **NULL probe** denir.  
+  - Gelen yanıt, **nmap-service-probes** dosyasındaki 3000’e yakın imzayla karşılaştırılır.  
+  - Eğer tam bir eşleşme sağlanırsa, sürüm tespiti tamamlanır.
+  - Eğer sadece “soft match” (yani servis türü biliniyor ama sürümü bilinmiyor) elde edilirse, Nmap sadece o servis türüyle alakalı testleri yapmaya devam eder.
+
+---
+
+### 3. **UDP Tarama Durumu**
+- UDP taramalarında doğrudan **probe aşamasından** başlanır çünkü UDP bağlantı kurulmadan çalışır.
+- TCP’de olduğu gibi çeşitli probe’lar gönderilir, gelen yanıtlar veri tabanındaki imzalarla karşılaştırılır.
+- Eğer open|filtered durumundaki bir UDP portuna yanıt gelirse, o portun durumu **open** olarak değiştirilir. Böylece **sürüm tespiti, UDP taramasını tamamlayıcı** bir yöntem olur.
+
+---
+
+### 4. **Probe (Sorgu) Mantığı**
+- Her probe, belirli bir port aralığında etkili olacak şekilde tasarlanmıştır.  
+  Örnek: “GetRequest” probe’u web server’ları tespit etmek için tasarlanmış olup 80, 8080 gibi portlarda çalışır.
+- Probe’lar sırasıyla portlara gönderilir ve **dönen yanıtlar düzenli ifadeler (regex)** ile karşılaştırılır.  
+- Üç tip sonuç olur:
+  1. **Tam eşleşme (full match)** → Servis ve sürüm tespit edilir, işlem biter.  
+  2. **Soft match** → Sadece servis tipi bilinir, tarama buna göre devam eder.  
+  3. **Eşleşme yok** → Diğer probe’lar denenir.
+
+---
+
+### 5. **Fallback (Düşme) ve Cheat (Hile) Mekanizması**
+- Bazı durumlarda servisler geç yanıt verir (örneğin SMTP sunucular DNS kontrolleri yaparken).  
+- NULL probe’un bekleme süresi dolduktan sonra Nmap diğer probe’u (örneğin “HELP\r\n”) gönderir. Ancak geç gelen yanıt aslında NULL probe’un yanıtıdır.  
+- Bu durumda Nmap “cheat” yaparak gelen yanıtı yeniden NULL probe imzalarıyla karşılaştırır.  
+- Bu olay **“cheats and fallbacks”** olarak bilinir.  
+- Benzer şekilde “fallback” yapısı, bir probe’un (örneğin HTTPOptions) başka bir probe’un (örneğin GetRequest) imzalarıyla eşleşmesine izin verir. Bu sayede **eksik yanıt durumlarında bile doğru servis tespit edilir.**
+
+---
+
+### 6. **Performans İyileştirmeleri ve Hızlandırma Teknikleri**
+Nmap, sürüm tespitini hızlandırmak için birkaç yöntem uygular:
+- **Genel (generic) probe’lar:** “\r\n\r\n” veya “help\r\n” gibi kısa sorgular birçok servis tipiyle eşleşebilir.  
+- **Soft match** sonrasında yalnızca ilgili probe’lar denenir.  
+- **Rarity (nadirlik)** değeri düşük olan probe’lar öncelikli denenir.
+- Kullanıcılar --version-* seçenekleri ile bu yoğunluğu kontrol edebilir:
+  - `--version-light` → Daha hızlı ama yüzeysel tarama (intensity 2)
+  - `--version-intensity <0–9>` → Belirli bir yoğunluk değeri (varsayılan 7)
+  - `--version-all` → Tüm probe’lar denenir (intensity 9)
+
+---
+
+### 7. **SSL ve Özel Durumlar**
+- Bir probe portun **SSL bağlantılı** olduğunu belirlerse, Nmap OpenSSL kullanarak bağlantıyı SSL üzerinden tekrar açar ve taramayı yeniden başlatır.  
+- Ayrıca Nmap **RPC (Remote Procedure Call)** ve **SMB** gibi özel protokoller için özel tarama ve yorumlama modülleri içerir.
+
+---
+
+### 8. **Yeni Servisler ve Fingerprint Gönderimi**
+- Eğer Nmap bir yanıt alır ancak servisi tanıyamazsa, **fingerprint (parmak izi)** olarak çıktıyı kullanıcıya gösterir.  
+- Kullanıcılardan, bu bilinmeyen servislerin fingerprint'lerini Nmap geliştiricilerine göndermeleri istenir. Bu sayede Nmap veritabanı sürekli genişletilir.
+
+---
+
+### 9. **Probe Seçimi ve Rarity Değeri**
+- Tüm probeların bir rarity (nadirlik) değeri vardır (1–9 arasında).
+- Taramanın yoğunluk seviyesi (intensity) arttıkça, rarity değeri yüksek probe’lar da denenir.  
+- Tarama şu şekilde ilerler:
+  1. TCP için daima **NULL probe** ilk denenir.  
+  2. Portu muhtemelen tanıyacak probe’lar sırayla gönderilir.  
+  3. Eğer hâlâ eşleşme yoksa intensity değerine göre diğer probe’lar denenir.  
+  4. Eşleşme bulunduğunda işlem sonlanır.
+
+---
+
+### 🔹 **Özetle Anlatılmak İstenenler**
+- Nmap sürüm tespiti, açık portlardaki servislerin tür ve sürümünü tespit etmek için akıllı, çok aşamalı bir sistemdir.  
+- NULL probe ve spesifik probe’lar temel tarama yöntemleridir.  
+- Performans artırmak için probe seçimi rarity ve intensity değerlerine göre optimize edilir.  
+- Süreç TCP ve UDP portları için farklı işler, SSL, RPC gibi özel durumlara uyum sağlar.  
+- Nmap hatalı veya yeni servisleri tanımlayamadığında kullanıcıdan fingerprint göndermesini ister, böylece tarama kabiliyetini geliştirir.  
+- “Fallback” ve “cheat” mekanizması, yavaş ya da atipik yanıt veren servislerin yine de doğru şekilde tanınmasını sağlar.
+
+---
+
+**Sonuç:**  
+Nmap’in sürüm tespiti algoritması, sadece servis adını değil aynı zamanda sürümünü, protokolünü, hatta ardında çalışan yazılımı da belirleyebilen bir sistemdir. Bu sistem; hız, doğruluk ve adaptasyon arasında dengeli bir yapı sunar.

@@ -1,0 +1,112 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T22:20:05+03:00
+
+====== Servis Tespiti ======
+Created Monday 10 November 2025
+
+Bu metin **Nmap’in sürüm ve servis tespit özelliklerini** ayrıntılı şekilde anlatıyor. Aşağıda metnin geniş ve açıklamalı özeti yer alıyor:
+
+---
+
+### 🔹 Nmap’in Temel Amacı
+Nmap’in yaptığı birçok işlem olsa da, **en temel işlevi port taramasıdır**. Yani bir hedef makinedeki hangi portların açık olduğunu belirler.  
+Örneğin:
+- Port 25 → genellikle SMTP (mail)  
+- Port 80 → genellikle HTTP (web)  
+- Port 53 → genellikle DNS  
+
+Nmap, bu eşleştirmeleri `nmap-services` veritabanına göre yapar. Ancak **her zaman doğru olmayabilir**, çünkü bazı kişiler servisleri farklı portlara taşıyabilir (örneğin güvenlik gerekçesiyle veya firewall izinleri nedeniyle).
+
+---
+
+### 🔹 Port Numaramın Ne Olduğu Önemli mi?
+Bir servisin sadece portuna bakarak hangi uygulamanın çalıştığını kesin söyleyemeyiz.  
+Örneğin:
+- Bazı kullanıcılar ISS kısıtlamalarından kaçmak için web sunucularını 80 yerine başka bir porta taşır.  
+- Bazıları da tehlikeli bir servisi gizlemek için “tuhaf” portlar seçer.
+
+Bu nedenle **sadece port taraması güvenlik değerlendirmesi için yeterli değildir.**
+
+---
+
+### 🔹 Neden Servis Tespiti (Version Detection) Önemlidir?
+Bir güvenlik değerlendirmesinde sadece “hangi servis çalışıyor” değil, **“hangi sürümün” çalıştığı** da bilinmelidir. Çünkü:
+- Farklı sürümlerin zafiyetleri farklıdır.  
+- Eksik veya yanlış versiyon bilgisi, hatalı güvenlik değerlendirmesine yol açabilir.  
+- Bazı yöneticiler sürüm numaralarını sahte olarak gösterir (örneğin saldırganları yanıltmak için).
+
+Ayrıca, **aynı port numarasını kullanan farklı servisler** de olabilir.  
+Örnek:  
+- Port 258/tcp → Checkpoint Firewall-1 **veya** yak Windows chat programı  
+
+Bu durumda Nmap’in versiyon tespiti işlemi, **hangi uygulamanın gerçekten çalıştığını** belirler.
+
+UDP taramalarında da aynı durum vardır. Basit bir port taraması “açık” ya da “filtreli” portu ayırt edemez; versiyon tespiti sayesinde portun gerçekten açık olduğu anlaşılabilir.
+
+---
+
+### 🔹 Nmap Servis Tespitinden Elde Edilen Ek Bilgiler
+Nmap sürüm taraması sadece program adı ve sürümünü değil, **başka bilgileri** de ortaya çıkarabilir:
+
+- **“info” alanı:** Ek detayları içerir (örneğin SSH protokol versiyonu, Apache modülleri vb.)  
+- **Hostname (makine adı):** Servisin yapılandırılmış alan adı bulunabilir. Bu, bazen saldırganın kim olduğunu veya sistemin rolünü anlamada ipucu verebilir.  
+- **OS ve cihaz türü (device type):**  
+  - Bazı uygulamalardan işletim sistemi dolaylı olarak öğrenilebilir (örneğin, Microsoft Exchange → sadece Windows’ta çalışır).  
+  - Bazı sunucular ise platform bilgilerini doğrudan yanıt olarak verir.
+
+Bu yöntem, klasik Nmap OS tespiti (-O) özelliğini **tamamlayıcı** niteliktedir.
+
+---
+
+### 🔹 Nmap Versiyon Taraması Nasıl Çalışır?
+Nmap açık portlara bağlanır ve **portun içeriğini anlama kabiliyeti olan özel “probe” sorguları** gönderir.  
+Servisin yanıtına göre:
+- Uygulama adı  
+- Sürüm numarası  
+- Ek bilgiler (ör: SSL, cihaz türü, OS, hostname)  
+tespit edilir.
+
+Bu, basit port numarası analizinden çok daha doğru ve ayrıntılı bir sonuç sağlar.
+
+---
+
+### 🔹 Örnek Kullanım
+Komut örneği:  
+`nmap -sV -T4 -F insecure.org`
+
+Bu komut:
+- Hedefteki açık portları bulur,  
+- Servis adını ve versiyonlarını listeler,  
+- Ek bilgi olarak hostname ve sistem bilgilerini gösterir.
+
+---
+
+### 🔹 Gelişmiş Özellikler
+Nmap sürüm tespit sisteminin öne çıkan yetenekleri:
+- **Hızlı ve paralel** çalışır (performans odaklı).  
+- **Servis adını ve versiyon numarasını** belirler.  
+- **Hem TCP hem UDP** protokollerini destekler.  
+- **Tüm büyük işletim sistemlerinde** (Linux, Windows, macOS, BSD, Solaris vb.) çalışır.  
+- **SSL algılama:** SSL tespit edilirse OpenSSL kullanarak bağlantıyı açar ve arka plandaki gerçek servisi tespit eder (örneğin HTTPS, IMAPS gibi).  
+- **RPC brute-force:** SunRPC servislerini tanımlar (program numarası, isim ve sürümü).  
+- **IPv6 desteği** vardır.  
+- **CPE (Common Platform Enumeration)** formatında çıktı verir – diğer yazılımlarla uyum için.  
+- **Topluluk katkıları:** Tanımlanamayan servislerle ilgili bilgiler kullanıcıdan alınabilir (yeni fingerprint’ler oluşturulur).  
+- **Büyük bir imza veri tabanı:** 1000’den fazla servis imzası, 180’den fazla protokolü kapsar.
+
+---
+
+### 🔹 Sonuç
+Metin özetle şunu anlatıyor:
+
+> Nmap sadece hangi portların açık olduğunu göstermekle kalmaz; **hangi servislerin, hangi sürümde ve hangi sistemde çalıştığını** da tespit eder. Bu, güvenlik analizlerinde çok daha anlamlı, doğru ve derinlemesine bilgi sağlar. Versiyon tespiti güvenlik açıklarının bulunmasında temel adımdır.  
+
+---
+
+**Önemli Noktalar:**
+- Port numarası = servis türü anlamına gelmez.  
+- Versiyon bilgisi güvenlik analizinde kritik önemdedir.  
+- Nmap’in sürüm tespiti, işletim sistemi ve yapılandırma hakkında ek ipuçları sunabilir.  
+- SSL, IPv6, RPC ve CPE desteğiyle kapsamlı çalışır.  
+- Sürekli güncellenen veri tabanı sayesinde giderek daha isabetli hale gelir.
