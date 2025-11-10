@@ -1,0 +1,89 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T20:02:56+03:00
+
+====== Keşif teknikleri ======
+Created Monday 10 November 2025
+
+
+---
+
+### 🔍 Konu: **Host Discovery (Canlı Bilgisayar Tespiti)**
+Nmap, bir ağdaki hangi makinelerin aktif olduğunu (yani açık ve erişilebilir olduğunu) belirlemek için çeşitli **“ping” yöntemleri** kullanır. Ancak artık klasik “ping - ICMP Echo Request” yöntemi çoğu yerde firewall’lar tarafından engellendiği için farklı tekniklere ihtiyaç duyulmuştur.
+
+---
+
+### 🧩 Önemli Host Discovery Teknikleri
+
+#### **1. ICMP Ping (-PE)**
+- Klasik ping yöntemidir (ICMP Echo Request).  
+- Güvenlik nedeniyle çoğu sistemde engellenmiştir.  
+- Bu yüzden tek başına güvenilir değildir.  
+
+---
+
+#### **2. TCP SYN Ping (-PS<port>)**
+- SYN bayrağı açık boş TCP paketi gönderir.  
+- Eğer hedef **açıksa SYN/ACK**, **kapalıysa RST** döner.  
+- Her iki durumda da hedefin **canlı** olduğu anlaşılır.  
+- Genellikle **port 80 (HTTP)** kullanılır.  
+- ICMP’yi engelleyen birçok sistem bu yönteme cevap verir.
+
+---
+
+#### **3. TCP ACK Ping (-PA<port>)**
+- SYN yerine **ACK** bayrağı kullanır.  
+- Hedefte bağlantı yok ama ACK geldiği için genelde **RST** döner → hedef canlı demektir.  
+- Bazı basit firewall’lar SYN’i engelleyip ACK’i geçirir, bu yüzden ACK pingi bazen işe yarar.  
+- Ancak “stateful” (durum takip eden) güvenlik duvarlarında işe yaramayabilir.
+
+---
+
+#### **4. UDP Ping (-PU<port>)**
+- Hedefe boş **UDP paketleri** yollar.  
+- Kapalı porta giderse **ICMP “port unreachable”** cevabı gelir → hedef canlıdır.  
+- TCP filtrelerini aşabilir.  
+- Ancak genelde yavaş ve bazen yanıltıcıdır, çünkü UDP cevap vermeyebilir.
+
+---
+
+#### **5. ICMP Türleri (-PE, -PP, -PM)**
+- **-PE:** Echo Request (klasik ping)  
+- **-PP:** Timestamp Request  
+- **-PM:** Address Mask Request  
+➡️ Bazı sistemler Echo’yu kapatmış olsa da diğer ICMP türlerine cevap verebilir.
+
+---
+
+#### **6. IP Protocol Ping (-PO<protocol>)**
+- Hedefe farklı **IP protokol numaralarıyla** (örneğin ICMP=1, IGMP=2, TCP=6, UDP=17 vb.) ping yollar.  
+- Cevap ya da “protocol unreachable” gelirse hedef canlıdır.  
+- Daha nadir kullanılır.
+
+---
+
+#### **7. ARP Scan (-PR)**
+- **Yerel ağlarda (LAN)** en güvenilir ve hızlı yöntemdir.  
+- IP yerine **MAC adresi** üzerinden çalışır.  
+- Nmap varsayılan olarak yerel ağda ARP kullanır çünkü:  
+  - IP ping’lerden hızlıdır.  
+  - Blocklanması zordur.  
+- Ayrıca **MAC adresi sahtekarlığı (--spoof-mac)** yapılabilir.
+
+---
+
+### ⚙️ **Varsayılan Davranış**
+Hiçbir özel seçenek verilmezse:  
+- **Windows / root kullanıcı:** `-PE -PS443 -PA80 -PP`  
+  (Yani: ICMP ping + TCP SYN 443 + TCP ACK 80 + ICMP timestamp)  
+- **Normal kullanıcı (root değil):** `-PS80,443`  
+- **Yerel ağda:** ARP taraması varsayılan olarak yapılır.  
+
+---
+
+### 🧠 Özetle:
+- Eskiden sadece “ping” (ICMP) yeterliyken, artık **farklı protokoller** ve **farklı portlardaki tepkiler** dikkate alınır.  
+- **Farklı sistemler farklı türde pinglere** yanıt verir.  
+- En etkili sonuç için **birden fazla yöntem** (SYN, ACK, ICMP, ARP vb.) birlikte kullanılmalıdır.
+
+---

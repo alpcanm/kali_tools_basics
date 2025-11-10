@@ -1,0 +1,108 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T20:34:03+03:00
+
+====== Port Tarama ======
+Created Monday 10 November 2025
+
+**Metnin Geniş Özeti (Basit ve Anlaşılır Anlatım)**  
+
+Bu metin, **Nmap adlı ağ tarama aracının basit ve gelişmiş kullanımlarını** anlatan bir öğretici (tutorial) yazıdır. Nmap, bir bilgisayardaki veya sunucudaki **açık portları (bağlantı noktalarını) tespit etmek** için kullanılan güçlü bir araçtır. Yazının amacı, Nmap’in temel işleyişini ve komut çıktılarını yeni kullanıcılara basit bir şekilde tanıtmaktır.
+
+---
+
+### 🔹 Nmap’in Tasarım Amacı
+Nmap’in geliştiricisi, programı hem yeni başlayan kullanıcılar hem de profesyoneller için **kullanımı kolay ama aynı zamanda esnek** olacak şekilde tasarlamıştır.  
+- Yeni kullanıcılar sadece basit bir komutla (`nmap <hedef>`) tarama yapabilir.  
+- İleri düzey kullanıcılar ise onlarca parametre kullanarak çok detaylı taramalar gerçekleştirebilir.  
+
+Ayrıca, **çıktı biçimi** de bu düşünceyle tasarlanmıştır:  
+- Basit kullanıcılar için kolay anlaşılacak şekilde,  
+- Profesyoneller için ise kapsamlı ve teknik bilgi içerecek şekilde.
+
+---
+
+### 🔹 Nmap’in Temel Kullanımı – Basit Tarama (`nmap <hedef>`)
+Yazının ilk bölümü, `nmap scanme.nmap.org` örneği üzerinden basit bir taramayı açıklar.  
+
+Bu komutta Nmap şu işlemleri yapar:
+1. **Hostname → IP dönüşümü:**  
+   `<hedef>` bir alan adıysa (örneğin *scanme.nmap.org*), DNS sorgusu yaparak IP adresine çevirir.
+2. **Ping testi:**  
+   Hedefin “açık” (çalışır durumda) olup olmadığını anlamak için küçük testler yapar.  
+   Eğer hedef kapalıysa, bunu rapor edip işlemi durdurur.
+3. **Ters DNS sorgusu:**  
+   IP adresini tekrar alan adına çevirmeyi dener (isteğe bağlı olarak -n ile kapatılabilir).
+4. **Port taraması:**  
+   En yaygın 1000 TCP portunu (**`nmap-services`** listesinden) tarar.  
+   Root yetkisi varsa *SYN (stealth)* taraması, yoksa *connect* taraması yapar.
+5. **Sonuçları ekrana yazar:**  
+   Portların durumu (açık, kapalı, filtrelenmiş gibi) listelenir.
+
+---
+
+### 🔹 Örnek 1 – Basit Tarama Çıktısı
+Bu örnekte Nmap, hedef sistemde şu portları bulur:  
+- **Açık (open):** 22/ssh, 53/domain, 80/http  
+- **Kapalı (closed):** 25/smtp, 70/gopher, 113/auth  
+- **Filtreli (filtered):** Geri kalan 994 port  
+
+**Çıktının anlamı:**
+- Açık portlar kullanıma hazır, dış bağlantı kabul ediyor.  
+- Kapalı portlar cevap veriyor ama bağlantıyı reddediyor.  
+- Filtreli portlar ise güvenlik duvarı tarafından engelleniyor.  
+
+Buradaki tablo kullanıcıya en “ilginç” (açık veya beklenmedik) portlar hakkında bilgi verir.  
+Ayrıca sonuçta taramanın ne kadar sürdüğü ve kaç hedefte işlem yapıldığı raporlanır.
+
+---
+
+### 🔹 Gelişmiş Kullanım – Detaylı Tarama (`nmap -p0- -v -A -T4 <hedef>`)
+İkinci tarama örneğinde yazar dört farklı seçenek kullanmıştır:
+- `-p0-`: **Tüm 65.536 portu** tara.  
+- `-v`: **Detaylı (verbose)** çıktı üret.  
+- `-A`: **Agresif tarama** – işletim sistemi tespiti, servis/versiyon analizi ve Nmap script motoru (NSE) etkinleşir.  
+- `-T4`: **Hızlı zamanlama (timing)** politikası uygula.  
+
+Bu tarama çok daha uzun sürer (yaklaşık **8 dakika**, önceki sadece 5 saniyeydi), ama çok daha fazla bilgi elde edilir.
+
+---
+
+### 🔹 Örnek 2 – Detaylı Tarama Çıktısı
+Bu taramada yine aynı açık portlar bulunur (22, 53, 80), ancak bu kez:
+- Servislerin **uygulama isimleri ve sürümleri** de görüntülenir:  
+  - 22/tcp → OpenSSH 4.3  
+  - 53/tcp → ISC BIND 9.3.4  
+  - 80/tcp → Apache 2.2.2  
+
+Ek olarak:
+- **Nmap Scripting Engine (NSE)** ile ek bilgiler çekilir  
+  (örneğin web sayfasının başlığı: “Go ahead and ScanMe!”).  
+- **Traceroute** işlemi yapılır → hedefe giden ağ yolları listelenir.  
+- **İşletim sistemi tespiti (OS detection)** yapılır → Linux 2.6 sürümü olduğu anlaşılır.  
+- **Zaman bilgisi ve performans istatistikleri** (kaç paket gönderildi, ne kadar sürdü) raporlanır.
+
+---
+
+### 🔹 Nmap Çıktısında Yeni Kullanıcının Bilmesi Gerekenler
+1. **Port tablosu** taramanın kalbidir: hangi port açık, kapalı veya filtrelenmiş?  
+2. **Servis tespiti**, o portta hangi yazılımın çalıştığını anlamayı sağlar.
+3. **OS tespiti**, hedefin işletim sistemini tahmin eder.
+4. **Zamanlama ve ağ koşulları**, taramanın süresini büyük ölçüde etkiler.
+5. **Agresif seçenekler (-A)** daha fazla bilgi toplar ama gizliliği ve hızını azaltabilir.
+
+---
+
+### 🔹 Metnin Anlatmak İstediği Temel Noktalar
+- Nmap’in **esneklik ve sadeliği birleştiren** yapısı, hem yeni hem ileri düzey kullanıcılar içindir.  
+- Basit bir komutla temel ağ keşfi yapılabilir.  
+- Detaylı seçeneklerle port, servis, işletim sistemi, hatta ağ yolu gibi çok sayıda bilgi toplanabilir.  
+- Ancak gelişmiş taramalar daha fazla zaman alır ve daha az “gizli” olur.  
+- Kullanıcılar çıktıyı anlamayı öğrendikçe Nmap’in sağladığı veriyi daha iyi yorumlayabilir.
+
+---
+
+### 🔹 Sonuç
+Bu bölüm, Nmap’in nasıl çalıştığını anlamak için temel bir giriş sağlar.  
+Yeni başlayanlara basit komutlarla işe başlamayı, deneyimli kullanıcılara ise çok katmanlı analizlerin nasıl yapılabileceğini gösterir.  
+Nmap’in gücü, **kullanıcının bilgi seviyesine göre esneyebilmesi** ve **ağ sistemleri hakkında kapsamlı bilgi verebilmesidir.**

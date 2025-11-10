@@ -1,0 +1,161 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T20:23:17+03:00
+
+====== Port Taramaya Genle Bakış ======
+Created Monday 10 November 2025
+
+Tabii, aşağıda verdiğin metnin **geniş ve detaylı özeti** yer alıyor. Metin “port” kavramı, port tarama (port scanning), Nmap aracı ve portların sınıflandırılması hakkında temel ağ güvenliği bilgisini anlatıyor.  
+
+---
+
+### 🔹 1. Port Nedir?
+
+- **Port**, bir cihaz üzerinde çalışan uygulamaları veya servisleri ayırt etmek için kullanılan numaralardır.  
+  > IP adresi bilgisayarları tanımlar, **portlar** ise o bilgisayardaki uygulamaları ayırır.  
+- Örnek:  
+  - HTTP → TCP port 80  
+  - HTTPS → TCP port 443  
+  - SSH → port 22  
+- Her port, belirli bir **protokolle** (TCP veya UDP) ilişkilidir.  
+- Bir bağlantı, dört unsurla tanımlanır:  
+  **Kaynak IP, Kaynak Port, Hedef IP, Hedef Port.**
+
+- Port numaraları **16-bit** uzunluğundadır; bu yüzden toplam 0–65535 arasında değişebilir.  
+  Ancak **port 0 kullanılamaz** (bazı kötü niyetli yazılımlar gizli erişim için bunu kullanır).  
+
+---
+
+### 🔹 2. Portların Sınıfları
+
+#### a. **Well-known (iyi bilinen / ayrılmış) portlar (1–1023):**
+- Genelde sistem servislerine ayrılır.  
+- Sadece **root** veya ayrıcalıklı kullanıcılar** bu portlara uygulama bağlayabilir.  
+- Örnekler:  
+  - 22 → SSH  
+  - 25 → SMTP  
+  - 80 → HTTP  
+
+#### b. **Registered (kayıtlı) portlar (1024–49151):**
+- IANA’ya (Internet Assigned Numbers Authority) kayıtlıdır ancak bu portlara sıradan kullanıcılar da erişebilir.  
+
+#### c. **Dynamic / Private / Ephemeral Ports (49152–65535):**
+- Dinamik olarak sistem tarafından geçici bağlantılar için kullanılır.  
+- Örneğin, bir uygulama port numarasını “0” olarak belirtirse, sistem bu aralıktan uygun bir port seçer.  
+- Linux’ta bu aralık `/proc/sys/net/ipv4/ip_local_port_range` dosyasıyla görüntülenebilir veya değiştirilebilir.  
+
+---
+
+### 🔹 3. Nmap ve Port Tarama (Port Scanning)
+
+#### a. **Nmap Nedir?**
+- Nmap, ağ keşfi ve güvenlik taraması için kullanılan popüler bir araçtır.  
+- Başta **port tarayıcı** olarak tasarlanmıştır.  
+- Temel komut:  
+  ```
+  nmap <hedef>
+  ```  
+  Bu komut, hedef makinedeki en yaygın 1000 TCP portunu tarar.  
+
+#### b. **Nmap’in Port Durumları**
+Nmap, her portu altı farklı duruma ayırır:
+
+| Durum          | Açıklama                                                               |                                                                                               |
+|----------------|------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
+| **open**       | Port dinleme yapıyor; uygulama bağlantı kabul ediyor.                  |                                                                                               |
+| **closed**     | Port erişilebilir ama üzerinde servis yok.                             |                                                                                               |
+| **filtered**   | Güvenlik duvarı (firewall) erişimi engelliyor. Nmap sonuca ulaşamıyor. |                                                                                               |
+| **unfiltered** | Port erişilebilir ancak açık mı kapalı mı net değil.                   |                                                                                               |
+| **open         | filtered**                                                             | Cevap yok; port açık da olabilir, filtrelenmiş de.                                            |
+| **closed       | filtered**                                                             | Cevap alınmadı; kapalı veya filtrelenmiş olabilir (özellikle özel tarama tiplerinde görülür). |
+
+Bu sınıflandırma, hangi servislerin açık, hangilerinin güvenlik duvarı arkasında olduğunu gösterir.  
+
+---
+
+### 🔹 4. Portların Yaygın Kullanımı (Popüler Portlar)
+
+Nmap’in dünya genelinde yaptığı büyük ölçekli port taramaları sonucunda en yaygın kullanılan portlar tespit edilmiştir.
+
+#### En Yaygın **TCP Portları**:
+1. 80 → HTTP  
+2. 23 → Telnet  
+3. 443 → HTTPS  
+4. 21 → FTP  
+5. 22 → SSH  
+6. 25 → SMTP  
+7. 3389 → Remote Desktop  
+8. 110 → POP3  
+9. 445 → Microsoft-DS (dosya/paylaşım servisleri)  
+10. 139 → NetBIOS  
+11. 143 → IMAP  
+12. 53 → DNS  
+13. 135 → MSRPC  
+14. 3306 → MySQL  
+15. 8080 → HTTP-Proxy  
+16. 1723 → PPTP (VPN)  
+17. 111 → RPCBind  
+18. 995 → POP3S  
+19. 993 → IMAPS  
+20. 5900 → VNC  
+
+#### En Yaygın **UDP Portları**:
+1. 631 → Internet Printing Protocol  
+2. 161 → SNMP  
+3. 137 → NetBIOS  
+4. 123 → NTP (Time)  
+5. 138 → NetBIOS-DGM  
+6. 1434 → MS-SQL  
+7. 445 → Microsoft-DS  
+8. 135 → MSRPC  
+9. 67–68 → DHCP (Sunucu ve istemci portları)  
+10. 53 → DNS  
+... ve diğerleri (69-TFTP, 514-Syslog vb.)
+
+---
+
+### 🔹 5. Port Taramanın Amacı
+
+**Port tarama neden yapılır?**
+
+- **Güvenlik Analizi:**  
+  Açık portlar potansiyel saldırı noktalarıdır.  
+  Her açık port = olası güvenlik açığı.  
+  Yöneticiler tarama yaparak gereksiz servisleri kapatabilir.
+
+- **Saldırganlar için:**  
+  Hangi portlarda hangi servislerin çalıştığını bulup, bilinen açıklardan faydalanmak için kullanılır.  
+
+- **Savunma tarafı için:**  
+  Sistem yöneticileri düzenli olarak kendi ağlarını tarayarak:  
+  - Gereksiz servisleri kapatır  
+  - Güvenlik duvarı kuralı koyar  
+  - Servislerin güncel ve güvenli çalıştığından emin olur  
+
+- **Diğer kullanım alanları:**  
+  - Ağ envanteri çıkarmak  
+  - Politika uyumluluğunu denetlemek  
+  - Lisans takibi, ağ hatası ayıklama gibi teknik amaçlar.
+
+---
+
+### 🔹 6. Nmap’in Sağladığı Katkılar
+
+- Büyük ağlarda hangi cihazda hangi portların açık olduğunu hızlıca gösterir.  
+- Netstat gibi komutlar sadece erişilen makinelerde çalışırken, Nmap **uzaktan tarama** sayesinde çok daha kapsamlı bilgi verir.  
+- Ancak Nmap sonuçları, hedef sistemin verdiği cevaba dayanır; bazı sistemler yanlış veya yanıltıcı cevaplar gönderebilir.
+
+---
+
+### ⚙️ Özetle Metnin Vermek İstediği Mesaj:
+
+1. **Portlar**, cihaz üzerindeki farklı iletişim kanallarını ayırır.  
+2. **Nmap**, ağ güvenliği ve servis keşfi için en yaygın kullanılan port tarama aracıdır.  
+3. Portlar **açık**, **kapalı**, **filtrelenmiş** gibi durumlarla sınıflandırılır.  
+4. Hangi portların açık olduğunu bilmek, **saldırı risklerini azaltmanın** ilk adımıdır.  
+5. **Yöneticiler**, periyodik olarak port taraması yapmalı, gereksiz portları kapatmalı ve servislere güvenlik kısıtlamaları getirmelidir.  
+6. **Ağ güvenliğinde temel prensip:** Gereksiz hiçbir servis açık bırakılmamalıdır.
+
+---
+
+İstersen bu özetin sonunda kısa bir **şema veya tablo halinde ana fikir–neden–sonuç** bağlantılarını da çıkarabilirim. İster misin?

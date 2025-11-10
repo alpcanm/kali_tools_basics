@@ -1,0 +1,213 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T20:13:52+03:00
+
+====== Host Keşif Stratejileri ======
+Created Monday 10 November 2025
+
+https://nmap.org/book/host-discovery-strategies.html
+
+Tamam. Aşağıda, verdiğin uzun metnin kapsamlı ama sade bir özeti ve ana fikirlerin açıklaması yer alıyor.  
+Bu metin, **Nmap’in “Host Discovery” (ev sahibi keşfi / ping taraması) stratejilerini** ve bu süreçte kullanılan **önemli opsiyonları** anlatıyor. Yani Nmap’in bir ağda hangi makinelerin “aktif” (açık ve ulaşılabilir) olduğunu belirlemek için kullandığı yöntemler ve bu yöntemleri etkileyen parametreler ele alınıyor.  
+
+---
+
+## 1. Host Discovery Nedir?
+Host Discovery (veya ping taraması), Nmap’in bir ağda hangi cihazların yanıt verdiğini belirleme aşamasıdır. Nmap, port taramadan önce genelde “hangi cihazlar açık?” sorusuna cevap bulmak için çeşitli **problar (ping türleri)** gönderir.  
+Amaç, ağda canlı olan IP’leri bulmak ve gereksiz yere kapalı olan adreslerde zaman kaybetmemektir.
+
+---
+
+## 2. Ping Taramasını Etkileyen Seçenekler (Önemli Parametreler)
+
+Metinde bu kısım oldukça detaylı anlatılmış. Temel başlıklar:
+
+### **-v (--verbose)**
+Daha fazla bilgi verir. Normalde sadece aktif host’ları gösterir; -v eklenirse ulaşılamayan host’lar da görünür.
+
+### **--source-port (veya -g)**
+Tüm paketlerin kaynak portunu sabitler (örnek: `--source-port 53`).  
+Bazı güvenlik duvarları DNS (53) veya FTP-data (20) trafiğine izin verdiği için, bu portlardan gelen sahte taramalar firewall’u aşabilir. Bu nedenle bazen gizlenmek için kullanılır.
+
+### **-n ve -R**
+- `-n`: DNS çözümlemesini tamamen kapatır (zaman kazandırır).  
+- `-R`: Her host için DNS sorgusu yapar, kapalı olanlar dâhil.  
+DNS sorguları taramayı yavaşlatabileceği için dikkatli kullanılmalıdır.
+
+### **--dns-servers**
+Alternatif DNS sunucuları tanımlanabilir. Bu, özellikle `reverse DNS` (geri çözümleme) işlemlerini hızlandırabilir.
+
+### **--data-length <length>**
+Her pakete belirli miktarda “rastgele veri” ekler.  
+Amaç, trafiği sıradan ping trafiğine benzeterek IDS (Intrusion Detection System) sistemlerinden gizlenmektir.  
+Örnek: `--data-length 56` → Linux ping’ine benzer, `32` → Windows ping’ine benzer paket boyutu.
+
+### **--ttl <value>**
+Paketin Time To Live (yaşam süresi) değeri ayarlanabilir.  
+Bu sayede tarama sadece yerel ağa kısıtlanabilir ya da gerçek ping programını taklit edebilir. Döngü oluşturan ağlarda TTL kısaltmak router yükünü azaltır.
+
+### **Canned Timing Options (-T0 → -T5)**
+Bu, hız ayarlarıdır.  
+- `-T3` → normal,  
+- `-T4` → hızlı, güvenilir bağlantılarda önerilir,  
+- `-T5` → çok hızlı ama gürültülü (IDS’leri tetikleyebilir).
+
+### **--max-parallelism / --min-parallelism**
+Aynı anda kaç IP’ye sorgu (probe) gönderileceğini belirler. Daha fazla paralellik = daha hızlı tarama, ama daha fazla ağ yükü.
+
+### **--min-rtt-timeout / --max-rtt-timeout / --initial-rtt-timeout**
+Nmap’in ping yanıtı bekleme süresini kontrol eder.
+
+### **-iL <dosya> / -iR <sayı>**
+Girdi yöntemleridir:  
+- `-iL`: IP listesi dosyadan okunur.  
+- `-iR`: Rasgele IP adresleri seçer (internet genelinde test için kullanılabilir).
+
+### **-oA, -oN, -oG, -oX**
+Çıktı formatlarını belirler. Tüm çıktı türleri (normal, XML, grepable) ping taramaya da uygulanabilir.
+
+### **--randomize-hosts**
+Host tarama sırasını karıştırır. Bu, ağ izleme sistemleri için daha az dikkat çekici olabilir.
+
+### **--reason**
+Bir host’un neden “up” (aktif) göründüğünü belirtir (örneğin, ICMP yanıtı mı aldı, yoksa RST mi döndü?).
+
+### **--packet-trace**
+Her gönderilen ve alınan paketi ayrıntılı olarak gösterir. Gelişmiş hata ayıklama için kullanılır.
+
+### **-D (decoy)**
+Decoy (örtücü) IP adresleri ekler; saldırganı gizlemek için. IDS’ler bu durumda kimin gerçek tarama yaptığını ayırt etmekte zorlanır.
+
+### **-6**
+IPv6 için TCP tabanlı ping taraması kullanılır.
+
+### **-S ve -e**
+Paketin gönderileceği IP adresini (`-S`) ve ağ arayüzünü (`-e`) belirtir.
+
+---
+
+## 3. Ping Taramasında En Etkili Problar (Test Edilen Türler)
+
+Metin, Nmap geliştiricilerinin 2009’daki bir araştırmasından bahsediyor.  
+Farklı ping yöntemleri binlerce host üzerinde test edilerek **hangi paket türlerinin en çok yanıt aldığı** ölçülmüş.  
+Sonuçlar özetle:
+
+| En Etkili Ping Türü             | Açıklama                                                                          |
+|---------------------------------|-----------------------------------------------------------------------------------|
+| **-PE (ICMP Echo Request)**     | En etkili yöntem. Klasik ping.                                                    |
+| **-PA80, -PS443 (TCP SYN/ACK)** | HTTP veya HTTPS gibi sık kullanılan portlara yapılan SYN/ACK istekleri etkilidir. |
+| **-PP (ICMP Timestamp)**        | Zaman damgası isteği; echo engellenmiş bazı ağlarda işe yarar.                    |
+| **-PU (UDP yüksek portlar)**    | `--source-port 53` ve `--data-length 24` ile birleştirilirse daha etkili olur.    |
+| **-PM (ICMP Address Mask)**     | En az etkili yöntem.                                                              |
+
+Yani özetle:
+➡ En çok işe yarayan: ICMP Echo (-PE)  
+➡ Ardından TCP SYN/ACK port 80/443  
+➡ UDP ping’ler ek katkı sağlıyor  
+➡ ICMP mask / özel IP pingi en az işe yarayanlar.
+
+---
+
+## 4. En İyi Kombinasyonlar (Tablo 3.3 Sonuçları)
+
+Nmap ekipleri, hangi **kombinasyonun en çok host’u bulduğunu** da test etmiş:  
+
+- **1 prob:** `-PE` → %62  
+- **2 prob:** `-PE -PA80` → %77  
+- **4 prob (Nmap varsayılan):** `-PE -PA80 -PS443 -PP` → %88  
+- **6+ prob:** UDP ve daha fazla TCP port eklenince %92–93’e çıkıyor.
+
+👉 **Sonuç:**  
+Nmap’in **varsayılan dört prob** stratejisi (%88 başarı) hem hızlı hem de etkili bir denge sunuyor.  
+Daha fazla prob eklemek doğruluğu artırır ama süreyi de uzatır.
+
+---
+
+## 5. TCP Port Seçimi
+
+- **Amaç:** SYN/ACK paketlerini en çok yanıt alabileceğimiz portlara göndermektir.  
+- **En "canlı" portlar:**  
+  80 (HTTP), 443 (HTTPS), 113 (auth), 21 (FTP), 23 (Telnet), 25 (SMTP), 22 (SSH), 110 (POP3), 3389 (RDP), 8080 (proxy).  
+
+👉 **Yorum:**  
+Yöneticiler genelde ICMP’yi engeller ama bu TCP portlarını açık bırakır, o yüzden TCP ping çok etkilidir.  
+Ancak örneğin **port 113’ten gelen RST (Reset)** yanıtları bazen “sahte olumlu” (false positive) oluşturabilir.
+
+**Ek Tavsiye:**  
+- Port listesi oluştururken farklı türde servisleri seç (çeşitlilik artırır).  
+- Yalnızca art arda gelen benzer portları seçmek etkisiz olur (örnek: 80 ve 443 yerine 80 ve 22 seçmek mantıklı).  
+- Birkaç yüksek port (örnek 40000) eklemek faydalıdır, çünkü bazı firewall’lar sadece düşük portları engeller.
+
+---
+
+## 6. UDP Port Seçimi
+
+UDP taramada durum farklıdır çünkü:
+- Açık portlar genelde **yanıt vermez**.  
+- Kapalı portlar “ICMP Port unreachable” döner, bu bize “host canlı” bilgisini sağlar.  
+Bu yüzden amaç **filtrelenmemiş** portlara denk gelmektir.
+
+Öneriler:
+- **53 (DNS)** genelde iyi sonuç verir.  
+- Ayrıca yüksek, rastgele bir port (örneğin 37452) denenebilir.  
+- SNMP (161) bazen firewall tarafından engellense de denenebilir.
+
+---
+
+## 7. ICMP Probe Türleri
+
+- **Echo Request (-PE):** En yaygın ve en etkili.
+- **Timestamp (-PP):** Süre ölçümü için; echo kapalı ağlarda işe yarar.
+- **Address Mask (-PM):** Çok az kullanılan ama bazen işe yarayabilir.
+
+---
+
+## 8. Uygulamalı Örnekler
+
+### **Default tarama (4 prob, hızlı)**
+```bash
+nmap -n -sn -T4 -iL 50K_IPs -oA 50KHosts_DefaultPing
+```
+→ 50.000 adresi 42 dakikada taradı, 3927 host bulundu.
+
+### **Genişletilmiş tarama (14 prob, yavaş ama kapsamlı)**
+```bash
+nmap -n -sn -PE -PP -PS21,22,23,25,80,113,443,31339 \
+-PA80,113,443,10042 -T4 --source-port 53 -iL 50K_IPs -oA 50KHosts_ExtendedPing
+```
+→ 50.000 adresi 147 dakikada taradı, 4712 host bulundu (yaklaşık %20 daha fazla).
+
+**Sonuç:**  
+Daha fazla prob = daha çok host bulma, ama süre ~3.5 kat daha uzun.  
+Ayrıca sahte pozitif riskleri artar (örneğin firewall’un kendisi yanıt verebilir).
+
+---
+
+## 9. Pratik Öneriler ve Stratejik Düşünme
+
+- **İç ağlar için:** Nmap’in varsayılan tarama türü genelde yeterlidir.  
+- **Dış ağlar (internet üzeri):** Daha fazla prob (ICMP + TCP + UDP) eklemek önerilir.  
+- **Amaç çeşitliliktir:** Farklı protokoller ve portlar seçilirse başarı artar.  
+- **Kaynak port 53 kullanımı:** Bazı firewall’ları aşarak daha fazla host tespit edilebilir.  
+- **Tarama süresi:** Her ek prob, sürenin orantılı şekilde artmasına neden olur.
+
+---
+
+## 🔹 ÖZETLE
+
+Metin şunu anlatıyor:
+
+1. **Host discovery**, Nmap’in bir ağda hangi makinelerin aktif olduğunu saptama aşamasıdır.  
+2. Bu aşama, ICMP, TCP, UDP ve IP temelli ping türleriyle yapılır.  
+3. Nmap’te birçok **opsiyon** ping taramasını hız, gizlilik, doğruluk ve kapsam açısından etkiler.  
+4. **En etkili prob ICMP Echo (-PE)**’dir, ancak sadece buna güvenmek hatalı olur. TCP portlarına SYN/ACK göndermek (80, 443, 22, vs.) ve UDP sorguları eklemek başarıyı artırır.  
+5. **Varsayılan Nmap kombinasyonu** (–PE -PA80 -PS443 -PP) hız ve doğrulukta iyi dengededir.  
+6. Büyük taramalarda DNS çözümleme ve paralellik ayarlarına dikkat edilmelidir.  
+7. Daha fazla prob eklendikçe taramanın süresi artar ama ağda gerçekten yaşayan cihazların kaçırılma ihtimali azalır.  
+8. Güvenlik analistleri, geniş taramalarda farklı protokolleri ve portları harmanlayan gelişmiş probe kombinasyonlarını kullanmalıdır.
+
+---
+
+Kısaca:
+> Metin, **ping taramasını verimli, hızlı ve tespit edilmesi zor hâle getirmek için** hangi Nmap seçeneklerinin nasıl kullanılacağını ve hangi prob kombinasyonlarının en iyi sonuç verdiğini anlatıyor.  
+> Ayrıca ICMP, TCP ve UDP temelli yöntemlerin avantajlarını, hangi portların daha duyarlı olduğunu ve farklı ağ yapılarına göre stratejik seçimler yapılması gerektiğini açıklıyor.

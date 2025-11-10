@@ -1,0 +1,134 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-10T20:40:41+03:00
+
+====== tarama bayrakları ======
+Created Monday 10 November 2025
+
+**GENİŞ VE DETAYLI ÖZET**
+
+Bu metin, Nmap aracının komut satırı seçeneklerini ve özellikle **port tarama (port scanning)** konusuna ilişkin özelliklerini açıklar. Nmap’in esnekliğini artıran yüzlerce seçenek olmasına rağmen bu metin yalnızca **port taramasıyla ilgili bayraklara (flags)** ve temel işlevlerine odaklanır. Ana başlıklar şunlardır:
+
+---
+
+### 🔹 1. Port Taramada Kullanılan Teknikler (Scan Techniques)
+
+Port taraması yapılırken önce hangi yöntemin kullanılacağı seçilir.  
+Nmap yaklaşık **bir düzine farklı tarama yöntemi** sunar. Genellikle bir tarama türü aynı anda kullanılabilir, ancak **UDP taraması (-sU)** herhangi bir TCP taramasıyla birleştirilebilir.  
+Taramalar genellikle **-s<C>** biçiminde gösterilir.  
+Varsayılan olarak Nmap, **TCP SYN (stealth) taraması (-sS)** yapar. Kullanıcının root izni yoksa ya da IPv6 hedefliyorsa **TCP connect taraması (-sT)** devreye girer.
+
+**Başlıca Port Tarama Türleri:**
+
+- **TCP SYN Scan (-sS):** En yaygın yöntemdir, hızlıdır ve açık TCP bağlantısı kurmadan portların durumunu anlar.  
+- **TCP Connect Scan (-sT):** Privilege’siz kullanıcılar ve IPv6 için kullanılır; sistem çağrısıyla bağlantı kurar.  
+- **UDP Scan (-sU):** UDP portlarını tarar, genellikle gözden kaçan güvenlik açıklarını tespit eder.  
+- **FIN, NULL, Xmas Scans (-sF, -sN, -sX):** Güvenlik duvarlarını aşmak için kullanılır, ancak bazı sistemlerde (özellikle Windows) etkisizdir.  
+- **ACK Scan (-sA):** Güvenlik duvarı kurallarını analiz eder, ama portların açık mı kapalı mı olduğunu tespit etmez.  
+- **Window Scan (-sW):** ACK taramasına benzer, ancak bazı makinelerde portun açık olup olmadığını anlayabilir.  
+- **Maimon Scan (-sM):** FIN+ACK kombinasyonudur; bazı filtreleri aşabilir ama az sistemde çalışır.  
+- **Idle Scan (-sI):** En gizli tarama türüdür. “Zombie” adında masum bir sistemi kullanır ama yavaştır ve karmaşıktır.  
+- **IP Protocol Scan (-sO):** IP bazlı protokolleri (TCP, ICMP, IGMP vs.) tarar. Teknik olarak port taraması olmasa da benzer şekilde çalışır.  
+- **FTP Bounce Scan (-b):** Artık çok nadir kullanılır; FTP sunucularını aracı olarak kullanarak port taraması yapar.
+
+---
+
+### 🔹 2. Hedeflenecek Portların Seçilmesi (Selecting Ports)
+
+Nmap, **nmap-services** adlı bir veritabanı dosyası kullanır. Bu dosyada, milyonlarca adres taramasından toplanan verilere göre **en çok açık olan portların sıklığı** bulunur.  
+Varsayılan olarak ilk **1000 popüler port** taranır.
+
+Alternatifler:
+- **-F:** Sadece en popüler ilk 100 portu tarar (hızlı tarama).  
+- **--top-ports <n>:** Belirli sayıda en popüler portu tarar.  
+- **-p:** Kullanıcıya özel port(lar) veya aralıklar belirlenebilir.
+
+**Örnekler:**
+- `-p 22` → sadece 22 numaralı portu tarar.  
+- `-p ssh` → port numarası yerine isim (örneğin ssh = 22).  
+- `-p 22,25,80` → birden fazla port.  
+- `-p80-85,443` → aralık ve tek değer birleşimi.  
+- `-pT:21,23,110,U:53,111` → TCP ve UDP portlarını ayrı bildirir.  
+- `-p http*` → benzer isimdeki portları (80, 443, 8080 vb.) tarar.  
+- `-p-` → tüm portları (1-65535) tarar.  
+
+Bu esnek yapı, kullanıcıya hedefe özel ve ayrıntılı tarama yapma olanağı verir.
+
+---
+
+### 🔹 3. Zamanlama ve Performans Ayarları (Timing-related Options)
+
+Port taraması genellikle en uzun süren kısımdır.  
+Nmap performansını hız ve yoğunluk açısından ayarlamak mümkündür.
+
+**Başlıca seçenekler:**
+
+- **-T0 – -T5:** Hız şablonları (çok yavaş → çok agresif).  
+- **--min/max-rtt-timeout:** Port cevabı için minimum/maksimum süre.  
+- **--host-timeout:** Belirtilen sürede yanıt vermeyen hedefi terk eder.  
+- **--min-rate / --max-rate:** Saniyede gönderilecek sorgu hızını belirler.  
+- **--max-retries:** Aynı porta gönderilecek tekrar deneme sayısı.  
+- **--min/max-hostgroup:** Kaç hostun aynı anda taranacağını belirler.  
+- **--min/max-parallelism:** Aynı anda kaç port sorgusunun açık kalabileceğini sınırlar.  
+- **--scan-delay / --max-scan-delay:** Her sorgu arasında bekleme süresi belirler.  
+
+Bu ayarlar sayesinde taramanın süresi ve gizliliği optimize edilir.
+
+---
+
+### 🔹 4. Çıktı Biçimi ve Ayrıntılılık (Output and Verbosity Options)
+
+Nmap sonuçlarını birçok formatta verebilir:
+- **-oN <dosya>:** Normal (metin) çıktı.  
+- **-oG <dosya>:** Grepable (tek satırlı, kolay filtrelenebilir).  
+- **-oX <dosya>:** XML biçiminde, programlarla kullanılabilir.  
+- **-oA <isim>:** Tüm formatlarda kayıt eder (isim.nmap, isim.xml, isim.gnmap).  
+- **--append-output:** Mevcut dosyaya ekleme yapar.  
+- **--resume:** Yarım kalmış taramayı devam ettirir.  
+- **--open:** Sadece açık portları gösterir.  
+
+**Verbosity (bilgi seviyesi):**
+- **-v:** Daha fazla bilgi. Tekrarlandıkça ayrıntı artar.  
+- **-d:** Hata ayıklama düzeyi. 1–9 arası artırılabilir.  
+- **--packet-trace:** Her gönderilen/alınan paketi gösterir (öğretici amaçlı kullanılır).  
+
+---
+
+### 🔹 5. Güvenlik Duvarı ve IDS Atlama (Firewall/IDS Evasion)
+
+Nmap, saldırı tespit sistemlerinden (IDS) veya güvenlik duvarlarından kaçınmak için özel seçenekler sunar. Bu bölüm sadece bu konuya değinir, detaylı anlatımlar başka bölümlerdedir. Amaç, daha gizli tarama yöntemleri kullanmaktır.
+
+---
+
+### 🔹 6. Hedeflerin Belirlenmesi (Specifying Targets)
+
+Basitçe IP adresi veya alan adı girilebilir.  
+Büyük ağlar taranırken hedefler bir dosyadan alınabilir veya rastgele üretilebilir.  
+Bu sistem Nmap’in ölçeklenebilir olmasını sağlar.
+
+---
+
+### 🔹 7. Diğer Faydalı Ayarlar (Miscellaneous Options)
+
+Bazı yararlı ama kategori dışı ayarlar:
+
+- **-6:** IPv6 ile tarama yapar.  
+- **-r:** Portları karışık sırada değil, sırayla tarar.  
+- **-Pn:** Ping testini atlayarak her hedefi doğrudan tarar.  
+- **--reason:** Her portun durumunun neden o şekilde sınıflandırıldığını gösterir.
+
+---
+
+### 🔹 Özetle:
+
+Bu metin, Nmap aracını **etkin, kontrollü ve özelleştirilebilir** bir port tarama aracı haline getiren temel özellikleri açıklıyor.  
+Öne çıkan noktalar:
+- Tarama tipi seçimi (TCP, UDP, gizli, hızlı, firewall arkası, vs.)  
+- Port hedeflerinin esnek tanımı (-p seçenekleriyle)  
+- Tarama hızı, performans ve zamanlama ayarları  
+- Çıktı biçimi ve ayrıntı kontrolü (-oN, -oX, -v, -d gibi)  
+- Gizlilik ve güvenlik duvarı atlatma yöntemleri  
+- IPv6 desteği, hedef belirleme ve tarama stratejileri  
+
+**Sonuç:**  
+Bu bölüm, Nmap kullanıcılarına port taramasını amaca göre hız, gizlilik veya kapsam bakımından özelleştirmeyi öğretir. Komut satırı bayraklarının bilinmesi, Nmap’in gücünü tam anlamıyla kullanmanın temelidir.
