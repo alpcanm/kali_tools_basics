@@ -1,0 +1,64 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-20T20:58:02+03:00
+
+====== Seclist ======
+Created Thursday 20 November 2025
+
+SecLists
+
+Ne amaçla üretildi?
+- Güvenlik testlerinde gereken “hazır kelime listelerini” tek yerde toplamak.
+- Yeni bir test ortamında hızlıca başlamak ve zaman kazanmak.
+
+Nedir?
+- Kullanıcı adı, parola, dizin/URL, DNS alt alan, zararlı imzası, fuzz/payload gibi metin listelerinin büyük bir koleksiyonu.
+- “Araç” değil, “içerik deposu” (wordlist/payload arşivi).
+
+Ne işe yarar (basit örneklerle)?
+- Gizli web sayfalarını bulmak: Liste içindeki klasör adlarını deneyerek.
+- Zayıf/varsayılan parolaları kontrol etmek: En yaygın parolalar listesinden denetim yapmak (yasal yetkiyle).
+- DNS keşfi: Alt alan adlarını listeden yoklamak.
+- Girdi doğrulaması testleri: Fuzz/payload listeleriyle uygulama tepkisini gözlemek.
+
+Ne değildir?
+- Kırma/istismar aracı değildir; tek başına “hacklemez”.
+- Otomatik tarayıcı veya parola kırıcı değildir; bu araçlara veri sağlar.
+- Sihirli başarı garantisi yoktur; kalitesiz/izinsiz kullanım uygun değildir.
+
+Kullanım alanları nedir?
+- Web uygulama keşfi ve dizin/endpoint bulma.
+- Şifre hijyeni denetimi ve varsayılan kimlik bilgisi kontrolü.
+- DNS/altyapı keşfi, desen eşleme, IoC arama.
+- Fuzzing ve güvenlik doğrulama testleri.
+
+Kullanım ortamı nelerdir?
+- Genelde Linux (Kali, Parrot), ama Windows/Mac’te de kullanılabilir.
+- Komut satırı araçlarıyla birlikte: örn. dizin bulucu, DNS keşif, parola denetim araçları.
+- Offline çalışabilir; tipik yol: /usr/share/seclists (Kali).
+
+Neden tercih edilir?
+- Çok kapsamlı ve toplulukça güncelleniyor.
+- Standart hâline gelmiş; birçok eğitim/lab ile uyumlu.
+- Kategorilere ayrılmış, işe göre doğru listeyi seçmek kolay.
+
+Kullanmak için nelere ihtiyaç vardır?
+- Yasal yetki ve test kapsamı.
+- Uygun işletim sistemi ve ~2 GB depolama.
+- Wordlist/payload tüketebilen araçlar (örn. dizin tarayıcılar, DNS araçları).
+- Temel komut satırı bilgisi.
+- Kurulum (ör.: paket “seclists”).
+
+Öğrenme zorluk seviyesi nedir?
+- Kolay (ortalama bir haftada öğrenilebilir).
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 6 — Rol-çekirdek zorunlu: Özellikle kırmızı takım, pentest, bug bounty, AppSec için şart.
+
+Alternatifleri nelerdir?
+- FuzzDB
+- PayloadsAllTheThings
+- Assetnote Wordlists
+- DirBuster/dirsearch wordlist’leri
+- Probable-Wordlists, rockyou.txt, CrackStation/Weakpass
+- OneListForAll (web keşfi odaklı)

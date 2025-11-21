@@ -2,7 +2,7 @@ Content-Type: text/x-zim-wiki
 Wiki-Format: zim 0.6
 Creation-Date: 2025-11-10T20:23:17+03:00
 
-====== Port Taramaya Genle Bakış ======
+====== Port Taramaya Genel Bakış ======
 Created Monday 10 November 2025
 
 Tabii, aşağıda verdiğin metnin **geniş ve detaylı özeti** yer alıyor. Metin “port” kavramı, port tarama (port scanning), Nmap aracı ve portların sınıflandırılması hakkında temel ağ güvenliği bilgisini anlatıyor.  

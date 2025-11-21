@@ -1,0 +1,75 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-21T20:41:58+03:00
+
+====== sqlmap ======
+Created Friday 21 November 2025
+
+sqlmap
+
+Ne amaçla üretildi?
+---
+- Web uygulamalarındaki SQL enjeksiyonu (SQLi) açıklarını otomatik bulmak, doğrulamak ve etkisini göstermek
+- Yetkili sızma testlerinde veritabanı riskini ölçmek ve kanıt üretmek
+
+Nedir?
+---
+- Açık kaynak, komut satırı tabanlı bir sızma testi aracıdır
+- Çok sayıda veritabanını destekler (ör. MySQL, PostgreSQL, Microsoft SQL Server, Oracle, MariaDB vb.)
+
+Ne işe yarar (basit örneklerle)?
+---
+- Bir URL’deki parametrenin SQLi’ye açık olup olmadığını test eder
+- Veritabanı türünü/sürümünü tanımlar (parmak izi)s
+- Kullanıcılar, tablolar, kolonlar gibi meta verileri listeler; seçilen verileri çekebilir
+- Uygun haklar varsa sunucudan dosya indirip/yükleyebilir, komut çalıştırmayı deneyebilir
+- Parola hash biçimlerini tanır, sözlükle kırmayı deneyebilir
+
+Ne değildir?
+---
+- “Tek tıkla her şeyi hackleyen” sihirli araç değildir
+- Yasal izin olmadan kullanılacak bir saldırı aracı değildir
+- Genel amaçlı zafiyet tarayıcısı değildir (SQLi dışındaki pek çok açığı kapsamaz)
+- WAF/IPS gibi korumaları atlatmayı garanti etmez
+
+Kullanım alanları nedir?
+---
+- Yetkili sızma testleri (VAPT), kırmızı takım, AppSec doğrulama
+- Güvenlik araştırması ve eğitim/lab ortamları
+- Regülasyon uyumu için kanıt üretimi
+
+Kullanım ortamı nelerdir?
+---
+- İşletim sistemleri: Linux, macOS, Windows
+- Hedefler: Web uygulamaları, API’ler; bazı durumlarda DB’ye doğrudan bağlantı
+- Entegrasyon: Proxy’ler (Burp/ZAP), Tor, out‑of‑band kanallar
+
+Neden tercih edilir?
+---
+- Güçlü tespit motoru (boolean, time, error, UNION, stacked, OOB)
+- Çok geniş DBMS desteği ve otomasyon
+- Açık kaynak, aktif topluluk ve dokümantasyon
+
+Kullanmak için nelere ihtiyaç vardır?
+---
+- Yazılı yetkilendirme (yasal izin)
+- Hedef URL veya veritabanı bağlantı bilgileri
+- Python 3, internet/ağ erişimi
+- İsteğe bağlı: proxy, sözlük dosyaları, lab/VM ortamı
+
+Öğrenme zorluk seviyesi nedir?
+---
+- Temel kullanım: kolay (ortalama bir haftada öğrenilebilir)
+- Etkili/özelleştirilmiş kullanım: orta (ortalama bir ayda öğrenilebilir)
+- Gelişmiş (OOB, WAF atlatma, ayrıcalık yükseltme): zor (6 aya kadar)
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+---
+- 6 — Rol-çekirdek zorunlu: Özellikle kırmızı takım/AppSec/Web pentest yapanlar için şart; diğer rollerde güçlü artı
+
+Alternatifleri nelerdir?
+---
+- jSQL Injection, BBQSQL, sqlninja, Havij (eski)
+- Burp Suite Pro (aktif tarama ve eklentiler), OWASP ZAP (aktif tarama)
+- Nmap NSE SQLi script’leri, Metasploit SQLi modülleri
+- NoSQL senaryoları için: NoSQLMap

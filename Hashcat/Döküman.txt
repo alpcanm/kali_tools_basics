@@ -1,0 +1,386 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-18T18:17:03+03:00
+
+====== Döküman ======
+Created Tuesday 18 November 2025
+
+
+
+
+## Hashcat Kullanım Rehberi: Temel → Orta → İleri Seviye  
+*(Basit, anlaşılır ve pratik bir anlatımla)*  
+
+---
+
+### Başlamadan Önce: Hashcat Nedir, Ne Değildir?
+
+Hashcat, **parola hash’lerini** çözmek (yani brute‑force veya sözlük saldırılarıyla parolayı tahmin etmek) için kullanılan çok güçlü bir araçtır.  
+Amaçları:
+
+- Unuttuğunuz parolayı geri kazanmak  
+- Kendi sisteminizde parola güvenliğini test etmek  
+- Güvenlik testleri / sızma testlerinde (yasal izinle) parola politikalarını değerlendirmek  
+
+**Kesinlikle şu amaçlarla kullanılmamalı:**
+
+- Başkalarının hesaplarını, sunucularını, dosyalarını kırmak  
+- Size ait olmayan veri tabanlarındaki hash’leri çözmeye çalışmak  
+- Yetkisiz herhangi bir sistemde test yapmak  
+
+Yani özetle:  
+**Kendi sistemin değilse, yazılı izin yoksa, dokunma.**
+
+Bu rehberdeki tüm örnekleri;  
+- kendi oluşturduğunuz test hash’leri üzerinde,  
+- demo lab ortamlarında  
+denemeniz gerektiğini varsayıyorum.
+
+---
+
+## 1. Temel Seviye: “Hashcat’i İlk Kez Açıyorum”
+
+### 1.1. Temel Kavramlar
+
+Hashcat’i anlamadan önce 3 kavramı netleştirelim:
+
+1. **Hash**  
+   Parolanın tek yönlü matematiksel özetidir. Örneğin:
+   ```text
+   Parola:  123456
+   Hash:    e10adc3949ba59abbe56e057f20f883e   (örneğin MD5)
+   ```
+   Hash’ten parolaya direkt geri dönüş yoktur; Hashcat’in yaptığı:  
+   “Ben tahmin ettiğim parolanın hash’ini alıp, elimdeki hash ile karşılaştırıyorum.”
+
+2. **Hash türü (hash type)**  
+   Örnek hash algoritmaları: `MD5`, `SHA1`, `SHA256`, `bcrypt`, `NTLM`…  
+   Hashcat’te bunlar **numaralarla** ifade edilir (ör: MD5 için belirli bir mod numarası vardır).  
+   Hangi hash türü olduğunu bilmek çok önemli; yanlış mod seçerseniz hiçbir şey çözemezsiniz.
+
+3. **Wordlist (Sözlük)**  
+   Tahmin etmek için kullanılacak parola listesi.  
+   Her satırda bir aday parola bulunan düz bir metin dosyası gibi düşünebilirsiniz.
+
+---
+
+### 1.2. Hashcat’i Kurmak (Genel Bakış)
+
+Detaylı kurulum adımları işletim sistemine göre değişir; ama mantık aynı:
+
+- **Windows**  
+  - Resmi siteden Hashcat arşivini indir  
+  - Çıkart ve klasör içinde çalıştır  
+  - Ekran kartı sürücülerinin güncel olduğundan emin ol
+
+- **Linux**  
+  - Dağıtımın paket yöneticisinde olabilir (ör. bazı dağıtımlarda `hashcat` paketi)  
+  - Yoksa resmi siteden indir, arşivi aç, dokümana göre çalıştır  
+
+- **macOS**  
+  - Bazı durumlarda GPU hızlandırma kısıtlı olabilir  
+  - Genellikle CPU modunda çalışır (daha yavaştır)  
+
+Kurulum detayları zamanla değişebileceği için en güncel bilgi için:  
+**resmi Hashcat dokümantasyonuna** bakmak iyi olur.
+
+---
+
+### 1.3. Hashcat Komutunun Mantığı
+
+Hashcat’in komut satırı formatı kabaca şöyle:
+
+```bash
+hashcat [seçenekler] <hash_dosyası> <wordlist_dosyası>
+```
+
+En kritik parametreler:
+
+- `-m`: Hash türü (hash mode)
+- `-a`: Saldırı modu (attack mode)
+- `<hash_dosyası>`: İçinde kırmak istediğiniz hash’lerin bulunduğu dosya
+- `<wordlist_dosyası>`: Aday parolaların bulunduğu dosya
+
+**Basit senaryo (sözlük saldırısı mantığı):**
+
+1. Bir dosyada hash’leriniz var: `hashes.txt`
+2. Bir dosyada parola adaylarınız var: `wordlist.txt`
+3. “Bu wordlist’teki her parolayı sırayla dene” demek istiyorsunuz.
+
+Bunun için şablon olarak:
+
+```bash
+hashcat -m <hash_türü> -a 0 hashes.txt wordlist.txt
+```
+
+Burada:
+- `-a 0` → “Düz sözlük saldırısı” (wordlist’te ne varsa aynen dener)
+- `<hash_türü>` → Örneğin MD5 ise buna uygun numarayı kullanmalısınız (doküman / yardım ekranından bakılır)
+
+> Not: Buradaki komut bir **şablon**. Gerçek kullanımda `<hash_türü>` gibi yerleri kendi ortamınıza göre doldurmalısınız.
+
+---
+
+### 1.4. Çıktıyı Okumak
+
+Hashcat çalışıp bir parola bulduğunda, genelde şöyle bir format görürsünüz:
+
+```text
+<hash> : <çözülen_parola>
+```
+
+Örneğin:
+```text
+e10adc3949ba59abbe56e057f20f883e : 123456
+```
+
+Bu size şu bilgiyi verir:
+
+- Elinizdeki hash: `e10adc...`
+- Bu hash’e karşılık gelen parola: `123456`
+
+Bu noktada artık temel kullanım mantığını biliyorsunuz.  
+Temel seviye için yeterli:  
+- Hash nedir?
+- Wordlist nedir?
+- Hashcat komutu kabaca nasıl çalışır?
+
+---
+
+## 2. Orta Seviye: “Şimdi Biraz Ciddileşelim”
+
+Temel seviyede “tek seferlik” bir komut çalıştırmayı gördük.  
+Orta seviyede ise:
+
+- Doğru hash türünü seçmeyi,
+- Farklı saldırı modlarını,
+- Performans ve pratik kullanım ipuçlarını
+ele alacağız.
+
+---
+
+### 2.1. Hash Türünü Doğru Seçmek
+
+Hashcat, desteklediği hash türlerini bir yardım ekranında listeler (mod numaralarıyla).  
+Buradan:
+
+- Elinizdeki hash’lerin hangi algoritmayla üretildiğini (örneğin sistem dokümanlarından) öğrenir,
+- Ona uygun hash mod numarasını seçersiniz.
+
+Yanlış mod = Boşa zaman.  
+Doğru mod = Performans + sonuç.
+
+> Örnek:  
+> NTLM, Windows ortamlarında sık kullanılan bir hash türüdür;  
+> bcrypt ise modern, yavaş ve daha güvenli bir algoritmadır (kırması zordur, yavaştır).
+
+---
+
+### 2.2. Saldırı Modları (Attack Modes) Mantığı
+
+Hashcat’te saldırı modları, `-a` parametresiyle seçilir. Öne çıkan bazıları:
+
+- `-a 0` → **Düz sözlük saldırısı (Straight)**  
+  Wordlist’te ne varsa aynen dener.
+
+- `-a 1` → **Combinator (Kombinasyon)**  
+  İki farklı wordlist’i birleştirip (başına/sonuna ekleyerek) dener.
+
+- `-a 3` → **Mask saldırısı (Mask Attack)**  
+  Parola yapısını biliyorsanız (örneğin 8 karakter, sonu rakam), “kalıp” tanımlayarak dener.
+
+- `-a 6` / `-a 7` → **Hybrid saldırılar**  
+  Wordlist + mask kombinasyonu gibi düşünebilirsiniz.
+
+Burada bilmeniz gereken:  
+Her saldırı modu, farklı senaryolar için uygundur.  
+Örneğin:
+
+- Kullanıcıların “klasik” zayıf parolalar yazdığını düşünüyorsanız → `-a 0` (wordlist)  
+- Parolaların belli bir formata uyduğunu biliyorsanız (ör. “Büyük harf + küçük harf + sayı”) → `-a 3` (mask)
+
+---
+
+### 2.3. Mask (Kalıp) Saldırısı Fikri
+
+Mask saldırısının mantığı şudur:
+
+> Parolanın tam ne olduğunu bilmiyorum ama **nasıl bir yapıda** olduğunu biliyorum.
+
+Örneğin:
+- 8 karakter uzunluğunda
+- Büyük/küçük harf + rakam kombinasyonu içeriyor
+
+Hashcat’te mask yaparken genellikle:
+- Harf, rakam, özel karakter gruplarını sembollerle ifade edersiniz.
+- Sonra bu sembolleri bir araya getirip mask (kalıp) tanımlarsınız.
+
+Detaylı sembol listesine Hashcat’in yardım/doküman kısmından bakılır.  
+Burada ana fikir: **tüm olası kombinasyonları değil, belirli bir kalıbı** tarayarak zaman kazanmak.
+
+---
+
+### 2.4. Performans ve Pratik Kullanım
+
+Hashcat’i daha verimli kullanmak için bazı pratik noktalar:
+
+- **GPU kullanımını kontrol etme**  
+  Birden fazla ekran kartınız varsa, hangisini kullanacağınıza karar verebiliyorsunuz.  
+  Böylece aynı anda hem çalışıp hem test yapmak mümkün olabilir (dikkat: yüksek yük binir).
+
+- **Çalışmayı durdurup devam ettirme (checkpoint / restore)**  
+  Uzun süren saldırılarda Hashcat’i durdurup sonra kaldığınız yerden devam edebilirsiniz.  
+  Bu, özellikle mask veya büyük wordlist’lerle çalışırken çok işinize yarar.
+
+- **Potfile kullanımı**  
+  Hashcat, çözülmüş hash’leri kayıt altına alarak, aynı hash’i tekrar tekrar çözmeye çalışmaz.  
+  Bu, tekrar çalıştırdığınızda zamandan kazandırır.
+
+- **Sınırları bilmek**  
+  Bcrypt gibi modern, kasıtlı yavaş algoritmalarda kırma işlemi çok zaman alabilir.  
+  Bu, sisteminizin zayıf olduğu anlamına gelmez; algoritmanın güvenlik tasarımı böyledir.
+
+---
+
+## 3. İleri Seviye: “Gerçekten Güvenlik Testi Yapmak İstiyorum”
+
+İleri seviyede artık:
+
+- Kendi test ortamınızı kurmayı,
+- Hashcat’in gelişmiş özelliklerini,
+- Sonuçları güvenlik politikalarına dönüştürmeyi
+konuşacağız.
+
+---
+
+### 3.1. Kendi Lab Ortamını Kurmak
+
+Etik ve hukuki sorun yaşamadan pratik yapmak istiyorsanız:
+
+1. **Kendi kullanıcı veritabanınızı oluşturun**  
+   Örneğin:
+   - Basit bir test uygulaması yazıp kullanıcılara parola belirletin
+   - Bu parolaları bilinen algoritmalarla hash’leyin (ör. MD5, SHA256, bcrypt vs.)
+
+2. **Hash’leri dışa aktarın**  
+   Bu hash’leri bir dosyada toplayın (ör: `lab_hashes.txt`).
+
+3. **Hashcat ile bu hash’lere saldırı yapın**  
+   Amacınız:
+   - Kaç tanesini ne kadar sürede çözebildiğinizi görmek
+   - Hangi tür parolaların zayıf kaldığını analiz etmek
+
+Böylece hem Hashcat pratiği yapmış olursunuz, hem de gerçek bir güvenlik testi simülasyonu elde edersiniz.
+
+---
+
+### 3.2. Kurallar (Rules) ile Wordlist’i “Zeki” Hale Getirmek
+
+Wordlist’te sadece “kelimeleri” deneyebilirsiniz, ama gerçek hayatta kullanıcılar:
+
+- Kelimenin başına/sonuna rakam ekler (`parola1`, `1parola`)
+- Bazı harfleri rakamla değiştirir (`a` → `@`, `e` → `3` gibi)
+- İlk harfi büyük yazar (`Parola`, `Admin123`)
+
+Hashcat’in **rules** mekanizması, tam bunu otomatikleştirmek için vardır:
+
+- Her rule satırı, wordlist’teki her kelimeye bir dönüştürme uygular:
+  - Örn: kelimenin sonuna rakam ekle
+  - Örn: kelimedeki `a` harfini `@` ile değiştir
+  - Örn: ilk harfi büyük yap
+
+Sonuç:  
+Tek bir wordlist’ten, kurallar sayesinde **binlerce farklı varyasyon** elde edersiniz.  
+Bu da parolaları gerçek kullanıcı alışkanlıklarına daha yakın şekilde tahmin etmenizi sağlar.
+
+> Yine hatırlatma: Bunları sadece **izinli testlerde** ve **kendi ortamınızda** kullanmalısınız.
+
+---
+
+### 3.3. Hybrid Saldırılar ve Strateji
+
+**Hybrid** saldırı, “wordlist + mask” yaklaşımıdır.  
+Örneğin:
+
+- Elinizde bir kelime listesi var: `abc`, `parola`, `admin`
+- Kullanıcıların genelde sonuna iki rakam eklediğini biliyorsunuz
+
+Strateji:
+
+- Wordlist’teki kelimeleri alın
+- Sonlarına `00`–`99` arası tüm kombinasyonları deneyin (mask)
+
+Böylece hem wordlist’in “anlamlı kelimelerinden” faydalanır,  
+hem de mask ile **küçük bir brute‑force** alanı eklersiniz.
+
+Hybrid saldırılar:
+
+- Özellikle şirket ortamlarında,
+- Kullanıcıların belli parola alışkanlıkları olduğunda (ör. isim + yıl)
+çok etkili olabilir.
+
+---
+
+### 3.4. Sonuçları Güvenlik Politikalarına Çevirmek
+
+Hashcat’i güvenlik testi için kullanıyorsanız, asıl değer:
+
+> “Neleri kırabildim?” değil,  
+> “Neden bu kadarını kırabildim ve bunu nasıl düzeltebilirim?” sorusudur.
+
+Örnek analizler:
+
+- Çözülen parolaların çoğu kısa mı?  
+  → Minimum parola uzunluğunu artırın (ör. 10+ karakter).
+
+- Kullanıcılar hep aynı kalıpta mı? (İsim + doğum yılı gibi)  
+  → Parola politika ve eğitimlerini güncelleyin.
+
+- Sadece zayıf hash algoritmaları mı hızlı kırılıyor?  
+  → MD5/SHA1 gibi hızlı algoritmalar yerine bcrypt, Argon2 gibi modern KDF’lere geçin.
+
+Bu analizleri raporlayarak:
+
+- Yönetimi ikna edebilir,
+- Parola yöneticisi kullanımını teşvik edebilir,
+- İki faktörlü kimlik doğrulama (2FA/MFA) gibi ek önlemleri savunabilirsiniz.
+
+---
+
+### 3.5. Otomasyon ve Entegrasyon
+
+Daha ileri seviyede:
+
+- Hashcat’i script’lerle (ör. bash, Python) otomatik çalıştırabilir,
+- Belirli aralıklarla kendi sisteminizde parola denetimi yapabilir,
+- Sonuçları raporlayıp, otomatik uyarı mekanizmaları kurabilirsiniz.
+
+Örneğin bir “güvenlik pipeline’ı” içinde:
+
+- Yeni kullanıcı parolaları belirli aralıklarla hash bazında test edilir
+- Çok kısa sürede kırılabilenler için:
+  - Kullanıcıya parola değiştirme uyarısı
+  - Güvenlik ekibine rapor
+
+gibi süreçler tasarlanabilir.
+
+---
+
+## Son Söz: Araç Değil, Kullanım Önemli
+
+Hashcat:
+
+- Yanlış kişinin elinde tehlikeli,
+- Doğru kişinin elinde çok güçlü bir **güvenlik testi aracı**.
+
+Özetle:
+
+- **Temel seviye**: Hash, hash türü, wordlist, basit komut kullanımı  
+- **Orta seviye**: Saldırı modları, mask mantığı, performans ve pratik kullanım  
+- **İleri seviye**: Lab ortamı, rules, hybrid saldırılar, sonuçları güvenlik politikalarına dönüştürme, otomasyon
+
+Eğer istersen bir sonraki adımda:
+
+- Belirli bir hash türü için örnek bir “lab senaryosu”  
+- Ya da sadece “kendi parolalarını nasıl test edersin?” odaklı pratik bir mini rehber  
+hazırlayabilirim. Hangi seviyeyi daha detaylı görmek istediğini söylemen yeterli.

@@ -1,0 +1,105 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-21T22:12:14+03:00
+
+====== sherlock ======
+Created Friday 21 November 2025
+
+# Sherlock
+
+---
+
+## Ne amaçla üretildi?
+
+- İnternette bir kişinin **kullanıcı adını** hangi sosyal medya ve sitelerde kullandığını hızlıca bulmak için üretildi.  
+- Özellikle **OSINT (açık kaynak istihbaratı)** yapanlar için zaman kazandırmak amacıyla geliştirildi.
+
+---
+
+## Nedir?
+
+- Terminal/komut satırında çalışan, **kullanıcı adı arama aracı**dır.  
+- Tek bir kullanıcı adını yüzlerce sitede otomatik olarak kontrol eder.
+
+---
+
+## Ne işe yarar (basit örneklerle)?
+
+- Örnek 1: “ali_123” kullanıcı adının **Instagram, GitHub, TikTok, Facebook** vb. yerlerde kullanılıp kullanılmadığını tek komutla kontrol eder.  
+- Örnek 2: Bir saldırganın kullandığı ad “darkhacker” ise, bu adla **başka hangi platformlarda hesabı var** görebilirsin.  
+- Örnek 3: Kendi kullanıcı adını aratıp, **senin adınla açılmış sahte hesaplar** var mı diye bakabilirsin.
+
+---
+
+## Ne değildir?
+
+- Bir **şifre kırma aracı** değildir.  
+- Hesaplara **girmez**, **hacklemez**, sadece hesabın var olup olmadığını gösterir.  
+- Gizli/özel veriyi çıkarmaz; sadece internetten **herkesin görebildiği** profil sayfalarına bakar.
+
+---
+
+## Kullanım alanları nedir?
+
+- **OSINT araştırmaları** (açık kaynak istihbaratı).  
+- **Dijital takip/profil çıkarma** (örneğin siber araştırma, gazetecilik, adli analiz).  
+- **Kimlik doğrulama / sahte profil tespiti** (örneğin dolandırıcılık incelemesi).  
+- **Red team / sosyal mühendislik hazırlığı** (hedefin dijital izini çıkarmak).
+
+---
+
+## Kullanım ortamı nelerdir?
+
+- Genelde **Linux dağıtımları** (özellikle Kali Linux) üzerinde kullanılır.  
+- **Terminal/komut satırı** üzerinden çalışır (grafik arayüzü yok).  
+- İstenirse Tor veya proxy üzerinden çalıştırılarak **IP gizliliği artırılabilir**.
+
+---
+
+## Neden tercih edilir?
+
+- Tek tek siteye girip arama yapmak yerine, **300+ siteyi otomatik tarar** → büyük zaman kazancı.  
+- Kurulumu ve kullanımı **çok basittir** (ör: `sudo apt install sherlock`).  
+- **Açık kaynak** olduğu için ücretsizdir ve geliştiriciler tarafından sürekli güncellenir.  
+- Sonuçları **CSV, XLSX** gibi formatlara kaydedip raporlamak kolaydır.
+
+---
+
+## Kullanmak için nelere ihtiyaç vardır?
+
+- **Temel bilgisayar kullanımı** ve terminale birkaç komut yazabilme.  
+- Bir işletim sistemi (özellikle:  
+  - Kali Linux / diğer Linux dağıtımları  
+  - Python kurulu ortamlarda da çalışabilir)  
+- İnternet bağlantısı (siteleri sorgulamak için).  
+- İsteğe bağlı:  
+  - **Tor** (anonimlik için)  
+  - **Proxy** (trafiği başka bir sunucudan geçirmek için)
+
+---
+
+## Öğrenme zorluk seviyesi nedir?
+
+- **Zorluk: kolay (ortalama bir haftada öğrenilebilir)**  
+- Sebebi:  
+  - Kullanılan komutlar çok az ve basit (`sherlock kullanıcı_adı`).  
+  - Sonuçların yorumlanması da oldukça düz: “bulundu / bulunmadı”.
+
+---
+
+## Aracın siber güvenlik uzmanı için önemi (0–7)
+
+- **Puan: 3 — Durumsal önemli**  
+  - **OSINT, tehdit istihbaratı, red team, DFIR** gibi alanlarda çalışanlar için oldukça faydalı.  
+  - Ama her siber güvenlik rolü için **zorunlu** değil (örneğin sadece ağ güvenliği yapan biri için kritik değil).
+
+---
+
+## Alternatifleri nelerdir?
+
+- **Maigret** – Sherlock’a benzer, çok sayıda siteyi tarayan kullanıcı adı aracı.  
+- **WhatsMyName** – Web tabanlı ve komut satırı sürümleri olan kullanıcı adı bulma projesi.  
+- **Socialscan** – Kullanıcı adı ve e-posta adreslerini birden fazla platformda kontrol eder.  
+- **holehe** – E-posta adresi üzerinden, hangi sitelerde hesap açılmış olabileceğini araştırır (dolaylı rakip).  
+
+Bu araçlar da aynı işi farklı yöntemlerle yapar; Sherlock genelde **en bilinen ve en basit** olanlardandır.

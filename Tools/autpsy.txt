@@ -1,0 +1,117 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-21T22:02:32+03:00
+
+====== autpsy ======
+Created Friday 21 November 2025
+
+# Autopsy
+
+---
+
+### Ne amaçla üretildi?
+
+- Bilgisayarlardaki delilleri (dosya, silinmiş veri, log vb.) incelemek  
+- Polis, adli bilişim uzmanı, olay müdahale ekiplerinin dijital delil toplamasını ve analiz etmesini kolaylaştırmak  
+- Pahalı ticari adli bilişim yazılımlarına ücretsiz/özgür alternatif olmak  
+
+---
+
+### Nedir?
+
+- “The Sleuth Kit” adlı komut satırı araçlarının **görsel (grafik) arayüzü** olan bir adli bilişim programıdır  
+- Bilgisayar ve disklerin **adli incelemesi** için kullanılan bir yazılımdır  
+
+---
+
+### Ne işe yarar (basit örneklerle)?
+
+- Silinmiş dosyaları bulmaya yarar  
+  - Örn: “Bu bilgisayardan dün silinen dosyalar nelerdi?” diye bakmak  
+- Zaman çizelgesi çıkarmaya yarar  
+  - Örn: “Bu kullanıcı saat kaçta hangi dosyayı açmış?”  
+- Disk, USB, imaj dosyası üzerinde delil aramaya yarar  
+  - Örn: “Bu USB’de çocuk istismarı içeriği var mı?”  
+- Arama yapmaya yarar  
+  - Örn: Belli bir kelimeyi, e‑postayı, dosya türünü tüm disk içinde taramak  
+
+---
+
+### Ne değildir?
+
+- Antivirüs programı değildir  
+- Güvenlik duvarı / saldırı engelleme sistemi değildir  
+- “Temizlik” programı (CCleaner vb.) değildir  
+- Saldırı yapma aracı (hack aracı) değildir  
+- Gerçek zamanlı izleme (SIEM gibi) aracı değildir  
+
+---
+
+### Kullanım alanları nedir?
+
+- Adli bilişim (forensic) incelemeleri  
+- Olay müdahalesi (incident response)  
+- İç soruşturmalar (kurum içi veri sızıntısı, usulsüzlük vb.)  
+- Hukuki süreçler (mahkeme için delil hazırlama)  
+- Eğitim ve laboratuvar çalışmaları (öğrencilere adli bilişim öğretmek)  
+
+---
+
+### Kullanım ortamları nelerdir?
+
+- Genelde masaüstü / dizüstü bilgisayarlar  
+- Linux (özellikle Kali gibi adli/siber dağıtımlar)  
+- Windows için de sürümleri/mevcud paketleri vardır  
+- Laboratuvar ortamları, polis/kurum adli bilişim birimleri  
+
+---
+
+### Neden tercih edilir?
+
+- Ücretsiz ve açık kaynak  
+- Ticari araçlara göre hafif ve erişilebilir  
+- Komut satırındaki The Sleuth Kit araçlarını **tıklanabilir, anlaşılır** hale getirir  
+- Temel adli incelemeler için yeterli özellik sunar  
+- Yaygın, bol eğitim ve dokümantasyon var  
+
+---
+
+### Kullanmak için nelere ihtiyaç vardır?
+
+- Temel bilgisayar kullanma bilgisi  
+- Linux veya Windows sistem  
+- İncelenecek disk / USB / disk imajı (örneğin: `.dd`, `.E01` vb.)  
+- Temel düzeyde:
+  - Dosya sistemi kavramı (NTFS, FAT32 gibi)
+  - Zaman damgası (timestamp) mantığı  
+- Yönetici/Root yetkisi (bazı işlemler için)  
+
+---
+
+### Öğrenme zorluk seviyesi nedir?
+
+- **Zorluk:** Orta (ortalama bir ayda temel kullanım öğrenilebilir)  
+- Sebep:
+  - Arayüz nispeten basit  
+  - Ama asıl zor olan: adli bilişim mantığını, dosya sistemlerini ve delil yorumlamayı öğrenmek  
+
+---
+
+### Aracın siber güvenlik uzmanı için önemi (0–7)
+
+- **Adli bilişim / DFIR uzmanı için:** 6 (rol-çekirdek zorunlu)  
+- **Genel siber güvenlikçi (mavi/kırmızı takım vb.) için:** 3 (durumsal önemli)  
+
+---
+
+### Alternatifleri nelerdir?
+
+- Ücretsiz / açık kaynak:
+  - The Sleuth Kit (TSK) – komut satırı  
+  - CAINE, DEFT gibi adli bilişim dağıtımları içindeki araçlar  
+  - Plaso / log2timeline (zaman çizelgesi için)  
+- Ticari (ücretli):
+  - EnCase  
+  - FTK (Forensic Toolkit)  
+  - X-Ways Forensics  
+  - Magnet AXIOM

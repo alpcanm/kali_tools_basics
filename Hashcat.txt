@@ -1,0 +1,73 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-18T18:13:14+03:00
+
+====== Hashcat ======
+Created Tuesday 18 November 2025
+
+
+**Hashcat Nedir, Ne Değildir?**  
+
+### Hashcat Nedir?
+
+Hashcat, **parola hash’lerini kırmak / çözmeye çalışmak** için kullanılan, çok hızlı ve gelişmiş bir **parola kurtarma ve güvenlik test aracıdır**.  
+
+Temel olarak şunları yapar:
+
+- Elinizdeki **hash** değerlerini alır (örneğin veri tabanından çıkan parola hash’leri)
+- Siz ona:
+  - Hangi hash türü olduğunu (ör: MD5, SHA1, NTLM, bcrypt…)
+  - Hangi saldırı yöntemini kullanacağını (wordlist, mask, hybrid vb.)
+  - Kullanacağı parola adaylarını (wordlist veya kalıp)
+  verirsiniz.
+- O da bu aday parolaların hash’lerini üretip, elinizdeki hash ile **eşleşme** arar.
+- Eşleşme bulursa, “Şu hash’in gerçek parolası budur” diyerek size sonucu gösterir.
+
+Yani Hashcat, aslında bir **tahmin motoru**:  
+Parolayı doğrudan “tersine çevirmiyor”, doğru parolayı tahmin edip deniyor.
+
+Kullanım amaçları:
+
+- Unutulmuş parolaları kurtarmak (örneğin eski bir arşiv, kendi dosyanız, kendi sisteminiz)
+- Bir sistemdeki parola politikalarını test etmek (örneğin şirket içi sızma testi)
+- Güvenlik araştırmaları ve eğitim (lab ortamında gerçekçi testler yapmak)
+
+---
+
+### Hashcat Ne Değildir?
+
+Hashcat:
+
+- **Sihirli bir “hack programı” değildir.**  
+  “Tek tuşa bas, herkesin parolasını anında göster” gibi bir şey beklemek yanlış.
+
+- **Her şeyi kırmaz.**  
+  - Güçlü parolalar,
+  - Güçlü ve yavaş algoritmalar (bcrypt, Argon2 vb.),
+  - Ek korumalar (salt, rate limit, MFA vs.)
+  olduğunda, pratikte kırmak aşırı zor veya neredeyse imkânsız hale gelir.
+
+- **Hukuken serbest bir “oyuncak” değildir.**  
+  - Size ait olmayan sistemlerde,  
+  - İzniniz olmayan veri tabanlarında,  
+  - Başkasının hesabı/cihazı üzerinde  
+  kullanırsanız, bu **suç** kapsamına girer.
+
+- **Ağlara giren, port tarayan, sistem exploiti yapan bir araç değildir.**  
+  Yani bir “penetrasyon aracı seti” değil;  
+  spesifik olarak hash çözme / parola kırma işine odaklıdır.
+
+---
+
+### Özetle
+
+- **Nedir?**  
+  Parola hash’lerini çözmek için kullanılan, GPU destekli, çok hızlı bir **parola kırma ve güvenlik test aracıdır**.
+
+- **Ne değildir?**  
+  Her şeyi otomatik kıran büyülü bir hack aracı değil; yanlış ve izinsiz kullanıldığında da hukuken ciddi sorun çıkartabilecek bir programdır.
+
+İstersen bir sonraki adımda,  
+“Hashcat’i yasal ve etik şekilde kendi sisteminde nasıl kullanırsın?”  
+diye özel bir mini rehber de hazırlayabilirim.
+

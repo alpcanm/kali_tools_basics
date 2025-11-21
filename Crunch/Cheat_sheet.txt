@@ -1,0 +1,7 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-18T19:35:39+03:00
+
+====== Cheat sheet ======
+Created Tuesday 18 November 2025
+

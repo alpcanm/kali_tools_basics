@@ -1,0 +1,57 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-20T21:18:11+03:00
+
+====== Optimal dizin tarama ======
+Created Thursday 20 November 2025
+
+
+Hızlı Dizin taraması
+
+
+- `raft-medium-words-lowercase.txt`
+
+Bunu kullanarak:
+- Hızlı dizin/endpoint keşfi
+- Yaygın dosya uzantılarıyla “akıllı” tarama
+- Çıktıyı dosyaya kaydetme
+
+için örnek ffuf komutu:
+
+```bash
+	ffuf -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories.txt \
+	 -u https://hedef.com/FUZZ \
+	 -recursion -recursion-depth 1 \
+	 -e .php,.html,.js,.json,.txt,.bak,.zip,.tar,.gz \
+	 -mc 200,204,301,302,307,401,403 \
+	 -fs 0 \
+	 -t 100 -rate 100 \
+	 -ac \
+	 -v -c \
+	 -o out_combined_$(date +%F_%H-%M).json \
+	 -of json
+```
+
+Kısa açıklama:
+
+Aşağıdaki tablo, komuttaki her parametrenin ne işe yaradığını basitçe açıklar:
+
+| Parametre / Kısım                                                                    | Anlamı               | Kısa Açıklama                                                                   |
+|--------------------------------------------------------------------------------------|----------------------|---------------------------------------------------------------------------------|
+| `ffuf`                                                                               | Araç adı             | Web fuzzing (dizin, dosya bulma vb.) aracı.                                     |
+| `-w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories.txt` | Wordlist             | Denenecek dizin/kelime listesini kullanır.                                      |
+| `-u https://kuzey2.com/FUZZ`                                                         | Hedef URL            | `FUZZ` yazan yere wordlist’teki her kelime sırayla yerleştirilir.               |
+| `-recursion`                                                                         | Özyinelemeli tarama  | Bulunan dizinlerin içine girip oraları da fuzz eder.                            |
+| `-recursion-depth 1`                                                                 | Derinlik             | En fazla 1 seviye alt dizinlere iner.                                           |
+| `-e .php,.html,.js,.json,.txt,.bak,.zip,.tar,.gz`                                    | Uzantılar            | Aynı kelimeyi bu uzantılarla birlikte de dener (ör: `admin.php`, `admin.html`). |
+| `-mc 200,204,301,302,307,401,403`                                                    | HTTP kodu eşle       | Bu cevap kodlarına sahip sonuçları göster (diğerlerini gizler).                 |
+| `-fs 0`                                                                              | Boyuta göre filtre   | Boyutu 0 olan cevapları **filtreler** (göstermez).                              |
+| `-t 100`                                                                             | Thread sayısı        | Aynı anda 100 istek gönderir (paralel tarama).                                  |
+| `-rate 100`                                                                          | Hız limiti           | Saniyede en fazla 100 istek yapar.                                              |
+| `-ac`                                                                                | Otomatik kalibrasyon | Gürültülü / gereksiz cevapları otomatik ayıklamaya çalışır.                     |
+| `-v`                                                                                 | Detaylı çıktı        | Daha ayrıntılı (verbose) çıktı verir.                                           |
+| `-c`                                                                                 | Renkli çıktı         | Terminalde renkli gösterim.                                                     |
+| `-o out_combined_$(date +%F_%H-%M).json`                                             | Çıktı dosyası        | Sonuçları bu dosyaya yazar; dosya adında tarih-saat kullanır.                   |
+| `-of json`                                                                           | Çıktı formatı        | Çıktı biçimi JSON olacak.                                                       |
+
+Özet: Bu komut, `kuzey2.com` üzerinde wordlist’teki isimleri ve belirtilen uzantıları kullanarak dizin/dosya araması yapıyor, belirli HTTP kodlarını gösteriyor, sonuçları da tarih-saatli bir JSON dosyasına kaydediyor.

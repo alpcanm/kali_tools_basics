@@ -1,0 +1,65 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-20T20:47:48+03:00
+
+====== ffuf ======
+Created Thursday 20 November 2025
+
+====== Ffuf ======
+Created Thursday 20 November 2025
+
+ffuf v2.1.0 için hızlı, etkili ve pratik birkaç tarama komutu aşağıda. Her biri farklı senaryolara uygun ve “optimal” ayarlarla dengelenmiştir. Lenovo Legion Go’nun güçlü CPU’sundan faydalanmak için thread ve rate değerlerini biraz yüksek tuttum; ağ/endpoint durumuna göre azaltıp artırabilirsiniz.
+
+Notlar:
+- -t eşzamanlı istek sayısı, -rate saniyedeki istek sayısıdır. Sıkı WAF/CDN ortamlarında -rate’i düşürün, -p ile rastgele gecikme ekleyin.
+- -mc ve -fc ile isabetli filtreleme kritik. -ac (autocalibrate) gürültüyü azaltır.
+- -o ve -of ile çıktıyı kayıt altına almayı öneririm.
+
+1) Hızlı dizin/endpoint keşfi (genel web kök taraması)
+ffuf -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories.txt -u https://hedef.tld/FUZZ -recursion -recursion-depth 1 -mc 200,204,301,302,307,401,403 -fs 0 -t 100 -rate 100 -ac -v -c -o out_dirs.json -of json
+
+- Orta boy wordlist + recursion 1 seviye.
+- Başlıca dönen kodları eşleştirir, boş içerikleri (fs 0) filtreler.
+- Hızlı/saldırgan: t=100 rate=100. Gerekirse rate 30-60’a düşürün.
+
+2) Dosya uzantılarıyla akıllı tarama (PHP/ASPX/js/css vs.)
+ffuf -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-small-words.txt -u https://hedef.tld/FUZZ -e .php,.asp,.aspx,.jsp,.js,.json,.txt,.bak,.old -mc 200,204,301,302,307,401,403 -t 80 -rate 80 -ac -c -o out_files.json -of json
+
+- Küçük/orta kelime listesini yaygın uzantılarla genişletir.
+- Yedek dosyaları (.bak, .old) yakalama şansı artar.
+
+3) Sanal host (VHost) keşfi (Host header fuzz)
+ffuf -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt -u https://hedef.tld/ -H "Host: FUZZ.hedef.tld" -mc 200,301,302 -t 80 -rate 80 -ac -v -c -o out_vhost.json -of json
+
+- CDN/WAF arkasında bazen 403/401 yerine 200/301/302 ile ipucu verir.
+- Hedef domainin yerine kendi domaininizi koyun.
+
+4) Parametre brute-force ve yansıma eşleşmesi (reflected param bulma)
+ffuf -w /usr/share/wordlists/seclists/Discovery/Web-Content/burp-parameter-names.txt:PARAM -w /usr/share/wordlists/seclists/Discovery/Web-Content/common-params.txt:VAL -u "https://hedef.tld/index.php?PARAM=VAL" -mr "VAL" -mc all -t 60 -rate 60 -ac -c -o out_params.json -of json
+
+- İki wordlist ile param/değer denemesi.
+- -mr "VAL" ile yansıma tespit edilir (XSS veya bilgi sızıntısına kapı aralayabilir).
+
+5) POST JSON fuzz (hata ayıklama/hassas endpoint keşfi)
+ffuf -w /usr/share/wordlists/seclists/Discovery/Web-Content/api/objects.txt:FUZZ -u https://api.hedef.tld/endpoint -X POST -H "Content-Type: application/json" -d '{"key":"FUZZ","mode":"test"}' -fr "error|invalid|not allowed" -mc all -t 60 -rate 50 -ac -c -o out_post.json -of json
+
+- Hata mesajlarını -fr ile filtreler, “sessiz başarılı” yanıtları öne çıkarır.
+- API keşfi için uygundur.
+
+6) 403 atlayan agresif deneme (403 çoksa, boyut/kelime filtresi)
+ffuf -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories.txt -u https://hedef.tld/FUZZ -mc 200,204,301,302,307,401,403 -fw 0,1 -fs 0,20 -t 100 -rate 100 -ac -sa -c -o out_403.json -of json
+
+- Küçük/boş cevapları eleyip anlamlı 403/200’leri ayıklar.
+- -sa ile hatalarda durur; isterseniz çıkarın.
+
+7) HTTP/2 ve SNI özel durumu (reverse proxy/CDN arkasında)
+ffuf -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-small-words.txt -u https://IP.veya.CNAME/FUZZ -http2 -sni hedef.tld -mc 200,301,302,401,403 -t 80 -rate 70 -ac -c -o out_h2.json -of json
+
+- TLS SNI zorunlu durumlarda -sni ile hedef hostu verin.
+- HTTP/2 bağlantı sayısını verimli kullanabilir.
+
+Performans/İstikrar ipuçları:
+- Ağa göre -rate 30-60 güvenli, dahası sunucuyu yorabilir. 429/503 görürseniz -rate’i düşürün, -p "0.1-0.5" ekleyin.
+- Gürültüyü azaltmak için daima -ac kullanın, gerekiyorsa -sf (403 yağmuru) ekleyin.
+- Wordlist önerileri: SecLists raft serileri (small/medium), API/params listeleri, dirsearch listeleri.
+- Çıktılarınızı hem json hem html isterseniz -of all ve -od results/ kullanın.

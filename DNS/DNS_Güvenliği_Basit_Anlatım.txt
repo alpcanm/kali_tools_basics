@@ -1,0 +1,147 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-13T13:29:50+03:00
+
+====== DNS Güvenliği Basit Anlatım ======
+Created Thursday 13 November 2025
+
+Harika, en baştan ve sade bir dille gidelim. Amacım zihninde net bir resim kurmak: önce temeller, sonra DNS, en sonda şifreli DNS (DoT/DoH/DoQ). Aralarda benzetmeler ve kısa örnekler vereceğim. Sonda da küçük bir terimler sözlüğü ekliyorum.
+
+1) Büyük resim: İnternet nasıl işler?
+- İnternet = bir kargo ağı gibi. Bilgi, “paket” denilen küçük parçalar hâlinde taşınır.
+- Bu paketlerin gideceği “adres” IP adresidir.
+- “Protokoller” ise bu taşımacılığın kurallarıdır (nasıl hazırlanır, nasıl gönderilir, nasıl karşılanır).
+
+2) Temel taşlar (hızlı giriş)
+- IP adresi: Evin posta adresi gibi. Ör: 93.184.216.34 (IPv4) ya da 2606:2800:220:1:248:1893:25c8:1946 (IPv6).
+- Paket: Yolladığın küçük veri parçası (kargo kutusu).
+- Protokol: Ortak kurallar. Ör: HTTP, TCP, DNS…
+- TCP vs UDP:
+  - TCP: Güvenilir, sırayı korur (kırılmasın diye ekstra özen). Web sayfaları, dosyalar.
+  - UDP: Hızlı ama kontrolü az (kırılabilir ama çabuk gider). Video, oyun, normal DNS.
+- Port: Binadaki daire numarası gibi. Ör: 80 (HTTP), 443 (HTTPS), 53 (DNS), 853 (DoT).
+
+3) DNS nedir? Neden var?
+- Sorun: İnsanlar “isimleri” hatırlar (example.com), bilgisayarlar “IP adreslerini”.
+- DNS = Telefon rehberi. İsmi alır, IP adresini verir.
+- Örnek: Tarayıcıya example.com yazdın → DNS’e sorulur: “Bunun IP’si ne?” → IP gelir → tarayıcı o IP’ye bağlanır.
+
+4) DNS nasıl çalışır? (adım adım)
+- 1: Cihazında küçük bir “DNS istemcisi” (stub resolver) var. İlk önce kendi önbelleğine bakar.
+- 2: Yoksa, ayarlı olduğu “DNS çözücüsüne” sorar (genelde modem/ISS’nin DNS’i ya da Google/Cloudflare gibi).
+- 3: Çözücüde de yoksa, internetin “rehber zinciri”ne gider:
+  - Kök sunucu (.) → “.com kayıtları nerededir?”
+  - TLD sunucusu (.com) → “example.com’un yetkili sunucuları şunlar…”
+  - Yetkili sunucu → “example.com için A kaydı: 93.184.216.34”
+- 4: Cevap önbelleğe alınır (TTL süresi boyunca). Sonraki istekler hızlı gelir.
+
+Kısa benzetme:
+- Sen: “Ayşe’nin telefonu?” (example.com → IP)
+- Santral: “Rehbere bir bakayım… Kök → .com → example.com” der ve numarayı bulur.
+
+5) Normal (klasik) DNS’in sorunu ne?
+- Çoğunlukla UDP 53 üzerinden “düz metin” gider (kartpostal gibi).
+- Aynı ağdaki biri (ör. kafe Wi‑Fi’si) hangi alan adını sorduğunu görebilir, yönlendirmeyi bozabilir (zehirleme/hijacking).
+- Gizlilik zayıftır, sansür/kurcalama yapılabilir.
+
+6) Çözüm: DNS’i şifrelemek
+- Fikir: DNS sorusunu “zarfa koymak”. Böylece aradaki kişiler ne sorduğunu göremez ve değiştiremez.
+- Üç popüler yöntem: DoT, DoH, DoQ.
+- Ortak noktaları: Hepsi DNS içeriğini şifreler; sadece “sen ↔ DNS çözücüsü” arasını korur. Çözücü (sağlayıcı) alan adlarını görmeye devam eder.
+
+7) DoT, DoH, DoQ’yu kısaca ve karşılaştırmalı anlatım
+- DoT (DNS over TLS)
+  - Ne yapar: DNS mesajlarını TLS ile şifreler.
+  - Nasıl görünür: “Bu DNS trafiği” olduğu anlaşılır (sıklıkla 853 portu).
+  - Artı: Basit, net standart. Android’in “Özel DNS” özelliği DoT’tur.
+  - Eksi: İsteyen ağlar 853’ü kolay engelleyebilir.
+  - Benzetme: Mektubu kalın bir zarfla yolluyorsun; üzerinde “DNS” etiketi var.
+
+- DoH (DNS over HTTPS)
+  - Ne yapar: DNS’i HTTPS’in içine koyar (web trafiği gibi görünür), genelde 443 portu.
+  - Artı: Engellemesi zordur; tarayıcılar doğrudan destekler.
+  - Eksi: Kurumsal ağlar denetim için hoşlanmayabilir; HTTP katmanı biraz ek yük getirir.
+  - Benzetme: Mektubunu sıradan web trafiğiyle aynı kamyona koyuyorsun; dışarıdan “bu DNS” demek zor.
+
+- DoQ (DNS over QUIC)
+  - Ne yapar: DNS’i QUIC (UDP üzerinde, 443) ile şifreler.
+  - Artı: Çok hızlı bağlantı kurar (el sıkışma kısa), kayıp paketlerde daha çevik.
+  - Eksi: Destek henüz DoH/DoT kadar yaygın değil ama hızla artıyor.
+  - Benzetme: Hızlı kurye servisi; trafik sıkışıklığında daha akıcı.
+
+Basit kıyas:
+- Engelleme direnci: DoH ≈ DoQ > DoT
+- Yaygın destek: DoH > DoT > DoQ
+- Gecikme/performans: DoQ genelde iyi, DoH/DoT kalıcı bağlantıyla da iyi.
+- Nerede kullanılır:
+  - Tarayıcılar: DoH
+  - Android “Özel DNS”: DoT
+  - Yeni nesil çözücüler/uygulamalar: DoQ (destek oldukça)
+
+8) Gerçek hayattan senaryo
+- Otel Wi‑Fi’sindesin:
+  - Normal DNS: Ağ yöneticisi hangi sitelerin isimlerini sorduğunu görebilir ve bazılarını engelleyebilir.
+  - DoT/DoH/DoQ: Sorduğun alan adını ağ göremez/kolayca kurcalayamaz; sadece “şifreli bir şey” gördüğünü anlar.
+  - Not: Hâlâ gittiğin sitenin IP adresi görünür. Tam anonimlik sağlamaz.
+
+9) Ne seçmeliyim?
+- Tarayıcı ağırlıklı kullanım: DoH pratik (Firefox/Chrome/Edge destekliyor).
+- Android’de sistem genelinde: “Özel DNS” (DoT).
+- Kayıplı/uzak bağlantılarda hız: DoQ iyi bir seçenek (destek varsa).
+- Kurumsal/ev ağı kontrolü: Yönlendiricide DoT ya da DoH kullanan bir çözücü (ör. AdGuard Home, Unbound+Stubby, NextDNS istemcisi).
+
+10) Pratik: Nasıl açarım?
+- Android (9+): Ayarlar > Ağ ve internet > Özel DNS > “Özel DNS sağlayıcı ana bilgisayar adı”
+  - Örnekler: dns.google veya 1dot1dot1dot1.cloudflare-dns.com veya dns.quad9.net
+- Chrome/Edge:
+  - Ayarlar > Gizlilik ve güvenlik > Güvenlik > “Güvenli DNS kullan”
+  - “Geçerli sağlayıcıyla” (uygunsa otomatik) ya da “Özel” seçip DoH URL’si gir:
+	- Google: https://dns.google/dns-query
+	- Cloudflare: https://cloudflare-dns.com/dns-query
+	- Quad9: https://dns.quad9.net/dns-query
+- Firefox:
+  - Ayarlar > Genel > Ağ Ayarları > “DNS üzerinden HTTPS”i etkinleştir
+  - Sağlayıcı seç (Cloudflare/NextDNS) veya özel URL gir.
+- Windows 11:
+  - Ayarlar > Ağ ve İnternet > Wi‑Fi/Ethernet > Bağlantı > DNS sunucuları > Düzenle
+  - Manuel seç, DNS adreslerini gir (ör. 1.1.1.1 / 8.8.8.8) ve “Şifreli (DoH)” yap.
+- iOS/macOS:
+  - Sistem geneli için bir profil ya da uygulama gerekir (Cloudflare “1.1.1.1”, NextDNS, AdGuard).
+  - Safari’de iCloud Private Relay açıksa, Safari trafiği için şifreli DNS kullanılır.
+
+11) Sık karışan noktalar
+- Şifreli DNS neyi gizler?
+  - Yerel ağ/ISS, hangi alan adını sorduğunu göremez ve cevabı kurcalaması zorlaşır.
+  - Ama DNS sağlayıcın (Google/Cloudflare/ISS) gördüğün adları görür.
+  - Ziyaret ettiğin sitenin IP’si ağ tarafından görülebilir.
+- DNSSEC nedir?
+  - DNS kaydının “doğruluğunu” imza ile kanıtlar (içerik kurcalanmamış mı?); gizlilik sağlamaz.
+  - Şifreli DNS ile birlikte çalışabilir: Biri gizlilik, diğeri bütünlük için.
+- “Şifreli DNS açtım, her şey gizli mi?”
+  - Hayır. Sadece DNS kısmı şifrelenir. Web için hâlâ HTTPS gerekir. Alan adını TLS uzantılarından sızdırmayı azaltan ECH gibi ek teknolojiler vardır ama her yerde yoktur.
+
+12) Terimler sözlüğü (kısa ve net)
+- IP adresi: Cihazın ağdaki adresi.
+- Paket: Ağ üzerinden giden veri kutusu.
+- Protokol: İletişim kuralları (ör. HTTP, TCP, DNS).
+- TCP: Güvenilir taşıma protokolü.
+- UDP: Hızlı ama kontrolsüz taşıma protokolü.
+- Port: Uygulama kapısı (53 DNS, 443 HTTPS, 853 DoT).
+- DNS: Alan adı → IP eşlemesini yapan sistem/protokol.
+- Kayıt türleri:
+  - A (IPv4), AAAA (IPv6), CNAME (takma ad), MX (e‑posta), NS (yetkili sunucu), TXT (serbest metin).
+- Çözücü (resolver): Sorgunu araştırıp cevaplayan DNS sunucusu.
+- Yetkili sunucu (authoritative): Bir alan adı için “resmi” kayıtları tutan sunucu.
+- TTL: Önbellekte ne kadar tutulacağını belirten süre.
+- TLS: Taşıma katmanı şifreleme teknolojisi (HTTPS’in temelidir).
+- HTTPS: HTTP + TLS, web trafiğini şifreler.
+- QUIC: UDP üzerinde modern, hızlı, şifreli taşıma.
+- DoT: DNS over TLS (genelde 853).
+- DoH: DNS over HTTPS (443).
+- DoQ: DNS over QUIC (443).
+- DNSSEC: DNS kayıtlarının imzayla doğrulanması (gizlilik değil, bütünlük/doğruluk).
+
+Kafanda oturması için tek cümlelik özet:
+- DNS telefon rehberidir; normalde kartpostal gibi açıktır; DoT/DoH/DoQ bu kartpostalı zarfın içine koyup şifreleyerek gizlilik ve kurcalama direnci sağlar.
+
+İstersen bir sonraki adımda: cihazına ve kullanımına göre “en uygun” seçeneği birlikte seçip, adım adım kurulum yapabiliriz. Hangi cihaz/işletim sistemi ve hangi DNS sağlayıcıyı tercih etmek istediğini söylemen yeterli.

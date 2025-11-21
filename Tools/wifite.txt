@@ -1,0 +1,155 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-21T22:11:10+03:00
+
+====== wifite ======
+Created Friday 21 November 2025
+
+# Wifite
+
+---
+
+## Ne amaçla üretildi?
+
+- Kablosuz (Wi‑Fi) ağların **güvenliğini test etmek** için üretildi.  
+- Özellikle:
+  - Zayıf şifreli ağları tespit etmek,
+  - Eski/yanlış yapılandırılmış Wi‑Fi ayarlarını bulmak,
+  - Kurumların kendi ağlarını **otomatik** şekilde denetlemesine yardımcı olmak için.
+
+*(Sadece kendi ağını veya izin aldığın ağı test etmek içindir; başkasının ağına izinsiz saldırı yasadışıdır.)*
+
+---
+
+## Nedir?
+
+- Linux üzerinde çalışan bir **komut satırı programıdır** (terminalden çalışır).
+- Arkada:
+  - `aircrack-ng`
+  - `reaver`
+  - `tshark`
+  gibi araçları kullanarak **kablosuz güvenlik taraması** yapan bir “otomasyon” aracıdır.
+- WEP, WPA, WPS gibi farklı Wi‑Fi güvenlik türlerine karşı testler yapabilir.
+
+---
+
+## Ne işe yarar (basit örneklerle)?
+
+- Basitçe:
+  - “Etrafımdaki Wi‑Fi ağlarının güvenliği ne durumda?” sorusuna cevap vermeye yardım eder.
+- Örnekler:
+  - Bir şirket, kendi ofis Wi‑Fi’sinin **zayıf şifre** kullanıp kullanmadığını kontrol etmek ister → Wifite ile otomatik tarama yapar.
+  - Güvenlik testi laboratuvarında, farklı modem ayarlarının **ne kadar dayanıklı** olduğunu görmek için aynı testleri tekrar tekrar çalıştırmak ister → Wifite bunu tek komutla otomatikleştirir.
+- Yani:
+  - Tek tek karmaşık araçları çalıştırmak yerine,
+  - Wifite hepsini senin adına sırayla çalıştırır, sonuçları toplar.
+
+---
+
+## Ne değildir?
+
+- Bir:
+  - İnternet sunucusu,
+  - Antivirüs,
+  - Güvenlik duvarı (firewall),
+  - Wi‑Fi paylaşım programı  
+  **DEĞİLDİR.**
+- “Sihirli tek tuşla her ağı kıran araç” değildir.
+- Kendi başına tam bir sızma testi (penetration test) çözümü değildir; sadece **kablosuz kısma odaklı** bir yardımcıdır.
+
+---
+
+## Kullanım alanları nedir?
+
+- **Siber güvenlik testleri**:
+  - Penetrasyon testi (özellikle kablosuz ağ testi) yapan ekipler.
+- **Kurumsal ağ denetimi**:
+  - Şirketlerin kendi Wi‑Fi ağlarını düzenli olarak kontrol etmesi.
+- **Eğitim / Laboratuvar**:
+  - Kablosuz güvenlik konusunu öğrenmek için sanal lab ortamlarında veya test router’lar üzerinde kullanılması.
+
+---
+
+## Kullanım ortamı nelerdir?
+
+- Genelde:
+  - **Kali Linux**, Parrot OS gibi güvenlik odaklı Linux dağıtımları.
+  - Normal bir Linux (Ubuntu vb.) üzerinde de kurulabilir.
+- Donanım olarak:
+  - **Monitör modunu destekleyen** bir Wi‑Fi adaptörü (kablosuz ağ kartı) gerekir.
+- Çalışma ortamı:
+  - Ofis / kurum ağları,
+  - Güvenlik lab ortamları,
+  - Ev ağı (kendi Wi‑Fi’nin güvenliğini test etmek için).
+
+---
+
+## Neden tercih edilir?
+
+- **Otomatik** çalıştığı için:
+  - Tek tek `airmon-ng`, `airodump-ng`, `reaver` gibi araçları yazmakla uğraşmak gerekmez.
+- Basit parametrelerle:
+  - Örneğin sadece **sinyali güçlü** (örn. `-pow 50`) ağları hedef almak,
+  - Sadece **WPS açık** olanları göstermek (`--wps`) gibi filtreler kolaydır.
+- Zaman kazandırır:
+  - Uzmanlar için: tekrar eden işleri otomatikleştirir.
+  - Yeni başlayanlar için: alttaki karmaşık araçları tek çatı altında toplar.
+
+---
+
+## Kullanmak için nelere ihtiyaç vardır?
+
+- **Temel Linux bilgisi**:
+  - Terminalde komut yazabilmek,
+  - “Arayüz” nedir (örneğin `wlan0`) bilmek.
+- **Uygun Wi‑Fi adaptörü**:
+  - Monitör modu ve paket yakalama destekli (her adaptör uygun değildir).
+- **Yasal ve etik çerçeve**:
+  - Sadece:
+	- Kendi ağında
+	- Yazılı izin alınmış ağlarda  
+	test yapmak gerekir.
+- İnternet bağlantısı:
+  - Aracı kurmak ve güncellemek için (örn. `sudo apt install wifite`).
+
+---
+
+## Öğrenme zorluk seviyesi nedir?
+
+- **Zorluk seviyesi: Orta (ortalama bir ayda öğrenilebilir)**  
+  - Aracı temel seviyede kullanmayı öğrenmek görece kolaydır.
+  - Ama:
+	- Kablosuz ağ yapısı,
+	- Şifreleme türleri (WEP/WPA/WPS),
+	- Hukuki/etik çerçeve  
+	gibi konuları anlamak için ek zaman gerekir.
+
+---
+
+## Aracın siber güvenlik uzmanı için önemi (0–7)
+
+- **Puan: 3 — Durumsal önemli**
+  - Kablosuz ağ testi (Wi‑Fi pentest) yapanlar için oldukça kullanışlıdır.
+  - Ancak:
+	- Web uygulaması,
+	- Endpoint güvenliği,
+	- Bulut güvenliği  
+	gibi alanlarda çalışan herkesin bilmesi şart değildir.
+  - Kablosuz güvenlik odaklı bir rolde ise, bilmek artı değer katar.
+
+---
+
+## Alternatifleri nelerdir?
+
+Wifite daha çok bir “otomatör” olduğu için, alternatifler genelde alttaki temel araçlardır:
+
+- **aircrack-ng**:
+  - En yaygın kablosuz denetim aracı seti (elle kullanılır, daha detaylı kontrol sunar).
+- **reaver / bully**:
+  - Özellikle WPS güvenliğini test etmek için kullanılır.
+- **Fern WiFi Cracker (GUI)**:
+  - Grafik arayüzlü (pencereli) bir alternatif; yeni başlayanlar için daha görsel.
+- **Kismet**:
+  - Daha çok kablosuz ağ keşfi ve izleme için (saldırı değil, analiz ağırlıklı).
+
+Wifite, bu araçların bir kısmını **tek komutla birleştiren**, daha “toplu ve otomatik” çalışan bir yardımcı araç olarak düşünülebilir.

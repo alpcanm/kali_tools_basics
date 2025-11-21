@@ -1,0 +1,281 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-13T17:19:19+03:00
+
+====== cap verileri ======
+Created Thursday 13 November 2025
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	  2 0.001677130    192.168.1.106         148.230.114.116       TCP      ✓                                 0               2619629710            0x00                          45540 → 443 [SYN] Seq=0 Win=64240 Len=0 MSS=1460 SACK_PERM TSval=2457597028 TSecr=0 WS=1024
+
+Frame 2: 74 bytes on wire (592 bits), 74 bytes captured (592 bits) on interface wlan0, id 0
+Ethernet II, Src: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f), Dst: TPLink_09:e2:ed (b0:a7:b9:09:e2:ed)
+Internet Protocol Version 4, Src: 192.168.1.106, Dst: 148.230.114.116
+Transmission Control Protocol, Src Port: 45540, Dst Port: 443, Seq: 0, Len: 0
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	  5 0.061060156    148.230.114.116       192.168.1.106         TCP      ✓                                 0               3795409137            0x00                          443 → 45540 [SYN, ACK] Seq=0 Ack=1 Win=65160 Len=0 MSS=1452 SACK_PERM TSval=3953477368 TSecr=2457597028 WS=128
+
+Frame 5: 74 bytes on wire (592 bits), 74 bytes captured (592 bits) on interface wlan0, id 0
+Ethernet II, Src: TPLink_09:e2:ec (b0:a7:b9:09:e2:ec), Dst: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f)
+Internet Protocol Version 4, Src: 148.230.114.116, Dst: 192.168.1.106
+Transmission Control Protocol, Src Port: 443, Dst Port: 45540, Seq: 0, Ack: 1, Len: 0
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	  6 0.061084020    192.168.1.106         148.230.114.116       TCP      ✓                                 0               2619629711            0x00                          45540 → 443 [ACK] Seq=1 Ack=1 Win=64512 Len=0 TSval=2457597087 TSecr=3953477368
+
+Frame 6: 66 bytes on wire (528 bits), 66 bytes captured (528 bits) on interface wlan0, id 0
+Ethernet II, Src: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f), Dst: TPLink_09:e2:ed (b0:a7:b9:09:e2:ed)
+Internet Protocol Version 4, Src: 192.168.1.106, Dst: 148.230.114.116
+Transmission Control Protocol, Src Port: 45540, Dst Port: 443, Seq: 1, Ack: 1, Len: 0
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	  9 0.062871657    192.168.1.106         148.230.114.116       TCP      ✓                                 1440            2619629711            0x00                          45540 → 443 [ACK] Seq=1 Ack=1 Win=64512 Len=1440 TSval=2457597089 TSecr=3953477368 [TCP PDU reassembled in 10]
+
+Frame 9: 1506 bytes on wire (12048 bits), 1506 bytes captured (12048 bits) on interface wlan0, id 0
+Ethernet II, Src: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f), Dst: TPLink_09:e2:ed (b0:a7:b9:09:e2:ed)
+Internet Protocol Version 4, Src: 192.168.1.106, Dst: 148.230.114.116
+Transmission Control Protocol, Src Port: 45540, Dst Port: 443, Seq: 1, Ack: 1, Len: 1440
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	 10 0.062875284    192.168.1.106         148.230.114.116       TLSv1.3  ✓        ✓                      1082            2619631151            0x00                          Client Hello (SNI=api.atlastorya.com)
+
+Frame 10: 1148 bytes on wire (9184 bits), 1148 bytes captured (9184 bits) on interface wlan0, id 0
+Ethernet II, Src: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f), Dst: TPLink_09:e2:ed (b0:a7:b9:09:e2:ed)
+Internet Protocol Version 4, Src: 192.168.1.106, Dst: 148.230.114.116
+Transmission Control Protocol, Src Port: 45540, Dst Port: 443, Seq: 1441, Ack: 1, Len: 1082
+[2 Reassembled TCP Segments (2522 bytes): #9(1440), #10(1082)]
+Transport Layer Security
+	TLSv1.3 Record Layer: Handshake Protocol: Client Hello
+		Content Type: Handshake (22)
+		Version: TLS 1.0 (0x0301)
+		Length: 2517
+		Handshake Protocol: Client Hello
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	 13 0.123626881    148.230.114.116       192.168.1.106         TCP      ✓                                 0               3795409138            0x00                          443 → 45540 [ACK] Seq=1 Ack=2523 Win=63616 Len=0 TSval=3953477431 TSecr=2457597089
+
+Frame 13: 66 bytes on wire (528 bits), 66 bytes captured (528 bits) on interface wlan0, id 0
+Ethernet II, Src: TPLink_09:e2:ec (b0:a7:b9:09:e2:ec), Dst: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f)
+Internet Protocol Version 4, Src: 148.230.114.116, Dst: 192.168.1.106
+Transmission Control Protocol, Src Port: 443, Dst Port: 45540, Seq: 1, Ack: 2523, Len: 0
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	 16 0.124682508    148.230.114.116       192.168.1.106         TLSv1.3  ✓        ✓                      244             3795409138            0x00                          Server Hello, Change Cipher Spec, Application Data, Application Data
+
+Frame 16: 310 bytes on wire (2480 bits), 310 bytes captured (2480 bits) on interface wlan0, id 0
+Ethernet II, Src: TPLink_09:e2:ec (b0:a7:b9:09:e2:ec), Dst: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f)
+Internet Protocol Version 4, Src: 148.230.114.116, Dst: 192.168.1.106
+Transmission Control Protocol, Src Port: 443, Dst Port: 45540, Seq: 1, Ack: 2523, Len: 244
+Transport Layer Security
+	TLSv1.3 Record Layer: Handshake Protocol: Server Hello
+		Content Type: Handshake (22)
+		Version: TLS 1.2 (0x0303)
+		Length: 128
+		Handshake Protocol: Server Hello
+	TLSv1.3 Record Layer: Change Cipher Spec Protocol: Change Cipher Spec
+		Content Type: Change Cipher Spec (20)
+		Version: TLS 1.2 (0x0303)
+		Length: 1
+		Change Cipher Spec Message
+	TLSv1.3 Record Layer: Application Data Protocol: Hypertext Transfer Protocol
+		Opaque Type: Application Data (23)
+		Version: TLS 1.2 (0x0303)
+		Length: 42
+		Encrypted Application Data: c3c7c300d3baf2cab923b42b22c6fd5f22a305c576e226bf26bfe0929ca4e159f4b69570e5814712e3a0
+		[Application Data Protocol: Hypertext Transfer Protocol]
+	TLSv1.3 Record Layer: Application Data Protocol: Hypertext Transfer Protocol
+		Opaque Type: Application Data (23)
+		Version: TLS 1.2 (0x0303)
+		Length: 53
+		Encrypted Application Data: 79feded474c3e3859c47412238d0ddb0e272b1af0c4b6816b9a42707aabf3ced3f6730a858ee49a73e61bac7f6489d73dd7a5963e5
+		[Application Data Protocol: Hypertext Transfer Protocol]
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	 17 0.124703788    192.168.1.106         148.230.114.116       TCP      ✓                                 0               2619632233            0x00                          45540 → 443 [ACK] Seq=2523 Ack=245 Win=64512 Len=0 TSval=2457597151 TSecr=3953477432
+
+Frame 17: 66 bytes on wire (528 bits), 66 bytes captured (528 bits) on interface wlan0, id 0
+Ethernet II, Src: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f), Dst: TPLink_09:e2:ed (b0:a7:b9:09:e2:ed)
+Internet Protocol Version 4, Src: 192.168.1.106, Dst: 148.230.114.116
+Transmission Control Protocol, Src Port: 45540, Dst Port: 443, Seq: 2523, Ack: 245, Len: 0
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	 20 0.126227801    192.168.1.106         148.230.114.116       TLSv1.3  ✓        ✓                      64              2619632233            0x00                          Change Cipher Spec, Application Data
+
+Frame 20: 130 bytes on wire (1040 bits), 130 bytes captured (1040 bits) on interface wlan0, id 0
+Ethernet II, Src: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f), Dst: TPLink_09:e2:ed (b0:a7:b9:09:e2:ed)
+Internet Protocol Version 4, Src: 192.168.1.106, Dst: 148.230.114.116
+Transmission Control Protocol, Src Port: 45540, Dst Port: 443, Seq: 2523, Ack: 245, Len: 64
+Transport Layer Security
+	TLSv1.3 Record Layer: Change Cipher Spec Protocol: Change Cipher Spec
+		Content Type: Change Cipher Spec (20)
+		Version: TLS 1.2 (0x0303)
+		Length: 1
+		Change Cipher Spec Message
+	TLSv1.3 Record Layer: Application Data Protocol: Hypertext Transfer Protocol
+		Opaque Type: Application Data (23)
+		Version: TLS 1.2 (0x0303)
+		Length: 53
+		Encrypted Application Data: f2ad87b8fda81f625acb87973f645d7b956d33c9ed26ab72c083d20200988d452f272f250dadca9209ad2f76822a6939328140a7fa
+		[Application Data Protocol: Hypertext Transfer Protocol]
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	 21 0.186036232    148.230.114.116       192.168.1.106         TLSv1.3  ✓        ✓                      303             3795409382            0x00                          Application Data
+
+Frame 21: 369 bytes on wire (2952 bits), 369 bytes captured (2952 bits) on interface wlan0, id 0
+Ethernet II, Src: TPLink_09:e2:ec (b0:a7:b9:09:e2:ec), Dst: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f)
+Internet Protocol Version 4, Src: 148.230.114.116, Dst: 192.168.1.106
+Transmission Control Protocol, Src Port: 443, Dst Port: 45540, Seq: 245, Ack: 2587, Len: 303
+Transport Layer Security
+	TLSv1.3 Record Layer: Application Data Protocol: Hypertext Transfer Protocol
+		Opaque Type: Application Data (23)
+		Version: TLS 1.2 (0x0303)
+		Length: 298
+		Encrypted Application Data […]: a58200eb1d0537d2b3ba240ecc68dc7537bd11ee2620690c5d5321cab0524ac72f9166076e80136df8b4fe1d6909bc5b0a5b49a618e0e0e636c675039ec1cec893050f7149417d19d410f74efc14b3b3dcf37c3a5ebccf321d6e9551d9c34b5a7008456827fcf
+		[Application Data Protocol: Hypertext Transfer Protocol]
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	 26 0.230540500    192.168.1.106         148.230.114.116       TCP      ✓                                 0               2619632297            0x00                          45540 → 443 [ACK] Seq=2587 Ack=548 Win=64512 Len=0 TSval=2457597257 TSecr=3953477493
+
+Frame 26: 66 bytes on wire (528 bits), 66 bytes captured (528 bits) on interface wlan0, id 0
+Ethernet II, Src: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f), Dst: TPLink_09:e2:ed (b0:a7:b9:09:e2:ed)
+Internet Protocol Version 4, Src: 192.168.1.106, Dst: 148.230.114.116
+Transmission Control Protocol, Src Port: 45540, Dst Port: 443, Seq: 2587, Ack: 548, Len: 0
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	 28 0.303217286    192.168.1.106         148.230.114.116       TLSv1.3  ✓        ✓                      668             2619632297            0x00                          Application Data
+
+Frame 28: 734 bytes on wire (5872 bits), 734 bytes captured (5872 bits) on interface wlan0, id 0
+Ethernet II, Src: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f), Dst: TPLink_09:e2:ed (b0:a7:b9:09:e2:ed)
+Internet Protocol Version 4, Src: 192.168.1.106, Dst: 148.230.114.116
+Transmission Control Protocol, Src Port: 45540, Dst Port: 443, Seq: 2587, Ack: 548, Len: 668
+Transport Layer Security
+	TLSv1.3 Record Layer: Application Data Protocol: Hypertext Transfer Protocol
+		Opaque Type: Application Data (23)
+		Version: TLS 1.2 (0x0303)
+		Length: 663
+		Encrypted Application Data […]: 6ae860c0dde6024bb008fe8c0363d95967bd02f32cae8deaca08b58a7891272146b6c472340a94984904fa78eee7f33c284f692cc50711b4baf60ebe69b0638fe3c13bbbea9a6f0c7d6db7e49885e7dab14bbad1b17d39abf4aea45e5cac0692ec56a1396c0a8
+		[Application Data Protocol: Hypertext Transfer Protocol]
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	 42 0.366295020    148.230.114.116       192.168.1.106         TLSv1.3  ✓        ✓                      1365            3795409685            0x00                          Application Data
+
+Frame 42: 1431 bytes on wire (11448 bits), 1431 bytes captured (11448 bits) on interface wlan0, id 0
+Ethernet II, Src: TPLink_09:e2:ec (b0:a7:b9:09:e2:ec), Dst: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f)
+Internet Protocol Version 4, Src: 148.230.114.116, Dst: 192.168.1.106
+Transmission Control Protocol, Src Port: 443, Dst Port: 45540, Seq: 548, Ack: 3255, Len: 1365
+Transport Layer Security
+	TLSv1.3 Record Layer: Application Data Protocol: Hypertext Transfer Protocol
+		Opaque Type: Application Data (23)
+		Version: TLS 1.2 (0x0303)
+		Length: 1360
+		Encrypted Application Data […]: 965336a8998158e93050cac860d95cfc91edba1224e060d2c7eef711612f26dc87922acf3ef3e9a61c74f47eb37a10324b80adee68f80074599f6a53b05f72f12575e95cfe05b05f5d83da680646d5fcfda7386547bd51e2c83dcf5da62c14dfc97e77b89d76d
+		[Application Data Protocol: Hypertext Transfer Protocol]
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	 44 0.366308365    192.168.1.106         148.230.114.116       TCP      ✓                                 0               2619632965            0x00                          45540 → 443 [ACK] Seq=3255 Ack=1913 Win=67584 Len=0 TSval=2457597392 TSecr=3953477673
+
+Frame 44: 66 bytes on wire (528 bits), 66 bytes captured (528 bits) on interface wlan0, id 0
+Ethernet II, Src: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f), Dst: TPLink_09:e2:ed (b0:a7:b9:09:e2:ed)
+Internet Protocol Version 4, Src: 192.168.1.106, Dst: 148.230.114.116
+Transmission Control Protocol, Src Port: 45540, Dst Port: 443, Seq: 3255, Ack: 1913, Len: 0
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	 52 0.372872254    192.168.1.106         148.230.114.116       TLSv1.3  ✓        ✓                      668             2619632965            0x00                          Application Data
+
+Frame 52: 734 bytes on wire (5872 bits), 734 bytes captured (5872 bits) on interface wlan0, id 0
+Ethernet II, Src: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f), Dst: TPLink_09:e2:ed (b0:a7:b9:09:e2:ed)
+Internet Protocol Version 4, Src: 192.168.1.106, Dst: 148.230.114.116
+Transmission Control Protocol, Src Port: 45540, Dst Port: 443, Seq: 3255, Ack: 1913, Len: 668
+Transport Layer Security
+	TLSv1.3 Record Layer: Application Data Protocol: Hypertext Transfer Protocol
+		Opaque Type: Application Data (23)
+		Version: TLS 1.2 (0x0303)
+		Length: 663
+		Encrypted Application Data […]: ae1097c6d2576829bc66f787842a589a0e8ab52db1c2fb064801711466a8c8a1f5391aca2af6fad1377ac93f6738e6f23e07b661a60bdbcb4bfd9af6245e35c9d3ba5c3515f5f7e6961d3035e07cb311cb1049b10eb3c1079dfafb5d2c19b3a09dbeb210685bc
+		[Application Data Protocol: Hypertext Transfer Protocol]
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	 79 0.433989807    148.230.114.116       192.168.1.106         TLSv1.3  ✓        ✓                      1364            3795411050            0x00                          Application Data
+
+Frame 79: 1430 bytes on wire (11440 bits), 1430 bytes captured (11440 bits) on interface wlan0, id 0
+Ethernet II, Src: TPLink_09:e2:ec (b0:a7:b9:09:e2:ec), Dst: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f)
+Internet Protocol Version 4, Src: 148.230.114.116, Dst: 192.168.1.106
+Transmission Control Protocol, Src Port: 443, Dst Port: 45540, Seq: 1913, Ack: 3923, Len: 1364
+Transport Layer Security
+	TLSv1.3 Record Layer: Application Data Protocol: Hypertext Transfer Protocol
+		Opaque Type: Application Data (23)
+		Version: TLS 1.2 (0x0303)
+		Length: 1359
+		Encrypted Application Data […]: 32f6b7e6d3c7e86e0a937bd0f3b77f21de65fab148ff6532016c922af0eba26f11af5100287ea4583f41be53fc01b98bcfeed09a4f842e4f56ccc48d279b04b3add5ece5b62707f1ed44fb50b9042fdbfb2ef30da6b376a427c3195de9cc252300d1df5733505
+		[Application Data Protocol: Hypertext Transfer Protocol]
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	 81 0.474533720    192.168.1.106         148.230.114.116       TCP      ✓                                 0               2619633633            0x00                          45540 → 443 [ACK] Seq=3923 Ack=3277 Win=70656 Len=0 TSval=2457597501 TSecr=3953477741
+
+Frame 81: 66 bytes on wire (528 bits), 66 bytes captured (528 bits) on interface wlan0, id 0
+Ethernet II, Src: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f), Dst: TPLink_09:e2:ed (b0:a7:b9:09:e2:ed)
+Internet Protocol Version 4, Src: 192.168.1.106, Dst: 148.230.114.116
+Transmission Control Protocol, Src Port: 45540, Dst Port: 443, Seq: 3923, Ack: 3277, Len: 0
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	138 5.446462175    148.230.114.116       192.168.1.106         TLSv1.3  ✓        ✓                      24              3795412414            0x00                          Application Data
+
+Frame 138: 90 bytes on wire (720 bits), 90 bytes captured (720 bits) on interface wlan0, id 0
+Ethernet II, Src: TPLink_09:e2:ec (b0:a7:b9:09:e2:ec), Dst: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f)
+Internet Protocol Version 4, Src: 148.230.114.116, Dst: 192.168.1.106
+Transmission Control Protocol, Src Port: 443, Dst Port: 45540, Seq: 3277, Ack: 3923, Len: 24
+Transport Layer Security
+	TLSv1.3 Record Layer: Application Data Protocol: Hypertext Transfer Protocol
+		Opaque Type: Application Data (23)
+		Version: TLS 1.2 (0x0303)
+		Length: 19
+		Encrypted Application Data: 02380ac06a8ee924e4772505cac9cc9585ce56
+		[Application Data Protocol: Hypertext Transfer Protocol]
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	139 5.446462265    148.230.114.116       192.168.1.106         TCP      ✓                                 0               3795412438            0x00                          443 → 45540 [FIN, ACK] Seq=3301 Ack=3923 Win=64128 Len=0 TSval=3953482742 TSecr=2457597501
+
+Frame 139: 66 bytes on wire (528 bits), 66 bytes captured (528 bits) on interface wlan0, id 0
+Ethernet II, Src: TPLink_09:e2:ec (b0:a7:b9:09:e2:ec), Dst: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f)
+Internet Protocol Version 4, Src: 148.230.114.116, Dst: 192.168.1.106
+Transmission Control Protocol, Src Port: 443, Dst Port: 45540, Seq: 3301, Ack: 3923, Len: 0
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	141 5.446509102    192.168.1.106         148.230.114.116       TCP      ✓                                 0               2619633633            0x00                          45540 → 443 [ACK] Seq=3923 Ack=3301 Win=70656 Len=0 TSval=2457602472 TSecr=3953482742
+
+Frame 141: 66 bytes on wire (528 bits), 66 bytes captured (528 bits) on interface wlan0, id 0
+Ethernet II, Src: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f), Dst: TPLink_09:e2:ed (b0:a7:b9:09:e2:ed)
+Internet Protocol Version 4, Src: 192.168.1.106, Dst: 148.230.114.116
+Transmission Control Protocol, Src Port: 45540, Dst Port: 443, Seq: 3923, Ack: 3301, Len: 0
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	142 5.446872503    192.168.1.106         148.230.114.116       TLSv1.3  ✓        ✓                      24              2619633633            0x00                          Application Data
+
+Frame 142: 90 bytes on wire (720 bits), 90 bytes captured (720 bits) on interface wlan0, id 0
+Ethernet II, Src: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f), Dst: TPLink_09:e2:ed (b0:a7:b9:09:e2:ed)
+Internet Protocol Version 4, Src: 192.168.1.106, Dst: 148.230.114.116
+Transmission Control Protocol, Src Port: 45540, Dst Port: 443, Seq: 3923, Ack: 3302, Len: 24
+Transport Layer Security
+	TLSv1.3 Record Layer: Application Data Protocol: Hypertext Transfer Protocol
+		Opaque Type: Application Data (23)
+		Version: TLS 1.2 (0x0303)
+		Length: 19
+		Encrypted Application Data: 8965b5c15770b83e2ff29ecb02831174c890a7
+		[Application Data Protocol: Hypertext Transfer Protocol]
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	143 5.446907248    192.168.1.106         148.230.114.116       TCP      ✓                                 0               2619633657            0x00                          45540 → 443 [FIN, ACK] Seq=3947 Ack=3302 Win=70656 Len=0 TSval=2457602473 TSecr=3953482742
+
+Frame 143: 66 bytes on wire (528 bits), 66 bytes captured (528 bits) on interface wlan0, id 0
+Ethernet II, Src: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f), Dst: TPLink_09:e2:ed (b0:a7:b9:09:e2:ed)
+Internet Protocol Version 4, Src: 192.168.1.106, Dst: 148.230.114.116
+Transmission Control Protocol, Src Port: 45540, Dst Port: 443, Seq: 3947, Ack: 3302, Len: 0
+
+No.     Time           Source                Destination           Protocol Ethernet   Transport Layer Security TCP Segment Len Sequence Number (raw) Differentiated Services Field İnfo
+	149 5.507177234    148.230.114.116       192.168.1.106         TCP      ✓                                 0               3795412439            0x00                          443 → 45540 [ACK] Seq=3302 Ack=3948 Win=64128 Len=0 TSval=3953482814 TSecr=2457602473
+
+Frame 149: 66 bytes on wire (528 bits), 66 bytes captured (528 bits) on interface wlan0, id 0
+Ethernet II, Src: TPLink_09:e2:ec (b0:a7:b9:09:e2:ec), Dst: CloudNetwork_b1:1b:6f (a8:3b:76:b1:1b:6f)
+Internet Protocol Version 4, Src: 148.230.114.116, Dst: 192.168.1.106
+Transmission Control Protocol, Src Port: 443, Dst Port: 45540, Seq: 3302, Ack: 3948, Len: 0

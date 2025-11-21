@@ -1,0 +1,107 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-13T17:19:30+03:00
+
+====== yorumlaması ======
+Created Thursday 13 November 2025
+
+====== Temiz bir tcp paket gönderim simülasyonu ======
+Created Thursday 13 November 2025
+
+
+---
+
+## 🖧 GENEL TABLO  
+Bu iletişim:  
+**İstemci** (senin bilgisayarın - `192.168.1.106`)  
+⬄  
+**Sunucu** (`148.230.114.116`, SNI: `api.atlastorya.com`)  
+arasında gerçekleşen bir **HTTPS (TCP 443/TLS 1.3)** bağlantısıdır.
+
+---
+
+## 🔹 1. TCP Üç Yönlü El Sıkışma (Bağlantı Kurulumu)
+Bu aşama, iki cihazın birbirine “bağlantı kurabilir miyiz?” dediği kısımdır.
+
+| Aşama           | Frame | Açıklama                                                                   |
+|-----------------|-------|----------------------------------------------------------------------------|
+| **1. SYN**      | **2** | İstemci bağlantı isteği yollar: “Merhaba sunucu, 443 portundan görüşelim.” |
+| **2. SYN, ACK** | **5** | Sunucu cevap verir: “Tamam, isteğini aldım, ben de hazırım.”               |
+| **3. ACK**      | **6** | İstemci onay verir: “Teşekkürler, bağlantı hazır.”                         |
+
+🔸 **Sonuç:** TCP bağlantısı kuruldu. Artık iki taraf arasında güvenilir bir kanal var.
+
+---
+
+## 🔹 2. TLS (HTTPS) El Sıkışma  
+Şimdi bu TCP hattı üzerinden şifreli (TLS 1.3) görüşme kurulacak.
+
+| Aşama                                                   | Frame    | Açıklama                                                                                                                                                                                     |
+|---------------------------------------------------------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **ClientHello**                                         | **9–10** | İstemci sunucuya “TLS kullanmak istiyorum, desteklediğim şifreleme yöntemleri bunlar” der. SNI kısmında `api.atlastorya.com` bilgisini gönderir.                                             |
+| **ACK**                                                 | **13**   | Sunucu aldığını onaylar, henüz cevap hazırlıyor.                                                                                                                                             |
+| **ServerHello**                                         | **16**   | Sunucu kendi sertifikasını ve seçtiği şifrelemeyi bildirir. Ardından `Change Cipher Spec` ve ilk şifreli “Application Data” bloklarını gönderir. Bu andan itibaren veri şifrelenmeye başlar. |
+| **ACK**                                                 | **17**   | İstemci sunucunun mesajını aldığını onaylar.                                                                                                                                                 |
+| **Change Cipher Spec + Şifreli veri (istek hazırlığı)** | **20**   | İstemci artık kendi tarafında da şifrelemeyi etkinleştirir.                                                                                                                                  |
+| **Sunucu Application Data**                             | **21**   | Sunucu, el sıkışma tamamlandıktan sonra ilk şifreli veriyi (muhtemelen HTTP yanıt başlatıyor) gönderir.                                                                                      |
+
+🔸 **Sonuç:** TLS oturumu başarıyla kuruldu. Artık tüm mesajlar **şifreli** gidiyor.
+
+---
+
+## 🔹 3. Şifreli Veri Alışverişi (TLSv1.3 Application Data)
+Bu noktada istemci ve sunucu artık HTTPS isteği–cevabı yapıyorlar ama içerik şifreli olduğu için Wireshark sadece “Encrypted Application Data” gösterebiliyor.
+
+| Aşama                               | Frame  | Açıklama                                                          |
+|-------------------------------------|--------|-------------------------------------------------------------------|
+| **Client → Server veri gönderiyor** | **28** | Kullanıcı tarafı bir istekte bulunuyor (muhtemelen HTTP request). |
+| **Server → Client veri gönderiyor** | **42** | Sunucu bir yanıt gönderiyor (örneğin HTTP response).              |
+| **Client ACK**                      | **44** | İstemci “cevabı aldım” diyor.                                     |
+| **Client yeni veri gönderiyor**     | **52** | Belki sonraki API isteği veya ek bir veri.                        |
+| **Server yeni yanıt gönderiyor**    | **79** | Sunucudan bir başka şifreli cevap geliyor.                        |
+| **ACK**                             | **81** | İstemci tekrar onay veriyor.                                      |
+
+🔸 **Sonuç:** HTTPS üzerinden veri alışverişi birkaç tur yapılıyor.  
+Her şey TLSv1.3 ile şifreli, dolayısıyla içerik okunamıyor ama akış düzenli.
+
+---
+
+## 🔹 4. Bağlantının Sonlandırılması (TCP Teardown)
+Veri alışverişi bittiğinde taraflar karşılıklı bağlantıyı düzgün kapatır.
+
+| Aşama                                         | Frame   | Açıklama                                                                             |
+|-----------------------------------------------|---------|--------------------------------------------------------------------------------------|
+| **Server Application Data (kapanış sinyali)** | **138** | Sunucu son bir kısa şifreli mesaj gönderiyor (muhtemelen “HTTP 200 OK” bitti tarzı). |
+| **Server → FIN, ACK**                         | **139** | Sunucu diyor ki: “Ben bağlantıyı kapatıyorum.”                                       |
+| **Client → ACK**                              | **141** | İstemci “Tamam, ben aldım.” diye onaylar.                                            |
+| **Client Application Data (kapanış mesajı)**  | **142** | İstemciden son küçük şifreli bilgi (muhtemelen “teşekkür / oturum sonu” gibi).       |
+| **Client → FIN, ACK**                         | **143** | İstemci de bağlantıyı kapatır.                                                       |
+| **Server → ACK**                              | **149** | Sunucu nihai onayı gönderir. Bağlantı tamamen kapanır.                               |
+
+🔸 **Sonuç:** TCP oturumu düzgün şekilde sonlandırıldı. Veri kaybı veya hata yok.
+
+---
+
+## 🔁 Özet Görsel (metinle)
+```
+[FRAME 2]   Client → Server  : SYN
+[FRAME 5]   Server → Client  : SYN, ACK
+[FRAME 6]   Client → Server  : ACK           → TCP bağlantısı kuruldu
+
+[FRAME 9–10] Client → Server : TLS ClientHello (api.atlastorya.com)
+[FRAME 16]   Server → Client : TLS ServerHello + ChangeCipherSpec
+[FRAME 20]   Client → Server : ChangeCipherSpec + Encrypted Request
+[FRAME 21–81] Veri alışverişi (TLS şifreli Application Data)
+[FRAME 138–149] Karşılıklı FIN, ACK  → Bağlantı kapandı
+```
+
+---
+
+### 🔚 Sonuç
+Bu Wireshark kaydı, **bir HTTPS oturumunun baştan sona tam akışıdır:**
+1. TCP bağlantısı kurulur ✅  
+2. TLS el sıkışması yapılır ✅  
+3. Şifreli veri gönderilir/alınır ✅  
+4. Bağlantı düzgün şekilde kapatılır ✅  
+
+Yani “kısa bir HTTPS istek–cevap işlemini” (örneğin bir API çağrısı) gerçek zamanlı olarak yakalamışsın. 

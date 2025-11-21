@@ -1,0 +1,587 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-18T18:29:28+03:00
+
+====== FAQ ======
+Created Tuesday 18 November 2025
+
+Aşağıdaki eğitim dökümanı, hashcat’i sıfırdan öğrenmek isteyen biri için hazırlandı.  
+Bilgiler “en önemli”den “daha özel/ileri seviye” olana doğru sıralıdır.
+
+---
+
+# 1. En Temel Bilgi: Hashcat ile NELER yapabilirsin / NELER yapamazsın?
+
+## 1.1. Hashcat ne işe yarar?
+
+- Hashcat, **şifre karmalarını (hash)** çevrimdışı olarak deneme–yanılma ile kırmaya yarayan bir araçtır.
+- Çalıştığı yer:
+  - Veritabanı dump’ları
+  - Windows / Linux / uygulama hash’leri
+  - PDF, Office, ZIP, TrueCrypt/VeraCrypt vs. dosya şifreleri
+- Çalışmadığı yer:
+  - **Online servislerin (Google, Facebook, Instagram, Twitter, vb.) şifrelerini doğrudan “deneyerek” kırmak için kullanılamaz.**
+  - Sende sadece **kullanıcı adı** varsa, hash yoksa hashcat bir işe yaramaz.
+
+> Önemli: Online hesaplar, başkasının verileri, izinsiz erişim = çoğu ülkede suç. Hashcat’i:
+> - Kendi verini kurtarmak
+> - Açık ve yazılı izin alınmış test ortamlarında
+> - Eğitim / lab amaçlı kullan.
+
+---
+
+# 2. Temel Kavramlar (hash, salt, offline saldırı, vs.)
+
+## 2.1. Hash nedir?
+
+- Şifrenin bir **tek yönlü matematiksel fonksiyonla** dönüştürülmüş halidir.
+- Örnek:
+  - Şifre: `hashcat`
+  - MD5 hash’i: `098f6bcd4621d373cade4e832627b4f6`
+- Hash’i gördüğünde genelde:
+  - Geri dönüş fonksiyonu yok.
+  - Deneme-yanılma ile aynı hash’i veren şifreyi bulmaya çalışırsın.
+
+## 2.2. Salt nedir?
+
+- Aynı şifre için farklı hash üretilmesini sağlayan rastgele ek değerdir.
+- Amaç: rainbow table ve toplu saldırıları zorlaştırmak.
+
+## 2.3. Hash türünü nasıl anlarsın?
+
+- Salt imzalar:
+  - `$1$...` → genelde `md5crypt`
+  - `$6$...` → `sha512crypt`
+- Ama çoğu hash **sadece uzunluk/karakter seti** ile ayırt edilemez.
+- En sağlam yöntem:
+  - Hash’in nereden geldiğini bilmek (hangi uygulama, OS, vs.)
+  - Hashcat wiki: **example hashes** bölümünden karşılaştırmak.
+
+---
+
+# 3. Hashcat’in Çalışma Mantığı (çok özet)
+
+Hashcat üç şeyi ister:
+
+1. **Hash türü**: `-m` ile (`-m 0` = MD5, `-m 1000` = NTLM vs.)
+2. **Saldırı türü (attack-mode)**: `-a`
+   - `-a 0` → wordlist (dictionary) saldırısı
+   - `-a 3` → maske (brute-force) saldırısı
+   - `-a 6 / -a 7` → hybrid (wordlist + maske)
+3. **Aday şifre kaynağı**: wordlist, maske, pipe, vs.
+
+Temel kullanım şekli:
+
+```bash
+hashcat -m <hash_tipi> -a <attack_tipi> hash.txt <wordlist/maske>
+```
+
+---
+
+# 4. Kurulum: En pratik yol
+
+## 4.1. Desteklenen işletim sistemleri
+
+- Windows
+- Linux
+- macOS (sınırlı donanım desteği)
+
+## 4.2. En basit kurulum (Linux: Kali / Ubuntu / Debian)
+
+İki seçenek var:
+
+### 4.2.1. Paket yöneticisinden (kolay ama her zaman en güncel olmayabilir):
+
+```bash
+sudo apt-get update
+sudo apt-get install hashcat
+```
+
+### 4.2.2. Resmî siteden (önerilen ve desteklenen yöntem)
+
+1. `https://hashcat.net/hashcat/` adresinden `.7z` arşivini indir.
+2. 7zip ile **klasör yapısını koruyarak** aç:
+   ```bash
+   7z x hashcat-*.7z
+   ```
+3. Oluşan klasöre gir, `hashcat.bin` / `hashcat.exe` ile çalıştır.
+
+## 4.3. Windows’ta kurulum
+
+1. `https://hashcat.net/hashcat/`%E2%80%99ten `.7z` indir.
+2. 7zip ile çıkart (sağ tık → 7-Zip → “Extract to …/”).
+3. Klasöre gir, `hashcat.exe` ile komut satırından çalıştır.
+
+> Not: Hashcat bir “setup” ile kurulmaz. Arşivi açman yeterli.
+
+---
+
+# 5. GPU Sürücüleri (en kritik pratik konu)
+
+Hashcat’in hızlı olmasının sebebi **GPU** kullanmasıdır. Bunun için:
+
+- **Doğru, güncel ve resmi** sürücüyü kullanmalısın.
+- Tercihen:
+  - Nvidia için: `nvidia.com`
+  - AMD için: `amd.com`
+- Genelde şu sürücülerden kaçın:
+  - Windows Update’in otomatik driver’ı
+  - Linux dağıtımının “fglrx-nvidia-opencl” hazır paketleri (çoğu zaman sorun çıkarır)
+  - CUDA SDK, AMD APP SDK (eski) gibi ekstra kitler (yanlış kurulumda çakışır)
+
+### 5.1. “GPU device not found” / `clGetPlatformIDs -64/-1001` / benzeri hatalar
+
+Büyük ihtimalle:
+- Yanlış/bozuk driver
+- Çakışan eski OpenCL kütüphaneleri
+
+Çözüm (özet):
+
+1. Tüm eski GPU driver ve OpenCL bileşenlerini kaldır.
+2. Reboot.
+3. Resmî siteden önerilen sürücüyü kur.
+4. Reboot.
+5. Hashcat klasörünü temiz bir yere tekrar aç.
+6. `hashcat --benchmark` ile test et.
+
+(Farklı OS’ler için uzun adımlar FAQ’da anlatılıyor ama mantık hep aynı.)
+
+---
+
+# 6. Hashcat’i Komut Satırından Kullanmayı Öğrenmek
+
+Hashcat **tamamen komut satırı aracıdır**.  
+“.exe’ye tıkla ve pencere açılsın” mantığı yok; tıklayınca pencere açılıp hemen kapanıyorsa sebebi bu.
+
+Temel yardım:
+
+```bash
+hashcat --help
+```
+
+Temel kullanım formatı:
+
+```bash
+hashcat [genel_seçenekler] -m <hash_tipi> -a <attack_tipi> hash_dosyası [wordlist|maske|klasör]...
+```
+
+Örnek (çok basit):
+
+```bash
+hashcat -m 0 -a 0 hashes.txt rockyou.txt
+```
+
+- `-m 0`: MD5
+- `-a 0`: wordlist saldırısı
+- `hashes.txt`: hash’lerin bulunduğu dosya
+- `rockyou.txt`: wordlist
+
+---
+
+# 7. Saldırı Tipleri (Attack Modes) – en çok kullanacakların
+
+## 7.1. `-a 0` – Dictionary (Wordlist) saldırısı
+
+En pratik ve ilk bilmen gereken:
+- Elindeki wordlist’teki her kelimeyi hash’lere karşı dener.
+
+Örnek:
+
+```bash
+hashcat -m 1000 -a 0 ntlm_hashes.txt rockyou.txt
+```
+
+- `-m 1000`: NTLM
+- `rockyou.txt`: klasik wordlist
+
+### Rule ekleyerek güçlendirmek
+
+Kurala göre kelimeyi değiştirir (sonuna `1` koy, ilk harfi büyüt vs.).  
+`-r` parametresini kullanırsın.
+
+```bash
+hashcat -m 1000 -a 0 ntlm.txt rockyou.txt -r rules/best64.rule
+```
+
+---
+
+## 7.2. `-a 3` – Mask (Brute-Force) saldırısı
+
+Brute-force’un gelişmiş hali.  
+Her pozisyon için hangi karakter setinin kullanılacağını sen söylersin.
+
+### Hazır charsetler
+
+- `?l` → küçük harf (lower)
+- `?u` → büyük harf (upper)
+- `?d` → rakam (digit)
+- `?s` → özel karakterler (symbol)
+- `?a` → hepsi (l+u+d+s)
+- `?b` → tüm 0–255 byte
+
+Örnek:
+
+```bash
+# 8 karakter, hepsi ?a
+hashcat -m 0 -a 3 hashes.txt ?a?a?a?a?a?a?a?a
+```
+
+### Uzunluk bilmiyorsan: increment
+
+```bash
+# 4 ile 6 karakter arası, hepsi ?d (rakam)
+hashcat -m 0 -a 3 -i --increment-min 4 --increment-max 6 hashes.txt ?d?d?d?d?d?d
+```
+
+> Önemli kural: **Mask uzunluğu**, maksimum uzunluktan küçük olamaz.  
+> `--increment-max` ≤ mask uzunluğu olmalı.
+
+---
+
+## 7.3. `-a 6` / `-a 7` – Hybrid saldırılar
+
+Wordlist ile maskeyi birleştirir:
+
+- `-a 6`: wordlist + maske (ekleme)
+  - örn: `password` + `123`
+- `-a 7`: maske + wordlist (başına ekleme)
+  - örn: `2024` + `password`
+
+Örnek:
+
+```bash
+# wordlist + 2 haneli rakam
+hashcat -m 0 -a 6 hashes.txt rockyou.txt ?d?d
+```
+
+---
+
+# 8. Potfile ve “Status: Cracked” Mantığı
+
+## 8.1. Potfile nedir?
+
+- Varsayılan dosya adı: `hashcat.potfile`
+- **Zaten kırılmış hash → tekrar kırılmasın** diye tutulur.
+- Avantajları:
+  - Aynı hash’i farklı saldırılarla denediğinde, tekrar tekrar zaman kaybetmez.
+  - Salt’lı hash’lerde, salt’ı tamamen kırdıysa onu tamamen devre dışı bırakıp hızı artırır.
+
+## 8.2. “Status: Cracked ama outfile boş” durumu
+
+Böyle bir şey görürsen:
+
+- Muhtemelen o hash daha önce kırılmıştır.
+- Hashcat başlarken potfile’ı okuyup “zaten kırdım” deyip o hash’i tekrar listeye almamıştır.
+- Çözüm:
+  - `--show` kullan:
+
+	```bash
+	hashcat -m 0 --show hashes.txt
+	```
+
+- Potfile’ı kapatmak istersen:
+  - `--potfile-disable`  
+  (Önerilmez; normalde açık kalması daha avantajlı.)
+
+---
+
+# 9. Sonradan Sonuç Gösterme ve Formatlama
+
+Önce hash’i kırarsın, sonra çıktıyı istediğin formatta alırsın.
+
+1. Saldırı:
+   ```bash
+   hashcat -m 0 hashes.txt rockyou.txt
+   ```
+
+2. Sonuç göstermeyi ve formatlamayı daha sonra yap:
+   ```bash
+   hashcat -m 0 --show hashes.txt -o sonuc.txt --outfile-format 2
+   ```
+
+- `--outfile-format 2` → sadece `plain` (şifre) çıktısı (veya başka kombinasyonlar için `--help`’e bak).
+
+Kullanıcı adı/email varsa:
+
+```bash
+hashcat -m 0 --username --show hashes.txt
+```
+
+---
+
+# 10. Performans / Hız Konuları
+
+## 10.1. Benchmark
+
+Sistemin teorik maksimum hızlarını görmek için:
+
+```bash
+hashcat -b
+```
+
+Belli bir hash türü için:
+
+```bash
+hashcat -m 0 -b
+```
+
+> Not: Benchmark “ideal durumda” tek hash, brute-force örneğidir. Gerçek dünyada hız daha düşük olur.
+
+## 10.2. GPU’yu ne kadar yorayım? (workload profile)
+
+```bash
+-w 1  # masaüstü takılmasın, düşük hız
+-w 2  # varsayılan
+-w 3  # maksimum performans, masaüstü kasabilir
+```
+
+Örnek:
+
+```bash
+hashcat -m 0 -a 3 -w 1 hashes.txt ?a?a?a?a?a?a?a?a
+```
+
+## 10.3. Hız niye düşük?
+
+En sık sebepler:
+
+- Keyspace çok küçük:
+  - Küçük wordlist, az sayıda rule, kısa maske → GPU tam doldurulamıyor.
+- Çok fazla hash / çok fazla salt:
+  - Algoritmaya göre hız düşer.
+- Hash zaten yavaş algoritma:
+  - Bcrypt, scrypt, Argon2, Bitcoin wallet, 7-zip vs. → tasarım gereği yavaş.
+- GPU ısınıp kendini **throttle** ediyor (90°C civarı).
+
+Hız arttırmak için:
+
+- Saldırıyı daha “geniş” yap:
+  - Daha büyük wordlist
+  - Daha fazla rule (`-r`)
+  - Maske ile GPU’da üretim (özellikle hızlı hash’lerde)
+- `-w 3` kullan (ısıya dikkat!)
+
+---
+
+# 11. Sık Karşılaşılan Hata Mesajlarını Basitçe Anlamak
+
+### 11.1. Pencere bir açılıp kapanıyor
+
+- Hashcat **GUI değil**.
+- `cmd` / `terminal` aç, hashcat klasörüne gir, komut satırından çalıştır.
+
+---
+
+### 11.2. `Line-length exception` / `Token length exception`
+
+Hash dosyanı okuyamadı, sebebleri:
+
+- Yanlış hash türü (`-m` yanlış)
+- Satırda fazladan boşluk, tab, görünmez karakterler
+- Format `user:hash` ise ama sen `--username` kullanmıyorsun
+- Dosya yolu yanlış → hashcat dosya adını “hash” sanıyor
+
+Çözüm:
+
+- Hash’i example hashes ile karşılaştır.
+- Boşlukları temizle.
+- `--username` dene.
+- Dosya yolunu kontrol et.
+
+---
+
+### 11.3. `GPU device not found` / `clGetPlatformIDs -64/-1001`
+
+- Sürücü / OpenCL kurulumu bozuk.
+- Çözüm: Eski sürücüleri tamamen kaldır, önerilen sürücüyü kur, reboot.
+
+---
+
+### 11.4. `cuModuleLoad() 209` / `301` (Nvidia CUDA)
+
+- Genelde sürücü–hashcat uyumsuzluğu ya da bozuk kernel dosyaları.
+- Çözüm:
+  - Doğru sürücü versiyonunu kur.
+  - Hashcat’i `.7z`’den **`7z x` ile** tekrar çıkar (klasör yapısı bozulmuş olabilir).
+
+---
+
+# 12. İleri Seviye (Özet, detayları sonra öğrenirsin)
+
+Bu bölüm “ilk etapta şart değil ama bilsen iyi olur” kısmı.
+
+## 12.1. Mask dosyaları (.hcmask)
+
+- Bir dosyada birden fazla maske saklamak için.
+- Her satır: opsiyonel custom charsetler + maske
+- Örnek satırlar (en basit hali):
+
+```text
+?u?l?l?l?l?s
+?l?l?l?l?l
+```
+
+Kullanım:
+
+```bash
+hashcat -m 0 -a 3 hashes.txt my.hcmask
+```
+
+---
+
+## 12.2. Session ve restore
+
+Uzun saldırılar için:
+
+```bash
+# saldırıyı adlandır:
+hashcat -m 0 -a 0 --session wpa hashes.txt rockyou.txt
+
+# durdurup sonra devam etmek:
+hashcat --session wpa --restore
+```
+
+---
+
+## 12.3. Dağıtık (distributed) cracking
+
+Birden fazla bilgisayar/gpu varsa:
+
+- Hashtopolis (açık kaynak)
+- disthc
+- Ticari: Hashstack
+
+Hashcat bunların içinde “worker” olarak çalışır.
+
+---
+
+# 13. Öğrenme Yol Haritası (Pratik Eğitim Planı)
+
+Buradan itibaren “uygulamalı” gidebilirsin. Tamamen eğitim/lab ortamı için:
+
+## Adım 1 – MD5 ile başla
+
+1. Kendine örnek hash üret:
+
+   ```bash
+   echo -n hashcat | md5sum
+   ```
+
+2. Hash’i `hashes.txt` içine yaz.
+3. Hashcat ile kır:
+
+   ```bash
+   hashcat -m 0 -a 3 hashes.txt ?l?l?l?l?l?l?l?l
+   ```
+
+4. Aynı hash’i wordlist ile kır:
+
+   ```bash
+   echo hashcat > wordlist.txt
+   hashcat -m 0 -a 0 hashes.txt wordlist.txt
+   ```
+
+## Adım 2 – NTLM veya Windows hash’leri
+
+- Test amaçlı bir NTLM hash al (örnek hashler bölümünden).
+- `-m 1000` ile dene.
+- Wordlist + rule kullan.
+
+## Adım 3 – WPA/WPA2 (Wi-Fi)
+
+- Kendi router’ında “test” SSID ve şifre oluştur.
+- Handshake yakala (`aircrack-ng`, `hcxdumptool` vs.).
+- `cap2hccapx` ile `.hccapx` çevir.
+- `-m 22000` / 2500 (eski format) ile hashcat’te dene.
+
+---
+
+# 14. Sözlük (Terimler)
+
+**Hash**  
+Şifrenin tek yönlü matematiksel fonksiyonla üretilmiş çıktı değeri.
+
+**Salt**  
+Hash üretirken şifreye eklenen rastgele veri.
+
+**Offline saldırı**  
+Hash’i elinde tutup internete bağlanmadan, kendi bilgisayarında deneme yapmak.
+
+**Wordlist (dictionary)**  
+İçinde satır satır olası şifre adayları bulunan dosya.
+
+**Mask saldırısı**  
+Her pozisyon için karakter kümesi belirleyerek brute-force yapmak.
+
+**Rule (kural)**  
+Wordlist’teki kelimeleri dönüştüren küçük komutlar (sonuna rakam ekle, harfi büyüt gibi).
+
+**Potfile**  
+Daha önce kırılmış hashlerin ve şifrelerinin saklandığı dosya.
+
+**Session**  
+Belirli bir saldırı çalışmasının adı; durdurup devam ettirmeye yarar.
+
+**Keyspace**  
+Denenecek tüm aday şifrelerin toplam sayısı.
+
+**Benchmark**  
+Sistemin hashcat ile teorik maksimum hızını ölçme işlemi.
+
+**GPU / OpenCL / CUDA**  
+Hashcat’in şifreyi hızlı denemek için kullandığı donanım ve yazılım teknolojileri.
+
+---
+
+# 15. Tavsiyeler (Pratik ve Öğrenme Önerileri)
+
+1. **Önce etik, sonra teknik:**
+   - Yasal izin olmadan hiçbir şeyi deneme.
+   - Kendi lab ortamın: sanal makine, test veritabanı, test Wi-Fi, vs. kur.
+
+2. **Küçük adımlar, basit hash’lerden başla:**
+   - MD5, SHA1, NTLM gibi hızlı hash’lerle pratik yap.
+   - Sonra bcrypt, PBKDF2, WPA gibi yavaş hash’lere geç.
+
+3. **Wordlist + rule kullanmayı alışkanlık yap:**
+   - Gerçek hayatta insanlar tamamen rastgele şifre kullanmaz.
+   - `rockyou.txt` + `best64.rule` gibi kombinasyonlar çok etkilidir.
+
+4. **Mask saldırısını iyi öğren:**
+   - Özellikle kısmen bildiğin şifrelerde (başını biliyorsun, sonunu bilmiyorsun) mask çok güçlüdür.
+   - Örn: Şifre `Pass????` ise → `Pass?d?d?d?d`.
+
+5. **Performansı ölç, sonra ince ayar yap:**
+   - Önce `hashcat -b` ile hızını bil.
+   - Gerçek saldırıda niye yavaş olduğunu anlamak için:
+	 - Hash sayısı
+	 - Salt sayısı
+	 - Saldırı tipi (brute-force vs. wordlist)
+	 - Keyspace büyüklüğü
+   - `-w 1/2/3` ile dene.
+
+6. **Dokümantasyon ve örnekleri kullan:**
+   - `hashcat --help`
+   - `examples/` klasörü
+   - hashcat wiki: example hashes, howtos
+   - Forum ve Github issue’larından gerçek senaryoları oku.
+
+7. **Komutları not et:**
+   - Sık kullandığın komutları bir metin dosyasında sakla (örneğin `komutlar.md`).
+   - Her yeni teknik öğrenince bir “reçete” oluşturmaya çalış.
+
+8. **Zaman tahmini yapmayı öğren:**
+   - Keyspace büyüklüğünü ve mevcut hızını biliyorsan:
+	 - Max süreyi kabaca hesaplayabilirsin.
+   - Bazı saldırılar pratikte **hiç bitmeyecek kadar büyük** olabilir; mantıklı sınırlar koy.
+
+---
+
+Bu dokümanı temel rehber olarak kullanırsan:
+
+1. Komut satırına alış
+2. Basit hash’lerle pratik yap
+3. Mask ve wordlist+rule kombinasyonlarına hâkim ol
+4. Sonra yavaş hash’ler, dağıtık kırma, özel formatlar (PDF, Office, WPA, TrueCrypt, vb.) gibi detaylara geç.
+
+İstersen bir sonraki adımda, elindeki **belirli bir hash tipi** için (örneğin NTLM veya WPA) sana özel, adım adım örnek komut seti de hazırlayabilirim.

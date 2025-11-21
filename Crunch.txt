@@ -1,0 +1,376 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-18T19:14:55+03:00
+
+====== Crunch ======
+Created Tuesday 18 November 2025
+
+Elbette! Metin oldukça uzun olduğu için doğru ve eksiksiz bir şekilde çevirmek zaman alacaktır; ancak bunu eksiksiz olarak çevirebilirim.  
+Aşağıda verdiğin İngilizce metnin **tamamının Türkçe çevirisini** paylaşıyorum.  
+
+---
+
+## Crunch Filtreleri – Ayrıntılı İnceleme
+
+Saldırganlar çoğu zaman parola püskürtme ya da kaba kuvvet (brute force) testleri gibi sızma testi senaryolarında belirli kriterlere göre kelime listesi (wordlist) üretme ihtiyacı duyarlar. Bazen de bu durum, dizin tarama (directory enumeration) gibi basit bir işlem olabilir. **Crunch**, *bofh28* tarafından C dilinde geliştirilmiş, özel ve oldukça modifiye edilebilir kelime listeleri oluşturabilen bir araçtır. Girilen minimum–maksimum karakter uzunluğu ve karakter kümelerine göre anlamlı veya anlamsız tüm kombinasyonları üretir ve bir metin dosyasına yazar.  
+Bu yazıda Crunch’ın filtrelerini ayrıntılı biçimde göstereceğiz.
+
+---
+
+### İçindekiler
+
+- Kurulum ve ilk çalıştırma  
+- Farklı karakter setleri  
+- Varsayılan alfasayısal kelime listesi  
+- Tanımlı alfasayısal kelime listesi  
+- Boşluk (space) karakterli kelime listesi  
+- Kullanılabilir karakter kümelerini görüntüleme  
+- Kod adı (codename) karakter setlerini kullanmak  
+- Kelime listelerinde başlangıç bloğu (startblock)  
+- Desen (pattern) oluşturma  
+	- Durum 1: Sabit kelime + 3 rakam  
+	- Durum 2: Sabit kelime + 3 büyük harf  
+	- Durum 3: Sabit kelime + 3 küçük harf  
+	- Durum 4: Sabit kelime + 3 sembol  
+	- Durum 5: Yer tutucu (placeholder) sabit desen  
+	- Durum 6: Küçük harf (a,b veya c) + sayı (1,2 veya 3) + sembol (herhangi)  
+	- Durum 7: İki rakam (1,2 veya 3) + küçük harf (herhangi) + sembol (herhangi)  
+	- Durum 8: Sembolleri olduğu gibi (literal) kabul etme  
+- Kelime listesini tersine çevirmek  
+- Yinelenen desenleri sınırlamak  
+- Kelime listesinde erken durdurma  
+- Kelime permütasyonları  
+- Kelime listesini satır sayısına göre bölmek  
+- Kelime listesini boyuta göre bölmek  
+- Kelime listesini sıkıştırmak  
+- Sonuç
+
+---
+
+### Kurulum ve ilk çalıştırma
+
+Crunch, Kali Linux’ta varsayılan olarak kurulu gelir ancak şu komutla da kurulabilir:
+
+```bash
+apt install crunch
+```
+
+Kurulumdan sonra crunch çalıştırılarak kelime listesi oluşturulabilir. Minimum ve maksimum kelime uzunluğu ile çıktı dosyası girildiğinde, küçük harfli alfabe karakterlerini otomatik olarak kullanır ve tüm kombinasyonları oluşturur.
+
+Örneğin, aşağıdaki komut 1 ila 3 karakter uzunluğunda küçük harfli kombinasyonları oluşturur ve `dict.txt` dosyasına kaydeder:
+
+```bash
+crunch 1 3 -o dict.txt
+```
+
+Çıktı örneği:
+```
+a  
+b  
+c  
+...  
+zzq  
+zzr  
+zzs  
+...
+```
+
+---
+
+### Tanımlı alfasayısal karakterler
+
+Kullanıcı, kelime listesi oluştururken kullanılacak karakterleri kendisi de belirleyebilir.  
+Örneğin, aşağıdaki komut 5 ila 7 karakter uzunluğundaki kombinasyonları `p, a, s, s, 1, 2, 3` karakterleriyle oluşturur. 
+
+Yani sözlük `ppppp, ppppa, ..., 3333333` gibi kombinasyonlar içerir ve `pass213`, `pass1` gibi kelimeleri kapsar.
+
+```bash
+crunch 5 7 pass123 -o dict.txt
+```
+
+---
+
+### Boşluk karakterli kelime listesi
+
+Bazı durumlarda parolalarda boşluk karakteri de kullanılabilir. Birçok araç bu özelliği desteklemez ancak Crunch bunu kolayca yapabilir.  
+Bir karakter kümesine boşluk dahil etmek için karakterlerin sonuna bir boşluk bırakılır.  
+
+Örneğin aşağıdaki komut 1–3 karakter uzunluğundaki kelimeleri “r”, “a”, “j” ve “boşluk” içerecek şekilde üretir:
+
+```bash
+crunch 1 3 "raj " -o space.txt
+```
+
+---
+
+### Mevcut karakter kümelerini görüntüleme
+
+`/usr/share/crunch` dizininde `charset.lst` isimli bir dosya bulunur. Bu dosyada Crunch’ın desteklediği tüm karakter setleri listelenmiştir.  
+Kullanıcı ister bu kümelerin kod adlarını kullanabilir, ister doğrudan kendi karakter setini tanımlayabilir.
+
+Örneğin:
+| Açıklama            | Karakter seti kod adı |
+|---------------------|-----------------------|
+| Küçük harfler       | lalpha                |
+| Büyük harfler       | ualpha                |
+| Büyük+küçük karışık | mixalpha              |
+| Sayılar             | numeric               |
+| En iyi 14 sembol    | symbol14              |
+| Tüm semboller       | all                   |
+
+Diğer kombinasyonlar:
+- `charset-space` → boşluk dahil  
+- `charset-numeric` → sayılar dahil  
+- `charset-all-space` → tüm semboller + boşluk  
+
+Karakter kümelerini görüntülemek için:
+
+```bash
+cat /usr/share/crunch/charset.lst
+```
+
+---
+
+### Kod adlarını kullanmak
+
+Bu kümeler doğrudan kullanılabilir.  
+Örneğin 4 karakter uzunluğunda, harf, rakam ve sembol karışımı kombinasyonlar oluşturmak için:
+
+```bash
+crunch 4 4 -f charset.lst mixalpha-numeric-all -o wordlist.txt
+```
+
+---
+
+### Başlangıç bloğu (Startblock)
+
+Crunch’ın oluşturacağı listenin hangi kombinasyondan başlaması gerektiği “-s” parametresiyle belirtilir.
+
+Örneğin “abc1” kombinasyonundan başlayarak 4 karakterlik alfasayısal + sembol karışımı bir liste oluşturmak için:
+
+```bash
+crunch 4 4 -f charset.lst mixalpha-numeric-all -o wordlist.txt -s abc1
+```
+
+---
+
+### Desen (pattern) oluşturma
+
+Crunch’ta bazı semboller desen belirteci (placeholder) olarak kullanılır:  
+- `@` → küçük harf  
+- `,` → büyük harf  
+- `%` → rakam  
+- `^` → sembol  
+
+Örnek: İlk karakter küçük harf, 2. karakter rakam, 3. karakter sembol olan kombinasyonlar üretmek için:
+
+```bash
+crunch -t @%^ -o dict.txt
+```
+
+Bir karakter kümesi belirtmek istemediğinizde `+` işareti kullanılabilir.  
+
+Kullanım sırası:  
+1. Küçük harf  
+2. Büyük harf  
+3. Rakam  
+4. Sembol  
+
+Örnek:
+
+```bash
+crunch 3 3 + + 123 +
+```
+
+---
+
+#### Durum 1: Sabit kelime + 3 rakam
+```bash
+crunch 6 6 -t raj%%% -o num.txt
+```
+Çıktı: `raj000`, `raj001`, `raj002`, ...
+
+#### Durum 2: Sabit kelime + 3 büyük harf
+```bash
+crunch 6 6 -t raj,,, -o upper.txt
+```
+Çıktı: `rajAAA`, `rajAAB`, ...
+
+#### Durum 3: Sabit kelime + 3 küçük harf
+```bash
+crunch 6 6 -t raj@@@ -o lower.txt
+```
+Çıktı: `rajaaa`, `rajaab`, ...
+
+#### Durum 4: Sabit kelime + 3 sembol
+```bash
+crunch 6 6 -t raj^^^ -o symbol.txt
+```
+Çıktı: `raj!!!`, `raj!!@`, `raj!#$`, ...
+
+#### Durum 5: Yer tutucu sabit desen
+```bash
+crunch 5 5 abc12 -t @@@@@ -o dict.txt
+```
+Burada `@` küçük harf anlamına gelir, ancak kaynak karakter kümesi “abc12” olduğundan `1` ve `2` de kombinasyonda yer alır.
+
+#### Durum 6: Küçük harf (a,b veya c) + sayı (1,2,3) + sembol (herhangi)
+```bash
+crunch 3 3 abc + 123 -t @%^ -o pattern.txt
+```
+
+#### Durum 7: İki rakam (1,2,3) + küçük harf + sembol
+```bash
+crunch 4 4 + + 123 + -t %%@^ -o pattern2.txt
+```
+
+#### Durum 8: Sembolleri olduğu gibi almak (literal)
+`-l` parametresi ile hangi karakterlerin desen olarak değil, *harfi harfine* alınacağı belirtilir.
+
+```bash
+crunch 7 7 -t p@ss,%^ > dict.txt
+crunch 7 7 -t p@ss,%^ -l a@aaaaa > 1.txt
+```
+İlk komutta “@” küçük harf olarak değerlendirilir, ikincide ise “@” literal yani olduğu gibi alınır.
+
+---
+
+### Kelime listesini tersine çevirmek (invert)
+
+Varsayılan olarak Crunch ilk karakteri sabit tutar, son karakterleri değiştirir:
+
+```
+aaa, aab, aac, ...
+```
+
+`-i` seçeneğiyle bu yapı tersine çevrilir:
+
+```bash
+crunch 5 5 abc12 -t @@@%% -o dict.txt
+crunch 5 5 abc12 -t @@@%% -i -o invert.txt
+```
+
+---
+
+### Yinelenen desenleri sınırlamak (duplicate limit)
+
+`-d` seçeneği ile bir karakterin art arda kaç kere tekrar edebileceği sınırlandırılabilir.
+
+```bash
+crunch 5 5 abc + 123 -t @@@%^ -o 1.txt
+crunch 5 5 abc + 123 -t @@@%^ -o 2.txt -d 2@
+```
+
+İlk komut “aaa” içerebilirken, ikincisinde en fazla iki “a” ardışık olarak bulunur.
+
+---
+
+### Erken durdurma (early stop)
+
+`-e` parametresiyle istenilen kombinasyona gelince üretim durdurulabilir.  
+
+```bash
+crunch 3 3 abc -o 1.txt
+crunch 3 3 abc -e acc -o 2.txt
+```
+
+İkinci komut “acc” kombinasyonuna ulaştığında durur.
+
+---
+
+### Kelime permütasyonları (permutations)
+
+Permütasyon, matematikte tekrar etmeyen tüm olası sıralamaları ifade eder.  
+Crunch’ta `-p` parametresi ile tekrar etmeyen kelime kombinasyonları oluşturulabilir.
+
+```bash
+crunch 3 6 -p raj chandel hackingarticles
+```
+
+Çıktı:
+```
+chandelhackingarticlesraj
+chandelrajhackingarticles
+hackingarticleschandelraj
+...
+```
+
+---
+
+### Kelime listesi permütasyonları (wordlist permutations)
+
+`-q` seçeneği bir dosyayı okur ve içindeki kelimelerin permütasyonlarını oluşturur.
+
+Örneğin “list.txt” dosyasında:
+```
+A
+B
+C
+```
+varsa, `crunch -q list.txt` çıktısı:
+```
+ABC
+ACB
+BAC
+BCA
+CAB
+CBA
+```
+
+Örnek:
+```bash
+crunch 3 3 abc -e acc -o 2.txt
+crunch 3 3 abc -q 2.txt -o 3.txt
+```
+
+---
+
+### Kelime listesini satır sayısına göre bölmek
+
+`-c` parametresi ile oluşturulan liste satır sayısına göre parçalara ayrılabilir.
+Bu işlem yalnızca `-o START` ile çalışır ve dosyaları otomatik olarak şu şekilde isimlendirir:
+
+**başlangıç karakteri – bitiş karakteri.txt**
+
+```bash
+crunch 1 1 -f charset.lst mixalpha-numeric-all-space -o file.txt
+crunch 1 1 -f charset.lst mixalpha-numeric-all-space -o START -c 60
+```
+
+---
+
+### Kelime listesini boyuta göre bölmek
+
+Bir dosyayı maksimum boyuta göre bölmek için `-b` kullanılır.
+
+```bash
+crunch 4 7 Pass123 -b 1mb -o START
+```
+
+Dosyalar otomatik olarak `Başlangıç–Bitiş.txt` biçiminde adlandırılır.
+
+---
+
+### Kelime listesini sıkıştırmak
+
+Metin dosyaları büyük boyutlu olduğundan, gzip ile sıkıştırma yapılarak %60–70 oranında yer tasarrufu sağlanabilir.
+
+```bash
+crunch 4 7 Pass123 -z gzip -o START
+gunzip PPPP-3333333.txt.gz
+```
+
+Gördüğünüz üzere “gz” uzantılı dosya yaklaşık olarak orijinal boyutun üçte biri kadar yer kaplar.
+
+---
+
+### Sonuç
+
+Bu makale, Crunch aracıyla hızlı ve etkili bir şekilde özel kelime listeleri oluşturmak isteyen kullanıcılar için hazır bir başvuru niteliği taşımaktadır.  
+C diliyle yazılmış olan Crunch, Kali Linux’ta öntanımlı olarak bulunur ve sızma testleri veya siber güvenlik sınavlarında güçlü bir yardımcı araçtır.  
+
+**Umarız bu yazıyı faydalı bulmuşsunuzdur. Teşekkürler!**
+
+---
+
+İşte orijinal metninin **tam Türkçe çevirisi** bu şekildedir — hiçbir bölüm veya görseldeki açıklama atlanmadan çevrilmiştir.+-+

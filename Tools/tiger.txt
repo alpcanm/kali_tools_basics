@@ -1,0 +1,64 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-21T22:12:38+03:00
+
+====== tiger ======
+Created Friday 21 November 2025
+
+TIGER
+
+Ne amaçla üretildi?
+- Sistemlerin güvenliğinin nereden kırılabileceğini bulup raporlamak ve sertleştirme (hardening) için yol göstermek.
+- Zamanla oluşan yetkisiz değişiklikleri yakalayıp uyarı vermek (basit bir ana makine saldırı tespit mekanizması olarak).
+
+Nedir?
+- Linux/Unix üzerinde çalışan güvenlik denetim aracı seti (kabuk betikleri + C yardımcı programları).
+- Tek seferlik denetim ve periyodik karşılaştırma (baseline) yapabilen hafif bir “host güvenlik denetçisi”.
+
+Ne işe yarar (basit örneklerle)?
+- Zayıf noktaları raporlar:
+  - Herkese yazılabilir kritik dosyaları bulur.
+  - Şüpheli SUID/SGID dosyalarını listeler.
+  - Dinleyen yerel servisleri analiz eder.
+  - Paketlere ait olmayan “sahipsiz” dosyaları ve bütünlük sapmalarını (md5) bildirir.
+- Periyodik çalıştırıldığında:
+  - Dün yokken bugün ortaya çıkan şüpheli dosyaları/ayar değişikliklerini e-posta ile bildirir.
+
+Ne değildir?
+- Antivirüs, EDR, SIEM ya da ağ tarayıcısı değildir.
+- Gerçek zamanlı ajan değildir; bulguları zamanlanmış denetimlerle üretir.
+- Otomatik düzeltme/patch uygulayıcı değildir; sadece raporlar.
+
+Kullanım alanları nedir?
+- Sunucu/iş istasyonu güvenlik denetimi ve sertleştirme öncesi kontrol listesi.
+- Temel ana makine saldırı tespiti (HIDS benzeri, imza/bütünlük takibi).
+- Uyum/denetim öncesi önişlem (ör. dosya izinleri, yetkiler, servisler).
+
+Kullanım ortamı nelerdir?
+- Linux (özellikle Debian/Ubuntu türevleri) ve çeşitli Unix türevleri.
+- Terminal/SSH üzerinden tek seferlik veya cron ile periyodik.
+- Merkezî paylaşımdan (NFS vb.) farklı Unix sistemlerine dağıtık çalıştırma.
+
+Neden tercih edilir?
+- Hafif, kurması/çalıştırması kolay; ajan gerektirmez.
+- Açık kaynak, küçük ayak izi, eski/çeşitli Unix’lerle uyumlu.
+- Cron + e-posta ile basit ve otomatik raporlama.
+- Debian’a özgü ek kontroller (md5sum, paket dışı dosyalar, dinleyen süreç analizi).
+
+Kullanmak için nelere ihtiyaç vardır?
+- Linux/Unix sistem, terminal erişimi (tercihen root yetkisi).
+- Zamanlayıcı (cron) ve raporları almak için basit e-posta yapılandırması.
+- İsteğe bağlı entegrasyonlar: John the Ripper (zayıf parola kontrolleri), chkrootkit, bütünlük araçları (AIDE/Tripwire/Integrit).
+
+Öğrenme zorluk seviyesi nedir?
+- Kolay (ortalama bir haftada öğrenilebilir): Kurulum, çalıştırma ve rapor okuma temelleri hızlı kavranır.
+
+Aracın siber güvenlik uzmanı için önemi (0–7)
+- 3 — Durumsal önemli: Özellikle Linux/Unix sunucu denetimleri ve basit HIDS senaryolarında faydalı.
+
+Alternatifleri nelerdir?
+- Lynis: Benzer kapsamda daha güncel ve geniş denetimler; tek makinede derin audit için sık tercih edilir.
+- OSSEC/Wazuh: HIDS/uyarı/merkezî korelasyon özellikleri güçlü; daha ağır ve kapsamlı mimari.
+- AIDE/Tripwire: Dosya bütünlüğü odaklı; TIGER’ın genel denetimini bütünlük takibiyle tamamlar.
+- chkrootkit/rkhunter: Rootkit odaklı kontroller; TIGER’ı tamamlayıcıdır.
+- checksecurity, LSAT, YASAT: Daha küçük/odaklı kontrol setleri; hızlı, hafif alternatifler.

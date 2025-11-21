@@ -1,0 +1,238 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-20T19:25:29+03:00
+
+====== cheat sheet ======
+Created Thursday 20 November 2025
+
+Aşağıda kullanman için kısa, pratik bir “cheat sheet” var.  
+(Hepsini terminalde kullanıyorsun.)
+
+---
+
+## 1. anonsurf – Temel Komutlar
+
+**Çalıştır (TOR üzerinden anonim trafik):**
+```bash
+sudo anonsurf start
+```
+
+**Durdur (normal internete geri dön):**
+```bash
+sudo anonsurf stop
+```
+
+**Yeniden başlat (önce durdur, sonra tekrar başlat):**
+```bash
+sudo anonsurf restart
+```
+
+**Kimlik değiştir (yeni TOR devresi / IP):**
+```bash
+sudo anonsurf change
+```
+
+**Durumu kontrol et:**
+```bash
+sudo anonsurf status
+```
+
+**i2p servislerini başlat/durdur:**
+```bash
+sudo anonsurf starti2p
+sudo anonsurf stopi2p
+```
+
+> Önemli:  
+> `service anonsurf ...` KULLANMA.  
+> Doğru kullanım: `anonsurf start`, `anonsurf stop` vb.
+
+---
+
+## 2. pandora – Temel Komutlar
+
+**Manuel RAM/cache temizliği:**
+```bash
+sudo pandora bomb
+```
+
+- Tüm sistem cache’ini temizler.
+- Aktif SSH oturumları, bazı bağlantılar kopabilir.
+- Sistem kapanırken zaten otomatik RAM temizleme özelliği var (kurulum öyle yaptıysa); elle çalıştırman şart değil.
+
+---
+
+## 3. Kullanım Senaryoları (Başlat / Kapat)
+
+### Sadece TOR ile anonim gezmek istediğinde
+
+1. anonsurf’u başlat:
+   ```bash
+   sudo anonsurf start
+   ```
+2. Durumu kontrol et:
+   ```bash
+   sudo anonsurf status
+   ```
+3. Tarayıcıdan:
+   - https://check.torproject.org
+   - IP’nin değiştiğini ve TOR kullandığını gösteriyorsa her şey ok.
+
+4. İşin bitince:
+   ```bash
+   sudo anonsurf stop
+   ```
+
+### TOR IP’ni yenilemek istediğinde
+
+anonsurf açıkken:
+```bash
+sudo anonsurf change
+```
+
+Sonra tekrar:
+- `sudo anonsurf status`
+- Tarayıcıdan IP kontrolü
+
+### i2p kullanmak istersen
+
+Önce anonsurf’ü başlat:
+```bash
+sudo anonsurf start
+sudo anonsurf starti2p
+```
+
+Bitince:
+```bash
+sudo anonsurf stopi2p
+sudo anonsurf stop
+```
+
+---
+
+## 4. Basit Konfigürasyon Notları
+
+Genel kural:  
+- Normal kullanıcı için **varsayılan ayarlar genelde yeterli**.  
+- Yanlış ayar, internete çıkamamana sebep olabilir.
+
+### TOR ile ilgili ayarlar
+
+Global TOR ayar dosyası genelde:
+```bash
+sudo nano /etc/tor/torrc
+```
+
+Buradan:
+- Çıkış ülkeleri ile oynamak istersen (örneğin sadece bazı ülkeler):
+
+  ```text
+  ExitNodes {de},{nl},{se}
+  StrictNodes 1
+  ```
+
+  ama:
+  - Çok kısıtlarsan bağlantın yavaşlayabilir ya da hiç çıkamayabilirsin.
+  - Değişiklikten sonra TOR servisini/anonsurf’u yeniden başlat:
+	```bash
+	sudo anonsurf restart
+	```
+
+### anonsurf özel ayarları
+
+Paketin sürümüne göre:
+- `/etc/anonsurf/` altında bir yapılandırma dosyası olabilir  
+  (örneğin `anonsurf.conf` gibi).
+- Emin olmak için:
+  ```bash
+  ls /etc/anonsurf
+  ```
+  ile bakabilirsin.
+
+Ama bu dosyalara dokunman **zorunlu değil**. Sadece ne yaptığını biliyorsan düzenle.
+
+---
+
+## 5. Ağ Bozulursa / İnternet Gitmişse Ne Yapmalı?
+
+Bazen (özellikle kural bozulursa) internete çıkamayabilirsin. Şu sırayla dene:
+
+1. anonsurf’ü kapat:
+   ```bash
+   sudo anonsurf stop
+   ```
+
+2. Gerekirse iptables’ı temizle:
+   ```bash
+   sudo iptables -F
+   sudo iptables -t nat -F
+   ```
+
+3. DNS’i tazele (örnek olarak Cloudflare DNS):
+   ```bash
+   echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf
+   ```
+
+4. Ağ yöneticisini yeniden başlat:
+   ```bash
+   sudo systemctl restart NetworkManager
+   ```
+
+Sonra bir siteyi ping’le:
+```bash
+ping -c 3 google.com
+```
+
+---
+
+## 6. Güvenli ve Sağlıklı Kullanım Tavsiyeleri
+
+- anonsurf **açıksa**:
+  - Mümkünse ekstra VPN açma, ağ karmaşıklaşır, kopmalar olabilir.
+  - Torrent, ağır trafik vs. TOR için uygun değil (yavaş + etik değil).
+- Banka / kritik hesap işlerinde:
+  - Bazı siteler TOR IP’lerini engeller; bu normal.
+- Pandora’yı:
+  - Her dakika çalıştırma; RAM temizliği bazı işlemleri bozabilir.
+  - Özellikle uzak SSH ile bağlıysan `sudo pandora bomb` kullanma, oturumun düşer.
+- GNOME Wayland üzerinde:
+  - Tüm kontrolü terminalden yapıyorsun; ekstra GUI yok, bu normal.
+
+---
+
+## 7. Küçük İpucu: Kısa Alias’lar
+
+Sık kullanıyorsan `.bashrc` içine (home dizininde) kısa kısayollar ekleyebilirsin:
+
+```bash
+nano ~/.bashrc
+```
+
+Sonuna örneğin şunları ekle:
+
+```bash
+alias astart='sudo anonsurf start'
+alias astop='sudo anonsurf stop'
+alias astatus='sudo anonsurf status'
+alias abomb='sudo pandora bomb'
+```
+
+Kaydet, sonra:
+```bash
+source ~/.bashrc
+```
+
+Artık:
+```bash
+astart
+astatus
+astop
+abomb
+```
+gibi kısa komutlarla kullanabilirsin.
+
+---
+
+Eğer istersen, bir sonraki adımda:
+- Senin çıktına göre (ör. `anonsurf status`) birlikte yorum yapıp  
+  “çalışıyor mu / TOR IP’n nasıl” kısmını da kontrol edebiliriz.
