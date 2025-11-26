@@ -1,0 +1,408 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-25T01:25:16+03:00
+
+====== Geçmiş Tls Saldırıları ======
+Created Tuesday 25 November 2025
+
+Tabii! Verdiğin metin, **TLS/SSL protokollerine yönelik bilinen saldırılar ve güvenlik açıkları** hakkında oldukça kapsamlı bir özet. Aşağıda senin için **madde madde**, sade ve sistematik şekilde tüm önemli noktaları özetliyorum:  
+
+---
+
+## 🔐 **Genel Bilgi**
+- **TLS (Transport Layer Security)** ve **SSL (Secure Sockets Layer)**: İnternet üzerindeki iletişimi şifrelemek için kullanılır.  
+- Amaç: Sunucu ile istemci arasındaki verinin gizlilik, bütünlük ve kimlik doğrulamasını sağlamaktır.  
+- Ancak zamanla farklı sürümlerinde ciddi güvenlik açıkları tespit edilmiştir.
+
+---
+
+## ⚔️ **Önemli Saldırı Türleri**
+
+### 1️⃣ **Renegotiation Attack (Yeniden Pazarlık Saldırısı)**
+- 2009’da keşfedildi.  
+- Saldırgan, mevcut bir bağlantıya kendi verisini “en başta gönderilmiş gibi” enjekte edebilir.  
+- Veriyi çözemez ama bağlantıya veri ekleyebilir.  
+- Geçici çözüm: Sunucuda **renegotiation’ı devre dışı bırakmak**.  
+- Kalıcı çözüm: **Renegotiation indication extension** eklemek.
+
+---
+
+### 2️⃣ **Downgrade Attacks (Sürüm Düşürme Saldırıları)**
+- Sunucuyu eski, güvensiz TLS/SSL sürümleriyle iletişim kurmaya zorlar.  
+- Amaç: Zayıf şifreleme algoritmalarına düşürmek.  
+- 💥 Örnekler:
+  - **FREAK Attack (2014):** 512 bit “export-grade” RSA anahtarlarını zorlayarak kırılabilir bağlantı oluşturdu.  
+  - **Logjam (2015):** Zayıf 512 bit Diffie–Hellman gruplarını kullandırarak anahtar tahminine imkan verdi.
+
+---
+
+### 3️⃣ **DROWN Attack (2016)**
+- Sunucu, hem yeni TLS sürümlerini hem de eski **SSLv2’yi** destekliyorsa, saldırgan SSLv2 açıklıklarından yararlanabilir.  
+- Böylece **güvenli görünen modern bağlantılar da etkilenebilir.**  
+
+---
+
+### 4️⃣ **BEAST Attack (2011)**
+- TLS 1.0’daki **CBC modundaki** bir açığı kullanır.  
+- Java applet yardımıyla, aynı bağlantıdaki parçalardan şifreli metni çözebilir.  
+- Çözüm: **TLS 1.1+** kullanmak veya **1/n-1 split** tekniği uygulamak.  
+- RC4 bu saldırıdan etkilenmezdi, ancak sonra RC4 de güvensiz hale geldi.
+
+---
+
+### 5️⃣ **CRIME ve BREACH Attacks**
+- BEAST’i geliştirenler tarafından ortaya çıkarıldı.  
+- **CRIME (2012):** TLS veya SPDY protokolünde **veri sıkıştırma** kullanıldığında, çerez içeriğini geri bulabilir.  
+- **BREACH (2013):** HTTP sıkıştırmasını istismar eder. HTTPS üzerinden oturum çerezleri, tokenlar gibi bilgileri çıkartabilir.  
+- Savunma: Sıkıştırmayı devre dışı bırakmak veya hassas verileri bu yoldan göndermemek.
+
+---
+
+### 6️⃣ **Timing ve Padding Saldırıları**
+- **Padding Oracle Attack (2002)** ve **Lucky 13 (2013)**: Zamanlamalarni ölçerek CBC bloklarının padding’ini tahmin eder.  
+- Çözüm: **Encrypt-then-MAC** eklentisi ve **AES-GCM** (TLS 1.2 veya 1.3) kullanılmalı.  
+- **Triple DES** ve **RC4** artık önerilmez.
+
+---
+
+### 7️⃣ **POODLE Attack (2014)**
+- SSL 3.0’daki CBC padding hatası.  
+- Ortalama 256 deneme ile 1 byte’lık veriyi açığa çıkarabilir.  
+- TLS’a downgrade edilebilen bağlantılarda etkiliydi.  
+- Çözüm: **SSL 3.0 tamamen kapatılmalı.**
+
+---
+
+### 8️⃣ **RC4 Attacks**
+- RC4 uzun süre BEAST’e karşı koruyucu olarak kullanılsa da, 2013’ten itibaren tamamen kırıldı.  
+- 2015’te resmen **tüm TLS sürümlerinde yasaklandı.**  
+- 2016 itibariyle büyük tarayıcılar RC4’ü kapattı.
+
+---
+
+### 9️⃣ **Truncation Attack (Kesilme Saldırısı)**
+- Oturum kapatma (logout) isteğini **TCP FIN** mesajıyla keser.  
+- Kullanıcı çıkış yaptığını sanır ama oturum açık kalır.  
+- Özellikle halka açık Wi-Fi veya proxy ortamlarında tehlikelidir.
+
+---
+
+### 🔟 **DTLS Plaintext Timing Attack (2013)**
+- Datagram TLS (UDP için TLS) üzerinde zamanlama farklarını ölçerek verinin bir kısmını elde edebilir.  
+- Özellikle OpenSSL ve GnuTLS kullanan sistemlerde etkiliydi.
+
+---
+
+### 11️⃣ **Unholy PAC (2016)**
+- WPAD (Web Proxy Autodiscovery Protocol) üzerinden, kullanıcının eriştiği TLS URL’sini sızdırabilir.  
+- URL bazlı kimlik doğrulamada (örn. Google Docs bağlantıları, paylaşım linkleri) büyük güvenlik riski.
+
+---
+
+### 12️⃣ **Sweet32 Attack (2016)**
+- 64-bit blok şifreleri (özellikle Triple-DES) kullanan CBC mod bağlantılarda “birthday attack” yapılabilir.  
+- Yani yeterince veri toplanırsa aynı bloklar bulunarak veriler çıkarılabilir.  
+
+---
+
+## 💥 **Uygulama Hataları (Implementation Errors)**
+
+### ➤ **Heartbleed (2014)**
+- OpenSSL 1.0.1–1.0.1f sürümlerinde hata.  
+- Saldırgan, sistem belleğini okuyarak **özel anahtarları**, kullanıcı adlarını, parolaları çalabilir.  
+- Protokol hatası değil, **kodlama (buffer over-read)** hatasıydı.
+
+### ➤ **BERserk (2014)**
+- RSA imza doğrulama kısmında ASN.1 hatası.  
+- Sahte imza oluşturulabiliyor (MITM saldırısı mümkün).
+
+### ➤ **Superfish / Komodia (2015)**
+- Lenovo dizüstülerde önceden yüklü “Superfish” yazılımı kendi sahte sertifikasını ekledi.
+- Bu sahte sertifikalarla saldırganlar HTTPS bağlantılarını dinleyebildi.
+
+### ➤ **Nonce Reuse (2016)**
+- Visa web sitelerinde TLS el sıkışmasında aynı “nonce”lerin tekrar kullanılması → önceden gönderilen şifreli verilerin çözülmesine imkan.
+
+### ➤ **Cloudbleed (2017)**
+- Cloudflare platformunda kodlama hatası sebebiyle veri sızıntısı yaşandı (benzer biçimde “Heartbleed-benzeri”).
+
+
+---
+
+## 📊 **Genel Sitelere İlişkin Durum (2021 Verileri)**
+- %99.7 web sitesi güvenli renegotiation kullanıyor.  
+- %96.9 RC4 devre dışı.  
+- POODLE ve Heartbleed neredeyse tamamen ortadan kalktı.  
+- Ancak hâlâ yaklaşık **%4 civarında** site “downgrade saldırılarına karşı savunmasız.”  
+
+---
+
+## 🔑 **Forward Secrecy (İleriye Dönük Gizlilik)**
+- Önemli özellik: Sunucu anahtarı sızsa bile geçmiş oturumların çözülememesini sağlar.  
+- Bunu **ephemeral Diffie–Hellman (DHE veya ECDHE)** anahtar değişimi sağlar.  
+- Google, Twitter gibi platformlar zorunlu hale getirdi.  
+- Ancak çoğu sunucu hâlâ zayıf parametreler veya uzun süreli “session ticket” anahtarları kullandığı için tam koruma sağlanamıyor.
+
+---
+
+## 🧩 **TLS / HTTPS Interception**
+- Bazı ağlar (kurumsal, güvenlik sistemleri) HTTPS trafiğini çözmek için **TLS interception proxy** kullanır.  
+- Ancak:
+  - Trafik “ortada açıldığı” için yeni bir güvenlik zafiyeti oluşur.  
+  - **MITM** saldırılarına kapı aralar.  
+  - 2017 çalışmaları, HTTPS interception’ın **bağlantı güvenliğini ciddi şekilde zayıflattığını** göstermiştir.
+
+---
+
+## ✅ **Özetle**
+| Kategori                         | Önerilen Önlem                                  |
+|----------------------------------|-------------------------------------------------|
+| Eski Protokoller                 | SSLv2, SSLv3 devre dışı bırakılmalı             |
+| Şifreleme                        | RC4, 3DES kullanımı yasaklanmalı                |
+| Saldırıya Karşı Güvenli Seçimler | AES-GCM, TLS 1.2/1.3 kullanılmalı               |
+| Sıkıştırma                       | TLS ve HTTP sıkıştırması devre dışı bırakılmalı |
+| Güvenli Oturumlar                | Forward Secrecy (DHE/ECDHE) aktif               |
+| Sertifika Yönetimi               | Güvenilir CA’lar, güçlü anahtar uzunlukları     |
+| Zayıf Uygulamalar                | OpenSSL vs. güncel tutulmalı                    |
+
+---
+
+**Sonuç:**  
+Metin, TLS/SSL’in tarih boyunca maruz kaldığı saldırıları kronolojik olarak anlatıyor. Günümüzde bu protokoller **TLS 1.3** ile birçok açığı kapattı. Ancak doğru yapılandırma yapılmazsa hâlâ eski zafiyetlerin bazıları etkin olabilir.
+
+---
+
+İstersen ikinci aşamada bu bilgileri **tarihsel zaman çizelgesi** veya **saldırı–çözüm eşleştirmesi tablosu** şeklinde de düzenleyebilirim.  
+Bunu ister misin?
+
+
+
+Harika fikir 👍  
+Bu konu oldukça teknik olduğu için bir **“TLS/SSL Güvenlik Terimleri Sözlüğü”** sana öğrenirken çok yardımcı olur.  
+Aşağıda, metinde geçen kavramları sistematik olarak açıklayan bir **kısa ama kapsamlı sözlük** bulacaksın:  
+
+---
+
+# 🔐 **TLS / SSL Güvenlik Sözlüğü**
+
+---
+
+### **A**
+
+**AES (Advanced Encryption Standard):**  
+Modern, güvenli, simetrik blok şifreleme algoritması. TLS’te CBC veya GCM modlarında kullanılır.  
+
+**ASN.1 (Abstract Syntax Notation One):**  
+Sertifikalar ve anahtar formatları için kullanılan veri tanım dili. BERserk saldırısında ASN.1 işleme hatası istismar edilmiştir.
+
+---
+
+### **B**
+
+**BEAST (Browser Exploit Against SSL/TLS):**  
+TLS 1.0’daki CBC mod zayıflığını kullanarak istemci tarafında şifre çözme saldırısı. (2011)  
+
+**BERserk:**  
+Bazı uygulamalarda RSA imza kontrolündeki ASN.1 uzunluk hatasından kaynaklanan sahte imza oluşturma açığı. (2014)  
+
+**Block Cipher (Blok Şifreleme):**  
+Veriyi sabit uzunluktaki bloklar hâlinde şifreleyen sistem — örneğin AES veya 3DES.  
+
+**BREACH:**  
+HTTP sıkıştırmasının zafiyetini istismar ederek gizli bilgilerin tahmin edilmesini sağlayan saldırı.  
+
+---
+
+### **C**
+
+**CBC (Cipher Block Chaining):**  
+Bir blok şifreleme modu. Her blok kendinden önceki blok çıktısıyla birleştirilir. Bazı TLS saldırıları CBC modundaki padding yapısından faydalanır (örnek: BEAST, POODLE).  
+
+**Certificate (Sertifika):**  
+Sunucu veya istemcinin kimliğini doğrulamak için kullanılan, dijital imzalı belge.  
+
+**CRIME (Compression Ratio Info-leak Made Easy):**  
+TLS veya SPDY veri sıkıştırması sayesinde çerez veya gizli verinin açığa çıkmasını sağlar.  
+
+**Cipher Suite (Şifre Takımı):**  
+TLS’in kullandığı algoritma seti: anahtar değişimi + şifreleme + bütünlük algoritması.  
+
+**Cloudbleed:**  
+Cloudflare sunucularının belleğinden yanlışlıkla hassas verilerin sızmasına neden olan uygulama hatası (2017).  
+
+---
+
+### **D**
+
+**Diffie–Hellman:**  
+Tarafların ortak bir gizli anahtar üretmesini sağlayan asimetrik anahtar değişimi yöntemi.  
+- **DHE / ECDHE:** Ephemeral (geçici) versiyonları, Forward Secrecy sağlar.  
+
+**DROWN:**  
+Eski SSLv2 desteği olan sistemlerde modern TLS bağlantılarının da tehlikeye girmesine olanak tanıyan saldırı (2016).  
+
+**DTLS (Datagram TLS):**  
+UDP tabanlı uygulamalarda TLS güvenliği sağlayan protokol.  
+
+**Downgrade Attack:**  
+Sunucu/istemciyi eski, zayıf TLS sürümünü veya şifre takımını kullanmaya zorlayan saldırı.
+
+---
+
+### **E**
+
+**Encrypt-then-MAC:**  
+Önce şifreleme, sonra bütünlük kontrolü yapılan yeni yöntem; padding oracle saldırılarına karşı dayanıklı.  
+
+**Ephemeral Key:**  
+Tek bir oturum boyunca kullanılan geçici anahtar. Forward secrecy sağlar.  
+
+**Export-grade Encryption:**  
+1990’larda ABD dışı kullanım kısıtlamaları nedeniyle zayıflatılmış (genelde 512 bit) şifreleme seviyesi.
+
+---
+
+### **F**
+
+**False Start / Snap Start:**  
+TLS el sıkışmasını hızlandırmayı amaçlayan teknikler; ancak sürüm düşürme riskleri oluşturmuştur.  
+
+**FREAK (Factoring RSA Export Keys):**  
+Sunucuyu 512 bit RSA anahtar kullanımına zorlayarak bağlantının kırılmasını sağlayan downgrade saldırısı.  
+
+**Forward Secrecy (İleriye Dönük Gizlilik):**  
+Sunucu özel anahtarı sızsa bile eski oturumların gizliliğinin korunması özelliği.  
+
+---
+
+### **G**
+
+**GCM (Galois/Counter Mode):**  
+Hem şifreleme hem bütünlük doğrulama yapan blok şifreleme modu. CBC’ye göre daha güvenlidir.  
+
+---
+
+### **H**
+
+**Heartbleed:**  
+OpenSSL 1.0.1 sürümlerindeki “heartbeat” uzantısında buffer over-read hatası. Bellekten hassas verilerin sızmasına neden olur.  
+
+**Handshake:**  
+TLS bağlantısının başlangıcında kimlik doğrulama, anahtar değişimi ve şifre takımı seçiminin yapıldığı aşama.  
+
+**HTTPS (HTTP over TLS):**  
+Web trafiğini TLS ile şifrelenmiş olarak ileten protokol (web tarayıcılarında “https://”).  
+
+---
+
+### **K**
+
+**Key Exchange (Anahtar Değişimi):**  
+İstemci ve sunucunun ortak oturum anahtarını güvenli şekilde üretmesi. (RSA, DHE, ECDHE)  
+
+**Komodia / Superfish:**  
+Lenovo dizüstülerde bulunan kötü amaçlı yazılım kütüphanesi. Sahte sertifikalarla TLS trafiğini dinleyebiliyordu.  
+
+---
+
+### **L**
+
+**Logjam:**  
+Zayıf Diffie–Hellman gruplarını zorlayarak anahtar tahminine izin veren saldırı (2015).  
+
+**Lucky 13:**  
+CBC modundaki padding kontrollerinin zaman farklarını ölçerek veri sızdırma saldırısı. (2013)
+
+---
+
+### **M**
+
+**MITM (Man-in-the-middle):**  
+Aradaki saldırganın iki taraf arasındaki iletişimi dinleyip değiştirebildiği saldırı tipi.  
+
+---
+
+### **N**
+
+**Nonce (Number used once):**  
+Her şifreli işlem için yalnızca bir kez kullanılan rastgele sayı. Tekrarlanan nonce güvenlik zayıflatır.  
+
+---
+
+### **P**
+
+**Padding Oracle Attack:**  
+CBC blok şifrelemede padding hatalarından yararlanarak düz metin elde etme saldırısı.  
+
+**POODLE (Padding Oracle On Downgraded Legacy Encryption):**  
+SSL 3.0’daki CBC padding açığından yararlanarak veri elde edilmesine neden olan saldırı (2014).  
+
+**Protocol Downgrade:**  
+Bağlantıyı zayıf TLS/SSL sürümüne düşürme saldırısı.  
+
+---
+
+### **R**
+
+**RC4:**  
+Eski bir akış şifreleme algoritması. Önceleri BEAST’e karşı çözüm sayılıyordu, sonradan kırıldı. 2015’te tamamen yasaklandı.  
+
+**Renegotiation:**  
+TLS bağlantısının yeniden el sıkışma aşamasına dönmesi. 2009’da bu süreçte açıklık bulundu.  
+
+---
+
+### **S**
+
+**SSL (Secure Sockets Layer):**  
+TLS’in eski versiyonu. SSL 3.0 ve öncesi artık güvensiz kabul edilir.  
+
+**Session Ticket:**  
+Oturum bilgilerini tutan TLS özelliği. Ancak uzun ömürlü anahtarlar forward secrecy’yi zayıflatabilir.  
+
+**Sweet32:**  
+64-bit blok şifrelerin (ör. 3DES) CBC modunda çok veri üretildiğinde kırılabilir hale geldiğini gösteren saldırı.  
+
+---
+
+### **T**
+
+**TLS (Transport Layer Security):**  
+SSL’in yerini alan standart güvenli iletişim protokolüdür (TLS 1.3 en güncel sürümdür).  
+
+**Truncation Attack:**  
+Logout isteğini TCP FIN mesajı ile keserek oturumun açık kalmasını sağlayan saldırı.  
+
+---
+
+### **U**
+
+**Unholy PAC Attack:**  
+WPAD protokolü zafiyetinden yararlanarak kullanıcının girdiği HTTPS URL’sini sızdırabilir.  
+
+---
+
+### **W**
+
+**WPAD (Web Proxy Auto-Discovery Protocol):**  
+Tarayıcıların otomatik proxy yapılandırmasını sağlar; Unholy PAC saldırısında hedef alınmıştır.  
+
+---
+
+### **Ek Kavramlar**
+
+**MITM Proxy / TLS Interception:**  
+Şifreli trafiği çözmek ve yeniden şifrelemek için kullanılan proxy. Ağ güvenliği amacıyla kullanılsa bile yeni riskler yaratabilir.  
+
+**Forward Secrecy (FS):**  
+Sunucunun gelecekteki özel anahtarı sızsa dahi geçmiş oturumların gizli kalması. DHE / ECDHE gerektirir.  
+
+**Encrypt-then-MAC (EtM):**  
+Şifrelemeden sonra doğrulama yapılması; padding oracle saldırılarına karşı güvenli bir mekanizma.
+
+---
+
+Bu sözlükteki kavramları öğrenirsen, TLS/SSL güvenliğiyle ilgili çoğu makaleyi ve akademik metni kolayca anlayabilirsin.  
+
+İstersen bir sonraki adımda sana bu sözlükten temel kavramları **kavram haritası (şematik bağlantılar)** şeklinde gösterebilirim.  
+İster misin onu da hazırlayayım?

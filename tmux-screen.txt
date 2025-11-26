@@ -1,0 +1,50 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-26T22:47:54+03:00
+
+====== tmux-screen ======
+Created Wednesday 26 November 2025
+# tmux → screen Komut Karşılıkları
+
+## 1. Oturum Yönetimi
+
+| İşlev                         | tmux                           | screen                                |
+|-------------------------------|--------------------------------|---------------------------------------|
+| Yeni (adsız) oturum başlat    | `tmux`                         | `screen`                              |
+| İsimli oturum başlat          | `tmux new -s isim`             | `screen -S isim`                      |
+| Oturumları listele            | `tmux ls`                      | `screen -ls`                          |
+| Var olan oturuma bağlan       | `tmux attach -t isim/id`       | `screen -r isim/id`                   |
+| Dışarıdan belli oturumu öldür | `tmux kill-session -t isim/id` | `screen -S isim/id -X quit`           |
+| Tüm sunucuyu/oturumları öldür | `tmux kill-server`             | (doğrudan yok, her oturuma `-X quit`) |
+
+---
+
+## 2. Pencere / Panel (Split) Yönetimi
+
+> Not:  
+> • tmux prefix: `Ctrl-b`  
+> • screen prefix: `Ctrl-a`  
+
+| İşlev                               | tmux (varsayılan)                | screen (varsayılan)                     |
+|-------------------------------------|----------------------------------|-----------------------------------------|
+| Üst/alt bölme (yatay split)         | `Ctrl-b "`                       | `Ctrl-a S` (Shift+S)                    |
+| Sol/sağ bölme (dikey split)         | `Ctrl-b %`                       | `Ctrl-a \|` *(derlenmişse)*             |
+| Bölmeler (region) arasında gezinme  | `Ctrl-b` + yön tuşları (← → ↑ ↓) | `Ctrl-a Tab`                            |
+| Sıradaki pencereye geç              | `Ctrl-b n`                       | `Ctrl-a n`                              |
+| Önceki pencereye geç                | `Ctrl-b p`                       | `Ctrl-a p`                              |
+| Pencere/bölgeyi kapatma (shell’den) | `exit`                           | `exit`                                  |
+| Aktif bölgeyi komutla öldürme       | `Ctrl-b x`                       | `Ctrl-a X`                              |
+| İçeriden tüm oturumu kapatma        | `Ctrl-b :kill-session`           | `Ctrl-a :quit` (komut satırında `quit`) |
+
+---
+
+## 3. Senin Akışının Özeti (tmux → screen)
+
+| Yaptığın İşlem                       | tmux’ta Nasıl?   | screen’de Nasıl?                        |
+|--------------------------------------|------------------|-----------------------------------------|
+| Yeni ekran/oturum aç                 | `tmux`           | `screen`                                |
+| Ekranı split’lemek (sol/sağ mantığı) | `Ctrl-b %`       | `Ctrl-a S` _(üst/alt)_ veya `Ctrl-a \|` |
+| Split’ler arasında geçiş             | `Ctrl-b` + ← / → | `Ctrl-a Tab`                            |
+| Paneli kapatmak                      | `exit`           | `exit`                                  |
+| Oturumları listelemek                | `tmux ls`        | `screen -ls`                            |
+| Oturumu dışarıdan sonlandırmak         | `tmux kill-session…`   | `screen -S isim/id -X quit`              |

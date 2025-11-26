@@ -12,3 +12,13 @@ Created Friday 21 November 2025
 | `sqlmap -m "<HEDEF_LISTESI_DOSYASI>" --dbs --batch --level=3 --risk=2 --threads=10 --tor --tor-type=SOCKS5 --check-tor --random-agent --eta --results-file="<SONUC_CSV>" --output-dir="<CIKTI_DIZINI>"`                                                          | Çoklu hedef, Tor üzerinden anonim tarama ve sonuçları CSV’ye yazma | Bir dosyadan çoklu hedef okur (`-m`), her birinde veritabanlarını listeler (`--dbs`). `--threads=10` ile paralel çoklu hedef tarar. `--tor`, `--tor-type`, `--check-tor` ile Tor üzerinden anonimleştirilmiş istekler, `--random-agent` ile User-Agent çeşitliliği sağlar. `--results-file` ile özellikle çoklu hedef senaryolarında merkezi CSV çıktı üretir, `--output-dir` ile klasör bazlı çıktı yönetimi yapar. |
 
 Not: Komutlardaki `<HEDEF_URL>`, `<COOKIE_DEGERI>`, `<VERITABANI_ADI>` vb. yer tutucuları kendi senaryonuza göre değiştirin ve bu araçları yalnızca yetkili olduğunuz sistemlerde güvenlik testi amacıyla kullanın.
+
+
+dosya ile çalıştırma 
+
+sqlmap -r /request.txt \
+	   --dbs \
+	   --level=5 --risk=3 --threads=10 \
+	   --random-agent --eta \
+	   --output-dir="sonuclar" \
+	   -o

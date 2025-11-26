@@ -1,0 +1,317 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-24T15:39:42+03:00
+
+====== bash commands ======
+Created Monday 24 November 2025
+
+Aşağıdaki komutlar genelde Unix/Linux ortamlarında kullanılır. Her biri için ne işe yaradığını ve en temel/çok kullanılan parametrelerini özetliyorum.
+
+---
+
+## 1. `grep`
+Metin içinde belirli bir desen (pattern) arar, eşleşen satırları gösterir.
+
+**Kullanım:**  
+```bash
+grep [SEÇENEKLER] "aranan" dosya
+```
+
+**Temel parametreler:**
+- `-i` : Büyük/küçük harf duyarsız ara  
+  ```bash
+  grep -i "hata" logfile.txt
+  ```
+- `-n` : Eşleşen satırların satır numarasını göster  
+  ```bash
+  grep -n "main" program.c
+  ```
+- `-r` veya `-R` : Dizin içinde özyineli (recursive) ara  
+  ```bash
+  grep -r "TODO" src/
+  ```
+- `-v` : Desenle eşleşmeyen satırları göster (tersi)  
+  ```bash
+  grep -v "^#" config.conf
+  ```
+- `-E` : Genişletilmiş regex (egrep benzeri)  
+  ```bash
+  grep -E "hata|warning" logfile.txt
+  ```
+- `-o` : Sadece eşleşen kısmı yazdır  
+  ```bash
+  grep -o "[0-9]\+" dosya.txt
+  ```
+
+---
+
+## 2. `sort`
+Satırları sıralar.
+
+**Kullanım:**  
+```bash
+sort [SEÇENEKLER] dosya
+```
+
+**Temel parametreler:**
+- (Parametresiz) : Alfabetik olarak sıralar  
+  ```bash
+  sort isimler.txt
+  ```
+- `-n` : Sayısal olarak sırala  
+  ```bash
+  sort -n sayilar.txt
+  ```
+- `-r` : Ters sırala (büyükten küçüğe)  
+  ```bash
+  sort -nr sayilar.txt
+  ```
+- `-u` : Tekrarlayan satırları tekilleştirerek sırala  
+  ```bash
+  sort -u liste.txt
+  ```
+- `-k` : Belirli sütuna göre sırala  
+  ```bash
+  sort -k2,2 dosya.txt    # 2. sütuna göre
+  ```
+
+---
+
+## 3. `uniq`
+Ardışık olarak tekrar eden satırları bir kez gösterir. Genelde `sort` ile birlikte kullanılır.
+
+**Kullanım:**  
+```bash
+uniq [SEÇENEKLER] dosya
+```
+
+**Temel parametreler:**
+- (Parametresiz) : Aynı olan ardışık satırları tek satır yapar  
+  ```bash
+  sort dosya.txt | uniq
+  ```
+- `-c` : Her satırın kaç kez tekrar ettiğini göster  
+  ```bash
+  sort dosya.txt | uniq -c
+  ```
+- `-d` : Sadece birden fazla tekrar edenleri göster  
+  ```bash
+  sort dosya.txt | uniq -d
+  ```
+- `-u` : Sadece tek kez geçenleri göster  
+  ```bash
+  sort dosya.txt | uniq -u
+  ```
+
+---
+
+## 4. `strings`
+İkili (binary) dosyalardaki okunabilir (yazdırılabilir ASCII) dizgeleri bulur.
+
+**Kullanım:**  
+```bash
+strings [SEÇENEKLER] dosya
+```
+
+**Temel parametreler:**
+- (Parametresiz) : Varsayılan en az 4 karakterlik stringleri çıkarır  
+  ```bash
+  strings binaryfile
+  ```
+- `-n N` : En az N karakter uzunluğundaki stringleri göster  
+  ```bash
+  strings -n 6 program.bin
+  ```
+- `-t x` : Ofseti hex olarak göster  
+  ```bash
+  strings -t x program.bin
+  ```
+
+---
+
+## 5. `base64`
+Veriyi Base64 formatında kodlar veya çözer.
+
+**Kullanım:**  
+```bash
+base64 [SEÇENEKLER]
+```
+
+**Temel parametreler:**
+- (Parametresiz) : stdin’den aldığı veriyi Base64’e çevirir  
+  ```bash
+  echo "merhaba" | base64
+  ```
+- `-d` veya `--decode` : Base64 kodunu çözer  
+  ```bash
+  echo "bWVySGFiYQ==" | base64 -d
+  ```
+- `-w N` : Çıktıyı N karakterde bir satır kır (GNU’da)  
+  ```bash
+  base64 -w 0 dosya.bin > out.b64   # satır kırmadan
+  ```
+
+---
+
+## 6. `tr`
+Karakter çevirme, eşleme ve silme aracı (translate/delete characters).
+
+**Kullanım:**  
+```bash
+tr [SEÇENEKLER] SET1 [SET2]
+```
+
+**Temel kullanım türleri:**
+- Karakter dönüştürme (ör. küçük → büyük):
+  ```bash
+  echo "merhaba" | tr 'a-z' 'A-Z'
+  ```
+- Karakter silme:
+  ```bash
+  echo "merhaba 123" | tr -d '0-9'   # sayıları sil
+  ```
+**Temel parametreler:**
+- `-d` : SET1’deki karakterleri sil  
+- `-s` : Tekrarlı karakterleri sıkıştır (ör. birden fazla boşluğu teke indir)  
+  ```bash
+  echo "a    b" | tr -s ' '
+  ```
+- `-c` : SET1’in tamamlayıcısını kullan (SET1 dışındakiler)  
+  ```bash
+  echo "abc123" | tr -cd '0-9'   # sadece sayıları bırak
+  ```
+
+---
+
+## 7. `tar`
+Arşiv dosyaları oluşturmak ve açmak için (çoğu zaman gzip/bzip2 ile birlikte).
+
+**Kullanım (klasik):**  
+```bash
+tar [SEÇENEKLER] arşiv.tar dosyalar...
+```
+
+**Temel parametreler (genelde birleştirilir):**
+- `-c` : Yeni arşiv oluştur (create)  
+- `-x` : Arşivi aç (extract)  
+- `-t` : Arşivin içeriğini listele (table)  
+- `-f` : Arşiv dosya adı belirt (file) – her zaman kullanılmalı  
+- `-v` : Ayrıntılı çıktı (verbose)
+
+**Örnekler:**
+- Arşiv oluşturma:  
+  ```bash
+  tar -cvf arsim.tar dizin/
+  ```
+- Arşiv açma:  
+  ```bash
+  tar -xvf arsim.tar
+  ```
+- Gzip ile birlikte (`.tar.gz` veya `.tgz`):  
+  - Oluştur:
+	```bash
+	tar -czvf arsim.tar.gz dizin/
+	```
+  - Aç:
+	```bash
+	tar -xzvf arsim.tar.gz
+	```
+- Bzip2 ile (`.tar.bz2`):  
+  ```bash
+  tar -cjvf arsim.tar.bz2 dizin/
+  tar -xjvf arsim.tar.bz2
+  ```
+
+---
+
+## 8. `gzip`
+Dosyaları sıkıştırır (genelde `.gz` uzantısı üretir). Orijinal dosyayı varsayılan olarak siler.
+
+**Kullanım:**  
+```bash
+gzip [SEÇENEKLER] dosya
+gunzip [SEÇENEKLER] dosya.gz
+```
+
+**Temel parametreler:**
+- (Parametresiz):  
+  ```bash
+  gzip dosya.txt   # dosya.txt.gz oluşturur, dosya.txt’yi siler
+  ```
+- `-k` : Orijinal dosyayı koru  
+  ```bash
+  gzip -k dosya.txt
+  ```
+- `-d` veya `gunzip` : Geri aç  
+  ```bash
+  gzip -d dosya.txt.gz
+  # veya
+  gunzip dosya.txt.gz
+  ```
+- `-1` ila `-9` : Sıkıştırma seviyesi (1: hızlı, 9: daha iyi sıkıştırma)  
+  ```bash
+  gzip -9 büyük_dosya
+  ```
+
+---
+
+## 9. `bzip2`
+`gzip`’e benzer, daha iyi sıkıştırma oranı ama genelde daha yavaş. `.bz2` uzantısı kullanır.
+
+**Kullanım:**  
+```bash
+bzip2 [SEÇENEKLER] dosya
+bunzip2 [SEÇENEKLER] dosya.bz2
+```
+
+**Temel parametreler:**
+- (Parametresiz):  
+  ```bash
+  bzip2 dosya.txt   # dosya.txt.bz2
+  ```
+- `-k` : Orijinali koru  
+  ```bash
+  bzip2 -k dosya.txt
+  ```
+- `-d` veya `bunzip2` : Geri aç  
+  ```bash
+  bzip2 -d dosya.txt.bz2
+  # veya
+  bunzip2 dosya.txt.bz2
+  ```
+- `-1` ila `-9` : Sıkıştırma seviyesi  
+  ```bash
+  bzip2 -9 büyük_dosya
+  ```
+
+---
+
+## 10. `xxd`
+Hex dump üretir veya hex dump’ten tekrar binary oluşturur.
+
+**Kullanım:**  
+```bash
+xxd [SEÇENEKLER] [dosya]
+```
+
+**Temel parametreler:**
+- (Parametresiz): Dosyayı hex dump formatına çevirir  
+  ```bash
+  xxd dosya.bin
+  ```
+- `-p` : Basit (plain) hexdump, adres vs olmadan  
+  ```bash
+  xxd -p dosya.bin
+  ```
+- `-r` : Hex dump’i tekrar binary’ye çevir (reverse)  
+  ```bash
+  xxd -r -p hex.txt > orijinal.bin
+  ```
+- `-g N` : N baytlık gruplar halinde göster  
+  ```bash
+  xxd -g 1 dosya.bin  # bayt bayt
+  ```
+
+---
+
+İstersen, bu komutlardan bazıları için pratik mini örnek senaryolar (log filtresi, küçük backup script’i, vb.) da gösterebilirim.
