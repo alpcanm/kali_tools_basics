@@ -1,0 +1,52 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-12-01T01:16:36+03:00
+
+====== auth ======
+Created Monday 01 December 2025
+
+
+## 1) Değişkenli Basic Auth ile ffuf komutu (Natas için)
+
+Önce kullanıcı, parola ve Base64 token’ı değişken olarak üret:
+
+```bash
+# Oturum bilgileri
+USER="natas3"
+PASS="SENIN_PAROLAN"
+
+# Basic Auth için Base64 token
+AUTH=$(printf '%s' "$USER:$PASS" | base64)
+```
+
+Sonra ffuf’u bu değişkeni kullanarak çalıştır:
+
+```bash
+ffuf -u http://natas3.natas.labs.overthewire.org/FUZZ \
+	 -w /usr/share/seclists/Discovery/Web-Content/common.txt \
+	 -e .php,.html,.js,.bak \
+	 -recursion -recursion-depth 2 -recursion-strategy greedy \
+	 -fs 298,480 -fc 404 \
+	 -t 50 -rate 100 -timeout 10 \
+	 -H "Authorization: Basic $AUTH" \
+	 -o dirs.json -of json
+```
+
+Yapman gereken tek şey:
+
+- `USER` ve `PASS` değişkenlerini kendi Natas seviyene göre ayarlamak.
+
+---
+
+## 2) Auth ile ilgili parametreler (tablo, güncellenmiş)
+
+| Parametre / Örnek Kullanım                | Açıklama                                                    | Bu senaryoda ne işe yarar?                                                                 |
+|-------------------------------------------|-------------------------------------------------------------|--------------------------------------------------------------------------------------------|
+| `-H "Authorization: Basic $AUTH"`         | HTTP Basic Auth header’ı ekler.                             | Natas seviyelerine `kullanıcı:şifre` ile giriş yapmak için kullanılır.                     |
+| `-H "Cookie: PHPSESSID=XYZ; other=value"` | İstekte özel cookie gönderir.                               | Login sonrası alınan session cookie ile sadece oturum gerektiren yolları fuzz edebilirsin. |
+| `-b "PHPSESSID=XYZ; other=value"`         | Cookie göndermek için kısayol (header yerine).              | `-H` ile Cookie yazmak yerine kısaca cookie eklemeni sağlar.                               |
+| `-H "Authorization: Bearer <TOKEN>"`      | Bearer/JWT token gönderir.                                  | API veya token tabanlı oturum doğrulamada kullanılır (Natas’ta tipik değil).               |
+| `-H "X-Api-Key: <KEY>"`                   | Özel header tabanlı API key taşır.                          | API brute force/fuzzing senaryolarında kullanılır.                                         |
+| `-u http://user:pass@host/FUZZ`           | Kullanıcı/şifreyi URL içine gömer (her zaman stabil değil). | Bazı durumlarda iş görür ama Natas için önerilen yöntem `-H "Authorization: Basic $AUTH"`. |
+
+Bu yapıyla oturum kısmı tek yerden (USER/PASS değişkenleri) değişiyor; ffuf komutunu sürekli yeniden yazmana gerek kalmıyor.

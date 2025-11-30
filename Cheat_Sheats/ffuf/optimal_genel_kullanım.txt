@@ -1,0 +1,47 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-11-21T22:08:32+03:00
+
+====== optimal genel kullanım ======
+Created Friday 21 November 2025,
+
+
+
+
+
+
+```bash
+ffuf -u http://natas3.natas.labs.overthewire.org/FUZZ \
+	 -w /usr/share/seclists/Discovery/Web-Content/common.txt \
+	 -e .php,.html,.js,.bak \
+	 -recursion -recursion-depth 2 -recursion-strategy greedy \
+	 -fs 298,480 -fc 404 \
+	 -t 50 -rate 100 -timeout 10 \
+	 -o dirs.json -of json
+```
+
+| Parametre                      | Açıklama                                                       | Bu komutta ne yapıyor                                                                       |
+|--------------------------------|----------------------------------------------------------------|---------------------------------------------------------------------------------------------|
+| `ffuf`                         | Fast web fuzzer aracı (komutun kendisi)                        | HTTP fuzzing için ffuf programını çalıştırıyor                                              |
+| `-u http://.../FUZZ`           | Hedef URL, `FUZZ` kısmı brute force edilecek alanı temsil eder | `FUZZ` yerine wordlist’ten gelen her kelimeyi koyarak istek atıyor                          |
+| `-w /usr/share/.../common.txt` | Wordlist dosyası (denenecek kelimeler)                         | `common.txt` içindeki dizin/dosya adlarını hedef URL’de `FUZZ` yerine sırayla deniyor       |
+| `-e .php,.html,.js,.bak`       | Eklentiler (uzantılar) listelemesi                             | Her kelimeyi bu uzantılarla da deniyor: `page.php`, `page.html`, `page.js`, `page.bak` gibi |
+| `-recursion`                   | Bulunan dizinlerin içine de tekrar fuzz yap                    | Bulunan her dizin içinde aynı wordlist’i kullanarak yeniden tarama yapıyor                  |
+| `-recursion-depth 2`           | Maksimum derinlik seviyesi                                     | En fazla 2 seviye alt dizine kadar iniyor (ör: `/dir/` ve `/dir/subdir/`)                   |
+| `-recursion-strategy greedy`   | Rekürsif tarama stratejisi                                     | Bulduğu her dizini hemen ve agresif şekilde tarıyor (az kontrol, hızlı ve kapsamlı)         |
+| `-fs 298,480`                  | Response body boyutuna göre filtreleme (size filter)           | Boyutu 298 veya 480 byte olan cevapları gizliyor; bunlar muhtemelen “boş/standart” sayfalar |
+| `-fc 404`                      | HTTP status koduna göre filtreleme (code filter)               | 404 dönen (Bulunamadı) cevapları listelemiyor; sadece farklı status kodlarını gösteriyor    |
+| `-t 50`                        | Aynı anda kaç istek (thread) çalışacak                         | 50 eşzamanlı istekle brute force’u hızlandırıyor                                            |
+| `-rate 100`                    | Saniyede en fazla kaç istek atılacağı (rate limit)             | Saniyede 100 isteği geçmemeye çalışarak hızı kontrol ediyor                                 |
+| `-timeout 10`                  | Bir isteğin zaman aşımına uğrama süresi (saniye)               | Sunucu 10 saniye içinde cevap vermezse o isteği zaman aşımı olarak işaretliyor              |
+| `-o dirs.json`                 | Çıktı dosya adı                                                | Bulunan sonuçları `dirs.json` dosyasına kaydediyor                                          |
+| `-of json`                     | Çıktı formatı                                                  | Çıktıyı JSON formatında kaydediyor (daha sonra script veya araçlarla rahat işlenebilir)     |
+
+Özet olarak:  
+Bu komut, `natas3` hedefinde `common.txt` wordlist’iyle dizin/dosya brute force yapıyor, çeşitli uzantıları deniyor, bulunan dizinlere 2 seviye derinliğe kadar rekürsif devam ediyor, belirli boyuttaki ve 404 dönen cevapları filtreliyor, işlemi 50 thread ve saniyede 100 istekle hızlandırıyor ve sonuçları JSON dosyasına yazıyor.
+
+
+
+Aşağıya önce **auth eklenmiş örnek komutu**, ardından da **ek auth parametrelerini tablo** olarak yazıyorum.
+
+---
