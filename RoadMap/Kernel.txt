@@ -1,0 +1,336 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-12-10T22:34:41+03:00
+
+====== Kernel ======
+Created Wednesday 10 December 2025
+
+Aşağıda **“çekirdek düzeyinde manipülasyon / kernel tarafı + siber güvenlik / RE”** için, sıfırdan ileri seviyeye kadar bir yol haritası var.  
+Her aşamada özellikle şu var:  
+- “Şunları yapamıyorsan bir sonrakine geçme” uyarıları.
+
+Bunu “Aşama 0 → Aşama 6+” gibi düşünebilirsin.
+
+---
+
+## Aşama 0 – Temel Hazırlık (çekirdeğe girmeden ÖNCE)
+
+Bu aşama **kernel’e girmeden önce mutlaka**.
+
+### 0.1 – C Programlama (zorunlu)
+
+Odak:
+- Pointer’lar, `struct`’lar, fonksiyon pointer’ları
+- Bellek modeli: stack / heap / global değişkenler
+- Derleme/linkleme temeli: `.c` → `.o` → binary, `make`
+
+Şunları rahat yapabilmelisin:
+- Bir C projesi yazıp `Makefile` ile derlemek.
+- Pointer aritmetiği, `struct` içinde bit-field kullanmak.
+- Basit bir `linked list`, `hash table` implement etmek.
+
+**Bunları yapamıyorsan**:
+- Kernel modülü / eBPF / driver işine **hiç girme**.  
+  Önce C’yi oturt.
+
+---
+
+### 0.2 – Temel Assembly + Reverse Engineering Girişi (önerilen ama şart)
+
+Odak:
+- x86-64 register’ları (RAX, RBX, RSP, RBP, RSI, RDI…)
+- Stack frame nedir, fonksiyon çağrısı nasıl yapılır (calling convention)
+- Basit bir C fonksiyonunun disassembly’sini okuyabilmek
+- Ghidra / IDA / radare2 ile:
+  - Küçük bir C programını derleyip reverse etmek
+
+**Bunları yapamıyorsan**:
+- Kernel reverse engineering tarafına (özellikle .ko, driver analizi) **erken** olur.
+- Kernel geliştirmeye başlayabilirsin ama RE tarafında yavaş olursun.
+
+---
+
+### 0.3 – İşletim Sistemi Temelleri (zorunlu)
+
+Odak:
+- User space vs kernel space
+- System call nedir, ne işe yarar
+- Process vs thread, context switch
+- Sanal bellek (virtual memory), sayfalama (paging) kavramı
+
+Test:
+- Kendi cümlelerinle şunu açıklayabilmelisin:
+  > “Bir process `open()` çağırdığında aslında ne olur? User space’ten kernel space’e nasıl geçer?”
+
+**Bunu açıklayamıyorsan**:
+- Kernel internal’lara geçme;  
+  önce basit OS kitapları / notları oku:
+  - Tanenbaum – Modern Operating Systems (genel)
+  - Linux Kernel Development (ilk bölümler)
+
+---
+
+## Aşama 1 – Linux & Kernel Genel Bakış
+
+Amaç: Henüz kernel kodu yazmadan, **neyle oynayacağını tanımak**.
+
+Odak:
+- Linux kernel mimarisine genel bakış:
+  - User space ↔ kernel space sınırı
+  - System call path
+  - Scheduler kabaca nasıl çalışıyor
+  - VFS (Virtual File System) fikri
+  - Network stack’in kaba yolculuğu (NIC → driver → netfilter → socket vs.)
+
+Pratik:
+- Kaynak kod gezintisi:
+  - Linux kernel kaynak kodunu indir (`git clone`).
+  - Dizinlere bak: `kernel/`, `mm/`, `fs/`, `net/`, `drivers/` vs.
+- `dmesg` ile boot log’larını incele.
+- `strace` ile bir programın hangi sistem çağrılarını yaptığını gözlemle.
+
+**Bunları bilmeden ilerleme**:
+- “Kernel’de network stack kabaca nereden nereye işliyor?” sorusuna kabaca cevap veremiyorsan.
+- “VFS ne yapıyor, neden her dosya sistemi için ayrı API yok?” sorusuna fikir yürütemiyorsan.
+
+---
+
+## Aşama 2 – İlk Kernel Modülü (LKM) Deneyimi
+
+Amaç: “Kernel seviyesinde kod çalıştırma” hissini kazanmak.
+
+### Ne Öğreneceksin?
+- LKM (Loadable Kernel Module) nedir, nasıl yüklenir / kaldırılır:
+  - `insmod`, `modprobe`, `rmmod`
+  - `dmesg` ile kernel log’u okuma
+- `module_init`, `module_exit` makroları
+- `printk` ile log atma
+
+### Pratik Projeler:
+1. **Hello Kernel**
+   - Yüklenince `dmesg`’e “modül yüklendi”, kaldırılınca “modül kaldırıldı” yazan basit modül.
+2. **Basit Parametreli Modül**
+   - Modüle parametre ver (`insmod mymod.ko param=42` gibi),
+   - Parametreye göre farklı log bas.
+
+Öğrenme kaynağı:
+- “Linux Device Drivers, 3rd Edition” (LDD3) – Temel LKM kısımları.
+- linux-insides projeleri.
+
+**Bunları yapamıyorsan ilerleme**:
+- Kernel modülünü derleyip yükleyemiyorsan (Makefile, `KDIR` vs. kavramıyor, her seferinde kayboluyorsan)
+- `dmesg` çıktısını okuyup modülünün init/exit log’larını göremiyorsan
+
+---
+
+## Aşama 3 – Netfilter, iptables/nftables ve NFQUEUE (Security’ye giriş)
+
+Amaç: Ağ üzerinden kernel davranışını etkilemeyi ve kullanıcı alanı ile kernel’in nasıl birlikte çalıştığını anlamak.
+
+### 3.1 – Netfilter Temeli
+
+Odak:
+- Netfilter hook noktaları:
+  - `PREROUTING`, `INPUT`, `FORWARD`, `OUTPUT`, `POSTROUTING`
+- iptables / nftables ile kural yazmak:
+  - Paket drop/accept
+  - Basit NAT kuralları
+
+Pratik:
+- `iptables` ile belirli bir IP veya porta gelen paketleri drop et.
+- `tcpdump` veya scapy ile bu değişiklikleri gözlemle.
+
+### 3.2 – NFQUEUE + User-space Manipülasyon
+
+Amaç: Kernel, paketi sana gönderiyor; sen Python/C ile karar veriyorsun.
+
+Pratik:
+1. `iptables` ile kural:
+   ```bash
+   sudo iptables -A OUTPUT -p tcp --dport 80 -j NFQUEUE --queue-num 0
+   ```
+2. Python’da `netfilterqueue` kullan:
+   - Paketi al,
+   - İçeriğine bak,
+   - Şarta göre `accept()` veya `drop()`.
+
+Bu:
+- Henüz kernel içinde kod yazmak değil ama
+- Kernel karar yoluna senin mantığını sokmanın çok kullanışlı bir yolu.
+
+**Bunları yapamıyorsan ilerleme**:
+- iptables ile temel bir firewall kuralı yazamıyorsan.
+- NFQUEUE ile paketleri kullanıcı alanında modifiye edip tekrar ACCEPT edemiyorsan.
+
+---
+
+## Aşama 4 – Kernel Tracing ve Dinamik Gözlem (RE için kritik)
+
+Amaç: Çekirdeği patch’lemeden **izlemek**. Reverse engineering ve güvenlik analizi için çok önemli.
+
+### Araçlar ve Konular:
+1. **ftrace**
+   - Kernel fonksiyon çağrılarını izlemek.
+   - `tracefs` üzerinden belirli fonksiyonları log’latmak.
+
+2. **perf**
+   - `perf record`, `perf report` ile hangi fonksiyonların ne kadar çalıştığını görmek.
+   - Kprobes ile fonksiyonlara dinamik probe koymak.
+
+3. **kprobes / kretprobes**
+   - Kernel fonksiyonlarının giriş/çıkış noktalarına hook koymak.
+   - Basit bir LKM ile `kprobe` kullanıp belirli fonksiyon çağrıldığında log atmak.
+
+4. **bpftrace** (yüksek seviyeli)
+   - `kprobe:do_sys_open { printf("%s\n", comm); }` gibi script’lerle system call’ları izlemek.
+   - Çok hızlıca RE benzeri gözlem yapmak için müthiş.
+
+**Bunları bilmeden ilerleme**:
+- Bir kernel fonksiyonunun (örneğin `do_sys_open`) çağrıldığını, hangi process’ten geldiğini canlı izleyemiyorsan.
+- bpftrace ile en az 2–3 basit script yazmadıysan.
+
+---
+
+## Aşama 5 – eBPF ve Güvenlik Odaklı Kullanımı
+
+Amaç: Modern, güvenli, yüksek performanslı çekirdek manipülasyonu öğrenmek.
+
+### 5.1 – eBPF Temelleri
+
+Odak:
+- eBPF nedir, neden “extended”
+- BPF program tipleri:
+  - XDP (Express Data Path)
+  - tc-BPF
+  - kprobe/kretprobe BPF
+  - tracepoint BPF
+  - socket BPF
+  - LSM BPF (güvenlik hook’ları)
+
+Araç:
+- **bcc** (Python binding’leriyle öğrenmesi kolay)
+- **bpftrace** (yüksek seviyeli, RE tarzı gözlem için)
+
+Pratik:
+1. bcc ile:
+   - `execve` system call’unu hook’layıp her yeni process’i loglayan script yaz.
+   - `connect()` çağrılarını izleyip hangi process hangi IP/port’a bağlanıyor kaydet.
+
+2. XDP ile:
+   - Çok basit bir XDP programı:
+	 - Belirli IP’den gelen paketleri drop et.
+   - Bunu bir interface’e attach et ve `ping` ile test et.
+
+**Bunları bilmeden ilerleme**:
+- eBPF ile en az 2–3 gerçek dünya benzeri kullanım (process izleme, network drop vs.) yapmadıysan.
+- XDP veya tc-bpf ile network path’ine bir müdahale eklemediysen.
+
+---
+
+## Aşama 6 – Kernel RE, Rootkit Teknikleri ve Gelişmiş Güvenlik
+
+Bu aşama **ileri seviye**. Buraya geldiysen zaten çekirdeğe epey aşinasın demektir.
+
+### 6.1 – Kernel Modülü / Driver Reverse Engineering
+
+Odak:
+- `.ko` dosyalarını Ghidra/IDA ile açmak.
+- Symbol bilgisi varsa (`vmlinux`):
+  - Hangi fonksiyon ne yapıyor, call graph incelemek.
+- Basit bir driver’ın init/exit path’ini analiz etmek.
+
+Pratik:
+- Basit bir open-source kernel modülünü:
+  - Kaynaktan derle,
+  - Binari halini Ghidra ile aç,
+  - Kodla disassembly’yi eşleştir.
+
+**Bunları bilmeden ilerleme**:
+- Disassembly’de temel akış (if/loop/func call) okuyamıyorsan.
+- IDA/Ghidra’da basit renaming, comment ekleme, function discovery yapamıyorsan.
+
+---
+
+### 6.2 – Rootkit Teknikleri (Lab ortamı ŞART)
+
+Amaç:
+- Saldırı tekniklerini anlamak → savunma ve tespit için.
+
+Konular:
+- Tarihsel olarak:
+  - Syscall tablosu hook’lama (artık zor ve riskli ama konsept önemli)
+- Modern teknikler:
+  - Kprobes üzerinden gizli hook’lar
+  - Kernel object gizleme (process, dosya, socket saklama)
+  - eBPF tabanlı gizli gözlem (userland hooking’e göre daha stealth)
+
+Pratik (SADECE kendi lab’ında, VM içinde):
+- Çok basit bir “rootkit tarzı” modül:
+  - Belirli bir process ismini `ps` çıktısından gizlemeye çalışma (öğrenme amaçlı).
+- Ardından:
+  - Bunu tespit etmek için hangi tracing tekniklerini kullanabileceğini analiz et (ftrace, bpftrace vs.).
+
+**UYARI**:
+- Bunu gerçek sistemlerde, üretim ortamlarında, başkalarının makinelerinde asla deneme.
+- Hem **etik** hem **hukuki** risk çok yüksek.
+
+---
+
+### 6.3 – Kernel Debugging (QEMU + GDB, kgdb, crash)
+
+Amaç:
+- Kernel seviyesinde hata ayıklamayı bilmek, RE çalışmalarına çok güç katar.
+
+Pratik:
+1. QEMU içinde kendi derlediğin kernel’i boot et.
+2. `-s -S` parametreleriyle GDB server modda başlat.
+3. Host’tan `gdb` ile bağlan:
+   - Breakpoint koy
+   - Call stack incele
+   - Belleği oku
+
+Ayrıca:
+- `kdump` + `crash` aracı ile kernel crash dump analizini dene.
+
+---
+
+## Özet Yol Haritası (Checkpoint’ler)
+
+Aşağıyı bir checklist gibi kullanabilirsin:
+
+1. **C + OS Temeli**
+   - [ ] Pointer/struct rahat
+   - [ ] Basit data structure’lar yazabildin
+   - [ ] System call kavramını net anlıyorsun
+
+2. **Kernel Genel Bakış**
+   - [ ] User/kernel sınırını açıklayabiliyorsun
+   - [ ] Netfilter, VFS, scheduler kabaca nerede, ne yapıyor biliyorsun
+
+3. **LKM Temeli**
+   - [ ] Hello kernel modülü yazdın
+   - [ ] Parametreli modül yazdın
+   - [ ] `dmesg` ile log’ları doğru okuyorsun
+
+4. **Netfilter + NFQUEUE**
+   - [ ] iptables/nftables ile temel kural yazdın
+   - [ ] NFQUEUE + Python ile paket üzerinde değişiklik yaptın
+
+5. **Tracing / kprobes / ftrace / bpftrace**
+   - [ ] Bir kernel fonksiyonuna dinamik probe koyup çağrıları izledin
+   - [ ] bpftrace ile en az 2–3 script yazdın (open/execve/connect izleme)
+
+6. **eBPF**
+   - [ ] bcc ile syscall / process izleme yaptın
+   - [ ] XDP veya tc-bpf ile paket drop/redirect yaptın
+
+7. **Kernel RE + Rootkit Araştırma (lab)**
+   - [ ] Basit bir `.ko` dosyasını Ghidra ile analiz ettin
+   - [ ] Lab ortamında basit bir “gizleyen” modül yazdın ve sonra tespit etmeye çalıştın
+   - [ ] QEMU + GDB ile en az bir kez kernel debug ettin
+
+Bu aşamaları sırayla ve gerçekten sindirerek gidersen, siber güvenlik ve reverse engineering tarafında **çekirdek seviyesinde** çalışabilecek seviyeye adım adım çıkarsın.
+
+İstersen bir sonraki adımda:
+- Şu an kendini hangi aşamada görüyorsun (0–7 arası),
+- Ona göre sana o aşamaya uygun çok somut “mini-proje listesi” çıkarabilirim.

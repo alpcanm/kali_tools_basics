@@ -1,0 +1,786 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-12-08T23:13:42+03:00
+
+====== LEMP ======
+Created Monday 08 December 2025
+
+Aşağıda Ubuntu 20.04/22.04 üstünde, IP ile çalışan temel bir LEMP (Linux + Nginx + MySQL + PHP) kurulumu ve basit güvenlik adımlarını bulacaksın.  
+Her bölümde:
+
+- Komutları veriyorum  
+- Sonra “Kontrol” kısmında ne görmen gerektiğini söylüyorum
+
+Aşağıda `SERVER_IP` yazan yerlere kendi VPS’inin public IP’sini koy.
+
+---
+
+===== ## 0. Hazırlık – Notlar =====
+
+- Sunucuya SSH ile bağlandığını ve `sudo` yetkin olduğunu varsayıyorum.
+- Komutlar root olmayan bir kullanıcıdan (`sudo` ile) veriliyor.
+- Ubuntu 20.04/22.04 için komutlar aynı.
+
+Sunucu IP’ni bilmek için:
+
+```bash
+ip a
+```
+
+veya:
+
+```bash
+curl ifconfig.me
+```
+
+**Kontrol:**  
+`curl ifconfig.me` sana tek satırda IP adresini döndürür, örneğin:
+
+```text
+203.0.113.10
+```
+
+Bu IP’yi `SERVER_IP` olarak kullanacağız.
+
+---
+
+===== ## 1. Sistemi güncelle ve otomatik güvenlik güncellemeleri =====
+
+==== ### 1.1 Paketleri güncelle ====
+
+```bash
+sudo apt update
+sudo apt upgrade -y
+```
+
+**Kontrol:**  
+Son satırlarda hata (error) görmüyorsan ve işlem normal bitiyorsa güncelleme tamamdır.
+
+==== ### 1.2 Otomatik güvenlik güncellemeleri ====
+
+```bash
+sudo apt install -y unattended-upgrades
+sudo dpkg-reconfigure --priority=low unattended-upgrades
+```
+
+İkinci komutta çıkan ekranda “Automatically download and install stable updates?” sorusuna “Yes” seç.
+
+**Kontrol:**  
+
+```bash
+sudo systemctl status unattended-upgrades
+```
+
+Çıktıda şuna benzer satırlar göreceksin:
+
+```text
+Active: active (running)
+```
+
+Bu durumdaysa otomatik güncellemeler açıktır.
+
+---
+
+===== ## 2. Temel güvenlik: UFW Firewall + Fail2ban =====
+
+==== ### 2.1 UFW (firewall) kur ve ayarla ====
+
+```bash
+sudo apt install -y ufw
+```
+
+Varsayılan politikaları ayarla:
+
+```bash
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+```
+
+SSH bağlantısını kesmemek için:
+
+```bash
+sudo ufw allow OpenSSH
+```
+
+Firewall’u aktif et:
+
+```bash
+sudo ufw enable
+```
+
+**Kontrol:**
+
+```bash
+sudo ufw status verbose
+```
+
+Şuna benzer görmelisin:
+
+```text
+Status: active
+
+To                         Action      From
+--                         ------      ----
+OpenSSH                    ALLOW IN    Anywhere
+OpenSSH (v6)               ALLOW IN    Anywhere (v6)
+```
+
+Nginx’i kurduktan sonra HTTP/HTTPS portlarını ekleyeceğiz.
+
+---
+
+==== ### 2.2 Fail2ban (SSH brute force koruması) ====
+
+```bash
+sudo apt install -y fail2ban
+```
+
+Basit bir SSH koruması için konfig dosyası oluştur:
+
+```bash
+sudo tee /etc/fail2ban/jail.local >/dev/null << 'EOF'
+[sshd]
+enabled  = true
+maxretry = 5
+bantime  = 1h
+EOF
+```
+
+Servisi başlat ve aktif et:
+
+```bash
+sudo systemctl enable --now fail2ban
+```
+
+**Kontrol:**
+
+```bash
+sudo fail2ban-client status sshd
+```
+
+Çıktıda şöyle görmelisin:
+
+```text
+Status for the jail: sshd
+|- Filter
+|  ...
+`- Actions
+   |- Currently banned: 0
+   ...
+```
+
+Bu görünüyorsa SSH için fail2ban aktif demektir.
+
+---
+
+===== ## 3. Nginx (Web sunucusu) kurulum ve HTTP testi =====
+
+==== ### 3.1 Nginx kur ====
+
+```bash
+sudo apt install -y nginx
+```
+
+Servisi başlat ve otomatik başlasın:
+
+```bash
+sudo systemctl enable --now nginx
+```
+
+**Kontrol:**
+
+```bash
+sudo systemctl status nginx
+```
+
+Şuna benzer görmelisin:
+
+```text
+Active: active (running)
+```
+
+==== ### 3.2 Firewall’dan HTTP/HTTPS izin ver ====
+
+Nginx kurunca UFW uygulama profilleri oluştu:
+
+```bash
+sudo ufw allow 'Nginx Full'
+```
+
+**Kontrol:**
+
+```bash
+sudo ufw status
+```
+
+Şuna benzer olmalı:
+
+```text
+To                         Action      From
+--                         ------      ----
+OpenSSH                    ALLOW IN    Anywhere
+Nginx Full                 ALLOW IN    Anywhere
+...
+```
+
+`Nginx Full` hem 80 (HTTP) hem 443 (HTTPS) portlarını açar.
+
+==== ### 3.3 HTTP test (Nginx default sayfası) ====
+
+```bash
+curl http://SERVER_IP
+```
+
+**Kontrol:**  
+HTML içinde şöyle bir satır görmelisin:
+
+```html
+<title>Welcome to nginx!</title>
+```
+
+Bu sayfayı tarayıcıdan da görebilirsin:  
+`http://SERVER_IP` → “Welcome to nginx!” sayfası geliyorsa HTTP kısmı çalışıyor.
+
+---
+
+===== ## 4. MySQL (veya MariaDB) kurulumu =====
+
+==== ### 4.1 Kurulum ====
+
+```bash
+sudo apt install -y mysql-server
+```
+
+Servisi başlat ve otomatik başlat:
+
+```bash
+sudo systemctl enable --now mysql
+```
+
+**Kontrol:**
+
+```bash
+sudo systemctl status mysql
+```
+
+Şuna benzer olmalı:
+
+```text
+Active: active (running)
+```
+
+==== ### 4.2 Güvenlik sihirbazı ====
+
+```bash
+sudo mysql_secure_installation
+```
+
+Çıkan sorularda tipik olarak:
+
+- VALIDATE PASSWORD COMPONENT? → `n` (basit tutmak için; istersen `y` diyebilirsin)
+- Remove anonymous users? → `y`
+- Disallow root login remotely? → `y`
+- Remove test database and access to it? → `y`
+- Reload privilege tables now? → `y`
+
+**Kontrol:**
+
+MySQL çalışıyor mu test et:
+
+```bash
+sudo mysql -e "SELECT VERSION();"
+```
+
+Şuna benzer bir çıktı almalısın:
+
+```text
++-----------+
+| VERSION() |
++-----------+
+| 8.0.38    |
++-----------+
+```
+
+Versiyon numarası görünüyorsa MySQL sorunsuz.
+
+---
+
+===== ## 5. PHP-FPM kurulumu =====
+
+==== ### 5.1 PHP ve MySQL eklentisi ====
+
+```bash
+sudo apt install -y php-fpm php-mysql
+```
+
+PHP versiyonunu görmek için:
+
+```bash
+php -v
+```
+
+**Kontrol:**  
+Çıktıda örneğin:
+
+```text
+PHP 8.1.x (cli) (built: ...)
+```
+
+görmelisin.
+
+PHP-FPM servis durumu:
+
+```bash
+sudo systemctl status php*-fpm
+```
+
+Veya muhtemelen:
+
+```bash
+sudo systemctl status php8.1-fpm
+```
+
+**Kontrol:**  
+`active (running)` yazıyorsa çalışıyor.
+
+---
+
+===== ## 6. Web dizini oluştur ve PHP test sayfası =====
+
+==== ### 6.1 Web root dizini oluştur ====
+
+```bash
+sudo mkdir -p /var/www/lemp_site
+sudo chown -R $USER:$USER /var/www/lemp_site
+sudo chmod -R 755 /var/www/lemp_site
+```
+
+> Eğer `$USER` sudo yazdığın kullanıcı değilse, `whoami` ile doğru kullanıcı adını bulup
+> `chown -R kullanici:kullanici /var/www/lemp_site` yazabilirsin.
+
+==== ### 6.2 PHP test dosyası oluştur (phpinfo) ====
+
+```bash
+cat << 'EOF' > /var/www/lemp_site/index.php
+<?php
+phpinfo();
+EOF
+```
+
+**Kontrol:**
+
+```bash
+ls -l /var/www/lemp_site
+```
+
+Şuna benzer görmelisin:
+
+```text
+-rw-rw-r-- 1 sen sen 20 Dec  8  index.php
+```
+
+`index.php` burada ise dosya hazır.
+
+---
+
+===== ## 7. Nginx’i PHP-FPM ile çalışacak şekilde ayarla =====
+
+==== ### 7.1 PHP-FPM soket dosyasını bul ====
+
+```bash
+ls /run/php/
+```
+
+Çıktı örneği:
+
+```text
+php8.1-fpm.sock
+php8.1-fpm.pid
+```
+
+Buradaki `.sock` dosyasının tam adını not et (örneğin `php8.1-fpm.sock`).
+
+~~''Şu andan itibaren sadece'' **''PHP-FPM soket/port''** ''konusunu çözüyoruz.''~~  
+~~''Adım adım gidelim.''~~
+
+~~''---''~~
+
+~~''## 1. 8.2 FPM içinde “listen” satırını bul''~~
+
+~~''Önce 8.2 FPM’in tüm konfig dosyalarında `listen` geçen satırları ara:''~~
+
+~~''```bash''~~
+~~''grep -R "listen" /etc/php/8.2/fpm''~~
+~~''```''~~
+
+~~**''Kontrol:''**~~
+
+~~''- Eğer şöyle bir satır görürsen (örnek):''~~
+
+  ~~''```text''~~
+  ~~''/etc/php/8.2/fpm/pool.d/default.conf:36:listen = /run/php/php8.2-fpm.sock''~~
+  ~~''```''~~
+
+  ~~''→ Bu, FPM’in'' **''unix socket''** ''ile çalıştığı anlamına gelir. (Birazdan ne yapacağımızı söyleyeceğim.)''~~
+
+~~''- Veya şöyle bir şey görebilirsin:''~~
+
+  ~~''```text''~~
+  ~~''/etc/php/8.2/fpm/pool.d/default.conf:36:listen = 127.0.0.1:9000''~~
+  ~~''```''~~
+
+  ~~''→ Bu da'' **''TCP portu''** ''üzerinden dinlediği anlamına gelir (yine birazdan Nginx tarafını buna göre ayarlayacağız).''~~
+
+~~''- Eğer hiç çıktı yoksa, bana “grep hiçbir şey döndürmedi” de, o durumda havuz dosyasını sıfırdan oluşturacağız.''~~
+
+~~''---''~~
+
+~~''## 2. PHP-FPM servisi çalışıyor mu?''~~
+
+~~''8.2 FPM servisini kontrol et:''~~
+
+~~''```bash''~~
+~~''sudo systemctl status php8.2-fpm''~~
+~~''```''~~
+
+~~**''Kontrol:''**~~
+
+~~''- Eğer `Active: active (running)` görüyorsan → servis çalışıyor.''~~
+~~''- Eğer `inactive` ya da `not-found` tarzı bir şey görüyorsan, veya hata varsa, çıktıyı aynen bana gönder.''~~
+
+~~''Çalışmıyorsa başlatmayı dene:''~~
+
+~~''```bash''~~
+~~''sudo systemctl restart php8.2-fpm''~~
+~~''sudo systemctl status php8.2-fpm''~~
+~~''```''~~
+
+~~''---''~~
+
+~~''## 3. Duruma göre Nginx ayarı (şimdilik sadece ne göreceğini bil)''~~
+
+~~''Bu adımı'' **''sadece bilgi olsun diye''** ''yazıyorum; önce 1. ve 2. adımın çıktılarını görmemiz lazım.''~~
+
+~~''- 1. adımda'' **''`listen = /run/php/php8.2-fpm.sock`''** ''gibi bir şey görürsen:''~~  
+  ~~''Nginx’te şu satırı kullanacağız:''~~
+
+  ~~''```nginx''~~
+  ~~''fastcgi_pass unix:/run/php/php8.2-fpm.sock;''~~
+  ~~''```''~~
+
+~~''- 1. adımda'' **''`listen = 127.0.0.1:9000`''** ''gibi bir port görürsen:''~~  
+  ~~''Nginx’te şu satırı kullanacağız:''~~
+
+  ~~''```nginx''~~
+  ~~''fastcgi_pass 127.0.0.1:9000;''~~
+  ~~''```''~~
+
+
+==== ### 7.2 Yeni Nginx site konfig dosyası oluştur ====
+
+```bash
+sudo nano /etc/nginx/sites-available/lemp_site
+```
+
+İçine şunu yapıştır (PHP versiyonuna göre `php8.1-fpm.sock` kısmını düzelt):
+
+```nginx
+server {
+	listen 80;
+	listen [::]:80;
+
+	server_name _;  # Domain yok, IP ile erişiyoruz
+
+	root /var/www/lemp_site;
+	index index.php index.html index.htm;
+
+	access_log /var/log/nginx/lemp_site.access.log;
+	error_log  /var/log/nginx/lemp_site.error.log;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+
+	location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+		fastcgi_pass 127.0.0.1:17000;  # BURASI YORUM SATIRLARINA GÖRE DEĞİŞEBİLİR:...
+	}
+
+	location ~ /\.ht {
+		deny all;
+	}
+}
+```
+
+Kaydet ve çık (`Ctrl+O`, `Enter`, `Ctrl+X`).
+
+==== ### 7.3 Site’ı aktif et ve default site’ı kapat ====
+
+```bash
+sudo ln -s /etc/nginx/sites-available/lemp_site /etc/nginx/sites-enabled/
+sudo rm /etc/nginx/sites-enabled/default
+```
+
+==== ### 7.4 Konfig testi ve reload ====
+
+```bash
+sudo nginx -t
+```
+
+**Kontrol:**  
+Şuna benzer iki satır görmelisin:
+
+```text
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+```
+
+Sonra servisi yeniden yükle:
+
+```bash
+sudo systemctl reload nginx
+```
+
+==== ### 7.5 HTTP üzerinden PHP testi ====
+
+```bash
+curl http://SERVER_IP
+```
+
+**Kontrol:**  
+Çok uzun bir HTML çıktısı görmelisin; içinde şunlar olur:
+
+```html
+<title>phpinfo()</title>
+```
+
+Tarayıcıda `http://SERVER_IP` açarsan renkli bir PHP bilgi sayfası görmen gerekir (PHP version, modules vs).  
+Bu sayfayı ileride güvenlik için silmeyi unutma.
+
+---
+
+===== ## 8. HTTPS kurulum (Self-signed sertifika ile – domainsiz IP) =====
+
+Domain olmadığı için Let’s Encrypt gibi CA’lardan **geçerli** sertifika almak mümkün değil.  
+Bu yüzden **self-signed (kendin imzaladığın)** sertifika kullanacağız:
+
+- Tarayıcı “Güvenilir değil” uyarısı verir, ama bağlantı şifrelenmiş olur.
+- Geliştirme/test ortamları için uygundur.
+
+==== ### 8.1 Sertifika dosyalarını oluştur ====
+
+```bash
+sudo mkdir -p /etc/ssl/selfsigned
+```
+
+Self-signed sertifika üret:
+
+```bash
+sudo openssl req -x509 -nodes -days 365 \
+  -newkey rsa:2048 \
+  -keyout /etc/ssl/selfsigned/lemp-selfsigned.key \
+  -out /etc/ssl/selfsigned/lemp-selfsigned.crt
+```
+
+Sorular gelecektir:
+
+- Country Name, State, vs → Boş bırakabilir veya rastgele doldurabilirsin.
+- **Common Name (CN)** kısmına `SERVER_IP` veya anlamlı bir isim yazabilirsin.
+
+İzinleri sıkılaştır:
+
+```bash
+sudo chmod 600 /etc/ssl/selfsigned/lemp-selfsigned.key
+sudo chmod 644 /etc/ssl/selfsigned/lemp-selfsigned.crt
+```
+
+**Kontrol:**
+
+```bash
+ls -l /etc/ssl/selfsigned
+```
+
+Şuna benzer:
+
+```text
+-rw------- 1 root root 1704 Dec  8 lemp-selfsigned.key
+-rw-r--r-- 1 root root 1232 Dec  8 lemp-selfsigned.crt
+```
+
+==== ### 8.2 Nginx site konfig’ine HTTPS ekle ====
+
+Konfig dosyamızı aç:
+
+```bash
+sudo nano /etc/nginx/sites-available/lemp_site
+```
+
+Mevcut `server { ... }` bloğunu aşağıdaki gibi güncelle (80 ve 443 aynı blokta; basit çözüm):
+
+```nginx
+server {
+	listen 80;
+	listen [::]:80;
+
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	server_name _;
+
+	ssl_certificate     /etc/ssl/selfsigned/lemp-selfsigned.crt;
+	ssl_certificate_key /etc/ssl/selfsigned/lemp-selfsigned.key;
+
+	root /var/www/lemp_site;
+	index index.php index.html index.htm;
+
+	access_log /var/log/nginx/lemp_site.access.log;
+	error_log  /var/log/nginx/lemp_site.error.log;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+
+	location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+		fastcgi_pass 127.0.0.1:17000;  # PHP soketini daha öncekiyle aynı bırak
+	}
+
+	location ~ /\.ht {
+		deny all;
+	}
+}
+```
+
+Kaydet ve çık.
+
+==== ### 8.3 Nginx konfig test ve reload ====
+
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+**Kontrol:**  
+`nginx -t` yine `... test is successful` diyorsa sorun yok.
+
+==== ### 8.4 HTTPS test (terminal) ====
+
+Tarayıcılar self-signed’a bağlanırken uyarı verecek. Önce terminalden test edelim:
+
+```bash
+curl -vk https://SERVER_IP
+```
+
+- `-k` self-signed sertifikaya rağmen bağlanmayı kabul et demek.
+
+**Kontrol:**  
+Çıktının başında şuna benzer satırlar görürsün:
+
+```text
+* SSL connection using TLSv1.3 ...
+* server certificate verification OK
+> GET / HTTP/1.1
+> Host: SERVER_IP
+...
+< HTTP/1.1 200 OK
+```
+
+Ve devamında yine phpinfo HTML çıktısı gelmelidir.
+
+==== ### 8.5 HTTPS test (tarayıcı) ====
+
+Tarayıcıda:
+
+- `https://SERVER_IP` aç
+- “Bağlantınız gizli değil” / “Sertifika güvenilir değil” / “Advanced / Gelişmiş” gibi uyarılar çıkar
+- “Yine de devam et” seçeneğiyle siteye gir
+
+PHP info sayfan aynı şekilde geliyorsa HTTPS kurulumun da tamam.
+
+---
+
+===== ## 9. Nginx için küçük güvenlik ayarları =====
+
+==== ### 9.1 Versiyon bilgisini gizle ====
+
+Ana Nginx konfig dosyasını aç:
+
+```bash
+sudo nano /etc/nginx/nginx.conf
+```
+
+`http {` bloğu içinde, uygun bir yere (örneğin mevcut ayarların altına) şunu ekle:
+
+```nginx
+	server_tokens off;
+```
+
+Kaydet ve çık.
+
+==== ### 9.2 Basit güvenlik header’ları (opsiyonel ama faydalı) ====
+
+`/etc/nginx/sites-available/lemp_site` içindeki `server { ... }` bloğunun içine (örneğin `root` satırının altına) şu header’ları ekleyebilirsin:
+
+```nginx
+	add_header X-Content-Type-Options "nosniff" always;
+	add_header X-Frame-Options "SAMEORIGIN" always;
+	add_header X-XSS-Protection "1; mode=block" always;
+```
+
+Kaydet.
+
+==== ### 9.3 Nginx reload ====
+
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+**Kontrol:**  
+
+```bash
+curl -I http://SERVER_IP
+```
+
+Çıktıda şuna benzer header’lar görmelisin:
+
+```text
+HTTP/1.1 200 OK
+...
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+```
+
+---
+
+===== ## 10. Servis ve güvenlik durumunu hızlı kontrol listesi =====
+
+Şu komutlarla her şeyin ayakta olup olmadığını görebilirsin:
+
+```bash
+sudo systemctl status nginx mysql php*-fpm fail2ban
+sudo ufw status
+```
+
+- Tüm servislerde `active (running)` görmelisin.
+- UFW’de en azından: `OpenSSH`, `Nginx Full` izinli olmalı.
+
+---
+
+===== ## 11. Güvenlik için ufak hatırlatmalar =====
+
+- `/var/www/lemp_site/index.php` (phpinfo) sayfasını **üretim ortamında** bırakma, çok bilgi açığa çıkarıyor. İşin bitince sil:
+
+  ```bash
+  rm /var/www/lemp_site/index.php
+  ```
+
+- MySQL root şifreni güvenli tut.
+- SSH için mümkünse:
+  - Şifre yerine SSH key kullan,
+  - Root login’i kapat (gerekirse sonraki adımda beraber yaparız).
+
+---
+
+Buraya kadar olanları uygularken bir adımda takılırsan, hangi komutta ne hata verdiğini ve çıktıyı paylaşırsan, bir sonraki cevabımda direkt oradan devam edip düzeltiriz.

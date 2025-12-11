@@ -1,0 +1,463 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-12-06T13:46:58+03:00
+
+====== RoadMap ======
+Created Saturday 06 December 2025
+
+Aşağıdaki planı, tam zamanlı değil de “düzenli ama sakin” çalışan biri için ~2–3 yıllık uzun vadeli bir yol haritası gibi düşünebilirsin. Daha hızlı da ilerleyebilirsin; önemli olan sıralamaya ve “önce temel, sonra uzmanlık” mantığına uymak.
+
+Odak noktaları:
+- Web sızma testi (Web Pentest)
+- Tersine mühendislik (RE)
+- Mobil tersine mühendislik (özellikle Android)
+
+Hepsini paralel götüreceğiz ama:
+- 1. Önce temel bilişim + Linux + Python
+- 2. Ardından web + web pentest
+- 3. Sonra klasik RE
+- 4. En sonda mobil RE
+
+Her fazda:
+- Mutlaka Yap (zorunlu)
+- Yaparsan Çok İyi Olur (opsiyonel ama tavsiye)
+- Bilmeden Geçme (tool/komut/konu)
+- Zorunlu Proje(ler)
+- “Bu Fazı Bitirdin” Kriterleri
+
+Lütfen her şeyi yalnızca kendi lab ortamında, CTF platformlarında ve izinli sistemlerde uygula.
+
+---
+
+## FAZ 0 – Temel Altyapı (Linux, Ağ, Python)  
+**Süre:** 1–3 ay (bilgin azsa), biliyorsan hızlı geçebilirsin.
+
+### Hedef
+- Linux’a rahat olmak
+- Temel ağ mantığını bilmek
+- En az bir dili (Python) scripting seviyesinde kullanmak
+
+### Mutlaka Yap
+1. **Linux**
+   - VirtualBox ile Ubuntu veya Kali kur.
+   - OverTheWire: **Bandit** wargame → en az **level 1–15** çözülsün.
+   - Kaynak:  
+	 - *Linux Journey* veya “Linux Command Line Basics”
+2. **Python**
+   - Kaynaklardan birini seç ve bitir:
+	 - “**Python for Everybody**”  
+	 - veya “**Automate the Boring Stuff with Python**”
+   - Küçük scriptler yaz:
+	 - Basit port tarayıcı (socket ile)
+	 - Basit parola üretici
+3. **Ağ Temeli**
+   - IP, port, TCP/UDP, DNS, HTTP temellerini oku.  
+   - Kaynak:  
+	 - “**Computer Networking: A Top-Down Approach**”ten sadece ilk 1–2 bölüm  
+	 - David Bombal / NetworkChuck YouTube temel videoları
+
+### Zorunlu Proje
+- **Mini Ağ Aracı Paketi (Python):**
+  - Port tarayıcı
+  - Basit ping/host canlı mı kontrolü (subprocess ile `ping` kullanarak)
+  - Basit HTTP istek aracı (requests kütüphanesiyle GET/POST atabilen script)
+
+Hepsini GitHub’a koy.
+
+### Bilmeden Geçme (Komut & Araç)
+- Komutlar: `ls`, `cd`, `cat`, `touch`, `mkdir`, `rm`, `cp`, `mv`, `grep`, `find`, `chmod`, `chown`, `ssh`, `scp`, `tar`, `curl` / `wget`
+- Araçlar:  
+  - `nmap` ile temel tarama: `nmap -sV -sC hedef`  
+  - `ping`, `traceroute`, `netstat` / `ss`
+- Python:
+  - Fonksiyon, liste, dict, döngüler, dosya okuma-yazma, modul import etme
+
+### Bu Fazı Bitirdin Saymak İçin
+- Linux’ta terminalden rahat geziniyor, dosya düzenliyorsan
+- Basit network diyagramını (client–switch–router–server) çizebiliyorsan
+- Python ile:
+  - IP aralığı verince hepsine ping atan
+  - Verilen hedefin ilk 100 portunu tarayan script yazabiliyorsan
+
+Bunlar yoksa sonraki faza **geçme**.
+
+---
+
+## FAZ 1 – Web & HTTP Temeli (Web Pentest’in Zemini)  
+**Süre:** 1–2 ay
+
+### Hedef
+- HTTP’yi protokol olarak anlamak
+- Basit bir web uygulamasının nasıl yazıldığını bilmek
+
+### Mutlaka Yap
+1. **HTTP’yi Öğren**
+   - HTTP metotları (GET, POST, PUT, DELETE, …)
+   - Status kodlar (200, 301, 302, 401, 403, 404, 500…)
+   - Header’lar (Host, Cookie, User-Agent, Authorization, Content-Type, …)
+   - Kaynak:
+	 - MDN Web Docs: HTTP bölümü
+	 - PortSwigger Web Security Academy → “**HTTP basics**” dersleri
+2. **Basit Web Geliştirme**
+   - HTML/CSS: freeCodeCamp “Responsive Web Design” başlangıç kısımları
+   - Bir backend framework seç:
+	 - Python → Flask veya Django
+   - Basit uygulama yaz:
+	 - Kullanıcı kayıt / login
+	 - Blog post ekleme / listeleme
+
+### Zorunlu Proje
+- **Basit Blog / Not Uygulaması (Flask veya Django):**
+  - Kullanıcı kayıt / giriş (email + şifre)
+  - Kullanıcı kendi postlarını oluşturup düzenleyebilmeli
+  - Şifreler **hash’lenmiş** olarak saklanmalı (Flask için werkzeug security, Django zaten hash’liyor)
+
+Bu projeyi ileride kendin hack’leyeceksin.
+
+### Bilmeden Geçme
+- Tarayıcı Developer Tools → Network tab’ında:
+  - HTTP isteği/cevabını okuyup yorumlayabilmek
+- Cookie nedir, session nedir, kabaca biliyor olmak
+- Temel form işleme: POST request ile form gönderip backend tarafında veri okuyabilmek
+
+### Bu Fazı Bitirdin Saymak İçin
+- Kendi yazdığın web uygulamasında:
+  - Form gönderip DB’ye kayıt edebiliyorsan
+  - Login/logout mekanizmasını kendin yazdıysan
+- Burp Suite veya OWASP ZAP ile:
+  - Tarayıcı trafiğini proxy üzerinden izleyebiliyorsan
+  - Bir isteği yakalayıp değiştirerek tekrar gönderebiliyorsan
+
+---
+
+## FAZ 2 – Web Sızma Testine Giriş (OWASP Top 10 Temel)  
+**Süre:** 3–4 ay
+
+### Hedef
+- OWASP Top 10’daki **temel** zafiyetleri gerçekten sömürebilmek
+- Standart web pentest araçlarına alışmak
+
+### Mutlaka Yap
+1. **OWASP Top 10 Çalış**
+   - OWASP Top 10 dokümanını **en az bir kere baştan sona oku**.
+   - Kavramaları öğren:
+	 - SQLi, XSS, CSRF, IDOR, Broken Auth, File Upload, XXE, SSRF (en azından yüzeysel)
+2. **PortSwigger Web Security Academy**
+   - “Apprentice” ve “Practitioner” seviyesinde:
+	 - SQL Injection
+	 - XSS
+	 - Auth (login bypass, cookie mantığı)
+	 - Access control (IDOR vb.)
+	 - File inclusion / file upload (temel seviye)
+   - Her çözdüğün lab için:
+	 - Ne yaptığını, payload’ı, sebebini **kısa not** al (Notion / Obsidian / Markdown dosyası).
+
+3. **Vulnerable Uygulamalar**
+   - DVWA (Damn Vulnerable Web App)
+   - OWASP Juice Shop
+   - Kendi blog uygulaman:
+	 - Bilerek açık bırak (ör: SQL injection, XSS), sonra bunları kullanarak exploit et.
+
+### Zorunlu Projeler
+1. **Kendi Blog’unu Hack’le ve Raporla**
+   - Blog uygulamana bilerek:
+	 - Basit SQLi (ör: `id` parametresi)
+	 - Reflected XSS (arama kutusu vb.)
+   - Bunları Burp ile kullanarak exploit et.
+   - **Mini Pentest Raporu** yaz:
+	 - Özet
+	 - Bulunacak zafiyet
+	 - Teknik detay
+	 - Etki / risk
+	 - Önerilen çözüm
+
+2. **Web Zafiyet Lab Defteri**
+   - PortSwigger + DVWA’dan en az:
+	 - 3 adet SQLi
+	 - 3 adet XSS
+	 - 1 adet CSRF
+	 - 2 adet IDOR benzeri access control açığı
+   - Hepsi için kısa POC ve not.
+
+### Bilmeden Geçme (Araç & Komut)
+- **Burp Suite:**
+  - Proxy, Repeater, Intruder (basit brute force), Decoder
+- **Nmap:**
+  - `nmap -sV -sC hedeften.com`
+- **Dirsearch / ffuf:**
+  - Klasör/endpoint bulma
+- **sqlmap:**
+  - Temel kullanım: `sqlmap -u "http://site.com/item.php?id=1" --dbs`
+- Linux’ta:
+  - `curl` ile manuel HTTP isteği yapma  
+  - `tcpdump` / Wireshark ile trafiği görebildiğini bilmek (ileri detay şart değil)
+
+### Bu Fazı Bitirdin Saymak İçin
+- Aşağıdakileri **manuel** (sqlmap’siz de) yapabiliyorsan:
+  - Reflected XSS bulup alert çıkarma
+  - Union-based SQLi ile bir tabloda satır listeleme
+  - Basit bir IDOR açığını (başkasının kaydını görebilme) yakalayıp exploit etmek
+- Burp ile:
+  - Bir login formuna brute-force denemesi yapabilmek (Wordlist’le basit senaryo)
+- En az 1 tam küçük web uygulamasına (kendi blog’un olabilir) **raporlu** pentest yapmış olman.
+
+Bunlar yoksa ileri web fazına geçme.
+
+---
+
+## FAZ 3 – İleri Web Pentest & Bug Bounty Hazırlık  
+**Süre:** 3–6 ay
+
+### Hedef
+- Daha zor web zafiyetlerini anlayıp sömürebilmek
+- Gerçek sistemlere benzer CTF’lerde ilerlemek
+- Profesyonel raporlama alışkanlığı kazanmak
+
+### Mutlaka Yap
+1. **PortSwigger Web Security Academy – İleri Konular**
+   - SSRF
+   - XXE
+   - Advanced auth bypass
+   - Business logic vulnerabilities (iş mantığı açıkları)
+   - Deserialization atakları
+2. **CTF / Platformlar**
+   - TryHackMe:
+	 - “Web Fundamentals”
+	 - “OWASP Top 10”
+   - HackTheBox:
+	 - En az 5–10 adet “Easy” web ağırlıklı makine
+3. **Kitap (Zorunlu Tavsiye):**
+   - “**The Web Application Hacker’s Handbook**” (yavaş yavaş ama sürekli)
+
+### Zorunlu Proje
+- **Gerçekçi Kurumsal Uygulama Senaryosu + Rapor**
+  - En az 3 rolü olan (admin, normal kullanıcı, misafir) bir web uygulaması tasarla (framework fark etmez).
+  - İçinde:
+	- Dosya yükleme
+	- Rol bazlı yetkilendirme
+	- Parola sıfırlama mekanizması
+  - Kendin pentest et:
+	- IDOR, business logic, misconfig, XSS, SSRF var mı?
+  - **Tam pentest raporu** yaz (profesyonel formatta, CVSS puanı ile).
+
+### Yaparsan Çok İyi Olur (Opsiyonel)
+- Bug bounty platformlarına üye ol (HackerOne, Bugcrowd vs.)
+  - Önce “program kuralları” okumayı öğren
+  - Çok düşük kritik, ama zararsız hesaplardan **legal** test yap (ya da VDP programları).
+- Web payloadlarını not ettiğin kendi “cheatsheet”ini oluştur.
+
+### Bilmeden Geçme
+- Her bir zafiyet türü için şu üç soruya cevap verebilmek:
+  - Nasıl oluşur? (tipik geliştirici hatası)
+  - Nasıl tespit edilir? (logik, parametre)
+  - Nasıl exploit edilir? (yüksek seviyede)
+  - Nasıl önlenir? (input validation, access control vb.)
+
+---
+
+Buraya kadar **Web Pentest hattı**. Bundan sonra “Web hattını” haftalık CTF’lerle canlı tutarken, paralelde **Tersine Mühendislik hattına** başlıyoruz.
+
+---
+
+## FAZ 4 – Tersine Mühendislik Temelleri (Desktop / Classic RE)  
+**Süre:** 2–4 ay
+
+### Hedef
+- Assembly seviyesinde kod okuyup temel akışı çıkarabilmek
+- Basit crackme’leri çözebilmek
+- Ghidra/x64dbg/gdb gibi araçları kullanmayı öğrenmek
+
+### Ön Koşul
+- Temel C programlama bil:  
+  - Değişkenler, fonksiyonlar, pointer, array, struct
+- Bunu bilmiyorsan kısa bir C kursu al:
+  - “C Programming Language” (K&R) veya online kurs (Udemy / freeCodeCamp C playlistleri)
+
+### Mutlaka Yap
+1. **Mimari & Assembly Giriş**
+   - x86/x64 temel komutları:
+	 - `mov`, `push`, `pop`, `call`, `ret`, `cmp`, `jmp`, `je/jne/jg/jl`
+   - Stack / heap kavramı
+   - Fonksiyon çağrı konvansiyonu (parametreler nereye gider?)
+
+2. **Araçlar**
+   - **Ghidra** (veya IDA Free):
+	 - Bir basit C programını derle, Ghidra’ya at, `main` fonksiyonunu incele.
+   - **x64dbg (Windows)** veya **gdb (Linux)**:
+	 - Breakpoint koy, adım adım ilerle, register’ları izle.
+   - Basit crackme siteleri:
+	 - https://crackmes.one → “very easy / easy” seviyeleri
+
+3. **Çalışma Şekli**
+   - Kendin küçük C programları yaz:
+	 - Basit şifre kontrolü (ör: sabit key)
+	 - Seri numarası kontrolü
+   - Derle → sonra RE ile şifreyi/seri numarasını **bul ve doğrulamayı kaldır**.
+
+### Zorunlu Projeler
+1. **Kendi Lisans Kontrollü Programını Yaz & Kır**
+   - C ile küçük program:
+	 - Kullanıcıdan “lisans key” istesin.
+	 - Doğruysa “Licensed”, yanlışsa “Invalid key”.
+   - Bu programın binary’sini:
+	 - Ghidra/x64dbg/gdb ile aç.
+	 - Doğrulama kısmını bul.
+	 - Binary’yi patch’leyip (örn. `je` → `jne`) her key’i kabul ettir.
+
+2. **3–5 Adet Basit Crackme Çöz**
+   - crackmes.one’dan
+   - Her biri için kısa bir write-up: “Nasıl çözdüm, hangi tool, hangi offset?”
+
+### Yaparsan Çok İyi Olur (Opsiyonel)
+- Kitap:
+  - “**Reversing: Secrets of Reverse Engineering**” veya  
+  - “**Practical Reverse Engineering**”
+- radare2 ile biraz oynayıp farklı RE arayüzlerine alışmak.
+
+### Bilmeden Geçme
+- Aşağıdakileri yapamıyorsan bu fazı **tekrar**:
+  - Bir fonksiyonun giriş/çıkış parametresini assembly’den tahmin etmek
+  - Basit bir `if (x == 10)` mantığını assembly’de görmek ve anlamak
+  - x64dbg/Ghidra’da:
+	- String referanslarını bulmak
+	- Bir fonksiyonun ne iş yaptığını kabaca yorumlamak (örn. “bu şifre kontrol fonksiyonu”)
+
+---
+
+## FAZ 5 – (Opsiyonel ama Çok Güçlü) Exploit Development Girişi  
+**Süre:** 2–3 ay
+
+Bu faz, özellikle binary exploitation tarafında ilerlemek istersen çok işe yarar. Mobil RE ve klasik RE için **zorunlu değil**, ama seni çok güçlendirir.
+
+### Mutlaka Yap (Eğer Girersen)
+- **Stack Buffer Overflow Temeli**
+  - Basit bir vulnerable program yaz:
+	- `gets()` veya unsafe `strcpy()` kullan
+  - GDB/pwndbg ile:
+	- EIP/RIP overwrite mantığını gör.
+- **Lab Ortamı:**
+  - Exploit-Exerciser, Protostar, pwnable.kr gibi platformlardan birkaç basit seviye.
+
+### Bilmeden Geçme
+- Stack’te return address’in nasıl değiştirildiğini biliyor olmak
+- “NX, ASLR, canary” gibi mitigasyon isimlerini duymuş ve ne yaptığını kabaca biliyor olmak
+
+Bu fazı hızlı da geçebilirsin; asıl odak **mobil RE** olacak.
+
+---
+
+## FAZ 6 – Mobil Tersine Mühendislik (Android Odaklı)  
+**Süre:** 3–6 ay
+
+### Hedef
+- Android APK yapısını anlamak
+- APK’yi decompile edip kodu okuyabilmek
+- Frida/Objection ile run-time’da method hook’layabilmek
+- Basit korumaları (root detection, debug check, basit obfuscation) aşabilmek
+
+### Ön Koşul
+- Genel RE bilgisi (Faz 4)
+- Temel Java veya Kotlin sentaksı
+  - Eğer bilmiyorsan, 1–2 haftalık mini Java/Kotlin girişi yeterli:
+	- Değişkenler, sınıf, metod, if/for, exception.
+
+### Mutlaka Yap
+1. **Android Temel**
+   - APK nedir, içinde neler var:
+	 - `AndroidManifest.xml`
+	 - classes.dex
+	 - resources.arsc
+   - Activity, Intent, Permission, Storage, Network kavramlarını öğren.
+   - Kaynak:
+	 - “OWASP Mobile Security Testing Guide” (MSTG) – başlangıç bölümleri.
+
+2. **Araç Kurulumu**
+   - Android Studio + Emulator (ya da Genymotion)
+   - `adb` komutları:
+	 - `adb devices`, `adb install`, `adb logcat`
+   - RE Araçları:
+	 - **Jadx** (GUI decompiler)
+	 - **Apktool** (decompile/compile)
+	 - **MobSF** (statik analiz)
+	 - **Frida + Objection**
+
+3. **Laboratuvar Uygulamaları**
+   - **OWASP UnCrackable Android Apps (1, 2, 3)**:
+	 - Decompile et, korumaları anla.
+	 - Frida ile root detection / debugger detection bypass et.
+   - Basit korumalı crackme’ler (Github’ta, crackmes.one’da Android kategorisi).
+
+### Zorunlu Projeler
+1. **Kendi Android Uygulamanı Yaz & Tersine Mühendislik Yap**
+   - Basit bir app:
+	 - Login ekranı (hard-coded secret, belki local storage)
+	 - Sunucuya GET/POST atan basit bir HTTP client
+	 - Basit bir “lisans kontrolü” veya “debug check”
+   - APK üret → sonra:
+	 - Jadx’le aç, kritik fonksiyonları bul.
+	 - Apktool ile smali seviyesinde küçük değişiklik yap (örn. bir if’i tersine çevir).
+	 - Frida ile runtime’da bir methodun dönüş değerini değiştir.
+
+2. **3+ Android Crackme Çöz**
+   - Her biri için:
+	 - Hangi korumalar vardı?
+	 - Nasıl bypass ettin?
+	 - Statik mi dinamik mi kullandın?
+
+### Yaparsan Çok İyi Olur (Opsiyonel)
+- “**Android Security Internals**” (Nikolay Elenkov)
+- MobSF ile kendi ve örnek APK’leri tarayıp raporlarını okumak
+- OWASP MSTG’deki recommended test case’leri, en azından “Authentication, Storage, Network” kısımlarında uygulamak.
+
+### Bilmeden Geçme
+- Aşağıdakileri yapamıyorsan mobil RE’ye “tam hakim” sayma:
+  - Bir APK’yi decompile edip temel akış diyagramını çıkarabilmek
+  - `AndroidManifest.xml`’den:
+	- Main Activity’yi, exported component’leri görebilmek
+  - Frida ile:
+	- Bir Java metoduna hook atıp parametrelerini/loglarını görebilmek
+	- Bir metodun return değerini değiştirebilmek
+  - Basit root detection’ı bypass edebilmek (ör: `isDeviceRooted` fonksiyonunu override etmek)
+
+---
+
+## Sürekli Yapman Gerekenler (Tüm Fazlar Boyunca)
+
+### 1. Not Tutma & Portföy
+- Her lab, her CTF, her proje için:
+  - Ne yaptın?
+  - Hangi tool, hangi komut?
+  - Nerede zorlandın, ne öğrendin?
+- Bunları:
+  - GitHub repo
+  - Kişisel blog (GitHub Pages/Notion/Medium)
+  - Markdown depo
+  halinde tut.
+
+### 2. Haftalık Rutin
+- 1–2 saat: Kitap / teori (Web / RE / Mobil)
+- 4–6 saat: Pratik (TryHackMe, HTB, crackme, lab)
+- 1 saat: Yazı yazmak / notları düzenlemek
+
+### 3. Topluluk & Kaynaklar
+- TryHackMe, HackTheBox, PortSwigger, OverTheWire → **düzenli** kullan
+- YouTube:
+  - Web: NahamSec, PwnFunction, STÖK
+  - RE: LiveOverflow, OALabs
+- Türkçe topluluklar, Discord / Telegram grupları; soru sor, CTF ekibi bulmaya çalış.
+
+---
+
+## Özet Akış
+
+1. **Faz 0:** Linux + Python + Ağ temeli  
+2. **Faz 1:** HTTP + Basit Web Geliştirme (kendi blog’un)  
+3. **Faz 2:** OWASP Top 10 + DVWA + PortSwigger temel lab’lar, ilk pentest raporu  
+4. **Faz 3:** İleri web zafiyetleri + CTF/Web makine + kurumsal senaryo app + tam rapor  
+5. **Faz 4:** RE temeli: C, assembly, Ghidra, x64dbg/gdb, crackme’ler, kendi lisanslı programını kır  
+6. **Faz 5 (opsiyonel):** Basit exploit dev / buffer overflow  
+7. **Faz 6:** Android RE: APK yapısı, Jadx/Apktool, Frida/Objection, UnCrackable app’ler, kendi app’ini tersine mühendislik
+
+---
+
+İstersen ilk faz (0 ve 1) için daha ayrıntılı; haftalık plan (hafta 1, 2, 3 diye) da çıkarabilirim. Şu an hangi seviyede olduğunu (Linux bilgisi, programlama, İngilizce) yazarsan, bu planı sana göre netleştirebiliriz.

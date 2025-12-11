@@ -1,0 +1,571 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-12-08T17:04:33+03:00
+
+====== roadmap ======
+Created Monday 08 December 2025
+
+Aşağıdaki planı “adım adım proje odaklı” ve sonunda kendi mini‑Nmap’ine gidecek şekilde hazırladım.  
+Her seviyede:
+
+- “Bunları yapmadan geçme” → zorunlu hedefler  
+- “Olursa çok iyi” → bonus / ileri seviye
+
+Hepsini sadece kendi sunucularında / izinli hedeflerde dene.
+
+---
+
+===== ## 0. Ön Hazırlık (Kısa Kontrol Listesi) =====
+
+==== ### Gerekli altyapı ====
+
+- Kali Linux (tamam)
+- Scapy kurulu (tamam)
+- En azından temel Python:
+  - Fonksiyon, modül, liste/dict kullanımı
+  - Komut satırından `python3 script.py` çalıştırma
+- Test ortamı:
+  - Mümkünse: 1–2 tane ek VM (ör. başka bir Kali, bir Windows, bir Ubuntu)  
+	Böylece gerçekçi ağ davranışlarını görürsün.
+
+### Bu adımı geçmeden:
+
+1. `python3` içinde:
+
+   ```python
+   from scapy.all import *
+   ```
+
+   çalışıyor olmalı.
+2. `scapy` interaktif shell’i açıp:
+
+   ```bash
+   sudo scapy
+   ```
+
+   yazınca hata almadan açılmalı.
+
+---
+
+===== ## 1. Scapy Temelleri – Paket Oluşturma ve Sniff Etme =====
+
+==== ### Öğrenilecek konular ====
+
+- `scapy` shell vs Python script farkı
+- Temel katmanlar: `Ether()`, `IP()`, `TCP()`, `UDP()`, `ICMP()`
+- Katman birleştirme: `IP()/TCP()`, `IP()/ICMP()`
+- Gönderme fonksiyonları:
+  - `send()`, `sendp()`
+  - `sr()`, `sr1()` (send/receive)
+- İnceleme fonksiyonları:
+  - `show()`, `summary()`, `hexdump()`
+- Sniffing:
+  - `sniff()`, `prn`, `count`, `iface`
+  - Filtre: `filter="tcp"` (BPF)
+
+==== ### Proje 1 – Basit Ping Scripti ====
+
+Amaç: ICMP ile kendi `ping` aracını yazmak.
+
+- Girdi: `python3 my_ping.py <hedef_ip>`
+- Yaptıkları:
+  - Hedefe 4 adet ICMP Echo Request gönder
+  - Cevap gelirse:
+	- Gönderen IP
+	- RTT (round-trip time)
+	- TTL
+  - Sonunda minimum/ortalama/maksimum RTT hesapla
+
+İpuçları:
+
+- `sr1(IP(dst=ip)/ICMP(), timeout=1)`
+- `time.time()` ile RTT ölçebilirsin
+
+Bunları yapmadan geçme:
+
+- Bir hedefe ping atıp TTL ve RTT’yi ekrana düzgün formatla yazabiliyor ol.
+- Hedef cevap vermezse “timeout” mesajı yazabilmelisin (Exception atmadan).
+
+Olursa çok iyi:
+
+- `argparse` ile:
+  - `-c` (packet sayısı)
+  - `-t` (timeout) gibi parametreler ekle.
+
+---
+
+==== ### Proje 2 – Temel Sniffer ====
+
+Amaç: Ağdan geçen paketleri izlemek.
+
+- Script adı: `simple_sniffer.py`
+- Yaptıkları:
+  - Parametre: `-i` arayüz (ör: `eth0`, `wlan0`)
+  - 20 paket sniff et, her paket için:
+	- Zaman
+	- Kaynak IP:Port
+	- Hedef IP:Port
+	- Protokol (TCP/UDP/ICMP vs.)
+  - Tablomsu bir çıktı üret.
+
+İpuçları:
+
+- `sniff(count=20, iface="eth0", prn=callback)`
+- `packet.haslayer(TCP)` vs.
+
+Bunları yapmadan geçme:
+
+- En azından TCP trafiğini yakalayıp src/dst IP/port’u görebilmelisin.
+- Hata vermeden belli sayıda pakette durabilmeli.
+
+Olursa çok iyi:
+
+- `filter="port 80"` gibi BPF filtreleri kullan.
+- Sniff edilen paketleri `.pcap` dosyasına kaydet ve Wireshark ile aç:
+  - `wrpcap("out.pcap", packets)`
+
+---
+
+===== ## 2. Yerel Ağ Keşfi – ARP ve ICMP =====
+
+==== ### Öğrenilecek konular ====
+
+- L2 vs L3 (ARP/Ether vs IP)
+- `srp()` ile Ethernet seviyesinde yayın (broadcast)
+- ARP istek/cevap yapısı
+- Ping sweep mantığı
+
+==== ### Proje 3 – ARP Tabanlı LAN Tarayıcı ====
+
+Amaç: Kendi /24 ağındaki aktif hostları bul.
+
+- Script: `arp_scan.py`
+- Girdi:
+  - `-n` network: ör. `192.168.1.0/24`
+- Yaptıkları:
+  - Verilen networkte broadcast ARP soru paketleri gönder (`ff:ff:ff:ff:ff:ff`)
+  - Cevap veren IP–MAC çiftlerini listele
+  - Çıktı: IP, MAC, (hazırsan) üretici adı (OUI lookup opsiyonel)
+
+İpuçları:
+
+- `Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst="192.168.1.0/24")`
+- `ans, unans = srp(..., timeout=2)`
+
+Bunları yapmadan geçme:
+
+- Kendi LAN’ında aktif cihazların IP–MAC listesini çıkarabilmelisin.
+- Yanıt vermeyen IP’ler için hata/flood oluşturmamalısın.
+
+Olursa çok iyi:
+
+- MAC adreslerinden üretici bilgisi çekmek için hazır OUI listesi kullan.
+- Sonuçları JSON olarak da kaydet.
+
+---
+
+==== ### Proje 4 – Ping Sweep (Ağ Arama) ====
+
+Amaç: Router arkasındaki bir ağda (ARP çalışmasa bile) hangi host’lar ayakta bulmak.
+
+- Script: `ping_sweep.py`
+- Girdi:
+  - Ağ aralığı: `10.0.0.0/24` veya `10.0.0.10-10.0.0.50`
+- Yaptıkları:
+  - Her IP’ye ICMP Echo veya TCP SYN gönder
+  - Dönenlere “up”, dönmeyenlere “down/unknown” de
+
+Bunları yapmadan geçme:
+
+- Kendi sunucunun IP’sini bu script ile “up” olarak görebil.
+- Zamanaşımı, hataları düzgün yönet.
+
+Olursa çok iyi:
+
+- Threading veya `sr()` ile bir seferde birden çok IP tarayıp hızlandır.
+- Farklı modlar: `--icmp`, `--tcp 80` gibi.
+
+---
+
+==== ### Proje 5 – Basit Traceroute ====
+
+Amaç: ICMP tabanlı `traceroute` klonlamak.
+
+- Script: `simple_traceroute.py target`
+- Yaptıkları:
+  - TTL=1’den başlayarak her pakete 1 artır
+  - Her cevabın geçtiği router IP’sini ve RTT’yi yaz
+  - Hedefe ulaştığında veya max TTL (ör. 30) olduğunda dur
+
+İpuçları:
+
+- `IP(dst=target, ttl=i)/ICMP()`
+- ICMP Time Exceeded ve Echo Reply farkını anla.
+
+Bunları yapmadan geçme:
+
+- Hedefe giden route’u temel seviyede görebilmelisin.
+- Yanıt gelmeyen hop’ları `*` vs. gibi göster.
+
+---
+
+===== ## 3. TCP Derinleşme & Temel Port Tarayıcı =====
+
+==== ### Öğrenilecek konular ====
+
+- TCP 3-way handshake (SYN, SYN-ACK, ACK)
+- Port durumu yorumlama:
+  - SYN/ACK → open
+  - RST → closed
+  - Hiç cevap yok → filtered/unknown
+- UDP tarama zorlukları (ICMP port unreachable vs. sessizlik)
+
+==== ### Proje 6 – Manuel TCP Bağlantı ve Veri Gönderme ====
+
+Amaç: Bir port’a Scapy ile manuel TCP 3-way handshake yap.
+
+- Script: `manual_tcp.py <ip> <port>`
+- Adımlar:
+  - SYN gönder
+  - SYN/ACK yakala
+  - ACK gönder (artık bağlantı kuruldu)
+  - Küçük bir payload gönder (ör: `GET / HTTP/1.0\r\n\r\n`)
+  - Gelen veriyi yakalayıp ekrana bas
+  - FIN/RST ile kapat
+
+Bunları yapmadan geçme:
+
+- Kendi HTTP sunucuna (80/8080) bu yöntemle request atıp cevap görebil.
+- TCP sequence/ack numaralarını doğru kullanıyor olmalısın.
+
+Olursa çok iyi:
+
+- Aynı mantığı başka protokoller (ör. 22 SSH, 25 SMTP) için dene.
+
+---
+
+==== ### Proje 7 – Basit SYN Port Tarayıcı ====
+
+Amaç: Nmap’in en temel özelliği: SYN taraması.
+
+- Script: `syn_scan.py <ip> -p 1-1024`
+- Özellikler:
+  - Tek IP için seçili port aralığı
+  - Hepsine SYN gönder
+  - Cevaba göre:
+	- open / closed / filtered
+  - Sonuçları listeli/tablolu yaz
+
+İpuçları:
+
+- `sr(IP(dst=ip)/TCP(dport=ports, flags="S"), timeout=2)`
+- Gelen pakette:
+  - `TCP.flags == "SA"` → open
+  - `TCP.flags == "RA"` → closed
+
+Bunları yapmadan geçme:
+
+- Kendi sunucundaki açık portları büyük oranda doğru tespit edebiliyor ol.
+- Hatalı IP verildiğinde script patlamamalı.
+
+Olursa çok iyi:
+
+- Çok hedefli tarama (birden fazla IP).
+- Hız ayarı: `--rate`, `--timeout` gibi.
+
+---
+
+==== ### Proje 8 – Basit UDP Tarayıcı ====
+
+Amaç: UDP port durumu hakkında fikir sahibi olmak.
+
+- Script: `udp_scan.py <ip> -p 53,123,161,...`
+- Adımlar:
+  - Her UDP porta boş veya protokole uygun küçük bir payload gönder
+  - ICMP Port Unreachable gelirse → closed
+  - Cevap gelirse → açık
+  - Hiç cevap yoksa → open|filtered
+
+Bunları yapmadan geçme:
+
+- En azından kendi DNS sunucunun 53/UDP portunu doğru “open” gösterebil.
+- Sessizlik durumunu anlamlı yorumlayabilmelisin.
+
+---
+
+===== ## 4. İlk Mini-Nmap’in – pyScan v0.1 =====
+
+Bu aşamada önceki projeleri tek bir araca topluyorsun.
+
+==== ### Proje 9 – pyScan v0.1 (Modüler Tarayıcı) ====
+
+Amaç: Tek CLI tool ile:
+
+- `--discover` → ARP + ping sweep
+- `--scan` → TCP SYN / UDP tarama
+- `--traceroute` → Traceroute modu
+
+Mimari fikir:
+
+- Klasör yapısı:
+
+  ```text
+  pyscan/
+	__main__.py
+	discover.py     # arp_scan, ping_sweep fonksiyonları
+	portscan.py     # syn_scan, udp_scan fonksiyonları
+	traceroute.py
+	utils.py
+  ```
+
+- `argparse` ile alt komutlar:
+  - `pyscan discover ...`
+  - `pyscan scan ...`
+  - `pyscan traceroute ...`
+
+Bunları yapmadan geçme:
+
+- Tek bir komut satırı aracından en az:
+  - Lan keşfi
+  - Tek IP port taraması
+  - Traceroute
+  çalışır halde olmalı.
+- Hatalı parametre verirsen kullanıcıya düzgün mesaj vermeli (stack trace atmadan).
+
+Olursa çok iyi:
+
+- Renkli çıktı (ör. `colorama`)
+- Çıktıyı hem ekrana hem dosyaya yazma
+- JSON formatında rapor export
+
+---
+
+===== ## 5. Servis Keşfi ve Banner Grabbing =====
+
+==== ### Öğrenilecek konular ====
+
+- Uygulama katmanı protokolleri (HTTP, SSH, FTP, SMTP…)
+- Banner grabbing: çoğu servis ilk bağlanınca kendini tanıtır.
+- Bazı protokollerde “ilk mesajı bizim atmamız” gerekebilir (HTTP gibi).
+
+==== ### Proje 10 – HTTP Banner Grabber ====
+
+Amaç: Açık HTTP portlarından `Server` bilgisini çekmek.
+
+- `http_banner.py <ip> -p 80,8080,...`
+- Adımlar:
+  - Port açık mı? (önceden yazdığın SYN scan modülünü kullan)
+  - Açık portlara:
+	- ya Python `socket` ile
+	- ya Scapy ile TCP 3WHS sonrası
+	- `HEAD / HTTP/1.0\r\nHost: <ip>\r\n\r\n` gönder
+  - Cevaptaki `Server:` başlığını parse et.
+
+Bunları yapmadan geçme:
+
+- Kendi HTTP sunucunun server banner’ını okuyabilmelisin (ör. `nginx/1.18.0`).
+- Hatalı port/servis durumunda script düzgün çıksın.
+
+Olursa çok iyi:
+
+- HTTPS için TLS ClientHello atıp sertifika CN/SAN çekmeye giriş (Scapy’nin TLS katmanları ile).
+- Banner’ı sadece belli uzunlukta göster (20–30 karakter).
+
+---
+
+==== ### Proje 11 – Genel Banner Grabber & Servis Haritalama ====
+
+Amaç: Açık TCP portlarından mümkün olduğunca servis/tip tahmini yapmak.
+
+- `service_detect.py <ip> -p 1-1024`
+- Adımlar:
+  - Açık portları önceden yazdığın SYN tarayıcı ile bul.
+  - Her açık port için:
+	- Eğer “well-known” port ise (22→SSH, 25→SMTP, 21→FTP…) özel bir handshake/beklenti kullan.
+	- Diğerleri için:
+	  - Basit TCP connect + data bekleme (banner varsa yakala).
+  - Sonuç:
+	- Port: 22 → muhtemel servis: SSH → banner: `OpenSSH_8.2p1`
+	- Port: 25 → SMTP vs.
+
+Bunları yapmadan geçme:
+
+- Kendi sunucunda en az 3–4 farklı servisi (HTTP, SSH, SMTP vb.) doğru tespit edebilmelisin.
+
+Olursa çok iyi:
+
+- Basit bir “signature” dosyası (JSON):
+  - Banner içinde “OpenSSH” varsa OS tipine puan ekle vs. (OS detect’e altyapı olur).
+
+---
+
+===== ## 6. OS Tespiti (Fingerprinting) – Nmap Benzeri =====
+
+Bu kısım en yaratıcı ve en zor olanı. Küçükten başla.
+
+==== ### Öğrenilecek konular ====
+
+- Farklı OS’lerin TCP/IP stack farklılıkları:
+  - Varsayılan TTL
+  - Varsayılan TCP Fenster (Window size)
+  - IP ID davranışı
+  - TCP Options (MSS, SACK, Timestamp sırası)
+- Fingerprint fikirleri:
+  - Belirli probe’lara verdiği cevap paternleri.
+
+==== ### Proje 12 – Basit Aktif OS Fingerprinting ====
+
+Yaklaşım:
+
+1. Veri Toplama Aşaması:
+   - Elinde en az 2–3 farklı OS olsun (ör. Windows, Ubuntu, Kali).
+   - Her biri için:
+	 - Hedefte açık bir TCP port seç (genelde 80/22).
+	 - Scapy ile özel paketler gönder:
+	   - Normal SYN
+	   - Garip flag kombinasyonu (FIN, PSH, URG vs.)
+	   - Farklı `window` değerleri
+	 - Cevapların:
+	   - TTL
+	   - Window size
+	   - IP DF bit
+	   - TCP options sırası
+	 - Hepsini kaydet (JSON dosyaya).
+
+2. Eşleştirme Aşaması:
+   - Yeni bir hedeften elde ettiğin fingerprint ile veritabanındaki fingerprint’ler arasında benzerlik skoru hesapla (basit karşılaştırma).
+   - Output: “Muhtemel OS: Linux/Windows/…” şeklinde.
+
+Bunları yapmadan geçme:
+
+- En azından laboratuvar ortamında:
+  - Kendi Ubuntu/Kali/Windows makinelerini doğru aile olarak (Windows vs Linux) tahmin eden basit bir sistemin olsun.
+- Fingerprint’leri JSON benzeri yapı ile depolayıp tekrar kullanabiliyor ol.
+
+Olursa çok iyi:
+
+- Pasif OS detection:
+  - Sniffer ile gelen sadece SYN paketlerine bakarak OS tahmini yap.
+- Fingerprint karşılaştırmada “skor” mantığı (her eşleşene +puan vb.).
+
+---
+
+===== ## 7. Scapy İleri Seviye – Kendi Protokol Katmanların ve Fuzzing =====
+
+Bu seviye Scapy uzmanlığı için.
+
+==== ### Proje 13 – Custom Protocol Layer ====
+
+Amaç: Kendi basit protokolünü tanımla ve Scapy’ye öğret.
+
+- Basit bir UDP tabanlı “chat” protokolü hayal et:
+  - Alanlar: `msg_type (1 byte)`, `length (1 byte)`, `payload (variable)`
+- Scapy’de:
+
+  ```python
+  class MyProto(Packet):
+	  name = "MyProto"
+	  fields_desc = [
+		  ByteField("msg_type", 0),
+		  ByteField("length", 0),
+		  StrLenField("payload", "", length_from=lambda pkt: pkt.length)
+	  ]
+  ```
+
+- `bind_layers(UDP, MyProto, dport=9999)`
+- Sonra bu paketleri gönder/sniff et ve içeriği düzgün decode olduğundan emin ol.
+
+Bunları yapmadan geçme:
+
+- Wireshark/Scapy output’unda, UDP payload’ı sadece hex olarak değil, alanlara ayrılmış biçimde görebilmelisin.
+
+Olursa çok iyi:
+
+- Mevcut bir basit protokol (ör. custom IoT protokolü, oyun protokolü) için dissector yaz.
+
+---
+
+==== ### Proje 14 – Fuzzing Modülü ====
+
+Amaç: Kendi sunucuna yönelik basit “fuzz” (bozuk paket) testi.
+
+- Örnek: UDP tabanlı kendi küçük sunucun.
+- Scapy `fuzz()` fonksiyonunu kullanarak:
+  - IP/UDP/MyProto veya basit TCP/HTTP istekleri üzerinde alanları randomize et.
+- Hedef:
+  - Sunucunun hata vermeyecek şekilde dayanıklı olduğunu (veya hatalı davrandığını) gözlemle.
+
+Bunları yapmadan geçme:
+
+- Fuzzing sonucunda:
+  - Sunucu loglarında/çıkışında ne olduğunu kontrol et.
+  - Kendin bir “crash” yaratmamaya dikkat et; sadece test sistemi kullan.
+
+Olursa çok iyi:
+
+- Fuzz sonuçlarını kaydeden, hangi paketlerin “şüpheli davranış” tetiklediğini raporlayan basit bir raporlayıcı.
+
+---
+
+===== ## 8. Projeleri GitHub’a Taşıma ve Ürünleştirme =====
+
+Her projeyi GitHub’a koyarken:
+
+==== ### Minimum Gerekenler ====
+
+- Dizin yapısı:
+
+  ```text
+  yourtool/
+	src/
+	  yourtool/
+		__init__.py
+		main.py
+		...
+	tests/
+	README.md
+	requirements.txt
+	setup.cfg veya pyproject.toml (ileride)
+  ```
+
+- `README.md` içine:
+  - Kısa açıklama
+  - Kullanım örnekleri
+  - Örnek çıktı
+- Lisans (MIT, Apache-2.0 vs.)
+- `.gitignore` (Python için)
+
+==== ### Olursa Çok İyi ====
+
+- `pytest` ile basit testler (özellikle yardımcı fonksiyonlar için).
+- GitHub Actions ile:
+  - `pytest`
+  - `flake8` / `black` gibi lint/format
+- Daha ileri: PyPI’ye yayınlayıp `pip install pyscan` ile kurulabilir hale getirmek.
+
+---
+
+===== ## Özet Yol Haritası (Kısaca) =====
+
+1. Temel Scapy + Ping & Sniffer
+   - Proje 1, 2
+2. LAN keşfi & ping sweep & traceroute
+   - Proje 3, 4, 5
+3. TCP/UDP derinleşme + port tarama
+   - Proje 6, 7, 8
+4. pyScan v0.1 – tek tool içinde birleşim
+   - Proje 9
+5. Servis/Banner tespiti
+   - Proje 10, 11
+6. OS fingerprinting
+   - Proje 12
+7. Scapy ileri seviye (custom layer, fuzzing)
+   - Proje 13, 14
+8. GitHub’da ürünleştirme ve belgeleme
+
+---
+
+İstersen bir sonraki adımda:
+
+- Bu yol haritasından ilk 1–2 proje için birlikte kod iskeleti çıkarabiliriz (ör. `my_ping.py` ve `arp_scan.py` için örnek fonksiyon yapısı).  
+- Ya da “şu anda şu seviyedeyim, şu projeyle başlayalım” dersen, o projeyi detaylı kod adımlarıyla anlatabilirim.

@@ -1,0 +1,284 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-12-09T00:43:14+03:00
+
+====== ICMP ======
+Created Tuesday 09 December 2025
+
+ICMP’yi “ping atan bir şey” olarak değil, IP’nin hata ve kontrol dili olarak düşünürsen konuya hâkim olman çok kolaylaşır. Aşağıda temelden başlayıp pratikte nasıl kullanıldığına kadar gideceğim.
+
+---
+
+## 1. ICMP nedir?
+
+**ICMP (Internet Control Message Protocol)**:
+
+- IP ağlarında **hata bildirimi** ve **durum bilgisi** taşımak için kullanılan bir kontrol protokolüdür.
+- Veri taşımak için değil, **IP’nin kendisini yönetmek** için vardır.
+- TCP/IP modelinde **Ağ (Internet) katmanında** yer alır.
+- IPv4’te: **ICMPv4**, IPv6’da: **ICMPv6** kullanılır.
+- IP paketinin içinde, **protokol numarası 1 (IPv4)** veya **Next Header = 58 (IPv6)** ile taşınır.
+
+Önemli nokta:  
+ICMP = “IP’nin hata ve kontrol mesajları”dır.  
+Ping, traceroute vb. bu protokolü kullanan araçlardır, **ICMP = ping değildir.**
+
+---
+
+## 2. ICMP’nin amacı ne?
+
+ICMP, cihazların (host ve router’lar):
+
+- Neden bir paketi iletemediğini,
+- Ağda ne tür problemler olduğunu,
+- Ağın bazı özelliklerini (MTU, yönlendirme, erişilebilirlik vs.)
+
+**karşı tarafa bildirebilmesini** sağlar.
+
+Örneğin:
+
+- Hedefe ulaşılamıyorsa: **“destination unreachable”**
+- Paket, TTL bittiği için atıldıysa: **“time exceeded”**
+- Paket boyu link için çok büyükse: **“fragmentation needed / packet too big”**
+- Ping atıyorsan: **“echo request / echo reply”**
+
+Bu sayede ağ problemlerini **teşhis etmek** ve **ağı optimize etmek** mümkün olur.
+
+---
+
+## 3. ICMP mesaj tipleri (Type / Code mantığı)
+
+ICMP mesajlarının en temel alanları:
+
+- **Type**: Mesajın ana türü (ör: echo request, destination unreachable)
+- **Code**: Aynı tür içindeki alt anlam (ör: destination unreachable için “network unreachable”, “host unreachable” gibi)
+- **Checksum**: Hata kontrolü
+
+### 3.1. Genel sınıflandırma
+
+İki ana kategori:
+
+1. **Hata mesajları (Error messages)**  
+   Bir IP paketinin işlenmesi sırasında sorun olduğunda gönderilir.
+
+   Örnekler:
+   - Destination Unreachable
+   - Time Exceeded
+   - Redirect
+   - Parameter Problem
+   - Packet Too Big (IPv6)
+
+2. **Bilgi mesajları (Informational messages)**  
+   Durum sorgulama/cevaplama gibi amaçlarla kullanılır.
+
+   Örnekler:
+   - Echo Request / Echo Reply (ping)
+   - Router Solicitation / Advertisement (özellikle ICMPv6)
+   - Neighbor Solicitation / Advertisement (ICMPv6)
+
+---
+
+## 4. Önemli ICMP türleri (IPv4 açısından)
+
+### 4.1. Echo Request / Echo Reply (Type 8 ve 0) – Ping
+
+- **Ping komutu** ICMP Echo Request gönderir.
+- Hedef, ICMP Echo Reply ile cevap verir.
+- Ping ile ölçülenler:
+  - Hedefe **ulaşılıp ulaşılamadığı**
+  - **Gidiş-dönüş süresi (RTT)**
+  - Paket kaybı oranı
+- Hiç cevap gelmiyorsa:
+  - Hedef kapalı olabilir,
+  - Arada firewall ICMP’yi engelliyor olabilir,
+  - Ya da rota yoktur.
+
+Ping, ağ erişilebilirliğini test etmek için temel bir araçtır ama eksiktir:
+- Sadece **ICMP trafiği** için erişilebilirliği ölçer, TCP/UDP değil.
+- Firewall’lar ICMP’yi engellemişse yanlış izlenim verebilir.
+
+---
+
+### 4.2. Destination Unreachable (Type 3)
+
+“Bu paketi hedefine ulaştıramıyorum” mesajı.
+
+Önemli **Code** örnekleri:
+
+- **Code 0 – Network unreachable**
+- **Code 1 – Host unreachable**
+- **Code 3 – Port unreachable**
+- **Code 4 – Fragmentation needed and DF set**  
+  (Paketi parçalamam gerek ama “Don’t Fragment” bitin açık, yani parçalayamam.)
+
+Kullanım açısından önemli bir senaryo:
+
+- UDP ile kapalı bir porta paket gönderdiğinde, hedef **ICMP Port Unreachable** dönebilir.
+- traceroute’un bazı varyantları (UDP’li olanlar) bu davranışı kullanır.
+
+---
+
+### 4.3. Time Exceeded (Type 11)
+
+Paketin **TTL değeri sıfıra düşerse** router paketi atar ve gönderen host’a **Time Exceeded** mesajı döner.
+
+- TTL (Time To Live): Paket sonsuza kadar dönmesin diye her router’da 1 azalır.
+- Sıfıra inince paket çöpe gider.
+
+**Traceroute** aracı bu mantığı kullanır:
+
+- İlk paketi TTL=1 ile yollar → İlk router paketi atar, ICMP Time Exceeded döner → 1. hop bulunur.
+- Sonra TTL=2, 3, 4…  
+- Her adımda sıradaki router’ı öğrenirsin.
+
+Yani:
+- **ping → hedefe gidiş**
+- **traceroute → aradaki yol**
+
+---
+
+### 4.4. Redirect (Type 5)
+
+Bir router, “Bana gönderiyorsun ama aslında şu router üzerinden gitmen daha iyi” diyerek **rota düzeltme** önerisi yapabilir.
+
+Günümüzde:
+- Güvenlik nedeniyle pek kullanılmaz.
+- Birçok cihaz ve firewall bu tür mesajları bloklar.
+
+---
+
+### 4.5. Parameter Problem (Type 12)
+
+IP başlığında anlam veremediği/kabul etmediği bir parametre varsa:
+
+- “Header’da sorun var” diyerek gönderene hata bildirir.
+
+---
+
+## 5. ICMP paket yapısı (kısaca)
+
+Genel ICMP başlığı:
+
+- **Type (8 bit)**
+- **Code (8 bit)**
+- **Checksum (16 bit)**
+- Sonrasında:
+  - Type/Code’a özgü alanlar
+  - Genellikle hataya neden olan **orijinal IP başlığı + ilk 8 byte** (hata tanısı için)
+
+Echo Request/Reply için ek alanlar:
+- Identifier (ID)
+- Sequence Number
+- Veri kısmı (genelde belli bir pattern + zaman bilgisi vb.)
+
+Bu sayede ping araçları:
+- ID ve sequence numara ile hangi cevabın hangi isteğe ait olduğunu bilir.
+- Veri kısmına zaman damgası koyup gecikmeyi ölçebilir.
+
+---
+
+## 6. ICMPv6: IPv6 dünyasında ICMP çok daha kritik
+
+IPv6’da ICMP sadece hata/durum mesajı değildir, ayrıca:
+
+- **Neighbor Discovery Protocol (NDP)** ICMPv6 üzerinde çalışır:
+  - ARP’nin IPv6’daki karşılığı gibi düşünebilirsin.
+  - Neighbor Solicitation / Neighbor Advertisement
+  - Router Solicitation / Router Advertisement
+- **Stateless Address Autoconfiguration (SLAAC)** yine ICMPv6 mesajları ile:
+  - Router Advertisement üzerinden cihazlar otomatik IPv6 adresi alır.
+- **Packet Too Big** (MTU keşfi):
+  - Gereğinden büyük paket gönderirsen, router ICMPv6 Packet Too Big ile:
+	- “Maksimum şu kadar byte gönderebilirsin” der.
+
+Dolayısıyla:
+- IPv4’te ICMP’yi kısmen bloklayarak idare edenler var.
+- IPv6’da ICMPv6’yı “kafadan kesmek” çoğu zaman **ağı bozuyor** (adres keşfi, MTU, yönlendirme vs. çalışmaz).
+
+---
+
+## 7. Güvenlik açısından ICMP
+
+ICMP tamamen masum da değil; kötüye kullanılabilir:
+
+- **Ping flood / ICMP flood**:
+  - Aşırı sayıda ICMP Echo Request ile hedefi boğmak (DoS).
+- **Smurf attack (IPv4)**:
+  - Broadcast adresine sahte kaynaklı ICMP Echo Request gönderip:
+  - Tüm ağın cevaplarının hedefe akmasını sağlamak.
+- **ICMP tunneling**:
+  - ICMP paketlerinin içine başka veri gömüp gizli tünel açmak.
+- **Bilgi toplama**:
+  - Ping, traceroute, ICMP destination unreachable mesajları:
+	- Hangi host aktif
+	- Hangi yönlendiriciler var
+	- Hangi yollar kullanılıyor
+	- Tahmin edilebilir hale gelir.
+
+Bu yüzden firewall’lar genelde:
+
+- Her ICMP’yi **tamamen** kapatmaz,
+- Ama:
+  - Oran sınırı (rate limit) koyar,
+  - Bazı tipleri kısıtlar (özellikle gereksiz olanları),
+  - Dışarıdan gelen istekler için daha sıkı davranır.
+
+Özellikle:
+- IPv6’da ICMPv6 mesajlarını geniş çaplı engellemek **yanlış pratik** kabul edilir.
+
+---
+
+## 8. Pratikte ICMP’yi nasıl görür ve kullanırsın?
+
+### 8.1. Temel komutlar
+
+- **ping**
+  - Linux: `ping 8.8.8.8`
+  - Windows: `ping 8.8.8.8`
+  - Domain ile ping: `ping google.com`
+- **traceroute / tracert**
+  - Linux: `traceroute 8.8.8.8`
+  - Windows: `tracert 8.8.8.8`
+- **ping6 / traceroute6** (bazı sistemlerde IPv6 için ayrı ikili dosyalar)
+
+### 8.2. Wireshark / tcpdump ile inceleme
+
+- Wireshark filtresi:
+  - IPv4: `icmp`
+  - IPv6: `icmpv6`
+- Görebileceğin örnekler:
+  - `Echo (ping) request`, `Echo reply`
+  - `Destination unreachable (Host unreachable, Port unreachable)`,
+  - `Time-to-live exceeded` (traceroute sırasında)
+  - `Router advertisement`, `Neighbor solicitation` (IPv6’de)
+
+Bu paketleri okuyup anlamaya başladığında ICMP’ye gerçekten “hâkim” olmuş olursun.
+
+---
+
+## 9. Kısa özet (öğrenilmesi gereken çekirdek bilgiler)
+
+- ICMP, **IP’nin kontrol ve hata bildirim protokolüdür**; veri taşıma protokolü değil.
+- **Ping** ve **traceroute**, ICMP’yi kullanan tanılama araçlarıdır.
+- Temel türler:
+  - Echo Request / Echo Reply (ping)
+  - Destination Unreachable
+  - Time Exceeded (traceroute)
+  - Redirect
+  - Parameter Problem
+- ICMP mesajları, **orijinal IP paketinin başını** içererek hangi paket için hata geldiğini belirtir.
+- IPv6’da ICMPv6:
+  - Neighbor Discovery
+  - Router Discovery
+  - MTU keşfi
+  gibi kritik mekanizmaları taşır; kapatılmaz.
+- Güvenlikte:
+  - Tümü değil, belirli tipler ve hızlar kontrol edilir (rate limiting, selective filtering).
+
+---
+
+İstersen bir sonraki adımda:
+
+- Wireshark ekran görüntüsü üzerinden birkaç ICMP paketini tek tek okuyup yorumlayabiliriz,  
+veya  
+- “Şu senaryoda hangi ICMP mesajları oluşur?” tarzı pratik sorularla bilgini pekiştirebiliriz.

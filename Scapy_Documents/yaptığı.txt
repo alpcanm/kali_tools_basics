@@ -1,0 +1,235 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-12-10T18:00:56+03:00
+
+====== yaptığı ======
+Created Wednesday 10 December 2025
+
+
+
+62.72.36.23 için ping başlatılıyor: 1 paket, timeout=2.0s
+###[ IP ]###
+  version   = 4
+  ihl       = None
+  tos       = 0x0
+  len       = None
+  id        = 1
+  flags     = 
+  frag      = 0
+  ttl       = 64
+  proto     = icmp
+  chksum    = None
+  src       = 192.168.1.106
+  dst       = 62.72.36.23
+  \options   \
+###[ ICMP ]###
+	 type      = echo-request
+	 code      = 0
+	 chksum    = None
+	 id        = 0x0
+	 seq       = 0x1
+	 unused    = b''
+
+62.72.36.23: icmp_seq=1 ttl=49 time=196.04 ms
+
+
+Konsoldaki `show()` çıktısı tam olarak “hava kabarcığı” değil; gerçekten **kabı** gösteriyor:  
+O an Scapy’nin oluşturduğu IP/ICMP paketinin alanlarını bire bir yazdırıyor.  
+Şimdi sorularını parça parça cevaplayayım.
+
+---
+
+## 1. `src` alanını değiştirirsem gerçekten öyle mi gider?
+
+Kısa cevap:  
+Evet, Scapy ile `IP(src="1.2.3.4", dst=...)` dersen, **IP header’ında** kaynak adres o olur ve paket o şekilde kablodan çıkar.
+
+Örnek:
+
+```python
+packet = IP(src="1.2.3.4", dst="62.72.36.23") / ICMP()
+packet.show()
+send(packet)
+```
+
+Wireshark’ta veya başka bir sniffer’da bu paketi yakalarsan:
+
+- Source IP: `1.2.3.4`
+- Destination IP: `62.72.36.23`
+
+olarak görürsün. Yani:
+
+> Paketi gören herkes için, kaynak IP “1.2.3.4” gibi GÖRÜNÜR.
+
+Buna **IP spoofing** denir.
+
+Ama burada kritik bir nokta var:  
+“Öyle görünmesi” ≠ “o IP gerçekten sendenmiş gibi tam anlamıyla davranır”.
+
+---
+
+## 2. Cevaplar nereye gider? (Spoof’ta asıl problem)
+
+Ping senaryosunu düşün:
+
+- Sen `src` = `1.2.3.4` yazdın.
+- Hedef makine (62.72.36.23) bu paketi aldı ve “kaynak 1.2.3.4” zannetti.
+- ICMP Echo Reply gönderirken:
+  - `dst` = `1.2.3.4` olarak cevap yollar.
+
+Yani cevap paketleri:
+
+- **Sana değil, 1.2.3.4’e doğru** yola çıkar.
+- Eğer 1.2.3.4 gerçekten sana ait bir IP değilse:
+  - Cevabı asla görmezsin.
+  - `sr1` için baktığında hep `timeout` alırsın.
+
+Dolayısıyla:
+
+- Evet, Scapy ile IP header’ını istediğin gibi manipüle edebilirsin.
+- Ama **geri dönüş yolunu da yönetemiyorsun**; onu internetin routing’i yönetiyor.
+
+Bu yüzden:
+
+- Ping yazarken `src`’yi spoof etmek → kendini bıçaklamak gibi;  
+  cevabı göremezsin, amacın bozulur.
+
+---
+
+## 3. Scapy’nin yaptığı “asıl iş” manipülasyon mu?
+
+Scapy’nin en temel gücü şu:
+
+> “Paketleri, işletim sisteminin normal network yığınına (kernel stack) bağlı kalmadan, **elle** oluşturup, değiştirebilmeni ve gönderebilmeni sağlıyor.”
+
+Bu ne demek?
+
+- Normalde `ping` komutu:
+  - Kernel’in IP/ICMP implementasyonunu kullanır.
+  - Kaynak IP’yi, TTL’yi, flag’leri vs. kafana göre ayarlayamazsın (çoğu zaman).
+- Scapy ile:
+  - IP header’ındaki her alanı elle yazabilirsin:
+	- `src`, `dst`, `ttl`, `id`, `flags`, `options`...
+  - ICMP/TCP/UDP header’larını istediğin gibi doldurabilirsin.
+  - Hatta tamamen saçma/protokole aykırı paketler de üretebilirsin (fuzzing, test vs.).
+
+Bu “manipülasyon” özelliği **Scapy’nin önemli bir parçası**, ama sadece bundan ibaret değil:
+
+- Paket **hazırlama** (crafting)
+- Paket **gönderme** (send, sr, sr1, srp, srp1)
+- Paket **yakalama / sniffing** (sniff)
+- Paket **parçalama / parse etme** (dissect)
+- Protokol **analizi**, kendi araçlarını yazma:
+  - ping/traceroute
+  - port tarama
+  - servis tespiti
+  - özel protokol implementasyonu
+  - IDS/IPS testleri, firewall testleri, vs.
+
+Yani Scapy:
+
+- “Manipülasyon yapma aracı” değil,
+- “**Network paketleriyle lego gibi oynama kütüphanesi**”.
+
+---
+
+## 4. `show()` çıktını yorumlayalım
+
+Senin çıktın:
+
+```text
+###[ IP ]###
+  version   = 4
+  ihl       = None
+  tos       = 0x0
+  len       = None
+  id        = 1
+  flags     = 
+  frag      = 0
+  ttl       = 64
+  proto     = icmp
+  chksum    = None
+  src       = 192.168.1.106
+  dst       = 62.72.36.23
+```
+
+Buradan önemli noktalar:
+
+- `src       = 192.168.1.106`  
+  Bu Scapy’nin **sen bir şey belirtmediğin için** otomatik seçtiği kaynak IP.
+  - Default gateway’e giden arayüzün IP’si büyük ihtimalle bu.
+
+- `len       = None`, `chksum    = None`  
+  Bunlar şu an `None`, ama gönderirken Scapy otomatik hesaplayıp dolduruyor.
+
+Sen eğer:
+
+```python
+packet = IP(src="10.10.10.10", dst="62.72.36.23") / ICMP(seq=1)
+packet.show()
+```
+
+diyorsan, `src` kısmında `"10.10.10.10"` görürsün  
+ve gönderdiğinde paketin IP header’ında gerçekten bu yazar.
+
+---
+
+## 5. Peki yerel ağda (LAN) ne olur?
+
+Aynı switch’teki başka bir makineye spoof edilmiş `src` ile paket attığında:
+
+- IP header’ı: `src = 1.2.3.4`, `dst = 192.168.1.50`
+- Ethernet (MAC) header’ı: **senin gerçek MAC adresin** (bunu genelde Scapy otomatik doldurur / sen de elle yazabilirsin).
+
+Yani karşı taraf (192.168.1.50) şunu görür:
+
+- MAC katmanında: “Bu paket X:Y:Z MAC adresinden gelmiş.”
+- IP katmanında: “Bu paket 1.2.3.4 IP adresinden gelmiş.”
+
+Bu durumda:
+
+- LAN’da, **ARP** tablosu, IP ↔ MAC eşlemesi tutar.
+- Eğer IP → MAC eşlemesini de bozmak istiyorsan, ARP spoofing gibi ek adımlar gerekir.
+
+Bu seviyelere inmek, artık “network güvenliği / saldırı simülasyonu” konusu oluyor.  
+Scapy bu işlerde de çok kullanılıyor, ama etik ve hukuki tarafı var;  
+kendi ağın/dolabın dışında denemek genelde yasadışı.
+
+---
+
+## 6. Sonuç: Senin ping aracında neyi öğrenmiş oldun?
+
+Senin yazdığın ping aracında Scapy ile şu kavramları pratikte gördün:
+
+1. **Katman mantığı**:  
+   `IP(...) / ICMP(...)` → L3 + L4 katmanlarını üst üste koymak.
+
+2. **Paket alanlarını okuma ve yazma**:
+   - `reply.getlayer(IP).src` → Cevabı kim gönderdi?
+   - `reply[IP].ttl` → Cevabın TTL’i kaç?
+   - İstesen `ttl=5` ile kısa ömürlü paketler de gönderebilirsin.
+
+3. **Zaman ölçümü (RTT)**:
+   - `time.time()` ile gönder-al arasındaki fark → RTT.
+
+4. **Timeout yönetimi**:
+   - `sr1(..., timeout=...)` ile bekleme süresini kontrol etmek.
+   - Cevap yoksa `None` dönmesi, üst katmanda düzgün yönetilmesi.
+
+5. **İstatistik toplama**:
+   - RTT değerlerini listede tutup min/avg/max hesaplamak.
+
+Bunların hepsine Scapy sadece “imkan sağlayan araç”.  
+Senim ping kodun ise o aracı kullanarak **kendi network uygulamanı yazman**.
+
+---
+
+İstersen bir sonraki adımda şunları yapabiliriz:
+
+- Aynı `send_icmp_echo` fonksiyonuna opsiyonel bir `source_ip` parametresi ekleyip:
+  - `source_ip` verilirse `IP(src=source_ip, dst=destination)`
+  - sonra bunun gerçekten nasıl `timeout`’a sebep olduğunu deneysel olarak görmek.
+- Veya bir `packet.show()` ve `reply.show()` karşılaştırması yapıp:
+  - giden paket ile gelen paketin header farklarını okumayı öğrenmek.
+
+Hangisine girmek istersen, oradan derinleşelim.

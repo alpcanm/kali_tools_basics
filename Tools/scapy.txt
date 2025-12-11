@@ -1,0 +1,66 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.6
+Creation-Date: 2025-12-06T14:29:57+03:00
+
+====== scapy ======
+Created Saturday 06 December 2025
+
+Scapy
+
+- Ne amaçla üretildi?
+  - Ağ paketlerini elle oluşturmak, değiştirmek, göndermek ve yakalamak; protokolleri test etmek ve hızlı prototip geliştirmek için.
+
+- Nedir?
+  - Python ile yazılmış, etkileşimli kabuk (REPL) ve kütüphane olarak çalışan, çok sayıda ağ protokolünü işleyebilen paket manipülasyon aracıdır.
+
+- Ne işe yarar (basit örneklerle)?
+  - Özel ICMP (ping) paketi oluşturup yanıtı görmek.
+  - DNS sorgusu gönderip cevabını yakalamak.
+  - ARP taramasıyla yerel ağdaki cihazları keşfetmek.
+  - Hatalı/alışılmadık paketler üretip cihazların tepkisini test etmek.
+  - PCAP dosyasını okuyup paketleri yeniden oynatmak.
+  - Basit traceroute benzeri iz sürme yapmak.
+
+- Ne değildir?
+  - GUI’li bir analiz aracı değildir (Wireshark gibi).
+  - Tam özellikli zafiyet tarayıcı veya sömürü aracı değildir (Nmap/Metasploit gibi).
+  - Yüksek hızda trafik üretim aracı değildir (pktgen/tcpreplay gibi).
+  - IDS/IPS veya güvenlik duvarı değildir.
+
+- Kullanım alanları nedir?
+  - Sızma testi ve kırmızı takım denemeleri (özel paket senaryoları).
+  - Mavi takım/DFIR için paket seviyesinde olay analizi/prototip kontrolü.
+  - Protokol araştırması, fuzzing, PoC geliştirme.
+  - Eğitim ve laboratuvar çalışmaları, CTF.
+
+- Kullanım ortamı nelerdir?
+  - İşletim sistemi: Linux, macOS, Unix; Windows’ta Npcap ile.
+  - Çalışma biçimi: REPL (etkileşimli) ya da Python kütüphanesi olarak betiklerden.
+  - Ağ arayüzünde paket gönderme/yakalama yetkisi gereken ortamlarda (çoğu zaman yönetici/root).
+
+- Neden tercih edilir?
+  - Esnek ve programlanabilir: Protokol katmanlarını kolayca ekleyip değiştirme.
+  - Hızlı prototip: Aynı anda oluştur–gönder–yakala–yorumla döngüsü.
+  - Geniş protokol desteği ve topluluk dokümantasyonu.
+  - Kıyas:
+	- Wireshark: Görselleştirir/analiz eder; Scapy: üretir + analiz eder.
+	- tcpdump: Yakalar/filtreler; Scapy: yakalar + özel paket üretir.
+	- Nmap: Hazır tarama iş akışları; Scapy: düşük seviye yapı taşları.
+	- hping3: Sınırlı komut seti; Scapy: tam Python gücüyle esnek.
+
+- Kullanmak için nelere ihtiyaç vardır?
+  - Python 3.7+ (PyPy destekli), Scapy paketi.
+  - Linux/macOS’ta libpcap; Windows’ta Npcap.
+  - Çoğu senaryoda yönetici/root yetkisi; uygun ağ arayüzü.
+
+- Öğrenme zorluk seviyesi nedir?
+  - Kolay–Orta: Temel kullanım 1 hafta; protokol derinliği ve otomasyon 1 ay civarı.
+
+- Aracın siber güvenlik uzmanı için önemi (0–7)
+  - 4 — Kuvvetle tavsiye edilen: Paket seviyesinde esneklik sağlar; tercih sebebi.
+
+- Alternatifleri nelerdir?
+  - Analiz ağırlıklı: Wireshark, tcpdump, PyShark.
+  - Paket üretimi/CLI: hping3, nping, tcpreplay.
+  - Python ekosistemi: Impacket (belirli protokoller), dpkt, Pcapy, Kamene (Scapy çatallanması).
+  - Diğer diller: GoPacket (Go), PacketFu (Ruby).
